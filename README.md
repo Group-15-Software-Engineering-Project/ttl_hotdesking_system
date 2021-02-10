@@ -5,6 +5,6 @@ Add your name, email and student id.
 - John Keaney - keaneyjo@tcd.ie - 18328855
 - 
 - Yifan Zhu - zhuyi@tcd.ie - 18300717
--
+- Dominik Guzowski - guzowskd@tcd.ie - 19334866
 -
 -
