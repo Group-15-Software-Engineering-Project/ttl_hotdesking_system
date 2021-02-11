@@ -7,4 +7,4 @@ Add your name, email and student id.
 - Yifan Zhu - zhuyi@tcd.ie - 18300717
 - Dominik Guzowski - guzowskd@tcd.ie - 19334866
 - Mike Kelly - mkelly32@tcd.ie - 18318983
--
+- Aaron Byrne - aabyrne@tcd.ie -19334098
