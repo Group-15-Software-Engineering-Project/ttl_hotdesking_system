@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+require('dotenv').config();
+require('mysql');
 
 class App extends Component {
-    state = { loading: false };
+    state = { loading: true };
 
-    componentDidMount() {
-        // 测试 devServer 的代理功能
-        // fetch('/api/category')
-        //     .then(resp => resp.json())
-        //     .then(res => console.log('here here', res));
-    }
+    var databaseConnection = mysql.createConnection({
+        host: process.env.REACT_APP_ENDPOINT,
+        user: process.env.REACT_APP_USER_ID,
+        password: process.env.REACT_APP_USER_PASS
+    });
 
     render() {
         return (
