@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Navbar from './Components/NavBar';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import Reports from './Pages/Reports';
 import Products from './Pages/Products';
 import Messages from './Pages/Messages';
 import ChooseDesk from './Pages/ChooseDesk';
-import Login from './Pages/Login'
 
 class App extends Component {
   state = {
@@ -51,11 +50,8 @@ class App extends Component {
         <Router>
           <Navbar />
           <Switch>
-            <Route exact path="/">
-              <Redirect to="/Login"></Redirect>
-            </Route>
-            <Route path='/login' component={Login} />
-            <Route path='/home' component={Home} />
+            <Route path='/' exact component={Home} />
+
             <Route path='/reports' component={Reports} />
             <Route path='/products' component={Products} />
             <Route path='/messages' component={Messages} />
