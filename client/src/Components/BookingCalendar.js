@@ -1,5 +1,5 @@
 import { Calendar } from "react-calendar";
-import "./Calendar.css";
+import "../public/css/Calendar.css";
 import React from "react";
 const months = [
   "Jan",

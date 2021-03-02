@@ -1,6 +1,6 @@
 import React from 'react';
-import '../App.css';
-import './Bookbutton.css';
+import '../public/css/App.css';
+import '../public/css/Bookbutton.css';
 
 const STYLES =[
     "btn--primary--solid",

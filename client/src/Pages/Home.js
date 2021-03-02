@@ -1,6 +1,6 @@
 import React from 'react'
-import tcd from'../assets/tcd.jpg';
-import './Home.css';
+import tcd from'../public/media/tcd.jpg';
+import '../public/css/Home.css';
 import Bookbutton from '../Components/Bookbutton';
 import {Link} from 'react-router-dom';
 

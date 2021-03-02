@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import "./Login.css";
-import crest from "../tcd-logo.png";
+import "../public/css/Login.css";
+import crest from "../public/media/tcd-logo.png";
 import {Route, Link} from "react-router-dom";
 
 function Login() {

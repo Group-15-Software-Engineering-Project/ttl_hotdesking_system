@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "start": "node server.js",
-        "aws-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+        "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
         "client": "cd client && yarn start",
         "server": "nodemon server.js",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
@@ -12,8 +12,6 @@
         "body-parser": "^1.18.3",
         "express": "^4.17.1",
         "nodemon": "^2.0.7",
-        "react-calendar": "^3.3.1",
-        "react-chartjs-2": "^2.11.1",
         "yarn": "^1.22.10"
     },
     "devDependencies": {
