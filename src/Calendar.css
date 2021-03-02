@@ -1,0 +1,303 @@
+.calendar-container {
+  display: flex;
+  background-color: #eeeeee;
+  justify-content: center;
+  flex-flow: row wrap;
+  height: 100vh;
+  /* align-items: center; */
+}
+
+.wrapper body {
+  margin: 0px;
+}
+
+.element-flex-1 {
+  flex: 1;
+  border: 1px black solid;
+  justify-content: center;
+  text-align: left;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.element-flex-2 {
+  flex: 2;
+  border: 1px black solid;
+  justify-content: center;
+  text-align: left;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.element-flex-3 {
+  flex: 3;
+  border: 1px black solid;
+  text-align: center;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.element-flex-4 {
+  flex: 4;
+  border: 1px black solid;
+  justify-content: center;
+  text-align: left;
+  margin: auto;
+  margin-top: 0px;
+}
+
+.calendar-element {
+  flex: 1;
+  justify-content: flex-start;
+  flex-flow: row;
+  margin: auto;
+}
+.calendar-element-col-half {
+  flex: 1;
+  margin: 5px;
+  justify-content: center;
+  flex-flow: column wrap !important;
+  justify-items: flex-start;
+  border: 2px black solid;
+  text-align: left !important;
+}
+.calendar-element-row-half {
+  flex: 1;
+  margin: 5px;
+  justify-content: center;
+  flex-flow: row wrap !important;
+  justify-items: flex-start;
+  border: 2px black solid;
+  text-align: left !important;
+}
+
+.calendar-center {
+  width: 50%;
+  justify-self: center;
+  margin: 5px;
+  justify-content: center;
+  justify-items: center;
+  border: 2px black solid;
+  text-align: center;
+}
+
+.header {
+  background-color: #282c34;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+.calendar-container-column {
+  display: flex;
+  background-color: #eeeeee;
+  justify-items: center;
+  justify-content: center;
+  margin: 10px;
+  flex-flow: column wrap;
+}
+
+.button-style {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  color: white;
+  background-color: #0095ff;
+  border: none;
+}
+.button-style:hover {
+  background-color: #00c5ff;
+}
+
+.react-calendar {
+  width: 350px;
+  /* max-width: 100%; */
+  background: white;
+  border: 1px solid #a0a096;
+  border-radius: 6px !important;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+  justify-content: space-around;
+  margin: auto;
+  color: black;
+}
+.react-calendar--doubleView {
+  width: 700px;
+}
+.react-calendar--doubleView .react-calendar__viewContainer {
+  display: flex;
+  margin: -0.5em;
+}
+.react-calendar--doubleView .react-calendar__viewContainer > * {
+  width: 50%;
+  margin: 0.5em;
+}
+.react-calendar,
+.react-calendar *,
+.react-calendar *:before,
+.react-calendar *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.react-calendar button {
+  margin: 0;
+  border: 0;
+  outline: none;
+}
+.react-calendar button:enabled:hover {
+  cursor: pointer;
+}
+.react-calendar__navigation {
+  height: 44px;
+  margin-bottom: 1em;
+  border-radius: 3px !important;
+}
+.react-calendar__navigation button {
+  min-width: 44px;
+  border-radius: 15px !important;
+  border: 3px white solid;
+  background: #aaaaaa;
+}
+.react-calendar__navigation button:enabled:hover {
+  background-color: #e6e6e6;
+}
+.react-calendar__navigation button[disabled] {
+  background-color: #f0f0f0;
+}
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: none;
+  font-weight: bold;
+  font-size: 0.75em;
+}
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+.react-calendar__month-view__weekNumbers {
+  font-weight: bold;
+}
+.react-calendar__month-view__weekNumbers .react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  padding: calc(0.75em / 0.75) calc(0.5em / 0.75);
+}
+.react-calendar__month-view__days__day--weekend {
+  color: black;
+}
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575;
+}
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+  padding: 2em 0.5em;
+}
+.react-calendar__tile {
+  max-width: 20%;
+  text-align: center;
+  border-radius: 15px !important;
+  padding: 0.75em 0.5em;
+  background: white;
+  border: 3px white solid !important;
+}
+
+.react-calendar__year-view .react-calendar__tile:hover {
+  color: #0095ff !important;
+  border: none !important;
+}
+
+.react-calendar__year-view .react-calendar__tile {
+  border: none !important;
+}
+.react-calendar__tile:disabled {
+  background-color: #f0f0f0;
+}
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #e6e6e6;
+}
+.react-calendar__tile:hover {
+  border: none !important;
+  color: white;
+  filter: opacity(75%);
+}
+.react-calendar__tile--now {
+  background: #ffff76;
+  color: black;
+  border: 3px #ffbf00 solid !important;
+}
+
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+  background: #a9d4ff;
+}
+
+.react-calendar__tile--active {
+  border: 3px black solid !important;
+  color: black;
+}
+
+.react-calendar__tile--active:hover {
+  border: 3px black solid !important;
+  color: white;
+}
+
+.react-calendar__tile--now:hover {
+  border: 3px #ffbf00 solid !important;
+  color: white;
+}
+
+.react-calendar--selectRange .react-calendar__tile--hover {
+  background-color: #e6e6e6;
+}
+
+.PM-Booked {
+  background-size: cover;
+  background-image: url("https://i.ibb.co/jwRLc8N/PMBooked.png");
+  border: 10px white solid;
+  width: 64px;
+  height: 48px;
+}
+
+.AM-Booked {
+  background-size: cover;
+  background-image: url("https://i.ibb.co/XXp3pLZ/AMBooked.png");
+  border: 10px white solid;
+  width: 64px;
+  height: 48px;
+}
+
+.ALL-Booked {
+  background-size: cover;
+  background-image: url("https://i.ibb.co/cQz9Zmy/Fully-Booked.png");
+  border: 10px white solid;
+  width: 64px;
+  height: 48px;
+}
+
+.NONE-Booked {
+  background-size: cover;
+  background-image: url("https://i.ibb.co/wwGYpWh/Not-Booked.png");
+  border: 10px white solid;
+  width: 64px;
+  height: 48px;
+}
+
+.Not-Available {
+  background-color: #aaaaaa;
+  border: 10px white solid;
+  width: 64px;
+  height: 48px;
+}

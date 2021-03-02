@@ -2,11 +2,15 @@
 
 # dependencies
 <<<<<<< HEAD
+<<<<<<< HEAD
 /node_modules
 =======
 node_modules
 client/node_modules
 >>>>>>> 615a4f08bdfad8b2dae0293d168209277a6ce116
+=======
+/node_modules
+>>>>>>> calendarpage
 /.pnp
 .pnp.js
 
@@ -15,9 +19,13 @@ client/node_modules
 
 # production
 <<<<<<< HEAD
+<<<<<<< HEAD
 /build
 =======
 >>>>>>> 615a4f08bdfad8b2dae0293d168209277a6ce116
+=======
+/build
+>>>>>>> calendarpage
 
 # misc
 .DS_Store
@@ -30,6 +38,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 yarn.lock
 >>>>>>> 615a4f08bdfad8b2dae0293d168209277a6ce116
+=======
+>>>>>>> calendarpage
