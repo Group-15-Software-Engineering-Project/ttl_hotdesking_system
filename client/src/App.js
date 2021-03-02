@@ -9,6 +9,7 @@ import Products from './Pages/Products';
 import Messages from './Pages/Messages';
 import ChooseDesk from './Pages/ChooseDesk';
 import Login from './Pages/Login'
+import BookingPage from './Pages/BookingPage';
 
 class App extends Component {
   state = {
@@ -55,6 +56,7 @@ class App extends Component {
               <Redirect to="/Login"></Redirect>
             </Route>
             <Route path='/login' component={Login} />
+            <Route path='/booking-page' component={BookingPage} />
             <Route path='/home' component={Home} />
             <Route path='/reports' component={Reports} />
             <Route path='/products' component={Products} />

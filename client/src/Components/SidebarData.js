@@ -7,7 +7,7 @@ import * as IoIcons from "react-icons/io";
 export const SidebarData=[
     {
         title:'Book',
-        path: '/',
+        path: '/booking-page',
         icon: <AiIcons.AiOutlineDesktop />,
         cName: 'nav-text'
     },

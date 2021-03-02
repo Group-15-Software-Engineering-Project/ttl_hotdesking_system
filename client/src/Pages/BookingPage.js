@@ -1,7 +1,6 @@
 import React from "react";
-import BookingCalendar from "../components/BookingCalendar";
-import "react-sticky-header/styles.css";
-import "../Sidebar.css";
+import BookingCalendar from "../Components/BookingCalendar";
+//import "react-sticky-header/styles.css";
 
 export default class BookingPage extends React.Component {
   constructor(props) {
@@ -118,7 +117,6 @@ export default class BookingPage extends React.Component {
   };
 
   render() {
-    this.props.getPageTitle("Desk Booking");
     return (
       <div className="booking-page">
         <section>
