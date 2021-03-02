@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-
-import logo from './logo.svg';
-
 import './App.css';
+
+import Navbar from './Components/NavBar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Home from './Pages/Home';
+import Reports from './Pages/Reports';
+import Products from './Pages/Products';
+import Messages from './Pages/Messages';
+import ChooseDesk from './Pages/ChooseDesk';
 
 class App extends Component {
   state = {
@@ -39,37 +44,21 @@ class App extends Component {
     this.setState({ responseToPost: body });
   };
   
-render() {
+  render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <p>{this.state.responseToPost}</p>
-      </div>
+      <>
+        <Router>
+          <Navbar />
+          <Switch>
+            <Route path='/' exact component={Home} />
+
+            <Route path='/reports' component={Reports} />
+            <Route path='/products' component={Products} />
+            <Route path='/messages' component={Messages} />
+            <Route path='/chooseDesk' component={ChooseDesk} />
+          </Switch>
+        </Router>
+      </>
     );
   }
 }

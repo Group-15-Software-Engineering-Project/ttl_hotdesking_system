@@ -1,0 +1,10 @@
+
+.Tcd {
+        background: url(../assets/tcd.jpg);
+        height: 86%;
+        width: 50%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size:cover;     
+    }
+
