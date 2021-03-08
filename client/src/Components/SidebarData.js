@@ -4,7 +4,8 @@ import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as GiIcons from "react-icons/gi";
 
-export const SidebarData = [
+
+export var SidebarData = [
   {
     title: "Book",
     path: "/booking-page",
@@ -47,4 +48,12 @@ export const SidebarData = [
     icon: <IoIcons.IoMdHelpCircle />,
     cName: "nav-text",
   },
+  {
+    title: "Admin",
+    path: "/Admin",
+    icon: <IoIcons.IoMdHelpCircle />,
+    cName: "nav-text",
+  },
 ];
+
+

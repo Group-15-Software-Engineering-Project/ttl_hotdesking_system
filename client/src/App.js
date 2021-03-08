@@ -16,6 +16,7 @@ import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
 import BookingPage from "./Pages/BookingPage";
 import Desks from "./Pages/Desks";
+import Admin from "./Pages/Admin";
 
 class App extends Component {
   state = {
@@ -52,6 +53,10 @@ class App extends Component {
     this.setState({ responseToPost: body });
   };
 
+  state = { // state should be false unless signed in as admin
+    visible: true
+  }
+
   render() {
     return (
       <>
@@ -69,6 +74,7 @@ class App extends Component {
             <Route path="/products" component={Products} />
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
+            {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
           </Switch>
         </Router>
       </>
