@@ -25,10 +25,11 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.handleSubmit();
     this.callApi()
       .then((res) => this.setState({ response: res.express }))
       .catch((err) => console.log(err));
-  }
+  } 
 
   callApi = async () => {
     const response = await fetch("/api/hello");
@@ -38,14 +39,14 @@ class App extends Component {
     return body;
   };
 
-  handleSubmit = async (e) => {
-    e.preventDefault();
+  handleSubmit = async () => {
+    //preventDefault();
     const response = await fetch("/api/world", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ post: this.state.post }),
+      body: JSON.stringify({ post: "poo poo" }),
     });
     const body = await response.text();
 
@@ -55,13 +56,15 @@ class App extends Component {
   render() {
     return (
       <>
+      <p>{this.state.response}</p>
+      <p>{this.state.responseToPost}</p>
         <Router>
           <Navbar />
           <Switch>
             <Route exact path="/">
               <Redirect to="/Login"></Redirect>
             </Route>
-            <Route path="/login" component={Login} />
+            <Route path="/login" component={Login}></Route>
             <Route path="/booking-page" component={BookingPage} />
             <Route path="/desks" component={Desks} />
             <Route path="/home" component={Home} />

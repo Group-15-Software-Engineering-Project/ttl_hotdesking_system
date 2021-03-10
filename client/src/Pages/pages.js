@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import "../public/css/Login.css";
-import crest from "../public/media/tcd-logo.png";
-import { Route, Link } from "react-router-dom";
-import App from "../App";
+import "./Login.css";
+import crest from "./tcd-logo.png";
+import { Link } from "react-router-dom";
 
-function Login() {
+export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,21 +15,10 @@ function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const response = fetch("/api/world", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ post: {email} }),
-    });
-    const body =response.text();
-
-    this.setState({ responseToPost: body });
   }
 
   return (
     <div className="Login">
-      <Route></Route>
       <img src={crest} alt="Crest" />
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
@@ -60,4 +48,4 @@ function Login() {
   );
 }
 
-export default Login;
+
