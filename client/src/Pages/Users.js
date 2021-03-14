@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import DialogDesks from "../Components/DialogDesks";
+import DialogUsers from "../Components/DialogUsers";
 
-class Desks extends Component {
+class Users extends Component {
   state = {
     isFirstOpen: false,
     isSecondOpen: false,
@@ -16,15 +16,8 @@ class Desks extends Component {
           }
         >
           {" "}
-          Make desks unavailable from booking{" "}
+          Add users{" "}
         </button>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
         <p>&nbsp;</p>
         <button
           onClick={(e) =>
@@ -32,18 +25,18 @@ class Desks extends Component {
           }
         >
           {" "}
-          Delete desks from the system{" "}
+          Delete users{" "}
         </button>
-        <DialogDesks
+        <DialogUsers
           isFirstOpen={this.state.isFirstOpen}
           isSecondOpen={this.state.isSecondOpen}
           onClose={(e) =>
             this.setState({ isFirstOpen: false, isSecondOpen: false })
           }
-        ></DialogDesks>
+        ></DialogUsers>
       </div>
     );
   }
 }
 
-export default Desks;
+export default Users;

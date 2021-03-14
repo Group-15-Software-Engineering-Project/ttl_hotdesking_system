@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import DayChooser from './DayChooser';
 import './Dialog.css'
 
-class Dialog extends Component {
+class DialogDesks extends Component {
 
     state = {
         desk: "Desks 1 in Office 2.5 West Theatre",
@@ -83,7 +83,7 @@ class Dialog extends Component {
                 <div className="popup">
                     <div className="popup-inner">
                         <button className="close-btn" onClick={this.props.onClose}>x</button>
-                        <div> Please choose the desk </div>
+                        <div> Please choose the desk to delete</div>
                         <div>
                             <select value={this.state.desk} onChange={this.handleDesk}>
                                 <option>Desks 1 in Office 2.5 West Theatre</option>
@@ -121,4 +121,4 @@ class Dialog extends Component {
     }
 }
 
-export default Dialog
+export default DialogDesks

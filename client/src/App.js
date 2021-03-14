@@ -16,6 +16,7 @@ import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
 import BookingPage from "./Pages/BookingPage";
 import Desks from "./Pages/Desks";
+import Users from "./Pages/Users";
 
 class App extends Component {
   state = {
@@ -64,6 +65,7 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/booking-page" component={BookingPage} />
             <Route path="/desks" component={Desks} />
+            <Route path="/users" component={Users} />
             <Route path="/home" component={Home} />
             <Route path="/reports" component={Reports} />
             <Route path="/products" component={Products} />
