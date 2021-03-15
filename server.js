@@ -1,9 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const mysql = require("mysql");
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+var con = mysql.createConnection({
+  host: process.env.DB_ENDPOINT,
+  user: process.env.DB_USER_ID,
+  password: process.env.DB_PASS,
+  database: process.env.DATABASE
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+})
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,6 +69,114 @@ for(var i =0;i<data.length;i++){
 
 });
 
+//Database Access
+function addUser(email) {
+  return new Promise((resolve, reject) => {
+    sql = "INSERT INTO USERS VALUES (\""+email+"\");";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    })
+    con.query
+  })
+}
+
+function addRoom(name) {
+  return new Promise((resolve,  reject) => {
+    sql = "INSERT INTO ROOMS VALUES (\""+name+"\");"
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res)
+      }
+    })
+  })
+}
+
+function addDesk(desk_number, room) {
+  return new Promise((resolve, reject) => {
+    sql = "INSERT INTO DESKS VALUES ("+desk_number+", \""+room+"\");";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    })
+  })
+}
+
+function addBooking(user, desk, room, date, time) {
+  return new Promise((resolve, reject) => {
+    day = date.toISOString().slice(0, 10)
+    sql = (time) ? "INSERT INTO BOOKINGS VALUES (\""+user+"\", "+desk+", \""+room+"\", \""+day+"\", 1, 0);" :
+      "INSERT INTO BOOKINGS VALUES (\""+user+"\", "+desk+", \""+room+"\", \""+day+"\", 0, 1);";
+    console.log(sql);
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    })
+
+  })
+}
+
+function getUsers() {
+  return new Promise((resolve, reject) => {
+    sql = "SELECT * FROM USERS;";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        let results = [];
+        for (var i in res) {
+          results.push(res[i].email);
+        }
+        resolve(results);
+      }
+    })
+  })
+}
+
+function getDesks(room) {
+  return new Promise((resolve, reject) => {
+    sql = "SELECT * FROM DESKS WHERE room = \""+room+"\";"
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        let results = []
+        for (var i in res) {
+          results.push(res[i].DESK_NO);
+        }
+        resolve(results);
+      }
+    })
+  })
+}
+
+function getRooms() {
+  return new Promise((resolve, reject) => {
+    sql = "SELECT * FROM ROOMS;";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        let results = []
+        for (var i in res) {
+          results.push(res[i].NAME)
+        }
+        resolve(results);
+      }
+    })
+  })
+}
 //Environment
 
 if (process.env.NODE_ENV === "production") {
@@ -67,4 +189,20 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+addBooking("mkelly32@tcd.ie", 1, "testRoom", new Date(), false)
+.then((res) => {
+  console.log(res);
+})
+.catch((err) => {
+  console.log(err);
+})
+/*
+addUser("mikekelly7654@gmail.com")
+.then((res) => {
+  console.log(res);
+})
+.catch((err) => {
+  console.log("Promise rejection: " + err);
+})
+*/
 app.listen(port, () => console.log(`Listening on port ${port}`));
