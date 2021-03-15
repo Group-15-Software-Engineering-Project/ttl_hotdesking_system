@@ -15,8 +15,29 @@ export default class BookingPage extends React.Component {
       bookableDesks: [],
       selectAM: false,
       selectPM: false,
+      responseToPost: ""
     };
   }
+  getDesks = async () => {};
+
+  postBooking = async (e) => {
+    e.preventDefault();
+
+    //console.log("Success login handleSubmit");
+
+    const response = await fetch("/api/desks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ chosenDate:this.state.chosenDate, chosenArea:this.state.chosenArea, chosenDesk:this.state.chosenDesk }),
+    });
+    const body = await response.text();
+
+    this.setState({ responseToPost: body });
+
+    //console.log(this.state.responseToPost);
+  };
 
   getMatchingDesks = () => {
     if (!this.state.selectAM && !this.state.selectPM) {
@@ -196,7 +217,8 @@ export default class BookingPage extends React.Component {
                 <div>
                   <button
                     className="button-style"
-                    onClick={() => {
+                    onClick={this.postBooking}
+                    /*onClick={() => {
                       alert(
                         "[" +
                           this.state.chosenDate +
@@ -204,16 +226,21 @@ export default class BookingPage extends React.Component {
                           this.state.chosenArea +
                           ": " +
                           this.state.chosenDesk
-                      );
-                    }}
+                      ); console.log(this.state.chosenDate+" "+this.state.chosenArea+" "+this.state.chosenDesk+" ");
+                      
+                    }}*/
                   >
                     Confirm Booking
                   </button>
+                  <p>{this.state.responseToPost}</p>
                 </div>
               ) : null}
             </div>
             <div className="element-flex-1"></div>
           </div>
+         
+            
+          
         </section>
       </div>
     );
