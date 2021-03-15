@@ -1,9 +1,10 @@
 .calendar-container {
   display: flex;
   background-color: #eeeeee;
-  justify-content: center;
+  justify-content: flex-start;
   flex-flow: row wrap;
-  height: 100vh;
+  min-height: 101vh;
+  height: auto;
   /* align-items: center; */
 }
 
@@ -13,7 +14,7 @@
 
 .element-flex-1 {
   flex: 1;
-  border: 1px black solid;
+  /* border: 1px black solid; */
   justify-content: center;
   text-align: left;
   margin: auto;
@@ -23,17 +24,19 @@
 
 .element-flex-2 {
   flex: 2;
-  border: 1px black solid;
-  justify-content: center;
+  /* border: 1px black solid; */
+  justify-content: flex-start;
+  background-color: white;
   text-align: left;
   margin: auto;
   margin-top: 0px;
   margin-bottom: 0px;
+  box-shadow: 0px -0px 10px #555;
 }
 
 .element-flex-3 {
   flex: 3;
-  border: 1px black solid;
+  /* border: 1px black solid; */
   text-align: center;
   margin: auto;
   margin-top: 0px;
@@ -42,7 +45,7 @@
 
 .element-flex-4 {
   flex: 4;
-  border: 1px black solid;
+  /* border: 1px black solid; */
   justify-content: center;
   text-align: left;
   margin: auto;
@@ -119,14 +122,12 @@
 }
 
 .react-calendar {
-  width: 350px;
-  /* max-width: 100%; */
+  width: 348px;
   background: white;
-  border: 1px solid #a0a096;
-  border-radius: 6px !important;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.125em;
   justify-content: space-around;
+  box-shadow: 0 0 6px #555;
   margin: auto;
   color: black;
 }
@@ -164,15 +165,18 @@
 }
 .react-calendar__navigation button {
   min-width: 44px;
-  border-radius: 15px !important;
+  /* border-radius: 100px !important; */
   border: 3px white solid;
-  background: #aaaaaa;
+  background: #eeeeee;
 }
 .react-calendar__navigation button:enabled:hover {
   background-color: #e6e6e6;
 }
 .react-calendar__navigation button[disabled] {
-  background-color: #f0f0f0;
+  background-color: white;
+  color: black;
+  font-size: 20px;
+  font-weight: bolder;
 }
 .react-calendar__month-view__weekdays {
   text-align: center;
@@ -205,9 +209,9 @@
   padding: 2em 0.5em;
 }
 .react-calendar__tile {
+  font-weight: bold;
   max-width: 20%;
   text-align: center;
-  border-radius: 15px !important;
   padding: 0.75em 0.5em;
   background: white;
   border: 3px white solid !important;
@@ -232,11 +236,12 @@
   border: none !important;
   color: white;
   filter: opacity(75%);
+  background: #0095ff !important;
 }
 .react-calendar__tile--now {
   background: #ffff76;
   color: black;
-  border: 3px #ffbf00 solid !important;
+  border: 1px #ffbf00 solid !important;
 }
 
 .react-calendar__tile--hasActive:enabled:hover,
@@ -245,7 +250,8 @@
 }
 
 .react-calendar__tile--active {
-  border: 3px black solid !important;
+  border: 2px black solid !important;
+  background: #00aaff !important;
   color: black;
 }
 
@@ -267,14 +273,17 @@
   background-size: cover;
   background-image: url("https://i.ibb.co/jwRLc8N/PMBooked.png");
   border: 10px white solid;
+  opacity: 80%;
   width: 64px;
   height: 48px;
+  color: black;
 }
 
 .AM-Booked {
   background-size: cover;
   background-image: url("https://i.ibb.co/XXp3pLZ/AMBooked.png");
   border: 10px white solid;
+  opacity: 80%;
   width: 64px;
   height: 48px;
 }
@@ -283,6 +292,7 @@
   background-size: cover;
   background-image: url("https://i.ibb.co/cQz9Zmy/Fully-Booked.png");
   border: 10px white solid;
+  opacity: 80%;
   width: 64px;
   height: 48px;
 }
@@ -290,14 +300,59 @@
 .NONE-Booked {
   background-size: cover;
   background-image: url("https://i.ibb.co/wwGYpWh/Not-Booked.png");
+  opacity: 80%;
   border: 10px white solid;
   width: 64px;
   height: 48px;
 }
 
+.bookingBtn{
+    border:none;
+    border-radius: 100px;
+    background-color: #008DD3;
+    color: white;
+    width: 30%;
+    margin-left: 35%;
+    height: 40px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 0px 6px #888;
+}
+.bookingBtn:hover{
+  background-color: #00c5ff;
+}
 .Not-Available {
   background-color: #aaaaaa;
   border: 10px white solid;
   width: 64px;
   height: 48px;
+} 
+
+/*
+ .am-free {
+  background-color: #65ff65;
+  border: none;
+  width: 64px;
+  height: 48px;
 }
+
+.am-booked {
+  background-color: #ff5050;
+  border: none;
+  width: 64px;
+  height: 48px;
+}
+
+.pm-free {
+  width: 0;
+  height: 0;
+  border-bottom: 64px solid #65ff65;
+  border-left: 48px solid transparent;
+}
+
+.pm-booked {
+  width: 0;
+  height: 0;
+  border-bottom: 64px solid #ff5050;
+  border-left: 48px solid transparent;
+} */
