@@ -71,6 +71,7 @@ for(var i =0;i<data.length;i++){
 
 //Database Access
 function addUser(email) {
+  email = email.toLowerCase();
   return new Promise((resolve, reject) => {
     sql = "INSERT INTO USERS VALUES (\""+email+"\");";
     con.query(sql, (err, res) => {
@@ -115,7 +116,6 @@ function addBooking(user, desk, room, date, time) {
     day = date.toISOString().slice(0, 10)
     sql = (time) ? "INSERT INTO BOOKINGS VALUES (\""+user+"\", "+desk+", \""+room+"\", \""+day+"\", 1, 0);" :
       "INSERT INTO BOOKINGS VALUES (\""+user+"\", "+desk+", \""+room+"\", \""+day+"\", 0, 1);";
-    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -177,6 +177,51 @@ function getRooms() {
     })
   })
 }
+
+function getBookingsForRoomAndDay(room, date) {
+  return new Promise((resolve, reject) => {
+    day = date.toISOString().slice(0, 10);
+    sql = "SELECT * FROM BOOKINGS WHERE ROOM=\""+room+"\" AND DATE=\""+day+"\";";
+    console.log(sql);
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    })
+  })
+}
+
+function getUserBookingsBetween(user, start, end) {
+  return new Promise((resolve, reject) => {
+    startDay = start.toISOString().slice(0, 10);
+    endDay = end.toISOString().slice(0, 10);
+    sql = "SELECT * FROM BOOKINGS WHERE DATE>\""+startDay+"\" AND DATE<\""+endDay+"\";";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(res));
+      } else {
+        resolve(res.length);
+      }
+    })
+
+  })
+}
+
+function deleteUser(email) {
+  email = email.toLowerCase();
+  return new Promise((resolve, reject) => {
+    sql = "DELETE FROM USERS WHERE email=\""+email+"\";";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(res));
+      } else {
+        resolve(res);
+      }
+    })
+  })
+}
 //Environment
 
 if (process.env.NODE_ENV === "production") {
@@ -188,8 +233,8 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
-
-addBooking("mkelly32@tcd.ie", 1, "testRoom", new Date(), false)
+/*
+deleteUser("mikekelly7654@gmail.com")//getUserBookingsBetween("mkelly32@tcd.ie", new Date(2021, 3, 10), new Date(2021, 3, 20))
 .then((res) => {
   console.log(res);
 })
