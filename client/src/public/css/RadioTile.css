@@ -39,7 +39,7 @@ h1 {
 .radioTile-checked {
   flex: 1;
   text-align: center;
-  color: #333333;
+  color: white;
   padding: 10px;
   margin-top: -1px;
   margin-left: -1px;

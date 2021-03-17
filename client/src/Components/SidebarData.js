@@ -3,19 +3,21 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as GiIcons from "react-icons/gi";
+import * as CgIcons from "react-icons/cg";
+import * as BiIcons from "react-icons/bi";
+import * as RiIcons from "react-icons/ri";
 
-
-export var SidebarData = [
+export const SidebarData = [
   {
     title: "Book",
     path: "/booking-page",
-    icon: <AiIcons.AiOutlineDesktop />,
+    icon: <BiIcons.BiBookAdd />,
     cName: "nav-text",
   },
   {
     title: "Account",
     path: "/",
-    icon: <AiIcons.AiOutlineHistory />,
+    icon: <CgIcons.CgProfile />,
     cName: "nav-text",
   },
   {
@@ -51,9 +53,7 @@ export var SidebarData = [
   {
     title: "Admin",
     path: "/Admin",
-    icon: <IoIcons.IoMdHelpCircle />,
+    icon: <RiIcons.RiUserStarFill />,
     cName: "nav-text",
   },
 ];
-
-

@@ -72,7 +72,7 @@ class App extends Component {
 
   state = {
     // state should be false unless signed in as admin
-    visible: true,
+    visible: false,
   };
 
   render() {

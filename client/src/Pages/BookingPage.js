@@ -13,18 +13,15 @@ export default class BookingPage extends React.Component {
       chosenTime: "default",
       bookableDesks: [],
       times: [
-        { id: "__am_booking", value: "9:00-12:00", label: "AM" },
-        { id: "__pm_booking", value: "12:00-17:30", label: "PM" },
-        { id: "__full_day_booking", value: "9:00-17:30", label: "AMPM" },
+        { id: "__am_booking", value: "9:00 - 12:00", label: "AM" },
+        { id: "__pm_booking", value: "12:00 - 17:30", label: "PM" },
+        { id: "__full_day_booking", value: "9:00 - 17:30", label: "AMPM" },
       ],
     };
   }
 
   positionReference = createRef();
 
-  componentDidMount() {
-    this.scrollToBottom();
-  }
   componentDidUpdate() {
     this.scrollToBottom();
   }
@@ -146,12 +143,12 @@ export default class BookingPage extends React.Component {
         <section>
           <div className="calendar-container">
             <div className="element-flex-1"></div>
-            <div className="element-flex-2">
+            <div className="element-flex-3">
+              <div style={{ marginTop: "20px" }} />
               <TileSelection
                 title={
                   <h1
                     style={{
-                      marginTop: "50px",
                       textAlign: "center",
                       boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
                       color: "white",
@@ -159,6 +156,7 @@ export default class BookingPage extends React.Component {
                       borderRadius: "100px",
                       width: "95%",
                       marginLeft: "2.5%",
+                      padding: "3px",
                     }}
                   >
                     Select a Booking Area
@@ -198,6 +196,7 @@ export default class BookingPage extends React.Component {
                         borderRadius: "100px",
                         width: "95%",
                         marginLeft: "2.5%",
+                        padding: "3px",
                       }}
                     >
                       Select a Booking Time
@@ -216,6 +215,7 @@ export default class BookingPage extends React.Component {
                       borderRadius: "100px",
                       width: "95%",
                       marginLeft: "2.5%",
+                      padding: "3px",
                     }}
                   >
                     Select a Booking Date
@@ -264,6 +264,7 @@ export default class BookingPage extends React.Component {
                           borderRadius: "100px",
                           width: "95%",
                           marginLeft: "2.5%",
+                          padding: "3px",
                         }}
                       >
                         Select a Desk
