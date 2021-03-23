@@ -39,8 +39,23 @@ app.post("/api/desks", (req, res) => {
   res.send(
     `Your booking on the ${req.body.chosenDate} for ${req.body.chosenDesk} in ${req.body.chosenArea} has been successful.`
   );
-  
 });
+
+app.post("/api/getAvailableDesksInMonth", (req, res) => {
+  let newDate = new Date(req.body.date);
+  let days = new Date(newDate.getFullYear(), newDate.getMonth()+1, 0).getDate();
+  getAvailableDesks(req.body.room, req.body.date, req.body.am, req.body.pm)
+  .then((desks) => {
+    console.log("desks=", desks);
+    data = [];
+    for (desk in desks) {
+      data.push(desks[desk].DESK_NO);
+    }
+    console.log(data);
+    res.send(data);
+  })
+  .catch((err) => {console.log(err);})
+})
 
 app.post("/api/email", (req, res) => {
   //console.log(req.body);
@@ -123,6 +138,26 @@ function addBooking(user, desk, room, date, time) {
       }
     })
 
+  })
+}
+
+function getAvailableDesks(room, date, am, pm) {
+  let times = "";
+  if (am && pm) {
+    times = "(BOOKINGS.AM=1 OR BOOKINGS.PM=1) "
+  } else {
+    times = (am) ? "BOOKINGS.AM=1 " : "BOOKINGS.PM=1 ";
+  }
+  return new Promise((resolve, reject) => {
+    sql = "SELECT DESK_NO FROM DESKS where ROOM=\""+room+"\" AND NOT DESK_NO IN (SELECT DISTINCT BOOKINGS.DESK FROM DESKS RIGHT JOIN BOOKINGS ON DESKS.ROOM=BOOKINGS.ROOM where BOOKINGS.ROOM=\""+room+"\" AND "+times+"AND BOOKINGS.DATE=\""+date+"\");"; 
+    console.log(sql);
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    })
   })
 }
 
@@ -232,14 +267,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
-/*
-deleteUser("mikekelly7654@gmail.com")//getUserBookingsBetween("mkelly32@tcd.ie", new Date(2021, 3, 10), new Date(2021, 3, 20))
-.then((res) => {
-  console.log(res);
-})
-.catch((err) => {
-  console.log(err);
-})
+
 /*
 addUser("mikekelly7654@gmail.com")
 .then((res) => {

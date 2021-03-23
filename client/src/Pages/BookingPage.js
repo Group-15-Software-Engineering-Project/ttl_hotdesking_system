@@ -26,7 +26,19 @@ export default class BookingPage extends React.Component {
 
   postBooking = async (e) => {
     e.preventDefault();
+  ///test
+   const res = await fetch("/api/getAvailableDesksInMonth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({room:"testRoom", date:'2021-03-15', am:true, pm:true})
+    });
+    const b = await res.text();
+    console.log(b);
 
+
+  ///test
     //console.log("Success login handleSubmit");
 
     const response = await fetch("/api/desks", {
@@ -161,6 +173,7 @@ export default class BookingPage extends React.Component {
     return data;
   };
   render() {
+
     return (
       <div className="booking-page">
         <section>
