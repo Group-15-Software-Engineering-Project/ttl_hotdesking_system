@@ -1,6 +1,6 @@
 import React from 'react';
-import '../App.css';
-import './Button.css';
+import '../public/css/App.css';
+import '../public/css/Button.css';
 
 const STYLES =[
     "btn--primary--solid",

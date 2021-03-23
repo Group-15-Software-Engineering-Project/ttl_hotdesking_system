@@ -1,0 +1,52 @@
+.radioTile {
+  flex: 1;
+  text-align: center;
+  color: #333333;
+  padding: 10px;
+  margin-top: -1px;
+  margin-left: -1px;
+  border: #ddd solid 1px;
+  background-color: white;
+}
+
+h3,
+h2,
+h1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
+}
+.tile-container-row {
+  display: flex;
+  /* border: red 1px solid; */
+  justify-content: center;
+  flex-flow: row wrap !important;
+  padding: 30px;
+}
+.tile-container-col {
+  display: flex;
+  /* border: red 1px solid; */
+  justify-content: center;
+  padding: 30px;
+  flex-flow: column wrap !important;
+}
+
+.hide-input {
+  position: absolute;
+  left: -100px;
+}
+
+.radioTile-checked {
+  flex: 1;
+  text-align: center;
+  color: white;
+  padding: 10px;
+  margin-top: -1px;
+  margin-left: -1px;
+  border: #ddd solid 1px;
+  background-color: #008dd3 !important;
+}
+
+.radioTile:hover {
+  background-color: #eeeeee;
+}

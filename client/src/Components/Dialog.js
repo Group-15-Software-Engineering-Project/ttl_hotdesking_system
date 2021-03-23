@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import DayChooser from './DayChooser';
-import './Dialog.css'
+import '../public/css/Dialog.css'
 
 class Dialog extends Component {
 
