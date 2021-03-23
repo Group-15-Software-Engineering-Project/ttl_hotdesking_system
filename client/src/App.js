@@ -16,6 +16,7 @@ import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
 import BookingPage from "./Pages/BookingPage";
 import Desks from "./Pages/Desks";
+import Admin from "./Pages/Admin";
 
 class App extends Component {
   state = {
@@ -23,6 +24,23 @@ class App extends Component {
     post: "",
     responseToPost: "",
   };
+  locations = [
+    {
+      id: "wt_off3.2",
+      value: "Office 3.2: West Theatre",
+      desc: "No data available for this location.",
+    },
+    {
+      id: "wt_off2.5",
+      value: "Office 2.5: West Theatre",
+      desc: "Data available for this location.",
+    },
+    {
+      id: "fp_off3.06",
+      value: "Office 3.06: Foster Place",
+      desc: "No data available for this location.",
+    },
+  ];
 
   componentDidMount() {
   } 
@@ -49,6 +67,11 @@ class App extends Component {
     this.setState({ responseToPost: body });
   };
 
+  state = {
+    // state should be false unless signed in as admin
+    visible: false,
+  };
+
   render() {
     return (
       <>
@@ -60,14 +83,19 @@ class App extends Component {
             <Route exact path="/">
               <Redirect to="/Login"></Redirect>
             </Route>
-            <Route path="/login" component={Login}></Route>
-            <Route path="/booking-page" component={BookingPage} />
+            <Route path="/login" component={Login} />
+            <Route path="/booking-page">
+              <BookingPage options={this.locations} />
+            </Route>
             <Route path="/desks" component={Desks} />
             <Route path="/home" component={Home} />
             <Route path="/reports" component={Reports} />
             <Route path="/products" component={Products} />
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
+            {this.state.visible ? (
+              <Route path="/Admin" component={Admin} />
+            ) : null}
           </Switch>
         </Router>
       </>
