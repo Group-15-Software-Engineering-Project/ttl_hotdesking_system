@@ -42,19 +42,33 @@ app.post("/api/desks", (req, res) => {
 });
 
 app.post("/api/getAvailableDesksInMonth", (req, res) => {
-  let newDate = new Date(req.body.date);
-  let days = new Date(newDate.getFullYear(), newDate.getMonth()+1, 0).getDate();
-  getAvailableDesks(req.body.room, req.body.date, req.body.am, req.body.pm)
-  .then((desks) => {
-    console.log("desks=", desks);
-    data = [];
-    for (desk in desks) {
-      data.push(desks[desk].DESK_NO);
+  let newDate = new Date(req.body.date+"-01");
+  let daysInMonth = new Date(newDate.getFullYear(), newDate.getMonth()+1, 0).getDate();
+  let availability = new Array(daysInMonth);
+  for (let i = 0; i < daysInMonth; i++) {
+    let j = i;
+    let date = req.body.date;
+    if (i < 10) {
+      date += "-0"+(i+1).toString();
+    } else {
+      date += "-"+(i+1).toString();
     }
-    console.log(data);
-    res.send(data);
-  })
-  .catch((err) => {console.log(err);})
+    getAvailableDesks(req.body.room, date, req.body.am, req.body.pm)
+    .then((desks) => {
+      data = [];
+      for (desk in desks) {
+        data.push(desks[desk].DESK_NO);
+      }
+      availability[j] = data;
+      if (i == daysInMonth-1) {
+      res.send(availability);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      data.push([]);
+    })
+  }
 })
 
 app.post("/api/email", (req, res) => {
@@ -149,8 +163,7 @@ function getAvailableDesks(room, date, am, pm) {
     times = (am) ? "BOOKINGS.AM=1 " : "BOOKINGS.PM=1 ";
   }
   return new Promise((resolve, reject) => {
-    sql = "SELECT DESK_NO FROM DESKS where ROOM=\""+room+"\" AND NOT DESK_NO IN (SELECT DISTINCT BOOKINGS.DESK FROM DESKS RIGHT JOIN BOOKINGS ON DESKS.ROOM=BOOKINGS.ROOM where BOOKINGS.ROOM=\""+room+"\" AND "+times+"AND BOOKINGS.DATE=\""+date+"\");"; 
-    console.log(sql);
+    sql = "SELECT DESK_NO FROM DESKS where ROOM=\""+room+"\" AND NOT DESK_NO IN (SELECT DISTINCT BOOKINGS.DESK FROM DESKS RIGHT JOIN BOOKINGS ON DESKS.ROOM=BOOKINGS.ROOM where BOOKINGS.ROOM=\""+room+"\" AND "+times+"AND BOOKINGS.DATE=\""+date+"\");";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));

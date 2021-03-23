@@ -32,7 +32,7 @@ export default class BookingPage extends React.Component {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({room:"testRoom", date:'2021-03-15', am:true, pm:true})
+      body: JSON.stringify({room:"testRoom", date:'2021-03', am:true, pm:true})
     });
     const b = await res.text();
     console.log(b);
