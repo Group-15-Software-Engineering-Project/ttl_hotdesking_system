@@ -3,20 +3,33 @@
     "version": "1.0.0",
     "scripts": {
         "start": "node server.js",
-        "aws-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+        "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
         "client": "cd client && yarn start",
         "server": "nodemon server.js",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
     },
     "dependencies": {
         "body-parser": "^1.18.3",
+        "chart.js": "^2.9.4",
+        "dotenv": "^8.2.0",
+        "emailjs-com": "^2.6.4",
         "express": "^4.17.1",
+        "mysql": "^2.18.1",
         "nodemon": "^2.0.7",
+        "react-bootstrap-validation": "^0.1.11",
         "react-calendar": "^3.3.1",
         "react-chartjs-2": "^2.11.1",
+        "react-icons": "^4.2.0",
+        "react-router-dom": "^5.2.0",
+        "react-scripts": "^4.0.3",
+        "web-vitals": "^1.1.0",
         "yarn": "^1.22.10"
     },
     "devDependencies": {
         "concurrently": "^4.0.1"
+    },
+    "engines": {
+        "node": ">=14.x",
+        "npm": ">=7.x"
     }
 }
