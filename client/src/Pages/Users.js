@@ -69,7 +69,7 @@ class Users extends Component {
         ></DialogUsers>
         <br></br><br></br><br></br>
         <h2>
-          First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Team&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time
+          First Name{Array(30).fill('\xa0').join('')}Last Name{Array(40).fill('\xa0').join('')}Email{Array(65).fill('\xa0').join('')}Team{Array(60).fill('\xa0').join('')}Usage Time in Last Month
         </h2>
         <div>{this.state.users.map(user => <User key={user.id} user={user} />)}</div>
       </div>
