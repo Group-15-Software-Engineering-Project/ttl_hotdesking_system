@@ -52,7 +52,6 @@ app.post("/api/email", (req, res) => {
     
 for(var i =0;i<data.length;i++){
   let x =JSON.stringify(data[i].email);
-  console.log(x);
   if(x.charAt(0)==='"'){
   x = x.slice(1, -1);
   }

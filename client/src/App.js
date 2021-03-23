@@ -25,10 +25,6 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.handleSubmit();
-    this.callApi()
-      .then((res) => this.setState({ response: res.express }))
-      .catch((err) => console.log(err));
   } 
 
   callApi = async () => {
