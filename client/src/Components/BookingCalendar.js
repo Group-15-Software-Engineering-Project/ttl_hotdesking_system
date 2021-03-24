@@ -1,21 +1,7 @@
 import { Calendar } from "react-calendar";
 import "../public/css/Calendar.css";
 import React from "react";
-import { createUniqueID } from "./Misc";
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+import { createUniqueID, months } from "./Misc";
 
 export default class BookingCalendar extends React.Component {
   constructor(props) {
@@ -106,7 +92,7 @@ export default class BookingCalendar extends React.Component {
     };
   }
 
-  fetchAvailableDesks = async () => {
+  fetchAvailableDesks = () => {
     let am;
     let pm;
     switch (this.props.bookingTime) {
@@ -140,9 +126,7 @@ export default class BookingCalendar extends React.Component {
         return res.json();
       })
       .then((res) => {
-        this.setState({ availableDesks: res.data }, () => {
-          console.log(this.state.availableDesks);
-        });
+        this.setState({ availableDesks: res.data }, () => {});
       });
   };
   componentDidMount() {
@@ -173,7 +157,6 @@ export default class BookingCalendar extends React.Component {
   checkAvailability1 = (dateInfo) => {
     let month = months.indexOf(String(dateInfo.date).split(" ")[1]);
     let day = parseInt(String(dateInfo.date).split(" ")[2]) - 1;
-    console.log("day: ", day, "month: ", month);
     if (
       this.state.currentMonth.substring(5) ===
       String(month + 1).padStart(2, "0")
@@ -191,6 +174,7 @@ export default class BookingCalendar extends React.Component {
       return "Not-Available";
     }
   };
+
   checkAvailability = (dateTileInfo) => {
     let dateComponent = String(dateTileInfo["date"]).split(" ");
     let area = this.state[this.props.chosenArea];
@@ -233,40 +217,24 @@ export default class BookingCalendar extends React.Component {
     return "Not-Available"; //Temporary: Need database information for desks in each area. Will always be green.
   };
 
-  // checkBookings = (dateTileInfo) => {
-  //   if (dateTileInfo["view"] === "month") {
-  //     let dateComponent = String(dateTileInfo["date"]).split(" ");
-  //     //get area data from database
-  //     let area = this.state[this.props.chosenArea];
-  //     if (area) {
-  //       let year = area[0][dateComponent[3]];
-  //       if (year) {
-  //         let month = year[0][dateComponent[1]];
-  //         if (month) {
-  //           let day = month[0][dateComponent[2]];
-  //           if (day) {
-  //             let freeDesksAM = false;
-  //             let freeDesksPM = false;
-  //             for (let i in Object.keys(day)) {
-  //               let key = Object.keys(day[i]);
-  //               if (!freeDesksAM) freeDesksAM = day[i][key].AM;
-  //               if (!freeDesksPM) freeDesksPM = day[i][key].PM;
-  //               if (freeDesksPM && freeDesksAM) return "NONE-Booked";
-  //             }
-  //             if (freeDesksAM && !freeDesksPM) return "PM-Booked";
-  //             else if (freeDesksPM && !freeDesksAM) return "AM-Booked";
-  //             else return "ALL-Booked";
-  //           }
-  //         }
-  //       }
-  //     }
-  //     return "NONE-Booked";
-  //   }
-  // };
-
   getDate = (e) => {
     let dateComponent = String(e).split(" ");
     return dateComponent[2] + " " + dateComponent[1] + " " + dateComponent[3];
+  };
+
+  getDesks = (dateInfo) => {
+    let desks = [];
+    let day = parseInt(String(dateInfo).split(" ")[2]) - 1;
+    let month = months.indexOf(String(dateInfo).split(" ")[1]);
+    if (
+      this.state.currentMonth.substring(5) ===
+      String(month + 1).padStart(2, "0")
+    ) {
+      for (let desk in this.state.availableDesks[day]) {
+        desks.push(String("Desk " + this.state.availableDesks[day][desk]));
+      }
+    }
+    return desks;
   };
 
   returnDeskList = (e) => {
@@ -334,8 +302,11 @@ export default class BookingCalendar extends React.Component {
           next2Label={null}
           tileClassName={this.checkAvailability1}
           onChange={(e) => {
-            this.props.onSelect(this.returnDeskList(e), this.getDate(e));
-            console.log(this.state.currentMonth);
+            this.props.onSelect(
+              this.getDesks(e),
+              this.getDate(e),
+              months[parseInt(this.state.currentMonth.substring(5)) - 1]
+            );
           }}
           onActiveStartDateChange={(e) => {
             let date = String(e.activeStartDate).split(" ");

@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
-import { createUniqueID } from "../Components/Misc";
+import { createUniqueID, months } from "../Components/Misc";
 
 export default class BookingPage extends React.Component {
   constructor(props) {
@@ -22,31 +22,60 @@ export default class BookingPage extends React.Component {
       ],
     };
   }
-  getDesks = async () => {};
 
-  postBooking = async (e) => {
-    e.preventDefault();
-    ///test
+  convertDate = () => {
+    return (
+      this.state.chosenDate.split(" ")[2] +
+      "-" +
+      String(months.indexOf(this.state.chosenDate.split(" ")[1]) + 1).padStart(
+        2,
+        "0"
+      ) +
+      "-" +
+      this.state.chosenDate.split(" ")[0]
+    );
+  };
 
-    ///test
-    //console.log("Success login handleSubmit");
-
-    const response = await fetch("/api/desks", {
+  submitBooking = () => {
+    let am;
+    let pm;
+    console.log(this.state.chosenTime);
+    switch (this.state.chosenTime) {
+      case "9:00 - 12:00":
+        am = true;
+        pm = false;
+        break;
+      case "12:00 - 17:30":
+        am = false;
+        pm = true;
+        break;
+      default:
+        am = true;
+        pm = true;
+        break;
+    }
+    fetch("/api/makeBooking", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        chosenDate: this.state.chosenDate,
-        chosenArea: this.state.chosenArea,
-        chosenDesk: this.state.chosenDesk,
+        email: "mkelly32@tcd.ie",
+        desk: this.state.chosenDesk.split(" ")[1],
+        room: this.state.chosenArea,
+        date: this.convertDate(),
+        am: am,
+        pm: pm,
       }),
-    });
-    const body = await response.text();
-
-    this.setState({ responseToPost: body });
-
-    //console.log(this.state.responseToPost);
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+        alert(res.message);
+      })
+      .catch((err) => alert(err));
   };
 
   positionReference = createRef();
@@ -159,12 +188,13 @@ export default class BookingPage extends React.Component {
     let desks = this.state.bookableDesks;
     for (let desk in desks) {
       data.push({
-        value: Object.keys(desks[desk])[0],
+        value: desks[desk],
         label: "",
       });
     }
     return data;
   };
+
   render() {
     return (
       <div className="booking-page">
@@ -262,15 +292,36 @@ export default class BookingPage extends React.Component {
                         }
                       }
                     })()}
-                    onSelect={(e, date) => {
+                    onSelect={(e, date, m) => {
+                      let newDate;
+                      if (
+                        this.state.chosenDate === "default" &&
+                        date.split(" ")[1] !== m
+                      ) {
+                        newDate = "default";
+                      } else if (this.state.chosenDate === "default") {
+                        newDate = date;
+                      } else if (
+                        this.state.chosenDate.split(" ")[1] !==
+                        date.split(" ")[1]
+                      ) {
+                        newDate = "default";
+                      } else {
+                        newDate = date;
+                      }
                       this.setState({
                         bookableDesks: e,
-                        chosenDate: date,
+                        chosenDate: newDate,
                         chosenDesk: "default",
                       });
                     }}
                   ></BookingCalendar>
                   <br />
+                  {this.state.chosenDate !== "default" ? (
+                    <span style={{ alignItems: "center", fontWeight: "bold" }}>
+                      {this.state.chosenDate}
+                    </span>
+                  ) : null}
                   {this.state.bookableDesks.length === 0 ? (
                     <>
                       <br />
@@ -315,7 +366,7 @@ export default class BookingPage extends React.Component {
                 <div>
                   <button
                     className="bookingBtn"
-                    onClick={this.postBooking}
+                    onClick={this.submitBooking}
                     /*onClick={() => {
                     className="bookingBtn"
                     onClick={() => {

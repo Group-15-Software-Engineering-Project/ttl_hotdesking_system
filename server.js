@@ -41,6 +41,23 @@ app.post("/api/desks", (req, res) => {
   );
 });
 
+app.post("/api/makeBooking", (req, res) => {
+  addBooking(
+    req.body.email,
+    req.body.desk,
+    req.body.room,
+    req.body.date,
+    req.body.am,
+    req.body.pm
+  )
+    .then((result) => {
+      res.send({ error: false, message: "Success" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err.toString() });
+    });
+});
+
 app.post("/api/getAvailableDesksInMonth", (req, res) => {
   let newDate = new Date(req.body.date + "-01");
   let daysInMonth = new Date(
@@ -141,28 +158,27 @@ function addDesk(desk_number, room) {
   });
 }
 
-function addBooking(user, desk, room, date, time) {
+function addBooking(user, desk, room, date, am, pm) {
+  let time;
+  if (am && pm) {
+    time = "1, 1";
+  } else {
+    time = am ? "1, 0" : "0, 1";
+  }
   return new Promise((resolve, reject) => {
-    day = date.toISOString().slice(0, 10);
-    sql = time
-      ? 'INSERT INTO BOOKINGS VALUES ("' +
-        user +
-        '", ' +
-        desk +
-        ', "' +
-        room +
-        '", "' +
-        day +
-        '", 1, 0);'
-      : 'INSERT INTO BOOKINGS VALUES ("' +
-        user +
-        '", ' +
-        desk +
-        ', "' +
-        room +
-        '", "' +
-        day +
-        '", 0, 1);';
+    sql =
+      'INSERT INTO BOOKINGS VALUES ("' +
+      user +
+      '", ' +
+      desk +
+      ', "' +
+      room +
+      '", "' +
+      date +
+      '", ' +
+      time +
+      ");";
+    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
