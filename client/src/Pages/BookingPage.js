@@ -16,9 +16,9 @@ export default class BookingPage extends React.Component {
       selectPM: false,
       responseToPost: "",
       times: [
-        { id: "__am_booking", value: "9:00 - 12:00", label: "AM" },
-        { id: "__pm_booking", value: "12:00 - 17:30", label: "PM" },
-        { id: "__full_day_booking", value: "9:00 - 17:30", label: "AMPM" },
+        { value: "9:00 - 12:00", label: "AM" },
+        { value: "12:00 - 17:30", label: "PM" },
+        { value: "9:00 - 17:30", label: "AMPM" },
       ],
     };
   }
@@ -26,19 +26,9 @@ export default class BookingPage extends React.Component {
 
   postBooking = async (e) => {
     e.preventDefault();
-  ///test
-   const res = await fetch("/api/getAvailableDesksInMonth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({room:"testRoom", date:'2021-03', am:true, pm:true})
-    });
-    const b = await res.text();
-    console.log(b);
+    ///test
 
-
-  ///test
+    ///test
     //console.log("Success login handleSubmit");
 
     const response = await fetch("/api/desks", {
@@ -46,7 +36,11 @@ export default class BookingPage extends React.Component {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ chosenDate:this.state.chosenDate, chosenArea:this.state.chosenArea, chosenDesk:this.state.chosenDesk }),
+      body: JSON.stringify({
+        chosenDate: this.state.chosenDate,
+        chosenArea: this.state.chosenArea,
+        chosenDesk: this.state.chosenDesk,
+      }),
     });
     const body = await response.text();
 
@@ -165,15 +159,13 @@ export default class BookingPage extends React.Component {
     let desks = this.state.bookableDesks;
     for (let desk in desks) {
       data.push({
-        id: createUniqueID(4, false),
         value: Object.keys(desks[desk])[0],
-        desc: "",
+        label: "",
       });
     }
     return data;
   };
   render() {
-
     return (
       <div className="booking-page">
         <section>
@@ -182,6 +174,7 @@ export default class BookingPage extends React.Component {
             <div className="element-flex-3">
               <div style={{ marginTop: "20px" }} />
               <TileSelection
+                showLabel={true}
                 title={
                   <h1
                     style={{
@@ -211,6 +204,7 @@ export default class BookingPage extends React.Component {
               />
               {this.state.chosenArea !== "default" ? (
                 <TileSelection
+                  showLabel={false}
                   key={this.state.chosenArea}
                   options={this.state.times}
                   size={["175px", "50px"]}
@@ -290,6 +284,7 @@ export default class BookingPage extends React.Component {
               {this.state.bookableDesks.length !== 0 ? (
                 <>
                   <TileSelection
+                    showLabel={false}
                     title={
                       <h1
                         style={{
@@ -319,7 +314,7 @@ export default class BookingPage extends React.Component {
               {this.state.chosenDesk !== "default" ? (
                 <div>
                   <button
-                    className="button-style"
+                    className="bookingBtn"
                     onClick={this.postBooking}
                     /*onClick={() => {
                     className="bookingBtn"
@@ -339,6 +334,7 @@ export default class BookingPage extends React.Component {
                   >
                     Confirm Booking
                   </button>
+                  <div style={{ marginBottom: "30px" }} />
                   <p>{this.state.responseToPost}</p>
                 </div>
               ) : null}
@@ -346,9 +342,6 @@ export default class BookingPage extends React.Component {
             </div>
             <div className="element-flex-1"></div>
           </div>
-         
-            
-          
         </section>
       </div>
     );

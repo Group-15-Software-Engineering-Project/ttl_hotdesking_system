@@ -26,24 +26,20 @@ class App extends Component {
   };
   locations = [
     {
-      id: "wt_off3.2",
       value: "Office 3.2: West Theatre",
-      desc: "No data available for this location.",
+      label: "No data available for this location.",
     },
     {
-      id: "wt_off2.5",
       value: "Office 2.5: West Theatre",
-      desc: "Data available for this location.",
+      label: "Data available for this location.",
     },
     {
-      id: "fp_off3.06",
       value: "Office 3.06: Foster Place",
-      desc: "No data available for this location.",
+      label: "No data available for this location.",
     },
   ];
 
-  componentDidMount() {
-  } 
+  componentDidMount() {}
 
   callApi = async () => {
     const response = await fetch("/api/hello");
@@ -75,8 +71,8 @@ class App extends Component {
   render() {
     return (
       <>
-      <p>{this.state.response}</p>
-      <p>{this.state.responseToPost}</p>
+        <p>{this.state.response}</p>
+        <p>{this.state.responseToPost}</p>
         <Router>
           <Navbar />
           <Switch>

@@ -11,13 +11,13 @@ var con = mysql.createConnection({
   host: process.env.DB_ENDPOINT,
   user: process.env.DB_USER_ID,
   password: process.env.DB_PASS,
-  database: process.env.DATABASE
+  database: process.env.DATABASE,
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
-})
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,136 +42,163 @@ app.post("/api/desks", (req, res) => {
 });
 
 app.post("/api/getAvailableDesksInMonth", (req, res) => {
-  let newDate = new Date(req.body.date+"-01");
-  let daysInMonth = new Date(newDate.getFullYear(), newDate.getMonth()+1, 0).getDate();
+  let newDate = new Date(req.body.date + "-01");
+  let daysInMonth = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth() + 1,
+    0
+  ).getDate();
+  console.log(daysInMonth);
   let availability = new Array(daysInMonth);
   for (let i = 0; i < daysInMonth; i++) {
     let j = i;
     let date = req.body.date;
     if (i < 10) {
-      date += "-0"+(i+1).toString();
+      date += "-0" + (i + 1).toString();
     } else {
-      date += "-"+(i+1).toString();
+      date += "-" + (i + 1).toString();
     }
     getAvailableDesks(req.body.room, date, req.body.am, req.body.pm)
-    .then((desks) => {
-      data = [];
-      for (desk in desks) {
-        data.push(desks[desk].DESK_NO);
-      }
-      availability[j] = data;
-      if (i == daysInMonth-1) {
-      res.send(availability);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      data.push([]);
-    })
+      .then((desks) => {
+        data = [];
+        for (desk in desks) {
+          data.push(desks[desk].DESK_NO);
+        }
+        availability[j] = data;
+        if (i == daysInMonth - 1) {
+          res.send({ data: availability });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        data.push([]);
+      });
   }
-})
+});
 
 app.post("/api/email", (req, res) => {
   //console.log(req.body);
-  var validUser=false;
+  var validUser = false;
   const fs = require("fs");
-  let rawdata = fs.readFileSync('MOCK_DATA.json')
-  let data =JSON.parse(rawdata);
-  	// Do something with your data
-    
-for(var i =0;i<data.length;i++){
-  let x =JSON.stringify(data[i].email);
-  if(x.charAt(0)==='"'){
-  x = x.slice(1, -1);
-  }
-  if(req.body.email=== x){
-    validUser=true; 
-    break;
-  }
-}  
+  let rawdata = fs.readFileSync("MOCK_DATA.json");
+  let data = JSON.parse(rawdata);
+  // Do something with your data
 
-  res.send(
-    validUser
-  );
+  for (var i = 0; i < data.length; i++) {
+    let x = JSON.stringify(data[i].email);
+    if (x.charAt(0) === '"') {
+      x = x.slice(1, -1);
+    }
+    if (req.body.email === x) {
+      validUser = true;
+      break;
+    }
+  }
+
+  res.send(validUser);
   console.log(req.body.email);
-
 });
 
 //Database Access
 function addUser(email) {
   email = email.toLowerCase();
   return new Promise((resolve, reject) => {
-    sql = "INSERT INTO USERS VALUES (\""+email+"\");";
+    sql = 'INSERT INTO USERS VALUES ("' + email + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
         resolve(res);
       }
-    })
-    con.query
-  })
+    });
+    con.query;
+  });
 }
 
 function addRoom(name) {
-  return new Promise((resolve,  reject) => {
-    sql = "INSERT INTO ROOMS VALUES (\""+name+"\");"
+  return new Promise((resolve, reject) => {
+    sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
-        resolve(res)
+        resolve(res);
       }
-    })
-  })
+    });
+  });
 }
 
 function addDesk(desk_number, room) {
   return new Promise((resolve, reject) => {
-    sql = "INSERT INTO DESKS VALUES ("+desk_number+", \""+room+"\");";
+    sql = "INSERT INTO DESKS VALUES (" + desk_number + ', "' + room + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
         resolve(res);
       }
-    })
-  })
+    });
+  });
 }
 
 function addBooking(user, desk, room, date, time) {
   return new Promise((resolve, reject) => {
-    day = date.toISOString().slice(0, 10)
-    sql = (time) ? "INSERT INTO BOOKINGS VALUES (\""+user+"\", "+desk+", \""+room+"\", \""+day+"\", 1, 0);" :
-      "INSERT INTO BOOKINGS VALUES (\""+user+"\", "+desk+", \""+room+"\", \""+day+"\", 0, 1);";
+    day = date.toISOString().slice(0, 10);
+    sql = time
+      ? 'INSERT INTO BOOKINGS VALUES ("' +
+        user +
+        '", ' +
+        desk +
+        ', "' +
+        room +
+        '", "' +
+        day +
+        '", 1, 0);'
+      : 'INSERT INTO BOOKINGS VALUES ("' +
+        user +
+        '", ' +
+        desk +
+        ', "' +
+        room +
+        '", "' +
+        day +
+        '", 0, 1);';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
         resolve(res);
       }
-    })
-
-  })
+    });
+  });
 }
 
 function getAvailableDesks(room, date, am, pm) {
   let times = "";
   if (am && pm) {
-    times = "(BOOKINGS.AM=1 OR BOOKINGS.PM=1) "
+    times = "(BOOKINGS.AM=1 OR BOOKINGS.PM=1) ";
   } else {
-    times = (am) ? "BOOKINGS.AM=1 " : "BOOKINGS.PM=1 ";
+    times = am ? "BOOKINGS.AM=1 " : "BOOKINGS.PM=1 ";
   }
   return new Promise((resolve, reject) => {
-    sql = "SELECT DESK_NO FROM DESKS where ROOM=\""+room+"\" AND NOT DESK_NO IN (SELECT DISTINCT BOOKINGS.DESK FROM DESKS RIGHT JOIN BOOKINGS ON DESKS.ROOM=BOOKINGS.ROOM where BOOKINGS.ROOM=\""+room+"\" AND "+times+"AND BOOKINGS.DATE=\""+date+"\");";
+    sql =
+      'SELECT DESK_NO FROM DESKS where ROOM="' +
+      room +
+      '" AND NOT DESK_NO IN (SELECT DISTINCT BOOKINGS.DESK FROM DESKS RIGHT JOIN BOOKINGS ON DESKS.ROOM=BOOKINGS.ROOM where BOOKINGS.ROOM="' +
+      room +
+      '" AND ' +
+      times +
+      'AND BOOKINGS.DATE="' +
+      date +
+      '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
         resolve(res);
       }
-    })
-  })
+    });
+  });
 }
 
 function getUsers() {
@@ -187,25 +214,25 @@ function getUsers() {
         }
         resolve(results);
       }
-    })
-  })
+    });
+  });
 }
 
 function getDesks(room) {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM DESKS WHERE room = \""+room+"\";"
+    sql = 'SELECT * FROM DESKS WHERE room = "' + room + '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
-        let results = []
+        let results = [];
         for (var i in res) {
           results.push(res[i].DESK_NO);
         }
         resolve(results);
       }
-    })
-  })
+    });
+  });
 }
 
 function getRooms() {
@@ -215,20 +242,25 @@ function getRooms() {
       if (err) {
         reject(new Error(err));
       } else {
-        let results = []
+        let results = [];
         for (var i in res) {
-          results.push(res[i].NAME)
+          results.push(res[i].NAME);
         }
         resolve(results);
       }
-    })
-  })
+    });
+  });
 }
 
 function getBookingsForRoomAndDay(room, date) {
   return new Promise((resolve, reject) => {
     day = date.toISOString().slice(0, 10);
-    sql = "SELECT * FROM BOOKINGS WHERE ROOM=\""+room+"\" AND DATE=\""+day+"\";";
+    sql =
+      'SELECT * FROM BOOKINGS WHERE ROOM="' +
+      room +
+      '" AND DATE="' +
+      day +
+      '";';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
@@ -236,38 +268,42 @@ function getBookingsForRoomAndDay(room, date) {
       } else {
         resolve(res);
       }
-    })
-  })
+    });
+  });
 }
 
 function getUserBookingsBetween(user, start, end) {
   return new Promise((resolve, reject) => {
     startDay = start.toISOString().slice(0, 10);
     endDay = end.toISOString().slice(0, 10);
-    sql = "SELECT * FROM BOOKINGS WHERE DATE>\""+startDay+"\" AND DATE<\""+endDay+"\";";
+    sql =
+      'SELECT * FROM BOOKINGS WHERE DATE>"' +
+      startDay +
+      '" AND DATE<"' +
+      endDay +
+      '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(res));
       } else {
         resolve(res.length);
       }
-    })
-
-  })
+    });
+  });
 }
 
 function deleteUser(email) {
   email = email.toLowerCase();
   return new Promise((resolve, reject) => {
-    sql = "DELETE FROM USERS WHERE email=\""+email+"\";";
+    sql = 'DELETE FROM USERS WHERE email="' + email + '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(res));
       } else {
         resolve(res);
       }
-    })
-  })
+    });
+  });
 }
 //Environment
 
