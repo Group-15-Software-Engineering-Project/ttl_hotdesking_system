@@ -65,7 +65,6 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
     newDate.getMonth() + 1,
     0
   ).getDate();
-  console.log(daysInMonth);
   let availability = new Array(daysInMonth);
   for (let i = 0; i < daysInMonth; i++) {
     let j = i;
@@ -178,7 +177,6 @@ function addBooking(user, desk, room, date, am, pm) {
       '", ' +
       time +
       ");";
-    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
