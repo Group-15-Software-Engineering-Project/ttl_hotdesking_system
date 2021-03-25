@@ -7,13 +7,17 @@ import { Route, Link, Redirect } from "react-router-dom";
 import App from "../App";
 
 class Login extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      validLogin: false,
+    };
+  }
   //const [email, setEmail] = useState("");
   //const [password, setPassword] = useState("");
-  state = {
-    email: "",
-    password: "",
-    validLogin: false,
-  };
+  
 
   submitLogin = () => {
     fetch("/api/login", {
@@ -34,6 +38,7 @@ class Login extends Component {
           this.setState({validLogin: false});
         } else {
           this.setState({validLogin: true});
+          this.props.setEmail(this.state.email);
         }
       })
       .catch((err) => {

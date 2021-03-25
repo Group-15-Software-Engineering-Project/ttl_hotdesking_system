@@ -7,7 +7,7 @@ import "../public/css/Navbar.css";
 import { IconContext } from "react-icons";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
-function Navbar() {
+function Navbar(props) {
   // Block to allow Admin Access - users who sign in using an admin account have access to admin portal
   // Not fully safe code - has potential for illegal access
   if (false) {
@@ -34,6 +34,7 @@ function Navbar() {
             <button
               className="nav-button"
               onClick={() => {
+                props.resetEmail();
                 console.log("Remove user login data from browser!");
               }}
             >

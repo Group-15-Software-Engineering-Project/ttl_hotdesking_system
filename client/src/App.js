@@ -20,10 +20,10 @@ import Admin from "./Pages/Admin";
 
 class App extends Component {
   state = {
-    response: "",
-    post: "",
-    responseToPost: "",
+    email: "",
+    visible: false
   };
+
   locations = [
     {
       value: "Office 3.2: West Theatre",
@@ -39,25 +39,23 @@ class App extends Component {
     },
   ];
 
-  state = {
-    // state should be false unless signed in as admin
-    visible: false,
-  };
-
   render() {
+    console.log(this.state.email);
     return (
       <>
         <p>{this.state.response}</p>
         <p>{this.state.responseToPost}</p>
         <Router>
-          <Navbar />
+          <Navbar resetEmail={() => {this.setState({email: ""})}}/>
           <Switch>
             <Route exact path="/">
               <Redirect to="/Login"></Redirect>
             </Route>
-            <Route path="/login" component={Login} />
+            <Route path="/login"> 
+              <Login setEmail={(email) => this.setState({email: email})} />
+            </Route>
             <Route path="/booking-page">
-              <BookingPage options={this.locations} />
+              <BookingPage email={this.state.email} options={this.locations} />
             </Route>
             <Route path="/desks" component={Desks} />
             <Route path="/home" component={Home} />
