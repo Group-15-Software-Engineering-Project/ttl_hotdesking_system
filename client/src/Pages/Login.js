@@ -16,8 +16,6 @@ class Login extends Component {
   };
 
   submitLogin = () => {
-    console.log("stateBeforeLogin: ", this.state.validLogin);
-    console.log("email: ", this.state.email, "pass:", this.state.password);
     fetch("/api/login", {
       method: "POST",
       headers: {
@@ -32,7 +30,6 @@ class Login extends Component {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         if (res.error) {
           this.setState({validLogin: false});
         } else {
@@ -40,15 +37,11 @@ class Login extends Component {
         }
       })
       .catch((err) => {
-        console.log(err);
         this.setState({validLogin: false});
       });
-
-    console.log("stateAfterLogin: ", this.state.validLogin);
   };
 
   render() {
-    console.log("rendering");
     if (this.state.validLogin) {
       return (
         <Redirect to="/home"></Redirect>
