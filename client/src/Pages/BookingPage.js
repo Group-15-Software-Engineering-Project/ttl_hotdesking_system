@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
-import { createUniqueID } from "../Components/Misc";
+import { createUniqueID, months } from "../Components/Misc";
 
 export default class BookingPage extends React.Component {
   constructor(props) {
@@ -16,43 +16,66 @@ export default class BookingPage extends React.Component {
       selectPM: false,
       responseToPost: "",
       times: [
-        { id: "__am_booking", value: "9:00 - 12:00", label: "AM" },
-        { id: "__pm_booking", value: "12:00 - 17:30", label: "PM" },
-        { id: "__full_day_booking", value: "9:00 - 17:30", label: "AMPM" },
+        { value: "9:00 - 12:00", label: "AM" },
+        { value: "12:00 - 17:30", label: "PM" },
+        { value: "9:00 - 17:30", label: "AMPM" },
       ],
     };
   }
-  getDesks = async () => {};
 
-  postBooking = async (e) => {
-    e.preventDefault();
-  ///test
-   const res = await fetch("/api/getAvailableDesksInMonth", {
+  convertDate = () => {
+    return (
+      this.state.chosenDate.split(" ")[2] +
+      "-" +
+      String(months.indexOf(this.state.chosenDate.split(" ")[1]) + 1).padStart(
+        2,
+        "0"
+      ) +
+      "-" +
+      this.state.chosenDate.split(" ")[0]
+    );
+  };
+
+  submitBooking = () => {
+    let am;
+    let pm;
+    console.log(this.state.chosenTime);
+    switch (this.state.chosenTime) {
+      case "9:00 - 12:00":
+        am = true;
+        pm = false;
+        break;
+      case "12:00 - 17:30":
+        am = false;
+        pm = true;
+        break;
+      default:
+        am = true;
+        pm = true;
+        break;
+    }
+    fetch("/api/makeBooking", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({room:"testRoom", date:'2021-03', am:true, pm:true})
-    });
-    const b = await res.text();
-    console.log(b);
-
-
-  ///test
-    //console.log("Success login handleSubmit");
-
-    const response = await fetch("/api/desks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ chosenDate:this.state.chosenDate, chosenArea:this.state.chosenArea, chosenDesk:this.state.chosenDesk }),
-    });
-    const body = await response.text();
-
-    this.setState({ responseToPost: body });
-
-    //console.log(this.state.responseToPost);
+      body: JSON.stringify({
+        email: "mkelly32@tcd.ie",
+        desk: this.state.chosenDesk.split(" ")[1],
+        room: this.state.chosenArea,
+        date: this.convertDate(),
+        am: am,
+        pm: pm,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+        alert(res.message);
+      })
+      .catch((err) => alert(err));
   };
 
   positionReference = createRef();
@@ -165,15 +188,14 @@ export default class BookingPage extends React.Component {
     let desks = this.state.bookableDesks;
     for (let desk in desks) {
       data.push({
-        id: createUniqueID(4, false),
-        value: Object.keys(desks[desk])[0],
-        desc: "",
+        value: desks[desk],
+        label: "",
       });
     }
     return data;
   };
-  render() {
 
+  render() {
     return (
       <div className="booking-page">
         <section>
@@ -182,6 +204,7 @@ export default class BookingPage extends React.Component {
             <div className="element-flex-3">
               <div style={{ marginTop: "20px" }} />
               <TileSelection
+                showLabel={true}
                 title={
                   <h1
                     style={{
@@ -211,6 +234,7 @@ export default class BookingPage extends React.Component {
               />
               {this.state.chosenArea !== "default" ? (
                 <TileSelection
+                  showLabel={false}
                   key={this.state.chosenArea}
                   options={this.state.times}
                   size={["175px", "50px"]}
@@ -268,15 +292,36 @@ export default class BookingPage extends React.Component {
                         }
                       }
                     })()}
-                    onSelect={(e, date) => {
+                    onSelect={(e, date, m) => {
+                      let newDate;
+                      if (
+                        this.state.chosenDate === "default" &&
+                        date.split(" ")[1] !== m
+                      ) {
+                        newDate = "default";
+                      } else if (this.state.chosenDate === "default") {
+                        newDate = date;
+                      } else if (
+                        this.state.chosenDate.split(" ")[1] !==
+                        date.split(" ")[1]
+                      ) {
+                        newDate = "default";
+                      } else {
+                        newDate = date;
+                      }
                       this.setState({
                         bookableDesks: e,
-                        chosenDate: date,
+                        chosenDate: newDate,
                         chosenDesk: "default",
                       });
                     }}
                   ></BookingCalendar>
                   <br />
+                  {this.state.chosenDate !== "default" ? (
+                    <span style={{ alignItems: "center", fontWeight: "bold" }}>
+                      {this.state.chosenDate}
+                    </span>
+                  ) : null}
                   {this.state.bookableDesks.length === 0 ? (
                     <>
                       <br />
@@ -290,6 +335,7 @@ export default class BookingPage extends React.Component {
               {this.state.bookableDesks.length !== 0 ? (
                 <>
                   <TileSelection
+                    showLabel={false}
                     title={
                       <h1
                         style={{
@@ -319,8 +365,8 @@ export default class BookingPage extends React.Component {
               {this.state.chosenDesk !== "default" ? (
                 <div>
                   <button
-                    className="button-style"
-                    onClick={this.postBooking}
+                    className="bookingBtn"
+                    onClick={this.submitBooking}
                     /*onClick={() => {
                     className="bookingBtn"
                     onClick={() => {
@@ -339,6 +385,7 @@ export default class BookingPage extends React.Component {
                   >
                     Confirm Booking
                   </button>
+                  <div style={{ marginBottom: "30px" }} />
                   <p>{this.state.responseToPost}</p>
                 </div>
               ) : null}
@@ -346,9 +393,6 @@ export default class BookingPage extends React.Component {
             </div>
             <div className="element-flex-1"></div>
           </div>
-         
-            
-          
         </section>
       </div>
     );
