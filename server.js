@@ -22,23 +22,20 @@ con.connect(function (err) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//API calls
-app.get("/api/hello", (req, res) => {
-  res.send({ express: "Hello From Express" });
-});
-
-app.post("/api/world", (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`
-  );
-  console.log(req.body.post);
-});
-app.post("/api/desks", (req, res) => {
-  console.log(req.body.chosenDate);
-  res.send(
-    `Your booking on the ${req.body.chosenDate} for ${req.body.chosenDesk} in ${req.body.chosenArea} has been successful.`
-  );
+app.post("/api/login", (req, res) => {
+  login(req.body.email, req.body.password)
+  .then((result) => {
+    console.log(result.body);
+    if (result.length != 0) {
+      res.send({error: false, message: "Success"});
+    } else {
+      res.send({error: true, message: 'No email with that password'});
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({error: true, message: err});
+  });
 });
 
 app.post("/api/makeBooking", (req, res) => {
@@ -155,6 +152,19 @@ function addDesk(desk_number, room) {
       }
     });
   });
+}
+
+function login(email, password) {
+  return new Promise((resolve, reject) => {
+    sql = "SELECT * FROM USERS WHERE email='"+email+"' AND password='"+password+"';";
+    con.query(sql, (err, res) => {
+      if  (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    })
+  })
 }
 
 function addBooking(user, desk, room, date, am, pm) {

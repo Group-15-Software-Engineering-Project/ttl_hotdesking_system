@@ -12,45 +12,48 @@ class Login extends Component {
   state = {
     email: "",
     password: "",
-    post: "",
-    responseToPost: false,
+    validLogin: false,
   };
 
-  //const [responseToPost, setResponseToPost] = useState("");
-  ifValid() {
-    console.log(this.state.responseToPost);
-    if(this.state.responseToPost===true)
-      <Redirect to="/home"></Redirect>;
-
-      return null;
-    
-  }
-
-  validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
-  }
-
-  handleSubmit = async (e) => {
-    e.preventDefault();
-
-    console.log("Success login handleSubmit");
-
-    const response = await fetch("/api/email", {
+  submitLogin = () => {
+    console.log("stateBeforeLogin: ", this.state.validLogin);
+    console.log("email: ", this.state.email, "pass:", this.state.password);
+    fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: this.state.email }),
-    });
-    const body = await response.text();
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.error) {
+          this.setState({validLogin: false});
+        } else {
+          this.setState({validLogin: true});
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({validLogin: false});
+      });
 
-    this.setState({ responseToPost: body });
-
-    console.log(this.state.responseToPost);
+    console.log("stateAfterLogin: ", this.state.validLogin);
   };
 
   render() {
-    const isValid = this.state.responseToPost;
+    console.log("rendering");
+    if (this.state.validLogin) {
+      return (
+        <Redirect to="/home"></Redirect>
+      );
+    }
     return (
       <div className="Login">
         <img src={crest} alt="Crest" />
@@ -74,21 +77,11 @@ class Login extends Component {
           </Form.Group>
 
           <Button
-            onClick={this.handleSubmit}
-            block
-            size="lg"
-            type="submit"
-            disabled={!this.validateForm()}
+            onClick={this.submitLogin}
           >
             Login
             
           </Button>
-          <div>
-      {isValid ? (
-        <Redirect to="/home"></Redirect>
-      ): <div></div> }
-    </div>
-          
         </Form>
       </div>
     );
