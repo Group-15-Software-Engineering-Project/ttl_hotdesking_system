@@ -1,3 +1,18 @@
+export const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export const createUniqueID = (idLength, prefix) => {
   let length;
   if (!idLength || idLength <= 0) length = 4;

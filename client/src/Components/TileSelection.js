@@ -6,13 +6,13 @@ TileSelection.propTypes = {
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   options: PropTypes.arrayOf(
     PropTypes.exact({
-      id: PropTypes.string,
       value: PropTypes.string,
-      desc: PropTypes.string,
+      label: PropTypes.string,
     })
   ).isRequired,
   size: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelect: PropTypes.func,
+  showLabel: PropTypes.bool,
 };
 
 export default function TileSelection(props) {
@@ -23,20 +23,19 @@ export default function TileSelection(props) {
     let options = props.options;
     for (let i in options) {
       tiles.push(
-        <div key={options[i].id}>
+        <div key={options[i].value}>
           <input
             type="radio"
             checked={chosenOption === options[i].value}
-            id={options[i].id}
+            id={options[i].value}
             value={options[i].value}
             onChange={(e) => {
-              console.log(chosenOption);
               setChosenOption(e.target.value);
               props.onSelect(e.target.value);
             }}
             className="hide-input"
           />
-          <label htmlFor={options[i].id}>
+          <label htmlFor={options[i].value}>
             <div
               className={
                 chosenOption === options[i].value
@@ -51,7 +50,9 @@ export default function TileSelection(props) {
               <h1 style={{ fontSize: "18px", width: props.size[0] }}>
                 {options[i].value}
               </h1>
-              <span style={{ fontSize: "12px" }}>{options[i].desc}</span>
+              {props.showLabel ? (
+                <span style={{ fontSize: "12px" }}>{options[i].label}</span>
+              ) : null}
             </div>
           </label>
         </div>

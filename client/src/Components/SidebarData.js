@@ -22,7 +22,7 @@ export const SidebarData = [
   },
   {
     title: "Past Bookings",
-    path: "/products",
+    path: "/past-bookings",
     icon: <AiIcons.AiOutlineHistory />,
     cName: "nav-text",
   },
@@ -42,6 +42,12 @@ export const SidebarData = [
     title: "Desks",
     path: "/desks",
     icon: <GiIcons.GiDesk />,
+    cName: "nav-text",
+  },
+  {
+    title: "Users",
+    path: "/users",
+    icon: <AiIcons.AiOutlineUser />,
     cName: "nav-text",
   },
   {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Dialog from "../Components/Dialog";
+import DialogDesks from "../Components/DialogDesks";
 
 class Desks extends Component {
   state = {
@@ -34,13 +34,13 @@ class Desks extends Component {
           {" "}
           Delete desks from the system{" "}
         </button>
-        <Dialog
+        <DialogDesks
           isFirstOpen={this.state.isFirstOpen}
           isSecondOpen={this.state.isSecondOpen}
           onClose={(e) =>
             this.setState({ isFirstOpen: false, isSecondOpen: false })
           }
-        ></Dialog>
+        ></DialogDesks>
       </div>
     );
   }
