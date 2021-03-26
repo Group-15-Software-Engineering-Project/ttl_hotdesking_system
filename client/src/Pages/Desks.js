@@ -6,6 +6,32 @@ class Desks extends Component {
     isFirstOpen: false,
     isSecondOpen: false,
   };
+
+  submitAddRoom = (room) => {
+    fetch("/api/addDesk", {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        room: room
+      })
+    })
+    .then((res) => {
+      return res.JSON();
+    })
+    .then((res) => {
+      if (res.error) {
+        alert(res.message);
+      } else {
+        alert("Success");
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  };
+
   render() {
     return (
       <div className="desks">
@@ -17,6 +43,7 @@ class Desks extends Component {
         >
           {" "}
           Make desks unavailable from booking{" "}
+          
         </button>
         <p>&nbsp;</p>
         <p>&nbsp;</p>

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import DayChooser from './DayChooser';
 import '../public/css/Dialog.css'
 
-class DialogUsers extends Component {
+class AddUsers extends Component {
 
     state = {
         firstName: "",
@@ -38,11 +38,11 @@ class DialogUsers extends Component {
                 <div className="popup">
                     <div className="popup-inner">
                         <button className="close-btn" onClick={this.props.onClose}>x</button>
-                        <p>Email:</p>
+                        <p>First Name:</p>
                         <input type="text" onChange={this.handleFirstName}></input>
-                        <p>Password:</p>
+                        <p>Last Name:</p>
                         <input type="text" onChange={this.handleLastName}></input>
-                        {/* <p>Team:</p>
+                        <p>Team:</p>
                         <div>
                             <select value={this.state.team} onChange={this.handleTeam}>
                                 <option>Academic Affairs</option>
@@ -50,7 +50,7 @@ class DialogUsers extends Component {
                                 <option>Academic Practice</option>
                                 <option>Other</option>
                             </select>
-                        </div> */}
+                        </div>
                         <button onClick={this.handleSubmit}>submit</button>
                     </div>
                 </div>
@@ -82,4 +82,4 @@ class DialogUsers extends Component {
     }
 }
 
-export default DialogUsers
+export default AddUsers
