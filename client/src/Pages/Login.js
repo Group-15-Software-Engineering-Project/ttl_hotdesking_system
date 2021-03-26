@@ -7,7 +7,7 @@ import { Route, Link, Redirect } from "react-router-dom";
 import App from "../App";
 
 class Login extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       email: "",
@@ -17,7 +17,6 @@ class Login extends Component {
   }
   //const [email, setEmail] = useState("");
   //const [password, setPassword] = useState("");
-  
 
   submitLogin = () => {
     fetch("/api/login", {
@@ -27,7 +26,7 @@ class Login extends Component {
       },
       body: JSON.stringify({
         email: this.state.email,
-        password: this.state.password
+        password: this.state.password,
       }),
     })
       .then((res) => {
@@ -35,27 +34,25 @@ class Login extends Component {
       })
       .then((res) => {
         if (res.error) {
-          this.setState({validLogin: false});
+          this.setState({ validLogin: false });
         } else {
-          this.setState({validLogin: true});
+          this.setState({ validLogin: true });
           this.props.setEmail(this.state.email);
         }
       })
       .catch((err) => {
-        this.setState({validLogin: false});
+        this.setState({ validLogin: false });
       });
   };
 
   render() {
     if (this.state.validLogin) {
-      return (
-        <Redirect to="/home"></Redirect>
-      );
+      return <Redirect to="/home"></Redirect>;
     }
     return (
       <div className="Login">
         <img src={crest} alt="Crest" />
-        <Form >
+        <Form>
           <Form.Group size="lg" controlId="email">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -74,12 +71,7 @@ class Login extends Component {
             />
           </Form.Group>
 
-          <Button
-            onClick={this.submitLogin}
-          >
-            Login
-            
-          </Button>
+          <Button onClick={this.submitLogin}>Login</Button>
         </Form>
       </div>
     );

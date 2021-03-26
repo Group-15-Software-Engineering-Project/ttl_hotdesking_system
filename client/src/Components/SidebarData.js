@@ -22,7 +22,7 @@ export const SidebarData = [
   },
   {
     title: "Past Bookings",
-    path: "/products",
+    path: "/past-bookings",
     icon: <AiIcons.AiOutlineHistory />,
     cName: "nav-text",
   },

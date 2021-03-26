@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import Home from "./Pages/Home";
 import Reports from "./Pages/Reports";
-import Products from "./Pages/Products";
+import PastBookings from "./Pages/PastBookings";
 import Messages from "./Pages/Messages";
 import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
@@ -21,7 +21,7 @@ import Admin from "./Pages/Admin";
 class App extends Component {
   state = {
     email: "",
-    visible: false
+    visible: false,
   };
 
   locations = [
@@ -45,14 +45,19 @@ class App extends Component {
       <>
         <p>{this.state.response}</p>
         <p>{this.state.responseToPost}</p>
+
         <Router>
-          <Navbar resetEmail={() => {this.setState({email: ""})}}/>
+          <Navbar
+            resetEmail={() => {
+              this.setState({ email: "" });
+            }}
+          />
           <Switch>
             <Route exact path="/">
               <Redirect to="/Login"></Redirect>
             </Route>
-            <Route path="/login"> 
-              <Login setEmail={(email) => this.setState({email: email})} />
+            <Route path="/login">
+              <Login setEmail={(email) => this.setState({ email: email })} />
             </Route>
             <Route path="/booking-page">
               <BookingPage email={this.state.email} options={this.locations} />
@@ -60,7 +65,9 @@ class App extends Component {
             <Route path="/desks" component={Desks} />
             <Route path="/home" component={Home} />
             <Route path="/reports" component={Reports} />
-            <Route path="/products" component={Products} />
+            
+              <PastBookings email={this.state.email} />
+           
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
             {this.state.visible ? (

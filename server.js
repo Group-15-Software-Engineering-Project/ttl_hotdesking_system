@@ -24,19 +24,35 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
   login(req.body.email, req.body.password)
-  .then((result) => {
-    if (result.length != 0) {
-      res.send({error: false, message: "Success"});
-    } else {
-      res.send({error: true, message: 'No email with that password'});
-    }
-  })
-  .catch((err) => {
-    res.send({error: true, message: err});
-  });
+    .then((result) => {
+      if (result.length != 0) {
+        res.send({ error: false, message: "Success" });
+      } else {
+        res.send({ error: true, message: "No email with that password" });
+      }
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
+});
+
+app.post("/api/getBooking", (req, res) => {
+  console.log(req.body.email);
+  getPastBookings(req.body.email)
+    .then((bookings) => {
+      data = [];
+      for (booking in bookings) {
+        data.push(bookings[booking]);
+      }
+      res.send({ data });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err.toString() });
+    });
 });
 
 app.post("/api/makeBooking", (req, res) => {
+  console.log(req.body.email);
   addBooking(
     req.body.email,
     req.body.desk,
@@ -131,15 +147,32 @@ function addDesk(desk_number, room) {
 
 function login(email, password) {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM USERS WHERE email='"+email+"' AND password='"+password+"';";
+    sql =
+      "SELECT * FROM USERS WHERE email='" +
+      email +
+      "' AND password='" +
+      password +
+      "';";
     con.query(sql, (err, res) => {
-      if  (err) {
+      if (err) {
         reject(new Error(err));
       } else {
         resolve(res);
       }
-    })
-  })
+    });
+  });
+}
+function getPastBookings(email) {
+  return new Promise((resolve, reject) => {
+    sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "';";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
 }
 
 function addBooking(user, desk, room, date, am, pm) {
