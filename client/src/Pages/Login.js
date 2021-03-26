@@ -7,17 +7,18 @@ import { Route, Link, Redirect } from "react-router-dom";
 import App from "../App";
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      validLogin: false,
+    };
+  }
   //const [email, setEmail] = useState("");
   //const [password, setPassword] = useState("");
-  state = {
-    email: "",
-    password: "",
-    validLogin: false,
-  };
 
   submitLogin = () => {
-    console.log("stateBeforeLogin: ", this.state.validLogin);
-    console.log("email: ", this.state.email, "pass:", this.state.password);
     fetch("/api/login", {
       method: "POST",
       headers: {
@@ -25,39 +26,33 @@ class Login extends Component {
       },
       body: JSON.stringify({
         email: this.state.email,
-        password: this.state.password
+        password: this.state.password,
       }),
     })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         if (res.error) {
-          this.setState({validLogin: false});
+          this.setState({ validLogin: false });
         } else {
-          this.setState({validLogin: true});
+          this.setState({ validLogin: true });
+          this.props.setEmail(this.state.email);
         }
       })
       .catch((err) => {
-        console.log(err);
-        this.setState({validLogin: false});
+        this.setState({ validLogin: false });
       });
-
-    console.log("stateAfterLogin: ", this.state.validLogin);
   };
 
   render() {
-    console.log("rendering");
     if (this.state.validLogin) {
-      return (
-        <Redirect to="/home"></Redirect>
-      );
+      return <Redirect to="/home"></Redirect>;
     }
     return (
       <div className="Login">
         <img src={crest} alt="Crest" />
-        <Form >
+        <Form>
           <Form.Group size="lg" controlId="email">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -76,12 +71,7 @@ class Login extends Component {
             />
           </Form.Group>
 
-          <Button
-            onClick={this.submitLogin}
-          >
-            Login
-            
-          </Button>
+          <Button onClick={this.submitLogin}>Login</Button>
         </Form>
       </div>
     );

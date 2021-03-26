@@ -7,6 +7,7 @@ export default class BookingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      areaKey: "default",
       chosenArea: "default",
       chosenDesk: "default",
       chosenDate: "default",
@@ -60,7 +61,7 @@ export default class BookingPage extends React.Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: "mkelly32@tcd.ie",
+        email: this.props.email,
         desk: this.state.chosenDesk.split(" ")[1],
         room: this.state.chosenArea,
         date: this.convertDate(),
@@ -72,8 +73,15 @@ export default class BookingPage extends React.Component {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         alert(res.message);
+        this.setState({
+          chosenArea: "default",
+          chosenDate: "default",
+          chosenDesk: "default",
+          chosenTime: "default",
+          areaKey: createUniqueID(),
+          bookableDesks: [],
+        });
       })
       .catch((err) => alert(err));
   };
@@ -205,6 +213,7 @@ export default class BookingPage extends React.Component {
               <div style={{ marginTop: "20px" }} />
               <TileSelection
                 showLabel={true}
+                key={this.state.areaKey}
                 title={
                   <h1
                     style={{
