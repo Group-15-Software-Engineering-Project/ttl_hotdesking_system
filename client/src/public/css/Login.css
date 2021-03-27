@@ -15,9 +15,115 @@
     max-height: 30px;
   }
   img {
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     border-radius: 4px;
     padding: 1px;
     width: 250px;
   }
+}
+
+.wrapper {
+  display: flex;
+  background-color: #eeeeee;
+  justify-content: flex-start;
+  flex-flow: row wrap;
+  min-height: 90vh;
+  height: auto;
+  padding: none;
+}
+
+.login-logo {
+  border: none;
+  position: absolute;
+  top: 5px;
+  left: 2vh;
+}
+.block-top {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  padding: 2vh;
+  height: 80px !important;
+  width: 100% !important;
+  background-color: #008dd3;
+  box-shadow: 0 5px 3px #555;
+  text-align: center;
+  align-items: center;
+}
+
+.text-field {
+  width: 35vh;
+  height: 6vh;
+  border-radius: 3px;
+  border: 1px #bbb solid;
+  margin: 2px;
+  padding: 10px;
+}
+
+.login-button {
+  background-color: #008dd3;
+  color: white;
+  border-radius: 3px;
+  width: 35vh;
+  height: 6vh;
+  margin: 10px;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #00bff9;
+  box-shadow: none;
+}
+.flex-container-1 {
+  flex: 1;
+  justify-content: center;
+  text-align: left;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  /* border: black 3px solid; */
+}
+.flex-container-2 {
+  flex: 2;
+  justify-content: center;
+  text-align: left;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  /* border: black 3px solid; */
+}
+.flex-container-3 {
+  flex: 3;
+  justify-content: center;
+  text-align: left;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  /* border: black 3px solid; */
+}
+.flex-container-4 {
+  flex: 4;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  /* border: black 3px solid; */
+}
+.flex-container-5 {
+  flex: 5;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  /* border: black 3px solid; */
 }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./public/css/App.css";
-
 import Navbar from "./Components/NavBar";
 import {
   BrowserRouter as Router,
@@ -55,7 +54,7 @@ class App extends Component {
           />
           <Switch>
             <Route exact path="/">
-              <Redirect to="/Login"></Redirect>
+              <Redirect to="/login"></Redirect>
             </Route>
             <Route path="/login">
               <Login setEmail={(email) => this.setState({ email: email })} />
@@ -67,9 +66,9 @@ class App extends Component {
             <Route path="/users" component={Users} />
             <Route path="/home" component={Home} />
             <Route path="/reports" component={Reports} />
-            
-              <PastBookings email={this.state.email} />
-           
+
+            <PastBookings email={this.state.email} />
+
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
             {this.state.visible ? (
