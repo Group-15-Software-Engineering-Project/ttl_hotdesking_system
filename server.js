@@ -36,8 +36,50 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/addRoom", (req, res) => {
+  addRoom(req.body.room)
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
+app.post("/api/addDesk", (req, res) => {
+  addDesk(req.body.desk, req.body.room)
+  .then(() => {
+    res.send({error: false, message: "Sucess"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+})
+
+app.post("/api/addUser", (req, res) => {
+  addUser(req.body.email, req.body.password)
+  .then((result) => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
+app.post("/api/removeUser", (req, res) => {
+  deleteUserBookings(req.body.email)
+  .then(() => {
+    deleteUser(req.body.email)
+  })
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
 app.post("/api/getBooking", (req, res) => {
-  console.log(req.body.email);
   getPastBookings(req.body.email)
     .then((bookings) => {
       data = [];
@@ -104,10 +146,10 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 });
 
 //Database Access
-function addUser(email) {
-  email = email.toLowerCase();
+function addUser(email, password) {
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '");';
+    sql = 'INSERT INTO USERS VALUES ("' + email + ', "'+password+'");';
+    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -120,8 +162,8 @@ function addUser(email) {
 }
 
 function addRoom(name) {
+  sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -133,8 +175,8 @@ function addRoom(name) {
 }
 
 function addDesk(desk_number, room) {
+  sql = "INSERT INTO DESKS VALUES (" + desk_number + ', "' + room + '");';
   return new Promise((resolve, reject) => {
-    sql = "INSERT INTO DESKS VALUES (" + desk_number + ', "' + room + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -324,8 +366,20 @@ function getUserBookingsBetween(user, start, end) {
   });
 }
 
+function deleteUserBookings(email) {
+  sql = "DELETE FROM BOOKINGS WHERE email='"+email+"';";
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
 function deleteUser(email) {
-  email = email.toLowerCase();
   return new Promise((resolve, reject) => {
     sql = 'DELETE FROM USERS WHERE email="' + email + '";';
     con.query(sql, (err, res) => {

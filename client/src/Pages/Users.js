@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import DialogUsers from "../Components/DialogUsers";
+import AddUsers from "../Components/AddUsers";
 import User from "../Components/User";
 
 class Users extends Component {
+  
   state = {
     isFirstOpen: false,
     isSecondOpen: false,
@@ -32,6 +34,56 @@ class Users extends Component {
       }]
   };
 
+  submitRemoveUser = (email) => {
+    fetch("/api/removeUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        alert(res.message);
+      } else {
+        alert("Success");
+      }
+    })
+    .catch((err) => {
+      alert("Could not remove user:\n", err);
+    });
+  };
+
+  submitAddUser = (email, password) => {
+    fetch("/api/addUser", {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        pasword: password
+      })
+    })
+    .then((res) => {return res.json()})
+    .then((res) => {
+      if (res.error === false) {
+        alert("Success!");
+      } else {
+        alert("Could not add user.");
+        alert(res.message);
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  };
+
 
   update() {
     this.setState({users: [
@@ -39,22 +91,33 @@ class Users extends Component {
     ]})
   }
 
+  checkForm(e) {
+    console.log(e);
+  }
+  
   render() {
     return (
       <div className="desks">
         <br></br>
-        <button
-          onClick={(e) =>
-            this.setState({ isFirstOpen: true, isSecondOpen: false })
-          }
-        >
-          {" "}
-          Add users{" "}
+        <div>
+
+          
+          <button
+            onClick={(e) =>
+              this.setState({ isFirstOpen: true, isSecondOpen: false }),
+              this.checkForm("test")
+            }
+          >
+            {" "}
+            Add users{" "}
         </button>
+        </div>
         <p>&nbsp;</p>
+
         <button
           onClick={(e) =>
-            this.setState({ isFirstOpen: false, isSecondOpen: true })
+            this.setState({ isFirstOpen: true, isSecondOpen: true }),
+            submitAddUser(this.state)
           }
         >
           {" "}
@@ -67,6 +130,8 @@ class Users extends Component {
             this.setState({ isFirstOpen: false, isSecondOpen: false })
           }
         ></DialogUsers>
+
+        
         <br></br><br></br><br></br>
         <h2>
           First Name{Array(30).fill('\xa0').join('')}Last Name{Array(40).fill('\xa0').join('')}Email{Array(65).fill('\xa0').join('')}Team{Array(60).fill('\xa0').join('')}Usage Time in Last Month
