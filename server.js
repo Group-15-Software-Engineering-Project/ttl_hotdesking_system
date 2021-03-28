@@ -151,7 +151,7 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 //Database Access
 function addUser(email, password) {
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + ', "'+password+'");';
+    sql = 'INSERT INTO USERS VALUES ("' + email + '", "'+password+'");';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
