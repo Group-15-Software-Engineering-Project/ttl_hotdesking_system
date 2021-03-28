@@ -76,6 +76,35 @@ app.post("/api/addUser", (req, res) => {
   });
 });
 
+app.post("/api/removeDesk", (req, res) => {
+  deleteDeskBookings(req.body.desk, req.body.room)
+  .then(() => {
+    deleteDesk(req.body.desk, req.body.room);
+  })
+  .then(() => {
+    res.send({error: false, message: "Success");
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
+app.post("/api/removeRoom", (req, res) => {
+  deleteRoomBookings(req.body.room)
+  .then(() => {
+    deleteDesksFromRoom(req.body.room)
+  })
+  .then(() => {
+    deleteRoom(req.body.room);
+  })
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error:true, message: err});
+  });
+});
+
 app.post("/api/removeUser", (req, res) => {
   deleteUserBookings(req.body.email)
   .then(() => {
@@ -107,7 +136,6 @@ app.post("/api/getBooking", (req, res) => {
 });
 
 app.post("/api/makeBooking", (req, res) => {
-  console.log(req.body.email);
   addBooking(
     req.body.email,
     req.body.desk,
@@ -381,6 +409,33 @@ function getUserBookingsBetween(user, start, end) {
 
 function deleteUserFromGroups(email) {
   sql = "DELETE FROM GROUPS WHERE USER='"+email+"';";
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteRoomBookings(room) {
+  sql = "DELETE FROM BOOKINGS WHERE ROOM='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(res));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteDeskBookings(desk, room) {
+  sql = "DELETE FROM BOOKING WHERE DESK="+desk+", AND ROOM='"+room+"';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -395,6 +450,46 @@ function deleteUserFromGroups(email) {
 
 function deleteUserBookings(email) {
   sql = "DELETE FROM BOOKINGS WHERE USER='"+email+"';";
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteDesksFromRoom(room) {
+  sql = "DELETE FROM DESKS WHERE ROOM='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err,res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+function deleteRoom(room) {
+  sql = "DELETE FROM ROOMS WHERE NAME='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteDesk(desk, room) {
+  sql = "DELETE FROM DESKS WHERE DESK_NO="+desk+", AND ROOM='"+room+"';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {

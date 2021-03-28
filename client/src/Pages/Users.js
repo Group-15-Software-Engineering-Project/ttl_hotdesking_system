@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import DialogUsers from "../Components/DialogUsers";
-import AddUsers from "../Components/AddUsers";
 import User from "../Components/User";
 
 class Users extends Component {
