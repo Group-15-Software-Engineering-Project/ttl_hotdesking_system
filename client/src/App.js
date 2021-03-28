@@ -15,7 +15,7 @@ import Messages from "./Pages/Messages";
 import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
 import BookingPage from "./Pages/BookingPage";
-import Desks from "./Pages/Desks";
+import Locations from "./Pages/Locations";
 import Admin from "./Pages/Admin";
 import Users from "./Pages/Users";
 
@@ -63,7 +63,7 @@ class App extends Component {
             <Route path="/booking-page">
               <BookingPage email={this.state.email} options={this.locations} />
             </Route>
-            <Route path="/desks" component={Desks} />
+            <Route path="/locations" component={Locations} />
             <Route path="/users" component={Users} />
             <Route path="/home" component={Home} />
             <Route path="/reports" component={Reports} />
