@@ -82,7 +82,7 @@ app.post("/api/removeDesk", (req, res) => {
     deleteDesk(req.body.desk, req.body.room);
   })
   .then(() => {
-    res.send({error: false, message: "Success");
+    res.send({error: false, message: "Success"});
   })
   .catch((err) => {
     res.send({error: true, message: err});

@@ -107,7 +107,7 @@ class Locations extends Component {
       }
     })
     .catch((err) => {
-      alert(res.error);
+      alert(err);
     })
   };
  
