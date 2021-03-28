@@ -23,7 +23,7 @@ class Locations extends Component {
       })
     })
     .then((res) => {
-      return res.JSON();
+      return res.JSON;
     })
     .then((res) => {
       if (res.error) {

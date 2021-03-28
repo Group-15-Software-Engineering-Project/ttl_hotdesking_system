@@ -435,7 +435,7 @@ function deleteRoomBookings(room) {
 }
 
 function deleteDeskBookings(desk, room) {
-  sql = "DELETE FROM BOOKING WHERE DESK="+desk+", AND ROOM='"+room+"';";
+  sql = "DELETE FROM BOOKINGS WHERE DESK="+desk+", AND ROOM='"+room+"';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
