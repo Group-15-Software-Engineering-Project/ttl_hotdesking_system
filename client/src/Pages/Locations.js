@@ -13,7 +13,7 @@ class Locations extends Component {
   };
 
   submitAddRoom = (room) => {
-    fetch("/api/addDesk", {
+    fetch("/api/addRoom", {
       method: "POST",
       headers: {
         "Content-Type" : "application/json"
