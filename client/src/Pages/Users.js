@@ -9,10 +9,7 @@ class Users extends Component {
     addEmail: "",
     addPassword: "",
     deleteEmail: "",
-    users: [{
-      email: "",
-      team: ""
-    }]
+    users: []
   };
 
   componentDidMount() {
