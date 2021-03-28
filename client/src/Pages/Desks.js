@@ -32,6 +32,32 @@ class Desks extends Component {
     });
   };
 
+  submitAddDesk = (desk, room) => {
+    fetch("/api/addDesk", {
+      method: "POST",
+      headers: {
+        "Content-Type" :"application/json"
+      },
+      body: JSON.stringify({
+        desk: desk,
+        room, room
+      })
+    })
+    .then((res) => {
+      return res.json
+    })
+    .then((res) => {
+      if (res.error) {
+        alert(res.message);
+      } else {
+        alert("Success");
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
+
   render() {
     return (
       <div className="desks">

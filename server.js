@@ -69,6 +69,9 @@ app.post("/api/addUser", (req, res) => {
 app.post("/api/removeUser", (req, res) => {
   deleteUserBookings(req.body.email)
   .then(() => {
+    deleteUserFromGroups(req.body.email);
+  })
+  .then(() => {
     deleteUser(req.body.email)
   })
   .then(() => {
@@ -361,6 +364,19 @@ function getUserBookingsBetween(user, start, end) {
         reject(new Error(res));
       } else {
         resolve(res.length);
+      }
+    });
+  });
+}
+
+function deleteUserFromGroups(email) {
+  sql = "DELETE FROM GROUPS WHERE USER='"+email+"';";
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
       }
     });
   });

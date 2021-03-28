@@ -6,8 +6,9 @@ import User from "../Components/User";
 class Users extends Component {
   
   state = {
-    isFirstOpen: false,
-    isSecondOpen: false,
+    addEmail: "",
+    addPassword: "",
+    deleteEmail: "",
     users: [{
         id: 1,
         firstName: 'Bruce',
@@ -94,10 +95,49 @@ class Users extends Component {
   checkForm(e) {
     console.log(e);
   }
+ 
+  addEmailF = event => {
+    this.setState({ addEmail: event.target.value });
+  }  
+
+  addPasswordF = event => {
+    this.setState({ addPassword: event.target.value });
+  } 
+
+  deleteEmailF = event => {
+  this.setState({ deleteEmail: event.target.value });
+  }
   
   render() {
     return (
       <div className="desks">
+        <div>
+          <h3>Add user:</h3>
+          <input type="text" onChange={this.addEmailF}></input>
+          <br></br><br></br><br></br>
+          <input type="text" onChange={this.addPasswordF}></input>
+          <button
+            onClick={(e) =>
+              this.submitAddUser(this.state.addEmail, this.state.addPassword)
+            }
+          >
+            {" "}Add User{" "}
+          </button>
+        </div>
+          
+        <div>
+          <h3>Delete user:</h3>
+          <input type="text" onChange={this.deleteEmailF}></input>
+          <button
+            onClick={(e) =>
+              this.submitRemoveUser(this.state.deleteEmail)
+            }
+          >
+            {" "}Delete User{" "}
+          </button>
+        </div>
+
+
         <br></br>
         <div>
 
@@ -116,20 +156,14 @@ class Users extends Component {
 
         <button
           onClick={(e) =>
-            this.setState({ isFirstOpen: true, isSecondOpen: true }),
-            submitAddUser(this.state)
+            this.setState({ isFirstOpen: false, isSecondOpen: true })
           }
         >
           {" "}
           Delete users{" "}
         </button>
-        <DialogUsers
-          isFirstOpen={this.state.isFirstOpen}
-          isSecondOpen={this.state.isSecondOpen}
-          onClose={(e) =>
-            this.setState({ isFirstOpen: false, isSecondOpen: false })
-          }
-        ></DialogUsers>
+
+
 
         
         <br></br><br></br><br></br>
