@@ -68,7 +68,7 @@ class Users extends Component {
       },
       body: JSON.stringify({
         email: email,
-        pasword: password
+        password: password
       })
     })
     .then((res) => {return res.json()})
@@ -115,7 +115,7 @@ class Users extends Component {
           <h3>Add user:</h3>
           <input type="email" onChange={this.addEmailF}></input>
           <br></br><br></br>
-          <input type="password" onChange={this.addPasswordF}></input>
+          <input type="text" onChange={this.addPasswordF}></input>
           <button
             onClick={(e) =>
               this.submitAddUser(this.state.addEmail, this.state.addPassword)

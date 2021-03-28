@@ -371,6 +371,7 @@ function getUserBookingsBetween(user, start, end) {
 
 function deleteUserFromGroups(email) {
   sql = "DELETE FROM GROUPS WHERE USER='"+email+"';";
+  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -384,6 +385,7 @@ function deleteUserFromGroups(email) {
 
 function deleteUserBookings(email) {
   sql = "DELETE FROM BOOKINGS WHERE email='"+email+"';";
+  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -396,8 +398,9 @@ function deleteUserBookings(email) {
 }
 
 function deleteUser(email) {
+  sql = 'DELETE FROM USERS WHERE email="' + email + '";';
+  console.log(sql);
   return new Promise((resolve, reject) => {
-    sql = 'DELETE FROM USERS WHERE email="' + email + '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(res));
