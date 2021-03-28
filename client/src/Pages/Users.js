@@ -113,9 +113,9 @@ class Users extends Component {
       <div className="desks">
         <div>
           <h3>Add user:</h3>
-          <input type="text" onChange={this.addEmailF}></input>
-          <br></br><br></br><br></br>
-          <input type="text" onChange={this.addPasswordF}></input>
+          <input type="email" onChange={this.addEmailF}></input>
+          <br></br><br></br>
+          <input type="password" onChange={this.addPasswordF}></input>
           <button
             onClick={(e) =>
               this.submitAddUser(this.state.addEmail, this.state.addPassword)
