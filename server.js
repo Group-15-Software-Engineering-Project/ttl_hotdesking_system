@@ -38,10 +38,10 @@ app.post("/api/login", (req, res) => {
 
 app.post("/api/getUsers", (req, res) => {
   getUsers()
-  .then((res) => {
-    res.send({error: false, users:res});
+  .then((result) => {
+    res.send({error: false, users:result});
   })
-  .catch((err) => {
+  .catch(() => {
     res.send({error:true, users:[]});
   });
 });
@@ -68,7 +68,7 @@ app.post("/api/addDesk", (req, res) => {
 
 app.post("/api/addUser", (req, res) => {
   addUser(req.body.email, req.body.password)
-  .then((result) => {
+  .then(() => {
     res.send({error: false, message: "Success"});
   })
   .catch((err) => {
