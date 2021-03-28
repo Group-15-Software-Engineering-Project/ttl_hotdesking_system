@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Desk from "../Components/Desk";
 
 class Locations extends Component {
   state = {
