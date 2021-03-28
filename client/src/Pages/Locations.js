@@ -27,7 +27,7 @@ class Locations extends Component {
     })
     .then((res) => {
       if (res.error) {
-        alert(res.message);
+        console.log(res.message);
       } else {
         alert("Success");
       }
