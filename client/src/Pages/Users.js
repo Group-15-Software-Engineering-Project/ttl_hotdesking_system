@@ -34,6 +34,7 @@ class Users extends Component {
         alert(res.message);
       } else {
         alert("Success");
+        this.getUsers();
       }
     })
     .catch((err) => {
@@ -56,6 +57,7 @@ class Users extends Component {
     .then((res) => {
       if (res.error === false) {
         alert("Success!");
+        this.getUsers();
       } else {
         alert("Could not add user.");
         alert(res.message);
