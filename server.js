@@ -36,6 +36,16 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/getUsers", (req, res) => {
+  getUsers()
+  .then((res) => {
+    res.send({error: false, users:res});
+  })
+  .catch((err) => {
+    res.send({error:true, users:[]});
+  });
+});
+
 app.post("/api/addRoom", (req, res) => {
   addRoom(req.body.room)
   .then(() => {

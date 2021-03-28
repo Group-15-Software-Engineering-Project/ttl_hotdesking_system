@@ -9,31 +9,12 @@ class Users extends Component {
     addEmail: "",
     addPassword: "",
     deleteEmail: "",
-    users: [{
-        id: 1,
-        firstName: 'Bruce',
-        lastName: 'Lee',
-        email: 'Bruce@tcd.ie',
-        team: 'Academic Affairs',
-        time: 100
-      },
-      {
-        id: 2,
-        firstName: 'Tom',
-        lastName: 'Brian',
-        email: 'Tom@tcd.ie',
-        team: 'Quality',
-        time: 50
-      },
-      {
-        id: 3,
-        firstName: 'Jerry',
-        lastName: 'Brian',
-        email: 'Jerry@tcd.ie',
-        team: 'Academic Practice',
-        time: 30
-      }]
+    users: []
   };
+
+  componentDidMount() {
+    this.getUsers();
+  }
 
   submitRemoveUser = (email) => {
     fetch("/api/removeUser", {
@@ -85,12 +66,28 @@ class Users extends Component {
     });
   };
 
-
-  update() {
-    this.setState({users: [
-
-    ]})
-  }
+  getUsers = () => {
+    fetch("/api/getUsers", {
+      method: "Post",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: ""
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        alert("Could not get Users");
+      } else {
+        this.setState({users: res.users});
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  };
 
   checkForm(e) {
     console.log(e);
@@ -137,40 +134,11 @@ class Users extends Component {
           </button>
         </div>
 
-
-        <br></br>
-        <div>
-
-          
-          <button
-            onClick={(e) =>
-              this.setState({ isFirstOpen: true, isSecondOpen: false }),
-              this.checkForm("test")
-            }
-          >
-            {" "}
-            Add users{" "}
-        </button>
-        </div>
-        <p>&nbsp;</p>
-
-        <button
-          onClick={(e) =>
-            this.setState({ isFirstOpen: false, isSecondOpen: true })
-          }
-        >
-          {" "}
-          Delete users{" "}
-        </button>
-
-
-
-        
         <br></br><br></br><br></br>
         <h2>
-          First Name{Array(30).fill('\xa0').join('')}Last Name{Array(40).fill('\xa0').join('')}Email{Array(65).fill('\xa0').join('')}Team{Array(60).fill('\xa0').join('')}Usage Time in Last Month
+          Email{Array(70).fill('\xa0').join('')}Team
         </h2>
-        <div>{this.state.users.map(user => <User key={user.id} user={user} />)}</div>
+        <div>{this.state.users.map(user => <User key={user.email} user={user} />)}</div>
       </div>
     );
   }
