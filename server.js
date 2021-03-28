@@ -204,6 +204,7 @@ function addUser(email, password) {
 
 function addRoom(name) {
   sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
+  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
