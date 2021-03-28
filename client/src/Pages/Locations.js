@@ -23,7 +23,7 @@ class Locations extends Component {
       })
     })
     .then((res) => {
-      return res.JSON;
+      return res.json();
     })
     .then((res) => {
       if (res.error) {
@@ -49,7 +49,7 @@ class Locations extends Component {
       })
     })
     .then((res) => {
-      return res.json
+      return res.json();
     })
     .then((res) => {
       if (res.error) {
