@@ -384,7 +384,7 @@ function deleteUserFromGroups(email) {
 }
 
 function deleteUserBookings(email) {
-  sql = "DELETE FROM BOOKINGS WHERE email='"+email+"';";
+  sql = "DELETE FROM BOOKINGS WHERE USER='"+email+"';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
