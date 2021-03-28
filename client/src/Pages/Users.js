@@ -9,7 +9,10 @@ class Users extends Component {
     addEmail: "",
     addPassword: "",
     deleteEmail: "",
-    users: []
+    users: [{
+      email: "",
+      team: ""
+    }]
   };
 
   componentDidMount() {
@@ -136,9 +139,9 @@ class Users extends Component {
 
         <br></br><br></br><br></br>
         <h2>
-          Email{Array(70).fill('\xa0').join('')}Team
+          Email
         </h2>
-        <div>{this.state.users.map(user => <User key={user.email} user={user} />)}</div>
+        <div>{this.state.users.map(user => <User key={user} user={user} />)}</div>
       </div>
     );
   }
