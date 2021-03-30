@@ -1,17 +1,17 @@
 import React from 'react'
 
-function User({user, key}) {
+function Desk({desk}) {
 //  let em = user.email;
 //  let eml = Object.keys(em).length;
-//  let emSpacing = Array(70-eml).fill('\xa0').join('');
+//  let deskSpacing = Array(50).fill('\xa0').join('');
 
   return (
     <div>
       <h2>
-        {user}
+        {desk}
       </h2>
     </div>
   )
 }
 
-export default User
+export default Desk
