@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import Home from "./Pages/Home";
 import Reports from "./Pages/Reports";
-import PastBookings from "./Pages/PastBookings";
 import Messages from "./Pages/Messages";
 import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
@@ -17,6 +16,10 @@ import BookingPage from "./Pages/BookingPage";
 import Locations from "./Pages/Locations";
 import Admin from "./Pages/Admin";
 import Users from "./Pages/Users";
+import Account from'./Pages/account'
+import PastBookings from './Pages/PastBookings'
+
+
 
 class App extends Component {
   state = {
@@ -64,11 +67,10 @@ class App extends Component {
             </Route>
             <Route path="/locations" component={Locations} />
             <Route path="/users" component={Users} />
-            <Route path="/home" component={Home} />
+            <Route path="/home" component={Home} />  
+            <Route path="/account" component={Account} />
             <Route path="/reports" component={Reports} />
-
             <PastBookings email={this.state.email} />
-
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
             {this.state.visible ? (
