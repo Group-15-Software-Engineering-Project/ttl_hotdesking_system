@@ -24,13 +24,13 @@ function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
   const location = useLocation();
-  return location.pathname === "/Login" ? (
+  return location.pathname === "/login" ? (
     <></>
   ) : (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
         <div className="navbar">
-          <Link to="/Login">
+          <Link to="/login">
             <button
               className="nav-button"
               onClick={() => {
