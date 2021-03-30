@@ -70,7 +70,9 @@ class App extends Component {
             <Route path="/home" component={Home} />  
             <Route path="/account" component={Account} />
             <Route path="/reports" component={Reports} />
+            <Route path="/past-bookings" component={PastBookings}>
             <PastBookings email={this.state.email} />
+            </Route>
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
             {this.state.visible ? (
