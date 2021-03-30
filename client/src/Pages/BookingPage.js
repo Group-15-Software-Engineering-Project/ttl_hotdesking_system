@@ -17,8 +17,8 @@ export default class BookingPage extends React.Component {
       selectPM: false,
       responseToPost: "",
       times: [
-        { value: "9:00 - 12:00", label: "AM" },
-        { value: "12:00 - 17:30", label: "PM" },
+        { value: "9:00 - 13:00", label: "AM" },
+        { value: "13:30 - 17:30", label: "PM" },
         { value: "9:00 - 17:30", label: "AMPM" },
       ],
     };
@@ -42,11 +42,11 @@ export default class BookingPage extends React.Component {
     let pm;
     console.log(this.state.chosenTime);
     switch (this.state.chosenTime) {
-      case "9:00 - 12:00":
+      case "9:00 - 13:00":
         am = true;
         pm = false;
         break;
-      case "12:00 - 17:30":
+      case "13:30 - 17:30":
         am = false;
         pm = true;
         break;
@@ -95,109 +95,15 @@ export default class BookingPage extends React.Component {
     this.positionReference.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  // getMatchingDesks = () => {
-  //   if (!this.state.selectAM && !this.state.selectPM) {
-  //     let AllDesks = [];
-  //     for (let desk in this.state.bookableDesks) {
-  //       let key = Object.keys(this.state.bookableDesks[desk]);
-  //       if (
-  //         this.state.bookableDesks[desk][key].AM &&
-  //         this.state.bookableDesks[desk][key].PM
-  //       ) {
-  //         AllDesks[AllDesks.length] = {
-  //           [Object.keys(this.state.bookableDesks[desk]) + " AM & PM"]: null,
-  //         };
-  //         AllDesks[AllDesks.length] = {
-  //           [Object.keys(this.state.bookableDesks[desk]) + " AM"]: null,
-  //         };
-  //         AllDesks[AllDesks.length] = {
-  //           [Object.keys(this.state.bookableDesks[desk]) + " PM"]: null,
-  //         };
-  //       } else if (
-  //         !this.state.bookableDesks[desk][key].AM &&
-  //         this.state.bookableDesks[desk][key].PM
-  //       ) {
-  //         AllDesks[AllDesks.length] = {
-  //           [Object.keys(this.state.bookableDesks[desk]) + " PM"]: null,
-  //         };
-  //       } else if (
-  //         this.state.bookableDesks[desk][key].AM &&
-  //         !this.state.bookableDesks[desk][key].PM
-  //       ) {
-  //         AllDesks[AllDesks.length] = {
-  //           [Object.keys(this.state.bookableDesks[desk]) + " AM"]: null,
-  //         };
-  //       }
-  //     }
-  //     return AllDesks;
-  //   } else if (!this.state.selectAM && this.state.selectPM) {
-  //     let PMDesks = [];
-  //     for (let desk in this.state.bookableDesks) {
-  //       let key = Object.keys(this.state.bookableDesks[desk]);
-  //       if (this.state.bookableDesks[desk][key].PM) {
-  //         PMDesks[PMDesks.length] = this.state.bookableDesks[desk];
-  //       }
-  //     }
-  //     return PMDesks;
-  //   } else if (this.state.selectAM && !this.state.selectPM) {
-  //     let AMDesks = [];
-  //     for (let desk in this.state.bookableDesks) {
-  //       let key = Object.keys(this.state.bookableDesks[desk]);
-  //       if (this.state.bookableDesks[desk][key].AM) {
-  //         AMDesks[AMDesks.length] = this.state.bookableDesks[desk];
-  //       }
-  //     }
-  //     return AMDesks;
-  //   } else if (this.state.selectAM && this.state.selectPM) {
-  //     let FullDayDesks = [];
-  //     for (let desk in this.state.bookableDesks) {
-  //       let key = Object.keys(this.state.bookableDesks[desk]);
-  //       if (
-  //         this.state.bookableDesks[desk][key].AM &&
-  //         this.state.bookableDesks[desk][key].PM
-  //       ) {
-  //         FullDayDesks[FullDayDesks.length] = this.state.bookableDesks[desk];
-  //       }
-  //     }
-  //     return FullDayDesks;
-  //   } else {
-  //     return this.state.bookableDesks; //error
-  //   }
-  // };
-
-  // handleEvent = async (event) => {
-  //   this.setState({
-  //     [event.target.name]:
-  //       event.target.type === "checkbox"
-  //         ? event.target.checked
-  //         : event.target.value,
-  //     bookableDesks:
-  //       event.target.name !== "chosenDesk" ? [] : this.state.bookableDesks,
-  //     view: event.target.name !== "chosenDesk" ? false : this.state.view,
-  //   });
-  // };
-
-  // getOptions = (option) => {
-  //   return <option>{option}</option>;
-  // };
-
-  // getBookableDeskList = (desk) => {
-  //   return <option>{Object.keys(desk)}</option>;
-  // };
-
-  // receiveDeskData = async (desks) => {
-  //   if (desks !== null) {
-  //     await this.changeState(desks);
-  //   }
-  // };
-
   transformDeskData = () => {
     let data = [];
     let desks = this.state.bookableDesks;
     for (let desk in desks) {
+      let label = desks[desk].disabled ? "Booked by: " + desks[desk].name : "";
       data.push({
         value: desks[desk],
-        label: "",
+        label: label,
+        disabled: desks[desk].disabled,
       });
     }
     return data;
@@ -301,7 +207,7 @@ export default class BookingPage extends React.Component {
                         }
                       }
                     })()}
-                    onSelect={(e, date, m) => {
+                    onSelect={(desks, date, m) => {
                       let newDate;
                       if (
                         this.state.chosenDate === "default" &&
@@ -319,18 +225,13 @@ export default class BookingPage extends React.Component {
                         newDate = date;
                       }
                       this.setState({
-                        bookableDesks: e,
+                        bookableDesks: desks,
                         chosenDate: newDate,
                         chosenDesk: "default",
                       });
                     }}
                   ></BookingCalendar>
                   <br />
-                  {this.state.chosenDate !== "default" ? (
-                    <span style={{ alignItems: "center", fontWeight: "bold" }}>
-                      {this.state.chosenDate}
-                    </span>
-                  ) : null}
                   {this.state.bookableDesks.length === 0 ? (
                     <>
                       <br />
@@ -344,25 +245,42 @@ export default class BookingPage extends React.Component {
               {this.state.bookableDesks.length !== 0 ? (
                 <>
                   <TileSelection
-                    showLabel={false}
+                    showLabel={true}
                     title={
-                      <h1
-                        style={{
-                          textAlign: "center",
-                          boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
-                          color: "white",
-                          backgroundColor: "#008dd3",
-                          borderRadius: "100px",
-                          width: "95%",
-                          marginLeft: "2.5%",
-                          padding: "3px",
-                        }}
-                      >
-                        Select a Desk
-                      </h1>
+                      <>
+                        <h1
+                          style={{
+                            textAlign: "center",
+                            boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
+                            color: "white",
+                            backgroundColor: "#008dd3",
+                            borderRadius: "100px",
+                            width: "95%",
+                            marginLeft: "2.5%",
+                            padding: "3px",
+                          }}
+                        >
+                          Select a Desk
+                        </h1>
+                        <div
+                          style={{
+                            textAlign: "center",
+                            alignItems: "center",
+                            marginTop: "15px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: "black",
+                              fontSize: "18px",
+                              fontWeight: "bold",
+                            }}
+                          >{`Desks for ${this.state.chosenArea} on ${this.state.chosenDate}.`}</span>
+                        </div>
+                      </>
                     }
                     options={this.transformDeskData()}
-                    size={["150px", "50px"]}
+                    size={["150px", "60px"]}
                     onSelect={(e) => {
                       this.setState({
                         chosenDesk: e,
@@ -373,25 +291,7 @@ export default class BookingPage extends React.Component {
               ) : null}
               {this.state.chosenDesk !== "default" ? (
                 <div>
-                  <button
-                    className="bookingBtn"
-                    onClick={this.submitBooking}
-                    /*onClick={() => {
-                    className="bookingBtn"
-                    onClick={() => {
-                      alert(
-                        "[" +
-                          this.state.chosenTime +
-                          " " +
-                          this.state.chosenDate +
-                          "] " +
-                          this.state.chosenArea +
-                          ": " +
-                          this.state.chosenDesk
-                      ); console.log(this.state.chosenDate+" "+this.state.chosenArea+" "+this.state.chosenDesk+" ");
-                      
-                    }}*/
-                  >
+                  <button className="bookingBtn" onClick={this.submitBooking}>
                     Confirm Booking
                   </button>
                   <div style={{ marginBottom: "30px" }} />

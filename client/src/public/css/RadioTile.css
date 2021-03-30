@@ -3,7 +3,7 @@
   text-align: center;
   color: #333333;
   padding: 10px;
-  margin-top: -1px;
+  margin-top: -0.5px;
   margin-left: -1px;
   border: #ddd solid 1px;
   background-color: white;
@@ -42,7 +42,7 @@ h1 {
   text-align: center;
   color: white;
   padding: 10px;
-  margin-top: -1px;
+  margin-top: -0.5px;
   margin-left: -1px;
   border: #ddd solid 1px;
   background-color: #008dd3 !important;
@@ -50,4 +50,16 @@ h1 {
 
 .radioTile:hover {
   background-color: #eeeeee;
+}
+
+.radioTile-disabled {
+  flex: 1;
+  text-align: center;
+  align-items: center;
+  color: gray;
+  padding: 10px;
+  margin-top: -0.5px;
+  margin-left: -1px;
+  border: #ddd solid 1px;
+  background-color: #aaa !important;
 }

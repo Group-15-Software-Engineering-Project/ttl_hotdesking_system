@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
-import crest from "../public/media/tcd-logo.png";
 import { Route, Link, Redirect } from "react-router-dom";
 import App from "../App";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
@@ -55,15 +54,7 @@ class Login extends Component {
       <div>
         <img src={TCDLogo} className="login-logo" style={{ zIndex: "6" }} />
         <div className="block-top">
-          <div
-            style={{
-              flex: "5",
-              fontFamily: "Sans-Serif",
-              fontVariant: "italic",
-              fontSize: "30px",
-              color: "white",
-            }}
-          >
+          <div className="title-text">
             Trinity Teaching & Learning Desk Booking
           </div>
         </div>
@@ -135,27 +126,3 @@ class Login extends Component {
 }
 
 export default Login;
-
-{
-  /* <Form>
-          <Form.Group size="lg" controlId="email">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              autoFocus
-              type="email"
-              value={this.state.email}
-              onChange={(e) => this.setState({ email: e.target.value })}
-            />
-          </Form.Group>
-          <Form.Group size="lg" controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              value={this.state.password}
-              onChange={(e) => this.setState({ password: e.target.value })}
-            />
-          </Form.Group>
-
-          <Button onClick={this.submitLogin}>Login</Button>
-        </Form> */
-}

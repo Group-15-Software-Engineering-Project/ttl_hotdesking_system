@@ -38,6 +38,12 @@
   top: 5px;
   left: 2vh;
 }
+.title-text {
+  flex: 5;
+  font-size: 2vw;
+  color: white;
+  font-family: sans-serif;
+}
 .block-top {
   display: flex;
   position: relative;
@@ -51,26 +57,57 @@
   width: 100% !important;
   background-color: #008dd3;
   box-shadow: 0 5px 3px #555;
-  text-align: center;
+  text-align: right;
   align-items: center;
 }
+@media (min-width: 1090px) {
+  .title-text {
+    flex: 5;
+    font-family: sans-serif;
+    font-size: 30px;
+    color: white;
+  }
 
+  .block-top {
+    display: flex;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    padding: 2vh;
+    height: 80px !important;
+    width: 100% !important;
+    background-color: #008dd3;
+    box-shadow: 0 5px 3px #555;
+    text-align: right;
+    align-items: center;
+  }
+}
 .text-field {
-  width: 35vh;
-  height: 6vh;
+  margin: 0px;
+  padding: 0px;
+  width: 30%;
+  min-width: 200px;
+  height: 45px;
   border-radius: 3px;
   border: 1px #bbb solid;
-  margin: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   padding: 10px;
 }
 
 .login-button {
+  margin: 0px;
+  padding: 0px;
   background-color: #008dd3;
   color: white;
   border-radius: 3px;
-  width: 35vh;
-  height: 6vh;
-  margin: 10px;
+  min-width: 200px;
+  width: 30%;
+  height: 40px;
+  margin-top: 10px;
   border: none;
   font-size: 20px;
   cursor: pointer;
@@ -81,6 +118,8 @@
   box-shadow: none;
 }
 .flex-container-1 {
+  margin: 0px;
+  padding: 0px;
   flex: 1;
   justify-content: center;
   text-align: left;
@@ -90,6 +129,8 @@
   /* border: black 3px solid; */
 }
 .flex-container-2 {
+  margin: 0px;
+  padding: 0px;
   flex: 2;
   justify-content: center;
   text-align: left;
@@ -99,6 +140,8 @@
   /* border: black 3px solid; */
 }
 .flex-container-3 {
+  margin: 0px;
+  padding: 0px;
   flex: 3;
   justify-content: center;
   text-align: left;
@@ -108,6 +151,8 @@
   /* border: black 3px solid; */
 }
 .flex-container-4 {
+  margin: 0px;
+  padding: 0px;
   flex: 4;
   display: flex;
   justify-content: center;
@@ -118,12 +163,11 @@
   /* border: black 3px solid; */
 }
 .flex-container-5 {
+  margin: 0px;
+  padding: 0px;
   flex: 5;
-  display: flex;
+  display: block;
   justify-content: center;
   text-align: center;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
   /* border: black 3px solid; */
 }
