@@ -1,0 +1,25 @@
+.Date {
+    font-size: medium; 
+    width: 1260px;
+    height:65px ;
+    }
+    
+    .Date:hover{
+        padding-right: 1265px;
+        padding-bottom: 27px;
+        cursor: pointer;
+        background-color: rgba(140, 140, 167, 0.938);
+    }
+    .Time {
+        left:100;
+        font-size: medium; 
+        border-left: 100px; 
+    }
+    
+    
+    .Desk {
+        background-position: center;
+        font-size:large; 
+    }
+    
+    

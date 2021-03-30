@@ -16,7 +16,7 @@ export const SidebarData = [
   },
   {
     title: "Account",
-    path: "/",
+    path: "/account",
     icon: <CgIcons.CgProfile />,
     cName: "nav-text",
   },
