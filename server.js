@@ -36,6 +36,24 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/getRooms", (req, res) => {
+  let locations = [];
+  getRooms()
+  .then((result) => {
+    for (x in result) {
+      locations.push({
+        "value": result[x],
+        "label": ""}
+        );
+    }
+    res.send({error: false, rooms:locations});
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({error: true, rooms:[]});
+  });
+})
+
 app.post("/api/getUsers", (req, res) => {
   getUsers()
   .then((result) => {
@@ -160,29 +178,40 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
     0
   ).getDate();
   let availability = new Array(daysInMonth);
+  let existingBookings = new Array(daysInMonth);
   for (let i = 0; i < daysInMonth; i++) {
-    let j = i;
     let date = req.body.date;
     if (i < 10) {
       date += "-0" + (i + 1).toString();
     } else {
       date += "-" + (i + 1).toString();
     }
-    getAvailableDesks(req.body.room, date, req.body.am, req.body.pm)
+    getExistingBookings(req.body.room, date, req.body.am, req.body.pm)
+    .then((bookings) => {
+      getAvailableDesks(req.body.room, date, req.body.am, req.body.pm)
       .then((desks) => {
         data = [];
+        users = [];
         for (desk in desks) {
           data.push(desks[desk].DESK_NO);
         }
-        availability[j] = data;
+        for (email in bookings) {
+          users.push(bookings[email].USER);
+        }
+        availability[i] = data;
+        existingBookings[i] = users;
         if (i == daysInMonth - 1) {
-          res.send({ data: availability });
+          res.send({ 
+            data: availability,
+            existingBookings: existingBookings
+            });
         }
       })
-      .catch((err) => {
-        console.log(err);
-        data.push([]);
-      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({date: availability});
+    });
   }
 });
 
@@ -353,7 +382,7 @@ function getDesks(room) {
 
 function getRooms() {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM ROOMS;";
+    sql = "SELECT DISTINCT * FROM ROOMS;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -368,16 +397,22 @@ function getRooms() {
   });
 }
 
-function getBookingsForRoomAndDay(room, date) {
+function getExistingBookings(room, date, am, pm) {
+  let times = "";
+  if (am && pm) {
+    times = "AM=1 OR PM=1";
+  } else {
+    times = am ? "AM=1 " : "PM=1 ";
+  }
+  sql =
+    'SELECT DISTINCT USER FROM BOOKINGS WHERE ROOM="' +
+    room +
+    '" AND DATE="' +
+    date + 
+    '" AND ' +
+    times +
+    ' ORDER BY DESK ASC;';
   return new Promise((resolve, reject) => {
-    day = date.toISOString().slice(0, 10);
-    sql =
-      'SELECT * FROM BOOKINGS WHERE ROOM="' +
-      room +
-      '" AND DATE="' +
-      day +
-      '";';
-    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -528,13 +563,4 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-/*
-addUser("mikekelly7654@gmail.com")
-.then((res) => {
-  console.log(res);
-})
-.catch((err) => {
-  console.log("Promise rejection: " + err);
-})
-*/
 app.listen(port, () => console.log(`Listening on port ${port}`));
