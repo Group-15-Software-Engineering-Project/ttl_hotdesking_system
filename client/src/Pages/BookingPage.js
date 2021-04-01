@@ -13,6 +13,7 @@ export default class BookingPage extends React.Component {
       chosenDesk: "default",
       chosenDate: "default",
       chosenTime: "default",
+      locations: [],
       bookableDesks: [],
       selectAM: false,
       selectPM: false,
@@ -88,6 +89,30 @@ export default class BookingPage extends React.Component {
 
   positionReference = createRef();
 
+  componentDidMount() {
+    fetch("/api/getRooms", {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json"
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        console.log("Error fetching rooms");
+      } else {
+        this.setState({
+          locations: res.rooms
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
   componentDidUpdate() {
     this.scrollToBottom();
   }
@@ -123,7 +148,7 @@ export default class BookingPage extends React.Component {
                 title={
                   <h1 className="page-divider-header">Select a Booking Area</h1>
                 }
-                options={this.props.options}
+                options={this.state.locations}
                 size={["210px", "75px"]}
                 onSelect={(e) => {
                   this.setState({

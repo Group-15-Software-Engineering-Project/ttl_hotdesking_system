@@ -11,6 +11,7 @@ export default class BookingCalendar extends React.Component {
       selectedDate: "",
       currentMonth: "",
       availableDesks: "",
+      existingBookings: [],
       key: 0,
     };
   }
@@ -49,7 +50,10 @@ export default class BookingCalendar extends React.Component {
         return res.json();
       })
       .then((res) => {
-        this.setState({ availableDesks: res.data }, () => {});
+        this.setState({ 
+          availableDesks: res.data,
+          existingBookings: res.existingBookings
+        }, () => {});
       });
   };
   componentDidMount() {
