@@ -40,7 +40,6 @@ export default class BookingPage extends React.Component {
   submitBooking = () => {
     let am;
     let pm;
-    console.log(this.state.chosenTime);
     switch (this.state.chosenTime) {
       case "9:00 - 13:00":
         am = true;

@@ -16,7 +16,7 @@ export const SidebarData = [
   },
   {
     title: "Account",
-    path: "/",
+    path: "/account",
     icon: <CgIcons.CgProfile />,
     cName: "nav-text",
   },
@@ -39,8 +39,8 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Desks",
-    path: "/desks",
+    title: "Locations",
+    path: "/locations",
     icon: <GiIcons.GiDesk />,
     cName: "nav-text",
   },

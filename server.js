@@ -36,8 +36,92 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/getUsers", (req, res) => {
+  getUsers()
+  .then((result) => {
+    res.send({error: false, users:result});
+  })
+  .catch(() => {
+    res.send({error:true, users:[]});
+  });
+});
+
+app.post("/api/addRoom", (req, res) => {
+  addRoom(req.body.room)
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
+app.post("/api/addDesk", (req, res) => {
+  addDesk(req.body.desk, req.body.room)
+  .then(() => {
+    res.send({error: false, message: "Sucess"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+})
+
+app.post("/api/addUser", (req, res) => {
+  addUser(req.body.email, req.body.password)
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
+app.post("/api/removeDesk", (req, res) => {
+  deleteDeskBookings(req.body.desk, req.body.room)
+  .then(() => {
+    deleteDesk(req.body.desk, req.body.room);
+  })
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
+app.post("/api/removeRoom", (req, res) => {
+  deleteRoomBookings(req.body.room)
+  .then(() => {
+    deleteDesksFromRoom(req.body.room)
+  })
+  .then(() => {
+    deleteRoom(req.body.room);
+  })
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error:true, message: err});
+  });
+});
+
+app.post("/api/removeUser", (req, res) => {
+  deleteUserBookings(req.body.email)
+  .then(() => {
+    deleteUserFromGroups(req.body.email);
+  })
+  .then(() => {
+    deleteUser(req.body.email)
+  })
+  .then(() => {
+    res.send({error: false, message: "Success"});
+  })
+  .catch((err) => {
+    res.send({error: true, message: err});
+  });
+});
+
 app.post("/api/getBooking", (req, res) => {
-  console.log(req.body.email);
   getPastBookings(req.body.email)
     .then((bookings) => {
       data = [];
@@ -52,7 +136,6 @@ app.post("/api/getBooking", (req, res) => {
 });
 
 app.post("/api/makeBooking", (req, res) => {
-  console.log(req.body.email);
   addBooking(
     req.body.email,
     req.body.desk,
@@ -104,10 +187,10 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 });
 
 //Database Access
-function addUser(email) {
-  email = email.toLowerCase();
+function addUser(email, password) {
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '");';
+    sql = 'INSERT INTO USERS VALUES ("' + email + '", "'+password+'");';
+    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -120,8 +203,9 @@ function addUser(email) {
 }
 
 function addRoom(name) {
+  sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
+  console.log(sql);
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -133,8 +217,8 @@ function addRoom(name) {
 }
 
 function addDesk(desk_number, room) {
+  sql = "INSERT INTO DESKS VALUES (" + desk_number + ', "' + room + '");';
   return new Promise((resolve, reject) => {
-    sql = "INSERT INTO DESKS VALUES (" + desk_number + ', "' + room + '");';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -324,10 +408,105 @@ function getUserBookingsBetween(user, start, end) {
   });
 }
 
-function deleteUser(email) {
-  email = email.toLowerCase();
+function deleteUserFromGroups(email) {
+  sql = "DELETE FROM GROUPS WHERE USER='"+email+"';";
   return new Promise((resolve, reject) => {
-    sql = 'DELETE FROM USERS WHERE email="' + email + '";';
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteRoomBookings(room) {
+  sql = "DELETE FROM BOOKINGS WHERE ROOM='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(res));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteDeskBookings(desk, room) {
+  sql = "DELETE FROM BOOKINGS WHERE DESK="+desk+" AND ROOM='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteUserBookings(email) {
+  sql = "DELETE FROM BOOKINGS WHERE USER='"+email+"';";
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteDesksFromRoom(room) {
+  sql = "DELETE FROM DESKS WHERE ROOM='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err,res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+function deleteRoom(room) {
+  sql = "DELETE FROM ROOMS WHERE NAME='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteDesk(desk, room) {
+  sql = "DELETE FROM DESKS WHERE DESK_NO="+desk+" AND ROOM='"+room+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function deleteUser(email) {
+  sql = 'DELETE FROM USERS WHERE email="' + email + '";';
+  console.log(sql);
+  return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(res));
