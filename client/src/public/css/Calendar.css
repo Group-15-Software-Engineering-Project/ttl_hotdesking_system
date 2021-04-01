@@ -116,18 +116,6 @@
   flex-flow: column wrap;
 }
 
-.button-style {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
-  color: white;
-  background-color: #0095ff;
-  border: none;
-}
-.button-style:hover {
-  background-color: #00c5ff;
-}
-
 .react-calendar {
   width: 348px;
   background: white;
@@ -316,22 +304,6 @@
   height: 48px;
 }
 
-.bookingBtn {
-  border: none;
-  border-radius: 100px;
-  background-color: #008dd3;
-  color: white;
-  width: 30%;
-  margin-left: 35%;
-  height: 40px;
-  font-weight: bold;
-  font-size: 16px;
-  box-shadow: 0 0px 6px #888;
-  cursor: pointer;
-}
-.bookingBtn:hover {
-  background-color: #00c5ff;
-}
 .Not-Available {
   background-color: #f0f0f0;
 }

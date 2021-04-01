@@ -15,15 +15,15 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Account",
-    path: "/account",
-    icon: <CgIcons.CgProfile />,
+    title: "My Bookings",
+    path: "/past-bookings",
+    icon: <AiIcons.AiOutlineHistory />,
     cName: "nav-text",
   },
   {
-    title: "Past Bookings",
-    path: "/past-bookings",
-    icon: <AiIcons.AiOutlineHistory />,
+    title: "Account",
+    path: "/account",
+    icon: <CgIcons.CgProfile />,
     cName: "nav-text",
   },
   {

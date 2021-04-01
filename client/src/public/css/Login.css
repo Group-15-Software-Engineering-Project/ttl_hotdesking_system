@@ -22,28 +22,29 @@
   }
 }
 
-.wrapper {
-  display: flex;
-  background-color: #eeeeee;
-  justify-content: flex-start;
-  flex-flow: row wrap;
-  min-height: 90vh;
-  height: auto;
-  padding: none;
-}
-
 .login-logo {
   border: none;
   position: absolute;
   top: 5px;
   left: 2vh;
+  width: 280px;
+  height: 72px;
 }
 .title-text {
   flex: 5;
-  font-size: 2vw;
+  font-size: 3.25vw;
   color: white;
   font-family: sans-serif;
 }
+@media (max-width: 860px) {
+  .login-logo {
+    clip: rect(0, 70px, 72px, 0);
+  }
+  .title-text {
+    font-size: 4vw;
+  }
+}
+
 .block-top {
   display: flex;
   position: relative;
@@ -90,15 +91,17 @@
   padding: 0px;
   width: 30%;
   min-width: 200px;
-  height: 45px;
+  height: 6vh;
   border-radius: 3px;
   border: 1px #bbb solid;
   margin-top: 3px;
   margin-bottom: 3px;
   padding: 10px;
+  font-size: 2vh;
 }
 
 .login-button {
+  font-size: 4vh;
   margin: 0px;
   padding: 0px;
   background-color: #008dd3;
@@ -106,7 +109,7 @@
   border-radius: 3px;
   min-width: 200px;
   width: 30%;
-  height: 40px;
+  height: 6vh;
   margin-top: 10px;
   border: none;
   font-size: 20px;
@@ -116,58 +119,4 @@
 .login-button:hover {
   background-color: #00bff9;
   box-shadow: none;
-}
-.flex-container-1 {
-  margin: 0px;
-  padding: 0px;
-  flex: 1;
-  justify-content: center;
-  text-align: left;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-2 {
-  margin: 0px;
-  padding: 0px;
-  flex: 2;
-  justify-content: center;
-  text-align: left;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-3 {
-  margin: 0px;
-  padding: 0px;
-  flex: 3;
-  justify-content: center;
-  text-align: left;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-4 {
-  margin: 0px;
-  padding: 0px;
-  flex: 4;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-5 {
-  margin: 0px;
-  padding: 0px;
-  flex: 5;
-  display: block;
-  justify-content: center;
-  text-align: center;
-  /* border: black 3px solid; */
 }

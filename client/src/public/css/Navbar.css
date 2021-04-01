@@ -12,7 +12,7 @@
 }
 .nav-logo {
   border: none;
-  margin-left: 30px;
+  margin-left: 2vw;
   margin-right: auto;
   position: relative;
   height: 50px;
@@ -22,7 +22,7 @@
 @media (min-width: 720px) {
   .nav-logo {
     border: none;
-    margin-left: auto;
+    margin-left: 2vw;
     margin-right: auto;
     position: relative;
     height: 80px;

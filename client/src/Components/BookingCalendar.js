@@ -7,6 +7,7 @@ export default class BookingCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      todayDate: "",
       selectedDate: "",
       currentMonth: "",
       availableDesks: "",
@@ -61,6 +62,10 @@ export default class BookingCalendar extends React.Component {
 
     this.setState(
       {
+        todayDate:
+          date.getFullYear() * 10000 +
+          (date.getMonth() + 1) * 100 +
+          date.getDate(),
         selectedDate:
           date.getDate() +
           " " +
@@ -120,20 +125,11 @@ export default class BookingCalendar extends React.Component {
 
   disabledTiles = (e) => {
     let date = String(e.date).split(" ");
-    let year0 = date[3];
-    let month0 = months.indexOf(date[1]) + 1;
-    month0 = String(month0).length === 1 ? "0" + month0 : month0;
-    let day0 = (String(date[2]).length === 1 ? "0" : "") + date[2];
-    let tileDate = year0 + month0 + day0;
-    let today = new Date();
-    let year = today.getFullYear();
-    let month =
-      String(today.getMonth() + 1).length === 1
-        ? "0" + (today.getMonth() + 1)
-        : today.getMonth() + 1;
-    let day = (today.getDate().length === 1 ? "0" : "") + today.getDate();
-    let todayVal = year + month + day;
-    return todayVal > tileDate;
+    let year = parseInt(date[3]);
+    let month = months.indexOf(date[1]) + 1;
+    let day = parseInt(date[2]);
+    let tileDate = year * 10000 + month * 100 + day;
+    return this.state.todayDate > tileDate;
   };
   render() {
     return (

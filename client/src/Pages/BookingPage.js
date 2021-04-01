@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
 import { createUniqueID, months } from "../Components/Misc";
+import "../public/css/main.css";
 
 export default class BookingPage extends React.Component {
   constructor(props) {
@@ -113,27 +114,14 @@ export default class BookingPage extends React.Component {
       <div className="booking-page">
         <section>
           <div className="calendar-container">
-            <div className="element-flex-1"></div>
-            <div className="element-flex-3">
+            <div className="flex-container-1"></div>
+            <div className="flex-container-5 main-body">
               <div style={{ marginTop: "20px" }} />
               <TileSelection
                 showLabel={true}
                 key={this.state.areaKey}
                 title={
-                  <h1
-                    style={{
-                      textAlign: "center",
-                      boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
-                      color: "white",
-                      backgroundColor: "#008dd3",
-                      borderRadius: "100px",
-                      width: "95%",
-                      marginLeft: "2.5%",
-                      padding: "3px",
-                    }}
-                  >
-                    Select a Booking Area
-                  </h1>
+                  <h1 className="page-divider-header">Select a Booking Area</h1>
                 }
                 options={this.props.options}
                 size={["210px", "75px"]}
@@ -161,18 +149,7 @@ export default class BookingPage extends React.Component {
                     })
                   }
                   title={
-                    <h1
-                      style={{
-                        textAlign: "center",
-                        boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
-                        color: "white",
-                        backgroundColor: "#008dd3",
-                        borderRadius: "100px",
-                        width: "95%",
-                        marginLeft: "2.5%",
-                        padding: "3px",
-                      }}
-                    >
+                    <h1 className="page-divider-header">
                       Select a Booking Time
                     </h1>
                   }
@@ -180,20 +157,7 @@ export default class BookingPage extends React.Component {
               ) : null}
               {this.state.chosenTime !== "default" ? (
                 <>
-                  <h1
-                    style={{
-                      textAlign: "center",
-                      boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
-                      color: "white",
-                      backgroundColor: "#008dd3",
-                      borderRadius: "100px",
-                      width: "95%",
-                      marginLeft: "2.5%",
-                      padding: "3px",
-                    }}
-                  >
-                    Select a Booking Date
-                  </h1>
+                  <h1 className="page-divider-header">Select a Booking Date</h1>
                   <BookingCalendar
                     key={this.state.chosenTime}
                     chosenArea={this.state.chosenArea}
@@ -247,20 +211,7 @@ export default class BookingPage extends React.Component {
                     showLabel={true}
                     title={
                       <>
-                        <h1
-                          style={{
-                            textAlign: "center",
-                            boxShadow: "0px 3px 3px #ccc, 0px -3px 3px #ccc",
-                            color: "white",
-                            backgroundColor: "#008dd3",
-                            borderRadius: "100px",
-                            width: "95%",
-                            marginLeft: "2.5%",
-                            padding: "3px",
-                          }}
-                        >
-                          Select a Desk
-                        </h1>
+                        <h1 className="page-divider-header">Select a Desk</h1>
                         <div
                           style={{
                             textAlign: "center",
@@ -289,8 +240,8 @@ export default class BookingPage extends React.Component {
                 </>
               ) : null}
               {this.state.chosenDesk !== "default" ? (
-                <div>
-                  <button className="bookingBtn" onClick={this.submitBooking}>
+                <div style={{ alignItems: "center", textAlign: "center" }}>
+                  <button className="button-style" onClick={this.submitBooking}>
                     Confirm Booking
                   </button>
                   <div style={{ marginBottom: "30px" }} />
@@ -299,7 +250,7 @@ export default class BookingPage extends React.Component {
               ) : null}
               <div ref={this.positionReference} />
             </div>
-            <div className="element-flex-1"></div>
+            <div className="flex-container-1"></div>
           </div>
         </section>
       </div>
