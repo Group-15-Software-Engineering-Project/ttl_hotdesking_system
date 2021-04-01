@@ -36,107 +36,139 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/getLocationData", (req, res) => {
+  var data00 = [];
+  getRooms()
+    .then((rooms) => {
+      for (room in rooms) {
+        let j = room;
+        console.log("room:", room);
+        getDesks(rooms[room])
+          .then((desks) => {
+            console.log(rooms[j]);
+            console.log(desks);
+            data00.push({ name: rooms[j], desks: desks });
+            console.log(j, rooms.length);
+            console.log(data00);
+            if (room == rooms.length - 1) {
+              console.log("DATA: ", data00);
+              return { error: false, data: data00 };
+            }
+          })
+          .then((res2) => {
+            return res2;
+          });
+      }
+    })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.send({ error: true, data: [] });
+    });
+});
+
 app.post("/api/getRooms", (req, res) => {
   let locations = [];
   getRooms()
-  .then((result) => {
-    for (x in result) {
-      locations.push({
-        "value": result[x],
-        "label": ""}
-        );
-    }
-    res.send({error: false, rooms:locations});
-  })
-  .catch((err) => {
-    console.log(err);
-    res.send({error: true, rooms:[]});
-  });
-})
+    .then((result) => {
+      for (x in result) {
+        locations.push({
+          value: result[x],
+          label: "",
+        });
+      }
+      res.send({ error: false, rooms: locations });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ error: true, rooms: [] });
+    });
+});
 
 app.post("/api/getUsers", (req, res) => {
   getUsers()
-  .then((result) => {
-    res.send({error: false, users:result});
-  })
-  .catch(() => {
-    res.send({error:true, users:[]});
-  });
+    .then((result) => {
+      res.send({ error: false, users: result });
+    })
+    .catch(() => {
+      res.send({ error: true, users: [] });
+    });
 });
 
 app.post("/api/addRoom", (req, res) => {
   addRoom(req.body.room)
-  .then(() => {
-    res.send({error: false, message: "Success"});
-  })
-  .catch((err) => {
-    res.send({error: true, message: err});
-  });
+    .then(() => {
+      res.send({ error: false, message: "Success" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
 });
 
 app.post("/api/addDesk", (req, res) => {
   addDesk(req.body.desk, req.body.room)
-  .then(() => {
-    res.send({error: false, message: "Sucess"});
-  })
-  .catch((err) => {
-    res.send({error: true, message: err});
-  });
-})
+    .then(() => {
+      res.send({ error: false, message: "Sucess" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
+});
 
 app.post("/api/addUser", (req, res) => {
   addUser(req.body.email, req.body.password)
-  .then(() => {
-    res.send({error: false, message: "Success"});
-  })
-  .catch((err) => {
-    res.send({error: true, message: err});
-  });
+    .then(() => {
+      res.send({ error: false, message: "Success" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
 });
 
 app.post("/api/removeDesk", (req, res) => {
   deleteDeskBookings(req.body.desk, req.body.room)
-  .then(() => {
-    deleteDesk(req.body.desk, req.body.room);
-  })
-  .then(() => {
-    res.send({error: false, message: "Success"});
-  })
-  .catch((err) => {
-    res.send({error: true, message: err});
-  });
+    .then(() => {
+      deleteDesk(req.body.desk, req.body.room);
+    })
+    .then(() => {
+      res.send({ error: false, message: "Success" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
 });
 
 app.post("/api/removeRoom", (req, res) => {
   deleteRoomBookings(req.body.room)
-  .then(() => {
-    deleteDesksFromRoom(req.body.room)
-  })
-  .then(() => {
-    deleteRoom(req.body.room);
-  })
-  .then(() => {
-    res.send({error: false, message: "Success"});
-  })
-  .catch((err) => {
-    res.send({error:true, message: err});
-  });
+    .then(() => {
+      deleteDesksFromRoom(req.body.room);
+    })
+    .then(() => {
+      deleteRoom(req.body.room);
+    })
+    .then(() => {
+      res.send({ error: false, message: "Success" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
 });
 
 app.post("/api/removeUser", (req, res) => {
   deleteUserBookings(req.body.email)
-  .then(() => {
-    deleteUserFromGroups(req.body.email);
-  })
-  .then(() => {
-    deleteUser(req.body.email)
-  })
-  .then(() => {
-    res.send({error: false, message: "Success"});
-  })
-  .catch((err) => {
-    res.send({error: true, message: err});
-  });
+    .then(() => {
+      deleteUserFromGroups(req.body.email);
+    })
+    .then(() => {
+      deleteUser(req.body.email);
+    })
+    .then(() => {
+      res.send({ error: false, message: "Success" });
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err });
+    });
 });
 
 app.post("/api/getBooking", (req, res) => {
@@ -187,38 +219,39 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
       date += "-" + (i + 1).toString();
     }
     getExistingBookings(req.body.room, date, req.body.am, req.body.pm)
-    .then((bookings) => {
-      getAvailableDesks(req.body.room, date, req.body.am, req.body.pm)
-      .then((desks) => {
-        data = [];
-        users = [];
-        for (desk in desks) {
-          data.push(desks[desk].DESK_NO);
-        }
-        for (email in bookings) {
-          users.push(bookings[email].USER);
-        }
-        availability[i] = data;
-        existingBookings[i] = users;
-        if (i == daysInMonth - 1) {
-          res.send({ 
-            data: availability,
-            existingBookings: existingBookings
-            });
-        }
+      .then((bookings) => {
+        getAvailableDesks(req.body.room, date, req.body.am, req.body.pm).then(
+          (desks) => {
+            data = [];
+            users = [];
+            for (desk in desks) {
+              data.push(desks[desk].DESK_NO);
+            }
+            for (email in bookings) {
+              users.push(bookings[email].USER);
+            }
+            availability[i] = data;
+            existingBookings[i] = users;
+            if (i == daysInMonth - 1) {
+              res.send({
+                data: availability,
+                existingBookings: existingBookings,
+              });
+            }
+          }
+        );
       })
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({date: availability});
-    });
+      .catch((err) => {
+        console.log(err);
+        res.send({ date: availability });
+      });
   }
 });
 
 //Database Access
 function addUser(email, password) {
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '", "'+password+'");';
+    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + password + '");';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
@@ -408,10 +441,10 @@ function getExistingBookings(room, date, am, pm) {
     'SELECT DISTINCT USER FROM BOOKINGS WHERE ROOM="' +
     room +
     '" AND DATE="' +
-    date + 
+    date +
     '" AND ' +
     times +
-    ' ORDER BY DESK ASC;';
+    " ORDER BY DESK ASC;";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -444,7 +477,7 @@ function getUserBookingsBetween(user, start, end) {
 }
 
 function deleteUserFromGroups(email) {
-  sql = "DELETE FROM GROUPS WHERE USER='"+email+"';";
+  sql = "DELETE FROM GROUPS WHERE USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -457,7 +490,7 @@ function deleteUserFromGroups(email) {
 }
 
 function deleteRoomBookings(room) {
-  sql = "DELETE FROM BOOKINGS WHERE ROOM='"+room+"';";
+  sql = "DELETE FROM BOOKINGS WHERE ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -471,7 +504,7 @@ function deleteRoomBookings(room) {
 }
 
 function deleteDeskBookings(desk, room) {
-  sql = "DELETE FROM BOOKINGS WHERE DESK="+desk+" AND ROOM='"+room+"';";
+  sql = "DELETE FROM BOOKINGS WHERE DESK=" + desk + " AND ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -485,7 +518,7 @@ function deleteDeskBookings(desk, room) {
 }
 
 function deleteUserBookings(email) {
-  sql = "DELETE FROM BOOKINGS WHERE USER='"+email+"';";
+  sql = "DELETE FROM BOOKINGS WHERE USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -498,10 +531,10 @@ function deleteUserBookings(email) {
 }
 
 function deleteDesksFromRoom(room) {
-  sql = "DELETE FROM DESKS WHERE ROOM='"+room+"';";
+  sql = "DELETE FROM DESKS WHERE ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
-    con.query(sql, (err,res) => {
+    con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
@@ -511,7 +544,7 @@ function deleteDesksFromRoom(room) {
   });
 }
 function deleteRoom(room) {
-  sql = "DELETE FROM ROOMS WHERE NAME='"+room+"';";
+  sql = "DELETE FROM ROOMS WHERE NAME='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -525,7 +558,7 @@ function deleteRoom(room) {
 }
 
 function deleteDesk(desk, room) {
-  sql = "DELETE FROM DESKS WHERE DESK_NO="+desk+" AND ROOM='"+room+"';";
+  sql = "DELETE FROM DESKS WHERE DESK_NO=" + desk + " AND ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {

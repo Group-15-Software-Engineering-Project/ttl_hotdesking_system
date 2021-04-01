@@ -11,6 +11,30 @@ class Locations extends Component {
     deleteDeskNum: "",
     deleteDeskRoom: "",
     desks: [],
+    roomDeskList: null,
+  };
+
+  componentDidMount = () => {
+    fetch("/api/getLocationData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          console.log("error fetching location data");
+        } else {
+          this.setState({ roomDeskList: res.data });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    //fetch room-desk list and store in this.state.roomDeskList
   };
 
   submitAddRoom = (room) => {
@@ -137,10 +161,21 @@ class Locations extends Component {
     this.setState({ deleteDeskRoom: event.target.value });
   };
 
-  render() {
+  listDesks = (room) => {
     return (
       <div>
-        {/* <div style={{ height: "80px", backgroundColor: "yellow" }} /> */}
+        <span className="page-divider-header">{room.name}</span>
+        {room.desks.map((x) => {
+          return <span>{"Desk " + x}</span>;
+        })}
+      </div>
+    );
+  };
+
+  render() {
+    console.log(this.state.roomDeskList);
+    return (
+      <div>
         <div className="wrapper">
           <div className="flex-container-1" />
           <div className="flex-container-5 main-body">
@@ -320,6 +355,13 @@ class Locations extends Component {
                   Remove Desk
                 </button>
               </div>
+            </div>
+            <div>
+              {this.state.roomDeskList
+                ? this.state.roomDeskList.map((x) => {
+                    return this.listDesks;
+                  })
+                : null}
             </div>
           </div>
           <div className="flex-container-1" />

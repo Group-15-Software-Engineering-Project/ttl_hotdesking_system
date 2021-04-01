@@ -123,12 +123,6 @@ function PastBookings({ email }) {
           Today
         </span>
       );
-    const arr = [1, 2, 3, 4, 5];
-    let temp = arr[3];
-    delete arr[3];
-    arr[3] = arr[0];
-    arr[0] = temp;
-    console.log(arr);
 
     return (
       <div className="bookings-table">
