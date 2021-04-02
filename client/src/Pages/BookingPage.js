@@ -135,9 +135,17 @@ export default class BookingPage extends React.Component {
 
     for (let desk in this.state.bookableDesks) {
       let label =
-        this.state.bookableDesks[desk].user.length !== 0
-          ? "Booked by: " + this.state.bookableDesks[desk].user
-          : "";
+        this.state.bookableDesks[desk].user.length !== 0 ? (
+          <>
+            <span style={{ margin: "0" }}>Booked by:</span>
+            <div style={{ width: "100%", marginBottom: "-8px" }} />
+            <span style={{ margin: "0" }}>
+              {this.state.bookableDesks[desk].user}
+            </span>
+          </>
+        ) : (
+          ""
+        );
       console.log(this.state.bookableDesks[desk]);
       let disabled = label.length !== 0;
       data.push({
@@ -284,7 +292,7 @@ export default class BookingPage extends React.Component {
                   </>
                 }
                 options={this.transformDeskData()}
-                size={["150px", "60px"]}
+                size={["180px", "90px"]}
                 onSelect={(e) => {
                   this.setState({
                     chosenDesk: e,

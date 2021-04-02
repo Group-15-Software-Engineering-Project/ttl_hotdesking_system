@@ -48,7 +48,11 @@ export default function TileSelection(props) {
               }
               style={{
                 width: props.size[0] + " !important",
+                maxWidth: props.size[0] + " !important",
                 height: props.size[1],
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: " ellipsis !important",
               }}
             >
               <h1 style={{ fontSize: "18px", width: props.size[0] }}>

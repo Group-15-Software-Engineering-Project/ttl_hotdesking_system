@@ -6,12 +6,21 @@ class Users extends Component {
     addEmail: "",
     addPassword: "",
     deleteEmail: "",
+    addTeamName: "",
+    addTeamUserName: "",
+    removeFromTeam: "",
+    removeUserFromTeam: "",
+    teams: [],
     users: [],
   };
 
   componentDidMount() {
     this.getUsers();
   }
+
+  submitAddUserToTeam = () => {};
+
+  submitRemoveUserFromTeam = () => {};
 
   submitRemoveUser = (email) => {
     fetch("/api/removeUser", {
@@ -111,85 +120,195 @@ class Users extends Component {
       <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
-          <div className="space" />
-          <h1
-            className="page-divider-header"
-            style={{ marginLeft: "2.5%", backgroundColor: "#4dc300" }}
-          >
-            Add Users
-          </h1>
-          <div className="space" />
-          <input
-            type="email"
-            className="text-input"
-            placeholder="Email"
-            onChange={this.addEmailF}
-            style={{ width: "10%" }}
-          ></input>
-          <div className="space" style={{ marginBottom: "1%" }} />
-          <input
-            type="password"
-            className="text-input"
-            placeholder="Password"
-            onChange={this.addPasswordF}
-            style={{ width: "10%" }}
-          ></input>
-          <div className="space" style={{ marginBottom: "1%" }} />
-          <button
-            className="button-style"
-            onChange={() => {
-              this.submitAddUser(this.state.addEmail, this.state.addPassword);
-            }}
-          >
-            Add user
-          </button>
-          <div className="space" />
-          <h1
-            className="page-divider-header"
-            style={{ marginLeft: "2.5%", backgroundColor: "#F32000" }}
-          >
-            Remove Users
-          </h1>
-          <div className="space" />
-          <input
-            className="text-input"
-            placeholder="Email"
-            style={{ width: "10%" }}
-            onChange={(e) => this.deleteEmailF}
-          ></input>
-          <div className="space" style={{ marginBottom: "1%" }} />
-          <button
-            className="button-style"
-            onClick={() => {
-              this.submitRemoveUser(this.state.deleteEmail);
-            }}
-          >
-            Remove User
-          </button>
-          <div className="space" />
-          <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
-            Registered Users
-          </h1>
-          <div className="space" />
           <div
             style={{
               display: "flex",
               flexFlow: "row wrap",
-              alignItems: "left",
-              width: "100%",
+              justifyContent: "flex-start",
             }}
           >
-            {this.state.users.map((user) => (
-              <span
-                style={{
-                  fontWeight: "bold",
-                  width: "16%",
-                  marginBottom: "12px",
+            <div className="quadrant">
+              <h1
+                className="page-divider-header"
+                style={{ marginLeft: "2.5%", backgroundColor: "#4dc300" }}
+              >
+                Add Users
+              </h1>
+              <div
+                className="space"
+                style={{ marginBottom: "10%", marginTop: "5%" }}
+              />
+              <input
+                type="email"
+                className="text-input"
+                placeholder="Email"
+                onChange={this.addEmailF}
+              ></input>
+              <div className="space" style={{ marginBottom: "1%" }} />
+              <input
+                type="text"
+                className="text-input"
+                placeholder="Password"
+                onChange={this.addPasswordF}
+                style={{ width: "10%" }}
+              ></input>
+              <div
+                className="space"
+                style={{ marginTop: "5%", marginBottom: "5%" }}
+              />
+              <button
+                className="button-style"
+                onChange={() => {
+                  this.submitAddUser(
+                    this.state.addEmail,
+                    this.state.addPassword
+                  );
                 }}
               >
-                {user}
-              </span>
-            ))}
+                Add User
+              </button>
+            </div>
+            <div className="quadrant">
+              <h1
+                className="page-divider-header"
+                style={{
+                  marginLeft: "2.5%",
+                  backgroundColor: "#4dc300",
+                }}
+              >
+                Add Users to Teams
+              </h1>
+              <div
+                className="space"
+                style={{ marginBottom: "10%", marginTop: "5%" }}
+              />{" "}
+              <input
+                className="text-input"
+                placeholder="Team name"
+                type="text"
+                name="addTeamName"
+                onChange={this.handleEvent}
+              ></input>
+              <div className="space" style={{ marginBottom: "1%" }} />
+              <input
+                className="text-input"
+                placeholder="User email"
+                type="email"
+                name="addTeamUserName"
+                onChange={this.handleEvent}
+              ></input>
+              <div
+                className="space"
+                style={{ marginTop: "5%", marginBottom: "5%" }}
+              />
+              <button
+                className="button-style"
+                onClick={() => {
+                  this.submitAddUserToTeam();
+                }}
+              >
+                Add to Teams
+              </button>
+            </div>
+            <div className="quadrant">
+              <h1
+                className="page-divider-header"
+                style={{
+                  marginLeft: "2.5%",
+                  backgroundColor: "#F32000",
+                }}
+              >
+                Remove Users
+              </h1>
+              <div
+                className="space"
+                style={{ marginBottom: "10%", marginTop: "5%" }}
+              />{" "}
+              <input
+                className="text-input"
+                placeholder="Email"
+                onChange={this.deleteEmailF}
+              ></input>
+              <div
+                className="space"
+                style={{ marginTop: "5%", marginBottom: "5%" }}
+              />
+              <button
+                className="button-style"
+                onClick={() => {
+                  this.submitRemoveUser(this.state.deleteEmail);
+                }}
+              >
+                Remove User
+              </button>
+            </div>
+            <div className="quadrant">
+              <h1
+                className="page-divider-header"
+                style={{ marginLeft: "2.5%", backgroundColor: "#F32000" }}
+              >
+                Remove Users from Teams
+              </h1>
+              <div
+                className="space"
+                style={{ marginBottom: "10%", marginTop: "5%" }}
+              />{" "}
+              <select
+                className="text-input"
+                name="removeFromTeam"
+                onChange={this.handleEvent}
+              >
+                <option value="">Select team</option>
+                {this.state.teams.map((x) => (
+                  <option value={x}>{x}</option>
+                ))}
+              </select>
+              <div className="space" style={{ marginBottom: "1%" }} />
+              <input
+                className="text-input"
+                placeholder="User email"
+                type="email"
+                name="removeUserFromTeam"
+                onChange={this.handleEvent}
+              ></input>
+              <div
+                className="space"
+                style={{ marginTop: "5%", marginBottom: "5%" }}
+              />
+              <button
+                className="button-style"
+                onClick={() => {
+                  this.submitRemoveUserFromTeam();
+                }}
+              >
+                Remove from Team
+              </button>
+            </div>
+            <div className="space" />
+            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+              Registered Users
+            </h1>
+            <div className="space" />
+            <div
+              style={{
+                display: "flex",
+                flexFlow: "row wrap",
+                alignItems: "left",
+                width: "100%",
+              }}
+            >
+              {this.state.users.map((user) => (
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    width: "16%",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {user}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
         <div className="flex-container-1"></div>
