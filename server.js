@@ -325,7 +325,8 @@ function adminCheck(email) {
 
 function getPastBookings(email) {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+    sql =
+      "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));

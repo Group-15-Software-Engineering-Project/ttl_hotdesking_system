@@ -150,3 +150,21 @@
     height: 10vh;
   }
 }
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
+}
+@media (min-width: 720px) {
+  .TCD-BG {
+    background-image: url("../media/tcd_bg.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+  }
+}
+
+.space {
+  width: 100%;
+  margin-bottom: 3%;
+}

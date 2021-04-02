@@ -34,8 +34,7 @@ function Navbar(props) {
             <button
               className="nav-button"
               onClick={() => {
-                props.resetEmail();
-                console.log("Remove user login data from browser!");
+                props.resetEmail("");
               }}
             >
               {"Log Out"}
@@ -45,7 +44,9 @@ function Navbar(props) {
           <Link to="#" className="menu-bars">
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
-          <img src={TCDLogo} className="nav-logo"></img>
+          <Link to="/home">
+            <img src={TCDLogo} className="nav-logo"></img>
+          </Link>
         </div>
         <nav
           className={sidebar ? "nav-menu active" : "nav-menu"}
