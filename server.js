@@ -36,6 +36,20 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/adminCheck", (req, res) => {
+  adminCheck(req.body.user)
+  .then((result) => {
+    if (res.length === 1) {
+      res.send({error: false, admin:true});
+    } else {
+      res.send({error: false, admin:false});
+    }
+  })
+  .catch((err) => {
+    res.send({error: true, admin:false});
+  });
+});
+
 app.post("/api/getLocationData", (req, res) => {
   let data = [];
   getRooms()
@@ -295,6 +309,20 @@ function login(email, password) {
     });
   });
 }
+
+function adminCheck(email) {
+  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='"+email+"';";
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
 function getPastBookings(email) {
   return new Promise((resolve, reject) => {
     sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
