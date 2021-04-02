@@ -214,6 +214,7 @@ app.post("/api/getBookingsInMonth", (req, res) => {
   getDesks(req.body.room)
     .then((desks) => {
       for (let i = 0; i < daysInMonth; i++) {
+        let k = i;
         let date = req.body.date;
         if (i < 10) {
           date += "-0" + (i + 1).toString();
@@ -221,17 +222,27 @@ app.post("/api/getBookingsInMonth", (req, res) => {
           date += "-" + (i + 1).toString();
         }
 
-        getExistingBookings(req.body.room, date, req.body.am, req.body.pm).then(
-          (bookings) => {
+        getExistingBookings(req.body.room, date, req.body.am, req.body.pm)
+        .then((bookings) => {
             let data = [];
-            for (item in bookings) {
-              data.push({
-                user: bookings[item].USER,
-                desk: bookings[item].DESK,
-              });
+            for (j = 0; j < bookings.length; j++) {
+              if (j < bookings.length-1 && bookings[j+1].DESK === bookings[j].DESK) {
+                data.push({
+                  user: (bookings[j].USER === bookings[j+1].USER) ?
+                    bookings[j].USER :
+                    bookings[j].USER + '|' + bookings[j+1].USER,
+                  desk: bookings[j].DESK
+                });
+                j++;
+              } else {
+                data.push({
+                  user: bookings[j].USER,
+                  desk: bookings[j].DESK,
+                });
+              }
             }
-            existingBookings[i] = data;
-            if (i == daysInMonth - 1) {
+            existingBookings[k] = data;
+            if (k == daysInMonth - 1) {
               console.log("desks: ", desks);
               console.log("existingBookings: ", existingBookings);
               res.send({
@@ -240,8 +251,7 @@ app.post("/api/getBookingsInMonth", (req, res) => {
                 desks: desks,
               });
             }
-          }
-        );
+        });
       }
     })
     .catch((err) => {
@@ -500,7 +510,7 @@ function getRooms() {
 function getExistingBookings(room, date, am, pm) {
   let times = "";
   if (am && pm) {
-    times = "AM=1 AND PM=1";
+    times = "(AM=1 OR PM=1) ";
   } else {
     times = am ? "AM=1 " : "PM=1 ";
   }
@@ -511,7 +521,7 @@ function getExistingBookings(room, date, am, pm) {
     date +
     '" AND ' +
     times +
-    " ORDER BY DESK ASC;";
+    " ORDER BY DESK ASC, AM DESC;";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
