@@ -23,7 +23,30 @@ function PastBookings({ email }) {
       }),
     })
       .then((response) => response.json())
-      .then(setData);
+      .then((res) => {
+        let data = res.data;
+        let today =
+          date.getFullYear() * 10000 +
+          (date.getMonth() + 1) * 100 +
+          date.getDate();
+        let index = 0;
+        for (let key in data) {
+          console.log(data[key]);
+          let bookingDateComponents = data[key].DATE.split("T")[0].split("-");
+          let bookingDate =
+            parseInt(bookingDateComponents[0]) * 10000 +
+            parseInt(bookingDateComponents[1]) * 100 +
+            parseInt(bookingDateComponents[2]);
+          if (today - bookingDate > 0) break;
+          index++;
+        }
+        for (let i = 0; i < Math.floor(index / 2); i++) {
+          let temp = data[i];
+          data[i] = data[index - 1 - i];
+          data[index - 1 - i] = temp;
+        }
+        setData({ data: data });
+      });
   }, []);
 
   // if (bookings) {
@@ -135,21 +158,18 @@ function PastBookings({ email }) {
     let bg =
       isUpcoming > 0
         ? {
-            width: "100%",
-            marginBottom: "1%",
-            backgroundColor: "white",
+            backgroundColor: "#eee",
+          }
+        : isUpcoming === 0
+        ? {
+            backgroundColor: "#FFFEAA",
           }
         : {
-            width: "100%",
-            marginBottom: "1%",
-            backgroundColor: "#ddd",
+            backgroundColor: "white",
           };
     return (
-      <div
-        className="bookings-table"
-        style={{ backgroundColor: isUpcoming > 0 ? "#eee" : null }}
-      >
-        <div style={bg} />
+      <div className="bookings-table" style={bg}>
+        <div style={{ width: "100%", marginBottom: "1%" }} />
         {status}
         <span
           style={{
