@@ -203,6 +203,49 @@ app.post("/api/makeBooking", (req, res) => {
     });
 });
 
+app.post("/api/getBookingsInMonth", (req, res) => {
+  let newDate = new Date(req.body.date + "-01");
+  let daysInMonth = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth() + 1,
+    0
+  ).getDate();
+  let existingBookings = new Array(daysInMonth);
+  getDesks(req.body.room) 
+  .then((desks) => {
+    for (let i = 0; i < daysInMonth; i++) {
+      let date = req.body.date;
+      if (i < 10) {
+        date += "-0" + (i + 1).toString();
+      } else {
+        date += "-" + (i + 1).toString();
+      }
+      
+      getExistingBookings(req.body.room, date, req.body.am, req.body.pm) 
+        .then((bookings)=> {
+          existingBookings[i] = bookings;
+        if (i == daysInMonth - 1) {
+          console.log("desks: ",  desks);
+          console.log("existingBookings: ",existingBookings);
+          res.send({
+            error: false,
+            existingBookings: existingBookings,
+            desks: desks
+          });
+        }
+      });
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({
+      error: true,
+      existingBookings: [],
+      desks: []
+    });
+  });
+});
+
 app.post("/api/getAvailableDesksInMonth", (req, res) => {
   let newDate = new Date(req.body.date + "-01");
   let daysInMonth = new Date(
@@ -449,12 +492,12 @@ function getRooms() {
 function getExistingBookings(room, date, am, pm) {
   let times = "";
   if (am && pm) {
-    times = "AM=1 OR PM=1";
+    times = "AM=1 AND PM=1";
   } else {
     times = am ? "AM=1 " : "PM=1 ";
   }
   sql =
-    'SELECT DISTINCT USER FROM BOOKINGS WHERE ROOM="' +
+    'SELECT DISTINCT USER, DESK FROM BOOKINGS WHERE ROOM="' +
     room +
     '" AND DATE="' +
     date +
