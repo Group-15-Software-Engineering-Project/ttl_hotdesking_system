@@ -56,6 +56,7 @@ export default class BookingPage extends React.Component {
         pm = true;
         break;
     }
+
     fetch("/api/makeBooking", {
       method: "POST",
       headers: {
@@ -136,7 +137,7 @@ export default class BookingPage extends React.Component {
 
   render() {
     return (
-      <div className="wrapper">
+      <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
           <div style={{ marginTop: "20px" }} />

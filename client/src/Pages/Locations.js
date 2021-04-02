@@ -141,6 +141,7 @@ class Locations extends Component {
   handleEvent = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
+
   addRoomF = (event) => {
     this.setState({ addRoom: event.target.value });
   };
@@ -214,7 +215,7 @@ class Locations extends Component {
   render() {
     return (
       <div>
-        <div className="wrapper">
+        <div className="wrapper TCD-BG">
           <div className="flex-container-1" />
           <div className="flex-container-5 main-body">
             <div
