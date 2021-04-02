@@ -93,9 +93,12 @@ function PastBookings({ email }) {
         <span
           style={{
             textAlign: "left",
+            marginLeft: "5px",
             color: "#3ABF00",
             fontWeight: "bold",
-            width: "15%",
+            // width: "15%",
+            flex: "2",
+            maxWidth: "16.5%",
           }}
         >
           Upcoming
@@ -104,9 +107,12 @@ function PastBookings({ email }) {
         <span
           style={{
             textAlign: "left",
+            marginLeft: "5px",
             color: "#555",
             fontWeight: "bold",
-            width: "15%",
+            // width: "15%",
+            flex: "2",
+            maxWidth: "16.5%",
           }}
         >
           Previous
@@ -116,23 +122,41 @@ function PastBookings({ email }) {
           style={{
             textAlign: "left",
             color: "red",
+            marginLeft: "5px",
             fontWeight: "bold",
-            width: "15%",
+            maxWidth: "16.5%",
+            // width: "15%",
+            flex: "2",
           }}
         >
           Today
         </span>
       );
-
+    let bg =
+      isUpcoming > 0
+        ? {
+            width: "100%",
+            marginBottom: "1%",
+            backgroundColor: "white",
+          }
+        : {
+            width: "100%",
+            marginBottom: "1%",
+            backgroundColor: "#ddd",
+          };
     return (
-      <div className="bookings-table">
-        <div style={{ width: "100%", marginBottom: "1%" }} />
+      <div
+        className="bookings-table"
+        style={{ backgroundColor: isUpcoming > 0 ? "#eee" : null }}
+      >
+        <div style={bg} />
         {status}
         <span
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            width: "12%",
+            //width: "10%",
+            flex: "1",
           }}
         >
           {"Desk " + data.DESK}
@@ -141,21 +165,24 @@ function PastBookings({ email }) {
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            width: "30%",
+            // width: "27%",
+            flex: "3",
           }}
         >{`${data.ROOM}`}</span>
         <span
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            width: "14%",
+            // width: "18%",
+            flex: "2",
           }}
         >{`${data.DATE.split("T")[0]}`}</span>
         <span
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            width: "14%",
+            // width: "13%",
+            flex: "2",
           }}
         >
           {time}
@@ -187,7 +214,7 @@ function PastBookings({ email }) {
             ? bookings.data.map((data, index) => {
                 return displayBooking(data, index);
               })
-            : "My Bookings"}
+            : "FETCH ERROR: Booking history not found."}
         </div>
         <div
           style={{

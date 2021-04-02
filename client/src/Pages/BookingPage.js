@@ -93,24 +93,24 @@ export default class BookingPage extends React.Component {
     fetch("/api/getRooms", {
       method: "POST",
       headers: {
-        "Content-Type" : "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-    .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      if (res.error) {
-        console.log("Error fetching rooms");
-      } else {
-        this.setState({
-          locations: res.rooms
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          console.log("Error fetching rooms");
+        } else {
+          this.setState({
+            locations: res.rooms,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   componentDidUpdate() {
@@ -136,148 +136,159 @@ export default class BookingPage extends React.Component {
 
   render() {
     return (
-      <div className="booking-page">
-        <section>
-          <div className="calendar-container">
-            <div className="flex-container-1"></div>
-            <div className="flex-container-5 main-body">
-              <div style={{ marginTop: "20px" }} />
-              <TileSelection
-                showLabel={true}
-                key={this.state.areaKey}
-                title={
-                  <h1 className="page-divider-header">Select a Booking Area</h1>
-                }
-                options={this.state.locations}
-                size={["210px", "75px"]}
-                onSelect={(e) => {
+      <div className="wrapper">
+        <div className="flex-container-1"></div>
+        <div className="flex-container-5 main-body">
+          <div style={{ marginTop: "20px" }} />
+          <TileSelection
+            showLabel={true}
+            key={this.state.areaKey}
+            title={
+              <h1
+                className="page-divider-header"
+                style={{ marginLeft: "2.5%" }}
+              >
+                Select a Booking Area
+              </h1>
+            }
+            options={this.state.locations}
+            size={["210px", "75px"]}
+            onSelect={(e) => {
+              this.setState({
+                chosenArea: e,
+                bookableDesks: [],
+                chosenTime: "default",
+                chosenDesk: "default",
+              });
+            }}
+          />
+          {this.state.chosenArea !== "default" ? (
+            <TileSelection
+              showLabel={false}
+              key={this.state.chosenArea}
+              options={this.state.times}
+              size={["175px", "50px"]}
+              onSelect={(e) =>
+                this.setState({
+                  chosenTime: e,
+                  chosenDate: "default",
+                  chosenDesk: "default",
+                  bookableDesks: [],
+                })
+              }
+              title={
+                <h1
+                  className="page-divider-header"
+                  style={{ marginLeft: "2.5%" }}
+                >
+                  Select a Booking Time
+                </h1>
+              }
+            />
+          ) : null}
+          {this.state.chosenTime !== "default" ? (
+            <>
+              <h1
+                className="page-divider-header"
+                style={{ marginLeft: "2.5%" }}
+              >
+                Select a Booking Date
+              </h1>
+              <BookingCalendar
+                key={this.state.chosenTime}
+                chosenArea={this.state.chosenArea}
+                bookingTime={(() => {
+                  for (let i in this.state.times) {
+                    if (this.state.chosenTime === this.state.times[i].value) {
+                      return this.state.times[i].label;
+                    }
+                  }
+                })()}
+                onSelect={(desks, date, m) => {
+                  let newDate;
+                  if (
+                    this.state.chosenDate === "default" &&
+                    date.split(" ")[1] !== m
+                  ) {
+                    newDate = "default";
+                  } else if (this.state.chosenDate === "default") {
+                    newDate = date;
+                  } else if (
+                    this.state.chosenDate.split(" ")[1] !== date.split(" ")[1]
+                  ) {
+                    newDate = "default";
+                  } else {
+                    newDate = date;
+                  }
                   this.setState({
-                    chosenArea: e,
-                    bookableDesks: [],
-                    chosenTime: "default",
+                    bookableDesks: desks,
+                    chosenDate: newDate,
                     chosenDesk: "default",
                   });
                 }}
-              />
-              {this.state.chosenArea !== "default" ? (
-                <TileSelection
-                  showLabel={false}
-                  key={this.state.chosenArea}
-                  options={this.state.times}
-                  size={["175px", "50px"]}
-                  onSelect={(e) =>
-                    this.setState({
-                      chosenTime: e,
-                      chosenDate: "default",
-                      chosenDesk: "default",
-                      bookableDesks: [],
-                    })
-                  }
-                  title={
-                    <h1 className="page-divider-header">
-                      Select a Booking Time
-                    </h1>
-                  }
-                />
-              ) : null}
-              {this.state.chosenTime !== "default" ? (
+              ></BookingCalendar>
+              <br />
+              {this.state.bookableDesks.length === 0 ? (
                 <>
-                  <h1 className="page-divider-header">Select a Booking Date</h1>
-                  <BookingCalendar
-                    key={this.state.chosenTime}
-                    chosenArea={this.state.chosenArea}
-                    bookingTime={(() => {
-                      for (let i in this.state.times) {
-                        if (
-                          this.state.chosenTime === this.state.times[i].value
-                        ) {
-                          return this.state.times[i].label;
-                        }
-                      }
-                    })()}
-                    onSelect={(desks, date, m) => {
-                      let newDate;
-                      if (
-                        this.state.chosenDate === "default" &&
-                        date.split(" ")[1] !== m
-                      ) {
-                        newDate = "default";
-                      } else if (this.state.chosenDate === "default") {
-                        newDate = date;
-                      } else if (
-                        this.state.chosenDate.split(" ")[1] !==
-                        date.split(" ")[1]
-                      ) {
-                        newDate = "default";
-                      } else {
-                        newDate = date;
-                      }
-                      this.setState({
-                        bookableDesks: desks,
-                        chosenDate: newDate,
-                        chosenDesk: "default",
-                      });
-                    }}
-                  ></BookingCalendar>
                   <br />
-                  {this.state.bookableDesks.length === 0 ? (
-                    <>
-                      <br />
-                      <br />
-                      <br />
-                    </>
-                  ) : null}
+                  <br />
+                  <br />
                 </>
               ) : null}
+            </>
+          ) : null}
 
-              {this.state.bookableDesks.length !== 0 ? (
-                <>
-                  <TileSelection
-                    showLabel={true}
-                    title={
-                      <>
-                        <h1 className="page-divider-header">Select a Desk</h1>
-                        <div
-                          style={{
-                            textAlign: "center",
-                            alignItems: "center",
-                            marginTop: "15px",
-                          }}
-                        >
-                          <span
-                            style={{
-                              color: "black",
-                              fontSize: "18px",
-                              fontWeight: "bold",
-                            }}
-                          >{`Desks for ${this.state.chosenArea} on ${this.state.chosenDate}.`}</span>
-                        </div>
-                      </>
-                    }
-                    options={this.transformDeskData()}
-                    size={["150px", "60px"]}
-                    onSelect={(e) => {
-                      this.setState({
-                        chosenDesk: e,
-                      });
-                    }}
-                  />
-                </>
-              ) : null}
-              {this.state.chosenDesk !== "default" ? (
-                <div style={{ alignItems: "center", textAlign: "center" }}>
-                  <button className="button-style" onClick={this.submitBooking}>
-                    Confirm Booking
-                  </button>
-                  <div style={{ marginBottom: "30px" }} />
-                  <p>{this.state.responseToPost}</p>
-                </div>
-              ) : null}
-              <div ref={this.positionReference} />
+          {this.state.bookableDesks.length !== 0 ? (
+            <>
+              <TileSelection
+                showLabel={true}
+                title={
+                  <>
+                    <h1
+                      className="page-divider-header"
+                      style={{ marginLeft: "2.5%" }}
+                    >
+                      Select a Desk
+                    </h1>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        alignItems: "center",
+                        marginTop: "15px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "black",
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                        }}
+                      >{`Desks for ${this.state.chosenArea} on ${this.state.chosenDate}.`}</span>
+                    </div>
+                  </>
+                }
+                options={this.transformDeskData()}
+                size={["150px", "60px"]}
+                onSelect={(e) => {
+                  this.setState({
+                    chosenDesk: e,
+                  });
+                }}
+              />
+            </>
+          ) : null}
+          {this.state.chosenDesk !== "default" ? (
+            <div style={{ alignItems: "center", textAlign: "center" }}>
+              <button className="button-style" onClick={this.submitBooking}>
+                Confirm Booking
+              </button>
+              <div style={{ marginBottom: "30px" }} />
+              <p>{this.state.responseToPost}</p>
             </div>
-            <div className="flex-container-1"></div>
-          </div>
-        </section>
+          ) : null}
+          <div ref={this.positionReference} />
+        </div>
+        <div className="flex-container-1"></div>
       </div>
     );
   }

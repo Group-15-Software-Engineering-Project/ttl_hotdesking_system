@@ -50,10 +50,13 @@ export default class BookingCalendar extends React.Component {
         return res.json();
       })
       .then((res) => {
-        this.setState({ 
-          availableDesks: res.data,
-          existingBookings: res.existingBookings
-        }, () => {});
+        this.setState(
+          {
+            availableDesks: res.data,
+            existingBookings: res.existingBookings,
+          },
+          () => {}
+        );
       });
   };
   componentDidMount() {
@@ -133,7 +136,9 @@ export default class BookingCalendar extends React.Component {
     let month = months.indexOf(date[1]) + 1;
     let day = parseInt(date[2]);
     let tileDate = year * 10000 + month * 100 + day;
-    return this.state.todayDate > tileDate;
+    return (
+      this.state.todayDate > tileDate || tileDate - this.state.todayDate > 14
+    );
   };
   render() {
     return (

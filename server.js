@@ -37,31 +37,18 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/getLocationData", (req, res) => {
-  var data00 = [];
+  let data = [];
   getRooms()
     .then((rooms) => {
       for (room in rooms) {
         let j = room;
-        console.log("room:", room);
-        getDesks(rooms[room])
-          .then((desks) => {
-            console.log(rooms[j]);
-            console.log(desks);
-            data00.push({ name: rooms[j], desks: desks });
-            console.log(j, rooms.length);
-            console.log(data00);
-            if (room == rooms.length - 1) {
-              console.log("DATA: ", data00);
-              return { error: false, data: data00 };
-            }
-          })
-          .then((res2) => {
-            return res2;
-          });
+        getDesks(rooms[j]).then((desks) => {
+          data.push({ name: rooms[j], desks: desks });
+          if (data.length === rooms.length) {
+            res.send({ error: false, data: data });
+          }
+        });
       }
-    })
-    .then((result) => {
-      res.send(result);
     })
     .catch((err) => {
       res.send({ error: true, data: [] });
@@ -396,7 +383,7 @@ function getUsers() {
   });
 }
 
-function getDesks(room) {
+async function getDesks(room) {
   return new Promise((resolve, reject) => {
     sql = 'SELECT * FROM DESKS WHERE room = "' + room + '";';
     con.query(sql, (err, res) => {

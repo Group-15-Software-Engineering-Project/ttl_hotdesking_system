@@ -22,16 +22,31 @@
 }
 
 .bookings-table {
-  font-size: 20px;
+  font-size: 16px;
   justify-content: flex-start;
+  text-align: left;
   display: flex;
   flex-flow: row wrap;
-  width: 96%;
+  width: 98%;
   margin-left: 2%;
   margin-right: 2%;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+}
+@media (min-width: 720px) {
+  .bookings-table {
+    font-size: 20px;
+    justify-content: flex-start;
+    display: flex;
+    flex-flow: row wrap;
+    width: 98%;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+  }
 }
 
 .bookings-table:hover {

@@ -10,6 +10,7 @@ class Locations extends Component {
     addDeskRoom: "",
     deleteDeskNum: "",
     deleteDeskRoom: "",
+    deleteDeskList: [],
     desks: [],
     roomDeskList: null,
   };
@@ -137,6 +138,9 @@ class Locations extends Component {
       });
   };
 
+  handleEvent = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
   addRoomF = (event) => {
     this.setState({ addRoom: event.target.value });
   };
@@ -163,17 +167,51 @@ class Locations extends Component {
 
   listDesks = (room) => {
     return (
-      <div>
-        <span className="page-divider-header">{room.name}</span>
-        {room.desks.map((x) => {
-          return <span>{"Desk " + x}</span>;
-        })}
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          justifyContent: "center",
+          marginTop: "20px",
+          width: "100%",
+        }}
+      >
+        <span className="page-divider-header" style={{ margin: "0px" }}>
+          {room.name}
+        </span>
+        <div style={{ width: "100%", margin: "10px" }} />
+        {room.desks.length === 0 ? (
+          <span
+            style={{
+              fontWeight: "bold",
+              width: "16%",
+              marginBottom: "10px",
+            }}
+          >
+            No desks listed
+          </span>
+        ) : (
+          room.desks.map((x) => {
+            return (
+              <>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    width: "16%",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {"Desk " + x}
+                </span>
+              </>
+            );
+          })
+        )}
       </div>
     );
   };
 
   render() {
-    console.log(this.state.roomDeskList);
     return (
       <div>
         <div className="wrapper">
@@ -186,26 +224,25 @@ class Locations extends Component {
                 justifyContent: "flex-start",
               }}
             >
-              <div
-                style={{
-                  width: "50%",
-                  height: "50vh",
-                  border: "0.5px #ccc solid",
-                }}
-              >
-                <h1 className="page-divider-header">Add Locations</h1>
+              <div className="quadrant">
+                <h1
+                  className="page-divider-header"
+                  style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}
+                >
+                  Add Locations
+                </h1>
                 <div
                   style={{
                     width: "100%",
                     marginTop: "5%",
-                    marginBottom: "15%",
+                    marginBottom: "10%",
                   }}
                 />
                 <input
                   className="text-input"
                   type="text"
                   placeholder="Location display name"
-                  onChange={this.addRoomF}
+                  onChange={this.handleEvent}
                 ></input>
                 <div
                   style={{ width: "100%", marginTop: "5%", marginBottom: "5%" }}
@@ -217,27 +254,32 @@ class Locations extends Component {
                   Add Location
                 </button>
               </div>
-              <div
-                style={{
-                  width: "50%",
-                  height: "50vh",
-                  border: "0.5px #ccc solid",
-                }}
-              >
-                <h1 className="page-divider-header">Add Desks</h1>
+              <div className="quadrant">
+                <h1
+                  className="page-divider-header"
+                  style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}
+                >
+                  Add Desks
+                </h1>
                 <div
                   style={{
                     width: "100%",
                     marginTop: "5%",
-                    marginBottom: "12%",
+                    marginBottom: "10%",
                   }}
                 />
-                <input
+                <select
                   className="text-input"
-                  placeholder="Desk Number"
-                  type="text"
-                  onChange={this.addDeskNumF}
-                ></input>
+                  name="addDeskRoom"
+                  onChange={this.handleEvent}
+                >
+                  <option value="">Select location</option>
+                  {this.state.roomDeskList
+                    ? this.state.roomDeskList.map((x) => {
+                        return <option value={x.name}>{x.name}</option>;
+                      })
+                    : null}
+                </select>
                 <div
                   style={{
                     width: "100%",
@@ -246,9 +288,10 @@ class Locations extends Component {
                 />
                 <input
                   className="text-input"
-                  placeholder="Exact desk location name"
+                  placeholder="Desk Number"
                   type="text"
-                  onChange={this.addDeskRoomF}
+                  name="addDeskNum"
+                  onChange={this.handleEvent}
                 ></input>
                 <div
                   style={{
@@ -258,7 +301,7 @@ class Locations extends Component {
                 />
                 <button
                   className="button-style"
-                  onClick={(e) =>
+                  onClick={() =>
                     this.submitAddDesk(
                       this.state.addDeskNum,
                       this.state.addDeskRoom
@@ -268,27 +311,32 @@ class Locations extends Component {
                   Add Desk
                 </button>
               </div>
-              <div
-                style={{
-                  width: "50%",
-                  height: "50vh",
-                  border: "0.5px #ccc solid",
-                }}
-              >
-                <h1 className="page-divider-header">Remove Locations</h1>
+              <div className="quadrant">
+                <h1
+                  className="page-divider-header"
+                  style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}
+                >
+                  Remove Locations
+                </h1>
                 <div
                   style={{
                     width: "100%",
                     marginTop: "5%",
-                    marginBottom: "15%",
+                    marginBottom: "10%",
                   }}
                 />
-                <input
+                <select
                   className="text-input"
-                  placeholder="Exact location name"
-                  type="text"
-                  onChange={this.deleteRoomF}
-                ></input>
+                  name="deleteRoom"
+                  onChange={this.handleEvent}
+                >
+                  <option value="">Select location</option>
+                  {this.state.roomDeskList
+                    ? this.state.roomDeskList.map((x) => {
+                        return <option value={x.name}>{x.name}</option>;
+                      })
+                    : null}
+                </select>
                 <div
                   style={{
                     width: "100%",
@@ -303,39 +351,63 @@ class Locations extends Component {
                   Remove Location
                 </button>
               </div>
-              <div
-                style={{
-                  width: "50%",
-                  height: "50vh",
-                  border: "0.5px #ccc solid",
-                }}
-              >
-                <h1 className="page-divider-header">Remove Desks</h1>
+              <div className="quadrant">
+                <h1
+                  className="page-divider-header"
+                  style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}
+                >
+                  Remove Desks
+                </h1>
                 <div
                   style={{
                     width: "100%",
                     marginTop: "5%",
-                    marginBottom: "15%",
+                    marginBottom: "10%",
                   }}
                 />
-                <input
+                <select
                   className="text-input"
-                  placeholder="Desk Number"
-                  type="text"
-                  onChange={this.deleteDeskNumF}
-                ></input>
+                  onChange={(e) =>
+                    this.setState({ deleteDeskRoom: e.target.value }, () => {
+                      for (let key in this.state.roomDeskList) {
+                        if (
+                          this.state.roomDeskList[key].name ===
+                          this.state.deleteDeskRoom
+                        ) {
+                          this.setState({
+                            deleteDeskList: this.state.roomDeskList[key].desks,
+                          });
+                          break;
+                        }
+                      }
+                    })
+                  }
+                >
+                  <option value="">Select location</option>
+                  {this.state.roomDeskList
+                    ? this.state.roomDeskList.map((x) => {
+                        return <option value={x.name}>{x.name}</option>;
+                      })
+                    : null}
+                </select>
                 <div
                   style={{
                     width: "100%",
                     marginTop: "1%",
                   }}
                 />
-                <input
+                <select
                   className="text-input"
-                  placeholder="Exact desk location name"
-                  type="text"
-                  onChange={this.deleteDeskRoomF}
-                ></input>
+                  name="deleteDeskRoom"
+                  onChange={this.handleEvent}
+                >
+                  <option value="">Select desk</option>
+                  {this.state.deleteDeskList
+                    ? this.state.deleteDeskList.map((x) => {
+                        return <option value={x}>{"Desk " + x}</option>;
+                      })
+                    : null}
+                </select>
                 <div
                   style={{
                     width: "100%",
@@ -356,13 +428,21 @@ class Locations extends Component {
                 </button>
               </div>
             </div>
-            <div>
+            <div
+              style={{
+                display: "flex",
+                flexFlow: "column wrap",
+                width: "100%",
+              }}
+              key={this.state.roomDeskList}
+            >
               {this.state.roomDeskList
                 ? this.state.roomDeskList.map((x) => {
-                    return this.listDesks;
+                    return this.listDesks(x);
                   })
                 : null}
             </div>
+            <div style={{ width: "100%", marginBottom: "20px" }} />
           </div>
           <div className="flex-container-1" />
         </div>
