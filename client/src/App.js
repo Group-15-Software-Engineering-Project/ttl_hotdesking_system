@@ -22,7 +22,7 @@ import PastBookings from "./Pages/PastBookings";
 class App extends Component {
   state = {
     email: "",
-    visible: false,
+    visible: true,
     isLoggedIn: false,
   };
 
