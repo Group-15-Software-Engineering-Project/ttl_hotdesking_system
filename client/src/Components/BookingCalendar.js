@@ -1,93 +1,17 @@
 import { Calendar } from "react-calendar";
 import "../public/css/Calendar.css";
 import React from "react";
-import { createUniqueID, months } from "./Misc";
+import { months } from "./Misc";
 
 export default class BookingCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      "Office 2.5: West Theatre": [
-        {
-          2021: [
-            {
-              Apr: [
-                {
-                  "02": [
-                    {
-                      Desk1: {
-                        AM: true, //true = bookable
-                        PM: false, //false = already booked
-                      },
-                    },
-                    {
-                      Desk2: {
-                        AM: true,
-                        PM: true,
-                      },
-                    },
-                    {
-                      Desk3: {
-                        AM: true,
-                        PM: false,
-                      },
-                    },
-                    {
-                      Desk4: {
-                        AM: false,
-                        PM: false,
-                      },
-                    },
-                    {
-                      Desk5: {
-                        AM: true,
-                        PM: false,
-                      },
-                    },
-                  ], // Feb 02 close
-                },
-                {
-                  10: [
-                    {
-                      Desk1: {
-                        AM: true, //true = bookable
-                        PM: false, //false = already booked
-                      },
-                    },
-                    {
-                      Desk2: {
-                        AM: true,
-                        PM: false,
-                      },
-                    },
-                    {
-                      Desk3: {
-                        AM: true,
-                        PM: false,
-                      },
-                    },
-                    {
-                      Desk4: {
-                        AM: false,
-                        PM: false,
-                      },
-                    },
-                    {
-                      Desk5: {
-                        AM: true,
-                        PM: false,
-                      },
-                    },
-                  ], // Feb 07 close
-                },
-              ], //Feb close
-            },
-          ], //2021 close
-        },
-      ],
+      todayDate: "",
       selectedDate: "",
       currentMonth: "",
       availableDesks: "",
+      existingBookings: [],
       key: 0,
     };
   }
@@ -126,7 +50,13 @@ export default class BookingCalendar extends React.Component {
         return res.json();
       })
       .then((res) => {
-        this.setState({ availableDesks: res.data }, () => {});
+        this.setState(
+          {
+            availableDesks: res.data,
+            existingBookings: res.existingBookings,
+          },
+          () => {}
+        );
       });
   };
   componentDidMount() {
@@ -139,6 +69,10 @@ export default class BookingCalendar extends React.Component {
 
     this.setState(
       {
+        todayDate:
+          date.getFullYear() * 10000 +
+          (date.getMonth() + 1) * 100 +
+          date.getDate(),
         selectedDate:
           date.getDate() +
           " " +
@@ -154,7 +88,7 @@ export default class BookingCalendar extends React.Component {
     );
   }
 
-  checkAvailability1 = (dateInfo) => {
+  checkAvailability = (dateInfo) => {
     let month = months.indexOf(String(dateInfo.date).split(" ")[1]);
     let day = parseInt(String(dateInfo.date).split(" ")[2]) - 1;
     if (
@@ -175,53 +109,12 @@ export default class BookingCalendar extends React.Component {
     }
   };
 
-  checkAvailability = (dateTileInfo) => {
-    let dateComponent = String(dateTileInfo["date"]).split(" ");
-    let area = this.state[this.props.chosenArea];
-    if (area) {
-      for (let y in area) {
-        let year = area[y][dateComponent[3]];
-        if (year) {
-          for (let m in year) {
-            let month = year[m][dateComponent[1]];
-            if (month) {
-              for (let d in month) {
-                let day = month[d][dateComponent[2]];
-                if (day) {
-                  let isAvailableAt;
-                  if (this.props.bookingTime === "AM")
-                    isAvailableAt = (desk) => {
-                      return desk.AM;
-                    };
-                  else if (this.props.bookingTime === "PM")
-                    isAvailableAt = (desk) => {
-                      return desk.PM;
-                    };
-                  else if (this.props.bookingTime === "AMPM")
-                    isAvailableAt = (desk) => {
-                      return desk.AM && desk.PM;
-                    };
-                  else return "Not-Available";
-                  for (let i in Object.keys(day)) {
-                    let key = Object.keys(day[i]);
-                    if (isAvailableAt(day[i][key])) return "NONE-Booked";
-                  }
-                  return "ALL-Booked";
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return "Not-Available"; //Temporary: Need database information for desks in each area. Will always be green.
-  };
-
   getDate = (e) => {
     let dateComponent = String(e).split(" ");
     return dateComponent[2] + " " + dateComponent[1] + " " + dateComponent[3];
   };
 
+  //Update to include names of who booked a desk
   getDesks = (dateInfo) => {
     let desks = [];
     let day = parseInt(String(dateInfo).split(" ")[2]) - 1;
@@ -237,52 +130,16 @@ export default class BookingCalendar extends React.Component {
     return desks;
   };
 
-  returnDeskList = (e) => {
-    let dateComponent = String(e).split(" ");
-    let desks = [];
-    let area = this.state[this.state.chosenArea];
-    if (area) {
-      for (let y in area) {
-        let year = area[y][dateComponent[3]];
-        if (year) {
-          for (let m in year) {
-            let month = year[m][dateComponent[1]];
-            if (month) {
-              for (let d in month) {
-                let day = month[d][dateComponent[2]];
-                if (day) {
-                  let isAvailableAt;
-
-                  if (this.props.bookingTime === "AM")
-                    isAvailableAt = (desk) => {
-                      return desk.AM;
-                    };
-                  else if (this.props.bookingTime === "PM")
-                    isAvailableAt = (desk) => {
-                      return desk.PM;
-                    };
-                  else if (this.props.bookingTime === "AMPM")
-                    isAvailableAt = (desk) => {
-                      return desk.AM && desk.PM;
-                    };
-                  else
-                    isAvailableAt = () => {
-                      return false;
-                    };
-                  for (let i in Object.keys(day)) {
-                    let key = Object.keys(day[i]);
-                    if (isAvailableAt(day[i][key])) desks.push(day[i]);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return desks;
+  disabledTiles = (e) => {
+    let date = String(e.date).split(" ");
+    let year = parseInt(date[3]);
+    let month = months.indexOf(date[1]) + 1;
+    let day = parseInt(date[2]);
+    let tileDate = year * 10000 + month * 100 + day;
+    return (
+      this.state.todayDate > tileDate || tileDate - this.state.todayDate > 14
+    );
   };
-
   render() {
     return (
       <div style={{ marginTop: "5%", marginBottom: "5%" }}>
@@ -300,7 +157,8 @@ export default class BookingCalendar extends React.Component {
           defaultView="month"
           prev2Label={null}
           next2Label={null}
-          tileClassName={this.checkAvailability1}
+          tileClassName={this.checkAvailability}
+          tileDisabled={this.disabledTiles}
           onChange={(e) => {
             this.props.onSelect(
               this.getDesks(e),

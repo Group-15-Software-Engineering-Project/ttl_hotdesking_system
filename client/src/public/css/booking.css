@@ -1,25 +1,55 @@
 .Date {
-    font-size: medium; 
-    width: 1260px;
-    height:65px ;
-    }
-    
-    .Date:hover{
-        padding-right: 1265px;
-        padding-bottom: 27px;
-        cursor: pointer;
-        background-color: rgba(140, 140, 167, 0.938);
-    }
-    .Time {
-        left:100;
-        font-size: medium; 
-        border-left: 100px; 
-    }
-    
-    
-    .Desk {
-        background-position: center;
-        font-size:large; 
-    }
-    
-    
+  font-size: medium;
+  width: 1260px;
+  height: 65px;
+}
+
+.Date:hover {
+  padding-right: 1265px;
+  padding-bottom: 27px;
+  cursor: pointer;
+  background-color: rgba(140, 140, 167, 0.938);
+}
+.Time {
+  left: 100;
+  font-size: medium;
+  border-left: 100px;
+}
+
+.Desk {
+  background-position: center;
+  font-size: large;
+}
+
+.bookings-table {
+  font-size: 16px;
+  justify-content: flex-start;
+  text-align: left;
+  display: flex;
+  flex-flow: row wrap;
+  width: 98%;
+  margin-left: 2%;
+  margin-right: 2%;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+@media (min-width: 720px) {
+  .bookings-table {
+    font-size: 20px;
+    justify-content: flex-start;
+    display: flex;
+    flex-flow: row wrap;
+    width: 98%;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+  }
+}
+
+.bookings-table:hover {
+  background-color: #fafafa;
+  cursor: pointer;
+}

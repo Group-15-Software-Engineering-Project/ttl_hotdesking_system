@@ -8,6 +8,7 @@ TileSelection.propTypes = {
     PropTypes.exact({
       value: PropTypes.string,
       label: PropTypes.string,
+      disabled: PropTypes.bool,
     })
   ).isRequired,
   size: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -28,6 +29,7 @@ export default function TileSelection(props) {
             type="radio"
             checked={chosenOption === options[i].value}
             id={options[i].value}
+            disabled={options[i].disabled}
             value={options[i].value}
             onChange={(e) => {
               setChosenOption(e.target.value);
@@ -38,7 +40,9 @@ export default function TileSelection(props) {
           <label htmlFor={options[i].value}>
             <div
               className={
-                chosenOption === options[i].value
+                options[i].disabled
+                  ? "radioTile-disabled"
+                  : chosenOption === options[i].value
                   ? "radioTile-checked"
                   : "radioTile"
               }
@@ -50,8 +54,15 @@ export default function TileSelection(props) {
               <h1 style={{ fontSize: "18px", width: props.size[0] }}>
                 {options[i].value}
               </h1>
-              {props.showLabel ? (
-                <span style={{ fontSize: "12px" }}>{options[i].label}</span>
+              {props.showLabel && options[i].label.length !== 0 ? (
+                <span
+                  style={{
+                    fontSize: "12px",
+                    margin: "0px",
+                  }}
+                >
+                  {options[i].label}
+                </span>
               ) : null}
             </div>
           </label>

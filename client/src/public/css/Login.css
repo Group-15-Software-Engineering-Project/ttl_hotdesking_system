@@ -22,22 +22,29 @@
   }
 }
 
-.wrapper {
-  display: flex;
-  background-color: #eeeeee;
-  justify-content: flex-start;
-  flex-flow: row wrap;
-  min-height: 90vh;
-  height: auto;
-  padding: none;
-}
-
 .login-logo {
   border: none;
   position: absolute;
   top: 5px;
   left: 2vh;
+  width: 280px;
+  height: 72px;
 }
+.title-text {
+  flex: 5;
+  font-size: 3.25vw;
+  color: white;
+  font-family: sans-serif;
+}
+@media (max-width: 860px) {
+  .login-logo {
+    clip: rect(0, 70px, 72px, 0);
+  }
+  .title-text {
+    font-size: 4vw;
+  }
+}
+
 .block-top {
   display: flex;
   position: relative;
@@ -51,26 +58,59 @@
   width: 100% !important;
   background-color: #008dd3;
   box-shadow: 0 5px 3px #555;
-  text-align: center;
+  text-align: right;
   align-items: center;
 }
+@media (min-width: 1090px) {
+  .title-text {
+    flex: 5;
+    font-family: sans-serif;
+    font-size: 30px;
+    color: white;
+  }
 
+  .block-top {
+    display: flex;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    padding: 2vh;
+    height: 80px !important;
+    width: 100% !important;
+    background-color: #008dd3;
+    box-shadow: 0 5px 3px #555;
+    text-align: right;
+    align-items: center;
+  }
+}
 .text-field {
-  width: 35vh;
+  margin: 0px;
+  padding: 0px;
+  width: 30%;
+  min-width: 200px;
   height: 6vh;
   border-radius: 3px;
   border: 1px #bbb solid;
-  margin: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   padding: 10px;
+  font-size: 2vh;
 }
 
 .login-button {
+  font-size: 4vh;
+  margin: 0px;
+  padding: 0px;
   background-color: #008dd3;
   color: white;
   border-radius: 3px;
-  width: 35vh;
+  min-width: 200px;
+  width: 30%;
   height: 6vh;
-  margin: 10px;
+  margin-top: 10px;
   border: none;
   font-size: 20px;
   cursor: pointer;
@@ -79,51 +119,4 @@
 .login-button:hover {
   background-color: #00bff9;
   box-shadow: none;
-}
-.flex-container-1 {
-  flex: 1;
-  justify-content: center;
-  text-align: left;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-2 {
-  flex: 2;
-  justify-content: center;
-  text-align: left;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-3 {
-  flex: 3;
-  justify-content: center;
-  text-align: left;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-4 {
-  flex: 4;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
-}
-.flex-container-5 {
-  flex: 5;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  /* border: black 3px solid; */
 }

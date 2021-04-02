@@ -8,14 +8,9 @@
   /* align-items: center; */
 }
 
-.wrapper body {
-  margin: 0px;
-}
-
 @media (min-width: 720px) {
   .element-flex-1 {
     flex: 1;
-    /* border: 1px black solid; */
     justify-content: center;
     text-align: left;
     margin: auto;
@@ -116,18 +111,6 @@
   flex-flow: column wrap;
 }
 
-.button-style {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
-  color: white;
-  background-color: #0095ff;
-  border: none;
-}
-.button-style:hover {
-  background-color: #00c5ff;
-}
-
 .react-calendar {
   width: 348px;
   background: white;
@@ -205,7 +188,7 @@
   padding: calc(0.75em / 0.75) calc(0.5em / 0.75);
 }
 .react-calendar__month-view__days__day--weekend {
-  color: black;
+  /* color: black; */
 }
 .react-calendar__month-view__days__day--neighboringMonth {
   color: #757575;
@@ -316,27 +299,8 @@
   height: 48px;
 }
 
-.bookingBtn {
-  border: none;
-  border-radius: 100px;
-  background-color: #008dd3;
-  color: white;
-  width: 30%;
-  margin-left: 35%;
-  height: 40px;
-  font-weight: bold;
-  font-size: 16px;
-  box-shadow: 0 0px 6px #888;
-  cursor: pointer;
-}
-.bookingBtn:hover {
-  background-color: #00c5ff;
-}
 .Not-Available {
-  background-color: #aaaaaa;
-  border: 10px white solid;
-  width: 64px;
-  height: 48px;
+  background-color: #f0f0f0;
 }
 
 /*
