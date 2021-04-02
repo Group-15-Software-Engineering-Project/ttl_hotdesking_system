@@ -12,7 +12,8 @@
 
 h3,
 h2,
-h1 {
+h1,
+span {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis !important;

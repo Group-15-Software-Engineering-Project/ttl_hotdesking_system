@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Desk from "../Components/Desk";
+import { createUniqueID } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Locations extends Component {
@@ -13,8 +14,30 @@ class Locations extends Component {
     deleteDeskList: [],
     desks: [],
     roomDeskList: null,
+    key: "default",
   };
 
+  componentDidUpdate = () => {
+    fetch("/api/getLocationData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          console.log("error fetching location data");
+        } else {
+          this.setState({ roomDeskList: res.data });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   componentDidMount = () => {
     fetch("/api/getLocationData", {
       method: "POST",
@@ -35,10 +58,10 @@ class Locations extends Component {
       .catch((err) => {
         console.log(err);
       });
-    //fetch room-desk list and store in this.state.roomDeskList
   };
 
   submitAddRoom = (room) => {
+    this.setState({ key: createUniqueID() });
     fetch("/api/addRoom", {
       method: "POST",
       headers: {
@@ -64,6 +87,7 @@ class Locations extends Component {
   };
 
   submitAddDesk = (desk, room) => {
+    this.setState({ key: createUniqueID() });
     fetch("/api/addDesk", {
       method: "POST",
       headers: {
@@ -91,6 +115,7 @@ class Locations extends Component {
   };
 
   submitRemoveDesk = (desk, room) => {
+    this.setState({ key: createUniqueID() });
     fetch("/api/removeDesk", {
       method: "POST",
       headers: {
@@ -114,6 +139,7 @@ class Locations extends Component {
   };
 
   submitRemoveRoom = (room) => {
+    this.setState({ key: createUniqueID() });
     fetch("/api/removeRoom", {
       method: "POST",
       headers: {
@@ -215,7 +241,7 @@ class Locations extends Component {
   render() {
     return (
       <div>
-        <div className="wrapper TCD-BG">
+        <div className="wrapper TCD-BG" key={this.state.key}>
           <div className="flex-container-1" />
           <div className="flex-container-5 main-body">
             <div
@@ -243,6 +269,7 @@ class Locations extends Component {
                   className="text-input"
                   type="text"
                   placeholder="Location display name"
+                  name="addRoom"
                   onChange={this.handleEvent}
                 ></input>
                 <div
