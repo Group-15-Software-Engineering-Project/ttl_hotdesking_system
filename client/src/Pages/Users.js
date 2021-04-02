@@ -112,7 +112,10 @@ class Users extends Component {
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
           <div className="space" />
-          <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+          <h1
+            className="page-divider-header"
+            style={{ marginLeft: "2.5%", backgroundColor: "#4dc300" }}
+          >
             Add Users
           </h1>
           <div className="space" />
@@ -121,16 +124,73 @@ class Users extends Component {
             className="text-input"
             placeholder="Email"
             onChange={this.addEmailF}
+            style={{ width: "10%" }}
           ></input>
-          <div className="space" />
+          <div className="space" style={{ marginBottom: "1%" }} />
           <input
             type="password"
             className="text-input"
             placeholder="Password"
             onChange={this.addPasswordF}
+            style={{ width: "10%" }}
           ></input>
           <div className="space" style={{ marginBottom: "1%" }} />
-          <button className="button-style"></button>
+          <button
+            className="button-style"
+            onChange={() => {
+              this.submitAddUser(this.state.addEmail, this.state.addPassword);
+            }}
+          >
+            Add user
+          </button>
+          <div className="space" />
+          <h1
+            className="page-divider-header"
+            style={{ marginLeft: "2.5%", backgroundColor: "#F32000" }}
+          >
+            Remove Users
+          </h1>
+          <div className="space" />
+          <input
+            className="text-input"
+            placeholder="Email"
+            style={{ width: "10%" }}
+            onChange={(e) => this.deleteEmailF}
+          ></input>
+          <div className="space" style={{ marginBottom: "1%" }} />
+          <button
+            className="button-style"
+            onClick={() => {
+              this.submitRemoveUser(this.state.deleteEmail);
+            }}
+          >
+            Remove User
+          </button>
+          <div className="space" />
+          <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+            Registered Users
+          </h1>
+          <div className="space" />
+          <div
+            style={{
+              display: "flex",
+              flexFlow: "row wrap",
+              alignItems: "left",
+              width: "100%",
+            }}
+          >
+            {this.state.users.map((user) => (
+              <span
+                style={{
+                  fontWeight: "bold",
+                  width: "16%",
+                  marginBottom: "12px",
+                }}
+              >
+                {user}
+              </span>
+            ))}
+          </div>
         </div>
         <div className="flex-container-1"></div>
       </div>
@@ -152,7 +212,7 @@ export default Users;
       this.submitAddUser(this.state.addEmail, this.state.addPassword)
     }
   >
-    {" "}Add User{" "}
+    Add User
   </button>
 </div>
   
@@ -164,7 +224,7 @@ export default Users;
       this.submitRemoveUser(this.state.deleteEmail)
     }
   >
-    {" "}Delete User{" "}
+    Delete User
   </button>
 </div>
 
