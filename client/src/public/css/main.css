@@ -127,3 +127,26 @@
     border: 0.5px #ccc solid;
   }
 }
+
+@media (orientation: landscape) and (max-height: 480px) {
+  .quadrant {
+    height: 360px;
+    width: 100%;
+  }
+
+  .flex-container-1 {
+    margin: 0px;
+    padding: 0px;
+    flex: 1;
+    justify-content: center;
+    text-align: left;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    /* border: black 3px solid; */
+  }
+
+  .text-input {
+    height: 10vh;
+  }
+}

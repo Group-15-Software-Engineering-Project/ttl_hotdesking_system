@@ -50,6 +50,6 @@
 }
 
 .bookings-table:hover {
-  background-color: #fafafa;
+  background-color: #ddf8ff !important;
   cursor: pointer;
 }
