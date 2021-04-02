@@ -38,16 +38,16 @@ app.post("/api/login", (req, res) => {
 
 app.post("/api/adminCheck", (req, res) => {
   adminCheck(req.body.user)
-  .then((result) => {
-    if (res.length === 1) {
-      res.send({error: false, admin:true});
-    } else {
-      res.send({error: false, admin:false});
-    }
-  })
-  .catch((err) => {
-    res.send({error: true, admin:false});
-  });
+    .then((result) => {
+      if (res.length === 1) {
+        res.send({ error: false, admin: true });
+      } else {
+        res.send({ error: false, admin: false });
+      }
+    })
+    .catch((err) => {
+      res.send({ error: true, admin: false });
+    });
 });
 
 app.post("/api/getLocationData", (req, res) => {
@@ -211,39 +211,47 @@ app.post("/api/getBookingsInMonth", (req, res) => {
     0
   ).getDate();
   let existingBookings = new Array(daysInMonth);
-  getDesks(req.body.room) 
-  .then((desks) => {
-    for (let i = 0; i < daysInMonth; i++) {
-      let date = req.body.date;
-      if (i < 10) {
-        date += "-0" + (i + 1).toString();
-      } else {
-        date += "-" + (i + 1).toString();
-      }
-      
-      getExistingBookings(req.body.room, date, req.body.am, req.body.pm) 
-        .then((bookings)=> {
-          existingBookings[i] = bookings;
-        if (i == daysInMonth - 1) {
-          console.log("desks: ",  desks);
-          console.log("existingBookings: ",existingBookings);
-          res.send({
-            error: false,
-            existingBookings: existingBookings,
-            desks: desks
-          });
+  getDesks(req.body.room)
+    .then((desks) => {
+      for (let i = 0; i < daysInMonth; i++) {
+        let date = req.body.date;
+        if (i < 10) {
+          date += "-0" + (i + 1).toString();
+        } else {
+          date += "-" + (i + 1).toString();
         }
+
+        getExistingBookings(req.body.room, date, req.body.am, req.body.pm).then(
+          (bookings) => {
+            let data = [];
+            for (item in bookings) {
+              data.push({
+                user: bookings[item].USER,
+                desk: bookings[item].DESK,
+              });
+            }
+            existingBookings[i] = data;
+            if (i == daysInMonth - 1) {
+              console.log("desks: ", desks);
+              console.log("existingBookings: ", existingBookings);
+              res.send({
+                error: false,
+                existingBookings: existingBookings,
+                desks: desks,
+              });
+            }
+          }
+        );
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({
+        error: true,
+        existingBookings: [],
+        desks: [],
       });
-    }
-  })
-  .catch((err) => {
-    console.log(err);
-    res.send({
-      error: true,
-      existingBookings: [],
-      desks: []
     });
-  });
 });
 
 app.post("/api/getAvailableDesksInMonth", (req, res) => {
@@ -354,7 +362,7 @@ function login(email, password) {
 }
 
 function adminCheck(email) {
-  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='"+email+"';";
+  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {

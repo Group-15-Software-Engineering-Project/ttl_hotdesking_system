@@ -59,6 +59,8 @@ export default function TileSelection(props) {
                   style={{
                     fontSize: "12px",
                     margin: "0px",
+                    color: "#222",
+                    fontWeight: "bold",
                   }}
                 >
                   {options[i].label}

@@ -123,15 +123,30 @@ export default class BookingPage extends React.Component {
 
   transformDeskData = () => {
     let data = [];
-    let desks = this.state.bookableDesks;
-    for (let desk in desks) {
-      let label = desks[desk].disabled ? "Booked by: " + desks[desk].name : "";
+    // let desks = this.state.bookableDesks;
+    // for (let desk in desks) {
+    //   let label = desks[desk].disabled ? "Booked by: " + desks[desk].name : "";
+    //   data.push({
+    //     value: desks[desk],
+    //     label: label,
+    //     disabled: desks[desk].disabled,
+    //   });
+    // }
+
+    for (let desk in this.state.bookableDesks) {
+      let label =
+        this.state.bookableDesks[desk].user.length !== 0
+          ? "Booked by: " + this.state.bookableDesks[desk].user
+          : "";
+      console.log(this.state.bookableDesks[desk]);
+      let disabled = label.length !== 0;
       data.push({
-        value: desks[desk],
+        value: this.state.bookableDesks[desk].desk,
         label: label,
-        disabled: desks[desk].disabled,
+        disabled: disabled,
       });
     }
+    console.log("data:", data);
     return data;
   };
 

@@ -199,39 +199,3 @@ class Users extends Component {
 }
 
 export default Users;
-
-{
-  /* <div className="desks">
-<div>
-  <h3>Add user:</h3>
-  <input type="email" onChange={this.addEmailF}></input>
-  <br></br><br></br>
-  <input type="text" onChange={this.addPasswordF}></input>
-  <button
-    onClick={(e) =>
-      this.submitAddUser(this.state.addEmail, this.state.addPassword)
-    }
-  >
-    Add User
-  </button>
-</div>
-  
-<div>
-  <h3>Delete user:</h3>
-  <input type="text" onChange={this.deleteEmailF}></input>
-  <button
-    onClick={(e) =>
-      this.submitRemoveUser(this.state.deleteEmail)
-    }
-  >
-    Delete User
-  </button>
-</div>
-
-<br></br><br></br><br></br>
-<h2>
-  Email
-</h2>
-<div>{this.state.users.map(user => <User key={user} user={user} />)}</div>
-</div> */
-}
