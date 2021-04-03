@@ -17,9 +17,53 @@ class Users extends Component {
     this.getUsers();
   }
 
-  submitAddUserToTeam = () => {};
+  submitAddUserToTeam = () => {
+    fetch("/api/addUserToTeam", {
+      method:"POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+        email: this.state.addTeamUserName,
+        group: this.state.addTeamName
+      })
+    })
+    .then((res) => {
+      let result = res.json();
+      if (result.error) {
+        alert("Failed to add user to team");
+      } else {
+        alert("Success");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
 
-  submitRemoveUserFromTeam = () => {};
+  submitRemoveUserFromTeam = () => {
+    fetch("/api/removeUserFromTeam", {
+      method:"POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+        email: this.state.removeUserFromTeam,
+        group: this.state.removeFromTeam
+      })
+    })
+    .then((res) => {
+      let result = res.json();
+      if (result.error) {
+        alert("error removing user from team");
+      } else {
+        alert("Success");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
 
   submitRemoveUser = (email) => {
     fetch("/api/removeUser", {
