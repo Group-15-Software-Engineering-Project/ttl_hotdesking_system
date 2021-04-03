@@ -137,7 +137,7 @@ app.post("/api/removeUserFromTeam", (req, res) => {
   .catch((err) => {
     console.log(err);
     res.send({error: true});
-  })
+  });
 });
 
 app.post("/api/addUser", (req, res) => {
