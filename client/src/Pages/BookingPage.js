@@ -123,30 +123,32 @@ export default class BookingPage extends React.Component {
 
   transformDeskData = () => {
     let data = [];
-    // let desks = this.state.bookableDesks;
-    // for (let desk in desks) {
-    //   let label = desks[desk].disabled ? "Booked by: " + desks[desk].name : "";
-    //   data.push({
-    //     value: desks[desk],
-    //     label: label,
-    //     disabled: desks[desk].disabled,
-    //   });
-    // }
-
     for (let desk in this.state.bookableDesks) {
+      let bookers = this.state.bookableDesks[desk].user.split("|");
       let label =
         this.state.bookableDesks[desk].user.length !== 0 ? (
           <>
             <span style={{ margin: "0" }}>Booked by:</span>
-            <div style={{ width: "100%", marginBottom: "-8px" }} />
+            <div style={{ width: "100%", marginBottom: "-5px" }} />
             <span style={{ margin: "0" }}>
-              {this.state.bookableDesks[desk].user}
+              {this.state.chosenTime === "9:00 - 17:30"
+                ? "AM: " + bookers[0]
+                : bookers[0]}
             </span>
+            {bookers.length === 2 ? (
+              <>
+                <div style={{ width: "100%", marginBottom: "-5px" }} />
+                <span style={{ margin: "0" }}>
+                  {this.state.chosenTime === "9:00 - 17:30"
+                    ? "PM: " + bookers[1]
+                    : bookers[1]}
+                </span>
+              </>
+            ) : null}
           </>
         ) : (
           ""
         );
-      console.log(this.state.bookableDesks[desk]);
       let disabled = label.length !== 0;
       data.push({
         value: this.state.bookableDesks[desk].desk,

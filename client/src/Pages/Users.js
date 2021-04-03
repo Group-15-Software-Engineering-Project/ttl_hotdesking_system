@@ -311,6 +311,7 @@ class Users extends Component {
                 </span>
               ))}
             </div>
+            <div className="space" />
           </div>
         </div>
         <div className="flex-container-1"></div>
