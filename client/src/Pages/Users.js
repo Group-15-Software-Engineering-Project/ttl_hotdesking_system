@@ -10,7 +10,6 @@ class Users extends Component {
     addTeamUserName: "",
     removeFromTeam: "",
     removeUserFromTeam: "",
-    teams: [],
     users: [],
   };
 
@@ -160,7 +159,7 @@ class Users extends Component {
               />
               <button
                 className="button-style"
-                onChange={() => {
+                onClick={() => {
                   this.submitAddUser(
                     this.state.addEmail,
                     this.state.addPassword
@@ -225,7 +224,7 @@ class Users extends Component {
               <div
                 className="space"
                 style={{ marginBottom: "10%", marginTop: "5%" }}
-              />{" "}
+              />
               <input
                 className="text-input"
                 placeholder="Email"
@@ -254,17 +253,14 @@ class Users extends Component {
               <div
                 className="space"
                 style={{ marginBottom: "10%", marginTop: "5%" }}
-              />{" "}
-              <select
+              />
+              <input
                 className="text-input"
-                name="removeFromTeam"
+                placeholder="User team"
+                type="text"
+                name="removeUserFromTeam"
                 onChange={this.handleEvent}
-              >
-                <option value="">Select team</option>
-                {this.state.teams.map((x) => (
-                  <option value={x}>{x}</option>
-                ))}
-              </select>
+              ></input>
               <div className="space" style={{ marginBottom: "1%" }} />
               <input
                 className="text-input"
