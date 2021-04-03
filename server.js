@@ -12,6 +12,10 @@ var con = mysql.createConnection({
   user: process.env.DB_USER_ID,
   password: process.env.DB_PASS,
   database: process.env.DATABASE,
+  dateStrings: [
+        'DATE',
+        'DATETIME'
+    ]
 });
 
 con.connect(function (err) {
