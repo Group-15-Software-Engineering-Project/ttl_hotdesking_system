@@ -48,6 +48,7 @@ class Users extends Component {
   };
 
   submitAddUser = (email, password) => {
+    console.log(email, password);
     fetch("/api/addUser", {
       method: "POST",
       headers: {
