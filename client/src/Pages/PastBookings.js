@@ -25,6 +25,7 @@ function PastBookings({ email }) {
     })
       .then((response) => response.json())
       .then((res) => {
+        console.log(res);
         let data = res.data;
         let today =
           date.getFullYear() * 10000 +

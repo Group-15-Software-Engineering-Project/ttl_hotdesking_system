@@ -102,7 +102,9 @@ class Users extends Component {
   checkForm(e) {
     console.log(e);
   }
-
+  handleEvent = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
   addEmailF = (event) => {
     this.setState({ addEmail: event.target.value });
   };
@@ -181,7 +183,7 @@ class Users extends Component {
               <div
                 className="space"
                 style={{ marginBottom: "10%", marginTop: "5%" }}
-              />{" "}
+              />
               <input
                 className="text-input"
                 placeholder="Team name"

@@ -47,10 +47,9 @@ class Login extends Component {
   };
 
   render() {
-    if (this.state.validLogin) {
-      return <Redirect to="/home"></Redirect>;
-    }
-    return (
+    return this.state.validLogin && this.state.email.length !== 0 ? (
+      <Redirect to="/loading"></Redirect>
+    ) : (
       <div>
         <img
           id="clip"

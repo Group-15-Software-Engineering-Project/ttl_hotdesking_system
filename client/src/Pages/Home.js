@@ -3,22 +3,33 @@ import "../public/css/main.css";
 import { Link } from "react-router-dom";
 import { createUniqueID, months } from "../Components/Misc";
 
-function Home(props) {
-  const [upcomingBookings, setBookings] = useState([]);
-  const [todayDate, setDate] = useState(null);
-  const [key, setKey] = useState("default");
-  function getBookings() {
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      upcomingBookings: [],
+      todayDate: null,
+      key: "default",
+      loaded: false,
+    };
+  }
+
+  componentDidMount = () => {
     let date = new Date();
-    setDate(
-      date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
-    );
+    this.setState({
+      todayDate:
+        date.getFullYear() * 10000 +
+        (date.getMonth() + 1) * 100 +
+        date.getDate(),
+    });
+
     fetch("/api/getBooking", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: props.email,
+        email: this.props.email,
       }),
     })
       .then((response) => {
@@ -26,6 +37,8 @@ function Home(props) {
       })
       .then((res) => {
         let data = res.data;
+        console.log("RES", res.data);
+
         let today =
           date.getFullYear() * 10000 +
           (date.getMonth() + 1) * 100 +
@@ -44,15 +57,16 @@ function Home(props) {
         for (let i = index - 1; i >= index - 3 && i >= 0; i--) {
           if (data[i]) bookings.push(data[i]);
         }
-        setKey(createUniqueID());
-        setBookings(bookings);
-      });
-  }
-  useEffect(() => {
-    getBookings();
-  }, []);
+        this.setState({
+          key: createUniqueID(),
+          upcomingBookings: bookings,
+          email: this.props.email,
+        });
+      })
+      .catch((err) => console.log("FUCK THIS FUCKING ERROR", err));
+  };
 
-  const displayBooking = (data) => {
+  displayBooking = (data) => {
     let time =
       data.PM && !data.AM
         ? "13:30 - 17:30"
@@ -60,7 +74,8 @@ function Home(props) {
         ? "09:00 - 13:00"
         : "09:00 - 17:30";
     let date = data.DATE.split("T")[0].split("-");
-    let isUpcoming = todayDate - parseInt(date[0] + date[1] + date[2]);
+    let isUpcoming =
+      this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
     let displayDate =
       parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
     let status =
@@ -153,56 +168,60 @@ function Home(props) {
     );
   };
 
-  return (
-    <div key={upcomingBookings[0]} className="wrapper TCD-BG">
-      <div className="flex-container-1" />
-      <div className="flex-container-5 main-body">
-        <div style={{ width: "100%", marginBottom: "3%" }} />
-        <h1 style={{ fontSize: "32px" }}>{`Welcome back, ${
-          props.email.split("@")[0]
-        }!`}</h1>
-        <div style={{ width: "100%", marginBottom: "3%" }} />
+  render() {
+    return (
+      <div key={this.state.key} className="wrapper TCD-BG">
+        <div className="flex-container-1" />
+        <div className="flex-container-5 main-body">
+          <div style={{ width: "100%", marginBottom: "3%" }} />
+          <h1
+            style={{ fontSize: "32px" }}
+          >{`Welcome back, ${this.props.email}!`}</h1>
+          <div style={{ width: "100%", marginBottom: "3%" }} />
 
-        <Link to="/booking-page">
-          <button className="button-style" onClick={() => console.log(key)}>
-            {"Book a Desk"}
-          </button>
-        </Link>
-        <div
-          style={{
-            width: "100%",
-            marginBottom: "5%",
-          }}
-        />
-        <div style={{ borderTop: "1px #ccc solid" }} />
-        <div style={{ width: "100%", marginBottom: "3%" }} />
-        <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
-          Current Bookings
-        </h1>
-        <div style={{ width: "100%", marginBottom: "3%" }} />
-        <div style={{ marginRight: "2.5%" }}>
+          <Link to="/booking-page">
+            <button className="button-style">{"Book a Desk"}</button>
+          </Link>
           <div
             style={{
-              borderBottom: "1px solid #ccc",
-              width: "98%",
-              marginLeft: "2%",
+              width: "100%",
+              marginBottom: "5%",
             }}
           />
-          {upcomingBookings.map((x) => {
-            return displayBooking(x);
-          })}
-        </div>
-        <div style={{ width: "100%", marginBottom: "3%" }} />
-        <div style={{ borderTop: "1px #ccc solid" }} />
-        <div style={{ width: "100%", marginBottom: "3%" }} />
+          <div style={{ borderTop: "1px #ccc solid" }} />
+          <div style={{ width: "100%", marginBottom: "3%" }} />
+          <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+            Current Bookings
+          </h1>
+          <div style={{ width: "100%", marginBottom: "3%" }} />
+          {this.state.upcomingBookings.length !== 0 ? (
+            <div style={{ marginRight: "2.5%" }}>
+              <div
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  width: "98%",
+                  marginLeft: "2%",
+                }}
+              />
+              {this.state.upcomingBookings.map((x) => {
+                return this.displayBooking(x);
+              })}
+            </div>
+          ) : (
+            <h1>There are no upcoming bookings.</h1>
+          )}
+          <div style={{ width: "100%", marginBottom: "3%" }} />
+          <div style={{ borderTop: "1px #ccc solid" }} />
+          <div style={{ width: "100%", marginBottom: "3%" }} />
 
-        <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
-          Notifications
-        </h1>
+          <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+            Notifications
+          </h1>
+        </div>
+        <div className="flex-container-1" />
       </div>
-      <div className="flex-container-1" />
-    </div>
-  );
+    );
+  }
 }
 
 export default Home;

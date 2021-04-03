@@ -12,10 +12,7 @@ var con = mysql.createConnection({
   user: process.env.DB_USER_ID,
   password: process.env.DB_PASS,
   database: process.env.DATABASE,
-  dateStrings: [
-        'DATE',
-        'DATETIME'
-    ]
+  dateStrings: ["DATE", "DATETIME"],
 });
 
 con.connect(function (err) {
@@ -183,7 +180,7 @@ app.post("/api/getBooking", (req, res) => {
       for (booking in bookings) {
         data.push(bookings[booking]);
       }
-      res.send({ data });
+      res.send({ data: bookings });
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
@@ -226,16 +223,20 @@ app.post("/api/getBookingsInMonth", (req, res) => {
           date += "-" + (i + 1).toString();
         }
 
-        getExistingBookings(req.body.room, date, req.body.am, req.body.pm)
-        .then((bookings) => {
+        getExistingBookings(req.body.room, date, req.body.am, req.body.pm).then(
+          (bookings) => {
             let data = [];
             for (j = 0; j < bookings.length; j++) {
-              if (j < bookings.length-1 && bookings[j+1].DESK === bookings[j].DESK) {
+              if (
+                j < bookings.length - 1 &&
+                bookings[j + 1].DESK === bookings[j].DESK
+              ) {
                 data.push({
-                  user: (bookings[j].USER === bookings[j+1].USER) ?
-                    bookings[j].USER :
-                    bookings[j].USER + '|' + bookings[j+1].USER,
-                  desk: bookings[j].DESK
+                  user:
+                    bookings[j].USER === bookings[j + 1].USER
+                      ? bookings[j].USER
+                      : bookings[j].USER + "|" + bookings[j + 1].USER,
+                  desk: bookings[j].DESK,
                 });
                 j++;
               } else {
@@ -255,7 +256,8 @@ app.post("/api/getBookingsInMonth", (req, res) => {
                 desks: desks,
               });
             }
-        });
+          }
+        );
       }
     })
     .catch((err) => {

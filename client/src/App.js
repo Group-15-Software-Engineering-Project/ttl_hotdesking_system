@@ -40,15 +40,22 @@ class App extends Component {
             }}
           />
           <Switch>
+            <Route exact path="/loading">
+              {this.state.email.length !== 0 ? (
+                <Redirect to="/home"></Redirect>
+              ) : (
+                <Redirect to="/loading" />
+              )}
+            </Route>
             <Route exact path="/">
               <Redirect to="/login"></Redirect>
             </Route>
 
             <Route path="/login">
               <Login
-                setEmail={(email) =>
-                  this.setState({ email: email, isLoggedIn: true })
-                }
+                setEmail={(email) => {
+                  this.setState({ email: email, isLoggedIn: true });
+                }}
               />
             </Route>
 
