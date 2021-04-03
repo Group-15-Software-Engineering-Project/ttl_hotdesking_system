@@ -49,6 +49,7 @@ class Users extends Component {
   };
 
   submitAddUser = (email, password) => {
+    console.log(email, password);
     fetch("/api/addUser", {
       method: "POST",
       headers: {
@@ -160,7 +161,7 @@ class Users extends Component {
               />
               <button
                 className="button-style"
-                onChange={() => {
+                onClick={() => {
                   this.submitAddUser(
                     this.state.addEmail,
                     this.state.addPassword
