@@ -118,6 +118,28 @@ app.post("/api/addDesk", (req, res) => {
     });
 });
 
+app.post("/api/addUserToTeam", (req, res) => {
+  addUserToGroup(req.body.email, req.body.group) 
+  .then(() => {
+    res.send({error: false});
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({error: true});
+  });
+});
+
+app.post("/api/removeUserFromTeam", (req, res) => {
+  removeUserFromGroup(req.body.email, req.body.group)
+  .then(() => {
+    res.send({error:false});
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({error: true});
+  })
+});
+
 app.post("/api/addUser", (req, res) => {
   addUser(req.body.email, req.body.password)
     .then(() => {
@@ -554,6 +576,34 @@ function getUserBookingsBetween(user, start, end) {
         reject(new Error(res));
       } else {
         resolve(res.length);
+      }
+    });
+  });
+}
+
+function removeUserFromGroup(email, group) {
+  sql = "DELETE FROM GROUPS WHERE NAME='"+group+"' AND USER='"+email+"';"
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  })
+}
+
+function addUserToGroup(email, group) {
+  sql =  "INSERT INTO GROUPS VALUES ('"+group+"', '"+email+"');";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
       }
     });
   });
