@@ -259,7 +259,7 @@ class Users extends Component {
                 className="text-input"
                 placeholder="User team"
                 type="text"
-                name="removeUserFromTeam"
+                name="removeFromTeam"
                 onChange={this.handleEvent}
               ></input>
               <div className="space" style={{ marginBottom: "1%" }} />
