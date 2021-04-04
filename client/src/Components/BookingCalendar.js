@@ -34,7 +34,7 @@ export default class BookingCalendar extends React.Component {
         break;
     }
 
-    fetch("/api/getAvailableDesksInMonth", {
+    fetch("/api/getBookingsInMonth", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,13 +50,17 @@ export default class BookingCalendar extends React.Component {
         return res.json();
       })
       .then((res) => {
+        console.log(res);
         this.setState(
           {
-            availableDesks: res.data,
+            availableDesks: res.desks,
             existingBookings: res.existingBookings,
           },
           () => {}
         );
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
   componentDidMount() {
@@ -95,9 +99,12 @@ export default class BookingCalendar extends React.Component {
       this.state.currentMonth.substring(5) ===
       String(month + 1).padStart(2, "0")
     ) {
-      if (this.state.availableDesks) {
-        if (this.state.availableDesks[day]) {
-          if (this.state.availableDesks[day].length > 0) {
+      if (this.state.existingBookings) {
+        if (this.state.existingBookings[day]) {
+          if (
+            this.state.existingBookings[day].length <
+            this.state.availableDesks.length
+          ) {
             return "NONE-Booked";
           } else {
             return "ALL-Booked";
@@ -123,10 +130,32 @@ export default class BookingCalendar extends React.Component {
       this.state.currentMonth.substring(5) ===
       String(month + 1).padStart(2, "0")
     ) {
-      for (let desk in this.state.availableDesks[day]) {
-        desks.push(String("Desk " + this.state.availableDesks[day][desk]));
+      for (let desk in this.state.availableDesks) {
+        let bookedDesk;
+        for (let booking in this.state.existingBookings[day]) {
+          if (
+            this.state.existingBookings[day][booking].desk ===
+            this.state.availableDesks[desk]
+          ) {
+            bookedDesk = {
+              desk: "Desk " + this.state.availableDesks[desk],
+              user: this.state.existingBookings[day][booking].user,
+            };
+            break;
+          }
+        }
+
+        if (bookedDesk) {
+          desks.push(bookedDesk);
+        } else {
+          desks.push({
+            desk: "Desk " + this.state.availableDesks[desk],
+            user: "",
+          });
+        }
       }
     }
+    console.log(desks);
     return desks;
   };
 
@@ -140,6 +169,7 @@ export default class BookingCalendar extends React.Component {
       this.state.todayDate > tileDate || tileDate - this.state.todayDate > 14
     );
   };
+
   render() {
     return (
       <div style={{ marginTop: "5%", marginBottom: "5%" }}>

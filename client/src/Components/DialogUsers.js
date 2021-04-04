@@ -28,7 +28,7 @@ class DialogUsers extends Component {
     }
 
     handleSubmit = () => {
-        console.log(this.state);
+        console.log(this.state.firstName);
     };
 
     render() {
@@ -38,11 +38,11 @@ class DialogUsers extends Component {
                 <div className="popup">
                     <div className="popup-inner">
                         <button className="close-btn" onClick={this.props.onClose}>x</button>
-                        <p>Email:</p>
+                        <p>Username:</p>
                         <input type="text" onChange={this.handleFirstName}></input>
                         <p>Password:</p>
                         <input type="text" onChange={this.handleLastName}></input>
-                        {/* <p>Team:</p>
+                        <p>Tag:</p>
                         <div>
                             <select value={this.state.team} onChange={this.handleTeam}>
                                 <option>Academic Affairs</option>
@@ -50,7 +50,7 @@ class DialogUsers extends Component {
                                 <option>Academic Practice</option>
                                 <option>Other</option>
                             </select>
-                        </div> */}
+                        </div> 
                         <button onClick={this.handleSubmit}>submit</button>
                     </div>
                 </div>

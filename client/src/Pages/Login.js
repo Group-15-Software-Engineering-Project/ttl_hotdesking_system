@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
 import "../public/css/main.css";
 import { Route, Link, Redirect } from "react-router-dom";
-import App from "../App";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
 class Login extends Component {
@@ -48,10 +47,9 @@ class Login extends Component {
   };
 
   render() {
-    if (this.state.validLogin) {
-      return <Redirect to="/home"></Redirect>;
-    }
-    return (
+    return this.state.validLogin && this.state.email.length !== 0 ? (
+      <Redirect to="/loading"></Redirect>
+    ) : (
       <div>
         <img
           id="clip"

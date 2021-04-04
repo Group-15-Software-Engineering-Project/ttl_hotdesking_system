@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
 import { createUniqueID, months } from "../Components/Misc";
+import ConfirmationEmail from "../Components/ConfirmationEmail.js";
 import "../public/css/main.css";
 
 export default class BookingPage extends React.Component {
@@ -56,6 +57,7 @@ export default class BookingPage extends React.Component {
         pm = true;
         break;
     }
+
     fetch("/api/makeBooking", {
       method: "POST",
       headers: {
@@ -74,6 +76,8 @@ export default class BookingPage extends React.Component {
         return res.json();
       })
       .then((res) => {
+        console.log(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm);
+        ConfirmationEmail(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm);
         alert(res.message);
         this.setState({
           chosenArea: "default",
@@ -85,6 +89,10 @@ export default class BookingPage extends React.Component {
         });
       })
       .catch((err) => alert(err));
+
+      
+      
+
   };
 
   positionReference = createRef();
@@ -122,21 +130,46 @@ export default class BookingPage extends React.Component {
 
   transformDeskData = () => {
     let data = [];
-    let desks = this.state.bookableDesks;
-    for (let desk in desks) {
-      let label = desks[desk].disabled ? "Booked by: " + desks[desk].name : "";
+    for (let desk in this.state.bookableDesks) {
+      let bookers = this.state.bookableDesks[desk].user.split("|");
+      let label =
+        this.state.bookableDesks[desk].user.length !== 0 ? (
+          <>
+            <span style={{ margin: "0" }}>Booked by:</span>
+            <div style={{ width: "100%", marginBottom: "-5px" }} />
+            <span style={{ margin: "0" }}>
+              {this.state.chosenTime === "9:00 - 17:30"
+                ? "AM: " + bookers[0]
+                : bookers[0]}
+            </span>
+            {bookers.length === 2 ? (
+              <>
+                <div style={{ width: "100%", marginBottom: "-5px" }} />
+                <span style={{ margin: "0" }}>
+                  {this.state.chosenTime === "9:00 - 17:30"
+                    ? "PM: " + bookers[1]
+                    : bookers[1]}
+                </span>
+              </>
+            ) : null}
+          </>
+        ) : (
+          ""
+        );
+      let disabled = label.length !== 0;
       data.push({
-        value: desks[desk],
+        value: this.state.bookableDesks[desk].desk,
         label: label,
-        disabled: desks[desk].disabled,
+        disabled: disabled,
       });
     }
+    console.log("data:", data);
     return data;
   };
 
   render() {
     return (
-      <div className="wrapper">
+      <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
           <div style={{ marginTop: "20px" }} />
@@ -268,7 +301,7 @@ export default class BookingPage extends React.Component {
                   </>
                 }
                 options={this.transformDeskData()}
-                size={["150px", "60px"]}
+                size={["180px", "90px"]}
                 onSelect={(e) => {
                   this.setState({
                     chosenDesk: e,

@@ -1,7 +1,8 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { render } from "react-dom";
 import "../public/css/booking.css";
 import "../public/css/main.css";
+import { months } from "../Components/Misc";
 
 function PastBookings({ email }) {
   const [bookings, setData] = useState(null);
@@ -23,63 +24,34 @@ function PastBookings({ email }) {
       }),
     })
       .then((response) => response.json())
-      .then(setData);
+      .then((res) => {
+        console.log(res);
+        let data = res.data;
+        let today =
+          date.getFullYear() * 10000 +
+          (date.getMonth() + 1) * 100 +
+          date.getDate();
+        let index = 0;
+        for (let key in data) {
+          console.log(data[key]);
+          let bookingDateComponents = data[key].DATE.split("T")[0].split("-");
+          let bookingDate =
+            parseInt(bookingDateComponents[0]) * 10000 +
+            parseInt(bookingDateComponents[1]) * 100 +
+            parseInt(bookingDateComponents[2]);
+          if (today - bookingDate > 0) break;
+          index++;
+        }
+        for (let i = 0; i < Math.floor(index / 2); i++) {
+          let temp = data[i];
+          data[i] = data[index - 1 - i];
+          data[index - 1 - i] = temp;
+        }
+        setData({ data: data });
+      });
   }, []);
 
-  // if (bookings) {
-  //   console.log(bookings);
-  //   return (
-  //     <div>
-  //       {bookings.data.map((book, index) => {
-  //         return (
-  //           <div>
-  //             <h1
-  //               className="messageList Date"
-  //               style={{ position: "absolute", fontSize: 30 }}
-  //             >
-  //               {book.DESK}
-  //             </h1>
-  //             <h2
-  //               className="messageList Time"
-  //               style={{ position: "absolute", left: 150, fontSize: 30 }}
-  //             >
-  //               {book.DATE.split("T")[0]}
-  //             </h2>
-  //             {/* <h3 className='messageList Time' style={{position:'absolute', left:400,fontSize:30}}>{book.DATE.split('T')[1].split('.')[0]}</h3> */}
-  //             <h3
-  //               className="messageList Time"
-  //               style={{ position: "absolute", left: 630, fontSize: 30 }}
-  //             >
-  //               {book.ROOM}
-  //             </h3>
-  //             <h4
-  //               className="messageList Message"
-  //               style={{
-  //                 position: "relative",
-  //                 marginBottom: 50,
-  //                 left: 1030,
-  //                 fontSize: 30,
-  //               }}
-  //             >
-  //               {book.AM == "1" ? (
-  //                 <h5>9:00 am to 12:00pm</h5>
-  //               ) : (
-  //                 <h5>1:00 am to 4:00pm</h5>
-  //               )}
-  //             </h4>
-  //             <hr></hr>
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // }
-  // return (
-  //   <div>
-  //     <h1>Past Bookings</h1>
-  //   </div>
-  // );
-  const displayBooking = (data, index) => {
+  const displayBooking = (data) => {
     let time =
       data.PM && !data.AM
         ? "13:30 - 17:30"
@@ -96,7 +68,6 @@ function PastBookings({ email }) {
             marginLeft: "5px",
             color: "#3ABF00",
             fontWeight: "bold",
-            // width: "15%",
             flex: "2",
             maxWidth: "16.5%",
           }}
@@ -110,7 +81,6 @@ function PastBookings({ email }) {
             marginLeft: "5px",
             color: "#555",
             fontWeight: "bold",
-            // width: "15%",
             flex: "2",
             maxWidth: "16.5%",
           }}
@@ -125,7 +95,6 @@ function PastBookings({ email }) {
             marginLeft: "5px",
             fontWeight: "bold",
             maxWidth: "16.5%",
-            // width: "15%",
             flex: "2",
           }}
         >
@@ -135,37 +104,35 @@ function PastBookings({ email }) {
     let bg =
       isUpcoming > 0
         ? {
-            width: "100%",
-            marginBottom: "1%",
-            backgroundColor: "white",
+            backgroundColor: "#eee",
+          }
+        : isUpcoming === 0
+        ? {
+            backgroundColor: "#FFFEAA",
           }
         : {
-            width: "100%",
-            marginBottom: "1%",
-            backgroundColor: "#ddd",
+            backgroundColor: "white",
           };
+    let displayDate =
+      parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
     return (
-      <div
-        className="bookings-table"
-        style={{ backgroundColor: isUpcoming > 0 ? "#eee" : null }}
-      >
-        <div style={bg} />
+      <div className="bookings-table" style={bg}>
+        <div style={{ width: "100%", marginBottom: "1%" }} />
         {status}
         <span
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            //width: "10%",
             flex: "1",
           }}
         >
           {"Desk " + data.DESK}
         </span>
         <span
+          className="ellipsis"
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            // width: "27%",
             flex: "3",
           }}
         >{`${data.ROOM}`}</span>
@@ -173,15 +140,15 @@ function PastBookings({ email }) {
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            // width: "18%",
             flex: "2",
           }}
-        >{`${data.DATE.split("T")[0]}`}</span>
+        >
+          {displayDate}
+        </span>
         <span
           style={{
             textAlign: "left",
             fontWeight: "bold",
-            // width: "13%",
             flex: "2",
           }}
         >
@@ -192,17 +159,9 @@ function PastBookings({ email }) {
     );
   };
   return (
-    <div className="wrapper">
+    <div className="wrapper TCD-BG ">
       <div className="flex-container-1"></div>
       <div className="flex-container-5 main-body">
-        <div
-          style={{
-            marginTop: "2%",
-            borderBottom: "1px solid #ccc",
-            width: "96%",
-            marginLeft: "2%",
-          }}
-        />
         <div
           style={{
             display: "flex",
@@ -210,11 +169,76 @@ function PastBookings({ email }) {
             justifyContent: "flex-start",
           }}
         >
-          {bookings
-            ? bookings.data.map((data, index) => {
-                return displayBooking(data, index);
-              })
-            : "FETCH ERROR: Booking history not found."}
+          <div style={{ width: "100%", marginBottom: "2%" }} />
+          {bookings ? (
+            <>
+              <div
+                className="bookings-table"
+                style={{ border: "none", pointerEvents: "none" }}
+              >
+                <span
+                  style={{
+                    textAlign: "left",
+                    marginLeft: "5px",
+                    fontWeight: "bold",
+                    maxWidth: "16.5%",
+                    flex: "2",
+                  }}
+                >
+                  Status
+                </span>
+                <span
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "1",
+                  }}
+                >
+                  Desk No.
+                </span>
+                <span
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "3",
+                  }}
+                >
+                  Location
+                </span>
+                <span
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "2",
+                  }}
+                >
+                  Date
+                </span>
+                <span
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "2",
+                  }}
+                >
+                  Time
+                </span>
+                <div style={{ width: "100%", marginTop: "2%" }} />
+              </div>
+              <div
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  width: "96%",
+                  marginLeft: "2%",
+                }}
+              />
+              {bookings.data.map((data) => {
+                return displayBooking(data);
+              })}
+            </>
+          ) : (
+            "Booking history not found. If booking history should be present, please wait 10 seconds and re-login if the problem persists."
+          )}
         </div>
         <div
           style={{

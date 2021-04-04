@@ -26,12 +26,12 @@ export const SidebarData = [
     icon: <CgIcons.CgProfile />,
     cName: "nav-text",
   },
-  {
-    title: "Messages",
-    path: "/messages",
-    icon: <FaIcons.FaEnvelopeOpenText />,
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Messages",
+  //   path: "/messages",
+  //   icon: <FaIcons.FaEnvelopeOpenText />,
+  //   cName: "nav-text",
+  // },
   {
     title: "Reports",
     path: "/reports",
@@ -50,12 +50,12 @@ export const SidebarData = [
     icon: <AiIcons.AiOutlineUser />,
     cName: "nav-text",
   },
-  {
-    title: "Support",
-    path: "/Support",
-    icon: <IoIcons.IoMdHelpCircle />,
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Support",
+  //   path: "/Support",
+  //   icon: <IoIcons.IoMdHelpCircle />,
+  //   cName: "nav-text",
+  // },
   {
     title: "Admin",
     path: "/Admin",
