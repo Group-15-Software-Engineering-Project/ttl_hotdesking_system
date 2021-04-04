@@ -35,6 +35,7 @@ function Navbar(props) {
               className="nav-button"
               onClick={() => {
                 props.resetEmail("");
+                sessionStorage.removeItem("email");
               }}
             >
               {"Log Out"}

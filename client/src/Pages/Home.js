@@ -14,7 +14,7 @@ class Home extends React.Component {
     };
   }
 
-  componentDidMount = () => {
+  componentWillMount = () => {
     window.scrollTo(0, 0);
     let date = new Date();
     this.setState({

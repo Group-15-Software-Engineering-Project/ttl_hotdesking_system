@@ -26,13 +26,26 @@ class App extends Component {
     isLoggedIn: false,
   };
 
+  // componentDidMount = () => {
+  //   if (sessionStorage.getItem("email"))
+  //     this.setState({ email: sessionStorage.getItem("email") });
+  // };
+
+  // componentDidUpdate = () => {
+  //   if (this.state.email.length === 0 && sessionStorage.getItem("email"))
+  //     this.setState({ email: sessionStorage.getItem("email") });
+  // };
+
   render() {
     return (
-      <>
+      <div key={sessionStorage.getItem("email")}>
         <p>{this.state.response}</p>
         <p>{this.state.responseToPost}</p>
         <Router>
-          {!this.state.isLoggedIn ? <Redirect to="/login"></Redirect> : null}
+          {/* {!this.state.isLoggedIn ? <Redirect to="/login"></Redirect> : null} */}
+          {!sessionStorage.getItem("email") ? (
+            <Redirect to="/login"></Redirect>
+          ) : null}
 
           <Navbar
             resetEmail={() => {
@@ -40,6 +53,13 @@ class App extends Component {
             }}
           />
           <Switch>
+            {/* <Route exact path="/loading">
+              {sessionStorage.getItem("email") ? (
+                <Redirect to="/home"></Redirect>
+              ) : (
+                <Redirect to="/loading" />
+              )}
+            </Route> */}
             <Route exact path="/loading">
               {this.state.email.length !== 0 ? (
                 <Redirect to="/home"></Redirect>
@@ -81,7 +101,7 @@ class App extends Component {
             ) : null}
           </Switch>
         </Router>
-      </>
+      </div>
     );
   }
 }

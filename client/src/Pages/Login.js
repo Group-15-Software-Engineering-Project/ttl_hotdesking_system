@@ -39,6 +39,7 @@ class Login extends Component {
         } else {
           this.setState({ validLogin: true });
           this.props.setEmail(this.state.email);
+          // sessionStorage.setItem("email", this.state.email);
         }
       })
       .catch((err) => {
