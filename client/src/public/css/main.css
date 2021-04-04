@@ -113,6 +113,25 @@
 .button-style:hover {
   background-color: #00c5ff;
 }
+
+.button-style-warning {
+  border: none;
+  border-radius: 100px;
+  background-color: #f32000;
+  color: white;
+  min-width: 180px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 3px 3px #555;
+  cursor: pointer;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.button-style-warning:hover {
+  background-color: #ff5000;
+}
 .quadrant {
   width: 100%;
   min-height: 35vh;
@@ -169,4 +188,10 @@
 .space {
   width: 100%;
   margin-bottom: 3%;
+}
+
+.quadrant-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
 }

@@ -38,7 +38,9 @@ class Locations extends Component {
         console.log(err);
       });
   };
+
   componentDidMount = () => {
+    window.scrollTo(0, 0);
     fetch("/api/getLocationData", {
       method: "POST",
       headers: {
@@ -244,13 +246,7 @@ class Locations extends Component {
         <div className="wrapper TCD-BG" key={this.state.key}>
           <div className="flex-container-1" />
           <div className="flex-container-5 main-body">
-            <div
-              style={{
-                display: "flex",
-                flexFlow: "row wrap",
-                justifyContent: "flex-start",
-              }}
-            >
+            <div className="quadrant-container">
               <div className="quadrant">
                 <h1
                   className="page-divider-header"

@@ -9,7 +9,7 @@ import * as RiIcons from "react-icons/ri";
 
 export const SidebarData = [
   {
-    title: "Book",
+    title: "Book a Desk",
     path: "/booking-page",
     icon: <BiIcons.BiBookAdd />,
     cName: "nav-text",
@@ -48,12 +48,6 @@ export const SidebarData = [
     title: "Users",
     path: "/users",
     icon: <AiIcons.AiOutlineUser />,
-    cName: "nav-text",
-  },
-  {
-    title: "Support",
-    path: "/Support",
-    icon: <IoIcons.IoMdHelpCircle />,
     cName: "nav-text",
   },
   {

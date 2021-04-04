@@ -9,7 +9,9 @@ function PastBookings({ email }) {
   const [todayDate, setDate] = useState(null);
   //email= "foo@bar.com";
   console.log(email);
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     let date = new Date();
     setDate(
       date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
@@ -171,71 +173,75 @@ function PastBookings({ email }) {
         >
           <div style={{ width: "100%", marginBottom: "2%" }} />
           {bookings ? (
-            <>
-              <div
-                className="bookings-table"
-                style={{ border: "none", pointerEvents: "none" }}
-              >
-                <span
-                  style={{
-                    textAlign: "left",
-                    marginLeft: "5px",
-                    fontWeight: "bold",
-                    maxWidth: "16.5%",
-                    flex: "2",
-                  }}
+            bookings.data ? (
+              <>
+                <div
+                  className="bookings-table"
+                  style={{ border: "none", pointerEvents: "none" }}
                 >
-                  Status
-                </span>
-                <span
+                  <span
+                    style={{
+                      textAlign: "left",
+                      marginLeft: "5px",
+                      fontWeight: "bold",
+                      maxWidth: "16.5%",
+                      flex: "2",
+                    }}
+                  >
+                    Status
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "left",
+                      fontWeight: "bold",
+                      flex: "1",
+                    }}
+                  >
+                    Desk No.
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "left",
+                      fontWeight: "bold",
+                      flex: "3",
+                    }}
+                  >
+                    Location
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "left",
+                      fontWeight: "bold",
+                      flex: "2",
+                    }}
+                  >
+                    Date
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "left",
+                      fontWeight: "bold",
+                      flex: "2",
+                    }}
+                  >
+                    Time
+                  </span>
+                  <div style={{ width: "100%", marginTop: "2%" }} />
+                </div>
+                <div
                   style={{
-                    textAlign: "left",
-                    fontWeight: "bold",
-                    flex: "1",
+                    borderBottom: "1px solid #ccc",
+                    width: "96%",
+                    marginLeft: "2%",
                   }}
-                >
-                  Desk No.
-                </span>
-                <span
-                  style={{
-                    textAlign: "left",
-                    fontWeight: "bold",
-                    flex: "3",
-                  }}
-                >
-                  Location
-                </span>
-                <span
-                  style={{
-                    textAlign: "left",
-                    fontWeight: "bold",
-                    flex: "2",
-                  }}
-                >
-                  Date
-                </span>
-                <span
-                  style={{
-                    textAlign: "left",
-                    fontWeight: "bold",
-                    flex: "2",
-                  }}
-                >
-                  Time
-                </span>
-                <div style={{ width: "100%", marginTop: "2%" }} />
-              </div>
-              <div
-                style={{
-                  borderBottom: "1px solid #ccc",
-                  width: "96%",
-                  marginLeft: "2%",
-                }}
-              />
-              {bookings.data.map((data) => {
-                return displayBooking(data);
-              })}
-            </>
+                />
+                {bookings.data.map((data) => {
+                  return displayBooking(data);
+                })}
+              </>
+            ) : (
+              "Booking history not found. If booking history should be present, please wait 10 seconds and re-login if the problem persists."
+            )
           ) : (
             "Booking history not found. If booking history should be present, please wait 10 seconds and re-login if the problem persists."
           )}
