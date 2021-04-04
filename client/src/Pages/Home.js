@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import "../public/css/main.css";
 import { Link } from "react-router-dom";
 import { createUniqueID, months } from "../Components/Misc";
@@ -15,6 +15,7 @@ class Home extends React.Component {
   }
 
   componentDidMount = () => {
+    window.scrollTo(0, 0);
     let date = new Date();
     this.setState({
       todayDate:
@@ -63,7 +64,7 @@ class Home extends React.Component {
           email: this.props.email,
         });
       })
-      .catch((err) => console.log("FUCK THIS FUCKING ERROR", err));
+      .catch((err) => console.log(err));
   };
 
   displayBooking = (data) => {

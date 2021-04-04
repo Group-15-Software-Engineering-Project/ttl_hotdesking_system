@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import {Bar} from 'react-chartjs-2';
-import {Line} from 'react-chartjs-2';
-import {Pie} from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 
 class Reports extends Component {
+  componentDidMount = () => {
+    window.scrollTo(0, 0);
+  };
 
   constructor() {
     super();
@@ -14,11 +17,24 @@ class Reports extends Component {
       roomlist: ["room1", "room2", "room3"],
       teamlist: ["team1", "team2", "team3"],
       barData: {
-        labels: ["User1", "User2", "User3", "User4", "User5", "User6","User1", "User2", "User3", "User4", "User5", "User6"],
+        labels: [
+          "User1",
+          "User2",
+          "User3",
+          "User4",
+          "User5",
+          "User6",
+          "User1",
+          "User2",
+          "User3",
+          "User4",
+          "User5",
+          "User6",
+        ],
         datasets: [
           {
             label: "Hours",
-            data: [58, 50, 40, 30, 20, 9,58, 50, 40, 30, 20, 9],
+            data: [58, 50, 40, 30, 20, 9, 58, 50, 40, 30, 20, 9],
             backgroundColor: [
               "rgba(255, 99, 132, 0.6)",
               "rgba(54, 162, 235, 0.6)",
@@ -90,12 +106,10 @@ class Reports extends Component {
   static defaultProps = {
     displayTitle: true,
     displayLegend: true,
-    legendPosition:'bottom'
-  }
+    legendPosition: "bottom",
+  };
 
-  reset() {
-
-  }
+  reset() {}
 
   overall() {
     this.setState({
@@ -586,105 +600,135 @@ class Reports extends Component {
         <div>
           <p>Time range:</p>
           <button
-            onClick={(e) =>
-              this.setState({time:"overall"}), this.reset()
-            }
-          >Overall</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            onClick={((e) => this.setState({ time: "overall" }), this.reset())}
+          >
+            Overall
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <button
-            onClick={(e) =>
-              this.setState({time:"last week"}), this.reset()
+            onClick={
+              ((e) => this.setState({ time: "last week" }), this.reset())
             }
-          >Last Week</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          >
+            Last Week
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <button
-            onClick={(e) =>
-              this.setState({time:"last month"}), this.reset()
+            onClick={
+              ((e) => this.setState({ time: "last month" }), this.reset())
             }
-          >Last Month</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          >
+            Last Month
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <button
-            onClick={(e) =>
-              this.setState({time:"next week"}), this.reset()
+            onClick={
+              ((e) => this.setState({ time: "next week" }), this.reset())
             }
-          >Next Week</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-
-
+          >
+            Next Week
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <p>Room:</p>
           <button
-            onClick={(e) =>
-              this.setState({room:"overall"}), this.reset()
-            }
-          >Overall</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-          {this.state.roomlist.map(roomName => <span>
-                                                <button
-                                                  onClick={(e) =>
-                                                    this.setState({room:roomName}), this.reset()}
-                                                >{roomName}</button>
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                              </span>)}
-
-
-
+            onClick={((e) => this.setState({ room: "overall" }), this.reset())}
+          >
+            Overall
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
+          {this.state.roomlist.map((roomName) => (
+            <span>
+              <button
+                onClick={
+                  ((e) => this.setState({ room: roomName }), this.reset())
+                }
+              >
+                {roomName}
+              </button>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              &nbsp; &nbsp; &nbsp;
+            </span>
+          ))}
           <p>Team:</p>
           <button
-            onClick={(e) =>
-              this.setState({team:"overall"}), this.reset()
-            }
-          >Overall</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-          {this.state.teamlist.map(teamName => <span>
-                                                <button
-                                                  onClick={(e) =>
-                                                    this.setState({team:teamName}), this.reset()}
-                                                >{teamName}</button>
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                              </span>)}
-
+            onClick={((e) => this.setState({ team: "overall" }), this.reset())}
+          >
+            Overall
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
+          {this.state.teamlist.map((teamName) => (
+            <span>
+              <button
+                onClick={
+                  ((e) => this.setState({ team: teamName }), this.reset())
+                }
+              >
+                {teamName}
+              </button>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              &nbsp; &nbsp; &nbsp;
+            </span>
+          ))}
         </div>
-        <div className="reports" style={{ position: "relative", margin: "auto", width: "70vw" }}>
-          <Bar 
+        <div
+          className="reports"
+          style={{ position: "relative", margin: "auto", width: "70vw" }}
+        >
+          <Bar
             data={this.state.barData}
             options={{
-              title:{
-                display:this.props.displayTitle,
-                text:'Most active user',
-                fontSize:25
+              title: {
+                display: this.props.displayTitle,
+                text: "Most active user",
+                fontSize: 25,
               },
-              legend:{
-                display:this.props.displayLegend,
-                position:this.props.legendPosition
+              legend: {
+                display: this.props.displayLegend,
+                position: this.props.legendPosition,
               },
             }}
           />
         </div>
-        <div className="reports" style={{ position: "relative", margin: "auto", width: "70vw" }}>
+        <div
+          className="reports"
+          style={{ position: "relative", margin: "auto", width: "70vw" }}
+        >
           <Line
             data={this.state.lineData}
             options={{
-              title:{
-                display:this.props.displayTitle,
-                text:'Most active day',
-                fontSize:25
+              title: {
+                display: this.props.displayTitle,
+                text: "Most active day",
+                fontSize: 25,
               },
-              legend:{
-                display:this.props.displayLegend,
-                position:this.props.legendPosition
+              legend: {
+                display: this.props.displayLegend,
+                position: this.props.legendPosition,
               },
             }}
           />
         </div>
-        <div className="reports" style={{ position: "relative", margin: "auto", width: "70vw" }}>
+        <div
+          className="reports"
+          style={{ position: "relative", margin: "auto", width: "70vw" }}
+        >
           <Pie
             data={this.state.pieData}
             options={{
-              title:{
-                display:this.props.displayTitle,
-                text:'Most used desk',
-                fontSize:25
+              title: {
+                display: this.props.displayTitle,
+                text: "Most used desk",
+                fontSize: 25,
               },
-              legend:{
-                display:this.props.displayLegend,
-                position:this.props.legendPosition
+              legend: {
+                display: this.props.displayLegend,
+                position: this.props.legendPosition,
               },
             }}
           />

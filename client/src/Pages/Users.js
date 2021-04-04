@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import User from "../Components/User";
 import "../public/css/main.css";
 class Users extends Component {
   state = {
@@ -15,54 +14,55 @@ class Users extends Component {
 
   componentDidMount() {
     this.getUsers();
+    window.scrollTo(0, 0);
   }
 
   submitAddUserToTeam = () => {
     fetch("/api/addUserToTeam", {
-      method:"POST",
+      method: "POST",
       headers: {
-        "Content-Type" : "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: this.state.addTeamUserName,
-        group: this.state.addTeamName
+        group: this.state.addTeamName,
+      }),
+    })
+      .then((res) => {
+        let result = res.json();
+        if (result.error) {
+          alert("Failed to add user to team");
+        } else {
+          alert("Success");
+        }
       })
-    })
-    .then((res) => {
-      let result = res.json();
-      if (result.error) {
-        alert("Failed to add user to team");
-      } else {
-        alert("Success");
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   submitRemoveUserFromTeam = () => {
     fetch("/api/removeUserFromTeam", {
-      method:"POST",
+      method: "POST",
       headers: {
-        "Content-Type" : "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: this.state.removeUserFromTeam,
-        group: this.state.removeFromTeam
+        group: this.state.removeFromTeam,
+      }),
+    })
+      .then((res) => {
+        let result = res.json();
+        if (result.error) {
+          alert("error removing user from team");
+        } else {
+          alert("Success");
+        }
       })
-    })
-    .then((res) => {
-      let result = res.json();
-      if (result.error) {
-        alert("error removing user from team");
-      } else {
-        alert("Success");
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   submitRemoveUser = (email) => {
@@ -166,13 +166,7 @@ class Users extends Component {
       <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
-          <div
-            style={{
-              display: "flex",
-              flexFlow: "row wrap",
-              justifyContent: "flex-start",
-            }}
-          >
+          <div className="quadrant-container">
             <div className="quadrant">
               <h1
                 className="page-divider-header"

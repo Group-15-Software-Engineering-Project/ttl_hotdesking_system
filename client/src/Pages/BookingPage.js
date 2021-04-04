@@ -111,9 +111,12 @@ export default class BookingPage extends React.Component {
         if (res.error) {
           console.log("Error fetching rooms");
         } else {
-          this.setState({
-            locations: res.rooms,
-          });
+          this.setState(
+            {
+              locations: res.rooms,
+            },
+            () => window.scrollTo(0, 0)
+          );
         }
       })
       .catch((err) => {
@@ -124,6 +127,7 @@ export default class BookingPage extends React.Component {
   componentDidUpdate() {
     this.scrollToBottom();
   }
+
   scrollToBottom = () => {
     this.positionReference.current.scrollIntoView({ behavior: "smooth" });
   };
@@ -137,19 +141,11 @@ export default class BookingPage extends React.Component {
           <>
             <span style={{ margin: "0" }}>Booked by:</span>
             <div style={{ width: "100%", marginBottom: "-5px" }} />
-            <span style={{ margin: "0" }}>
-              {this.state.chosenTime === "9:00 - 17:30"
-                ? "AM: " + bookers[0]
-                : bookers[0]}
-            </span>
+            <span style={{ margin: "0" }}>{bookers[0]}</span>
             {bookers.length === 2 ? (
               <>
                 <div style={{ width: "100%", marginBottom: "-5px" }} />
-                <span style={{ margin: "0" }}>
-                  {this.state.chosenTime === "9:00 - 17:30"
-                    ? "PM: " + bookers[1]
-                    : bookers[1]}
-                </span>
+                <span style={{ margin: "0" }}>{bookers[1]}</span>
               </>
             ) : null}
           </>
@@ -172,7 +168,7 @@ export default class BookingPage extends React.Component {
       <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
-          <div style={{ marginTop: "20px" }} />
+          <div className="space" />
           <TileSelection
             showLabel={true}
             key={this.state.areaKey}

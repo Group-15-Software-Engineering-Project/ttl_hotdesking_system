@@ -9,7 +9,7 @@ import * as RiIcons from "react-icons/ri";
 
 export const SidebarData = [
   {
-    title: "Book",
+    title: "Book a Desk",
     path: "/booking-page",
     icon: <BiIcons.BiBookAdd />,
     cName: "nav-text",

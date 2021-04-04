@@ -67,7 +67,9 @@ class App extends Component {
             <Route path="/home">
               <Home email={this.state.email}></Home>
             </Route>
-            <Route path="/account" component={Account} />
+            <Route path="/account">
+              <Account email={this.state.email} />
+            </Route>
             <Route path="/reports" component={Reports} />
             <Route path="/past-bookings">
               <PastBookings email={this.state.email} />
