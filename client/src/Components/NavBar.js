@@ -8,19 +8,6 @@ import { IconContext } from "react-icons";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
 function Navbar(props) {
-  // Block to allow Admin Access - users who sign in using an admin account have access to admin portal
-  // Not fully safe code - has potential for illegal access
-  if (false) {
-    let result = SidebarData.map((a) => a.title === "Admin");
-    console.log(result);
-    if (result[result.length - 1]) {
-      SidebarData.splice(SidebarData.length - 1);
-      console.log(
-        "Admin Access Removed: " + SidebarData[SidebarData.length - 2]
-      );
-    }
-  }
-
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
   const location = useLocation();
