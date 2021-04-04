@@ -26,29 +26,13 @@ class App extends Component {
     isLoggedIn: false,
   };
 
-  locations = [
-    {
-      value: "Office 3.2: West Theatre",
-      label: "No data available for this location.",
-    },
-    {
-      value: "Office 2.5: West Theatre",
-      label: "Data available for this location.",
-    },
-    {
-      value: "Office 3.06: Foster Place",
-      label: "No data available for this location.",
-    },
-  ];
-
   render() {
-    console.log(this.state.email);
     return (
       <>
         <p>{this.state.response}</p>
         <p>{this.state.responseToPost}</p>
         <Router>
-        {!this.state.isLoggedIn ? (<Redirect to="/login"></Redirect>) :null}
+          {!this.state.isLoggedIn ? <Redirect to="/login"></Redirect> : null}
 
           <Navbar
             resetEmail={() => {
@@ -56,28 +40,36 @@ class App extends Component {
             }}
           />
           <Switch>
+            <Route exact path="/loading">
+              {this.state.email.length !== 0 ? (
+                <Redirect to="/home"></Redirect>
+              ) : (
+                <Redirect to="/loading" />
+              )}
+            </Route>
             <Route exact path="/">
               <Redirect to="/login"></Redirect>
             </Route>
 
             <Route path="/login">
               <Login
-                setEmail={(email) =>
-                  this.setState({ email: email, isLoggedIn: true })
-                }
+                setEmail={(email) => {
+                  this.setState({ email: email, isLoggedIn: true });
+                }}
               />
             </Route>
-            
-            
+
             <Route path="/booking-page">
-              <BookingPage email={this.state.email} options={this.locations} />
+              <BookingPage email={this.state.email} />
             </Route>
             <Route path="/locations" component={Locations} />
             <Route path="/users" component={Users} />
-            <Route path="/home" component={Home} />
+            <Route path="/home">
+              <Home email={this.state.email}></Home>
+            </Route>
             <Route path="/account" component={Account} />
             <Route path="/reports" component={Reports} />
-            <Route path="/past-bookings" component={PastBookings}>
+            <Route path="/past-bookings">
               <PastBookings email={this.state.email} />
             </Route>
             <Route path="/messages" component={Messages} />

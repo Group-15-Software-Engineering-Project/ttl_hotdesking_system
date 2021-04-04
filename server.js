@@ -12,6 +12,7 @@ var con = mysql.createConnection({
   user: process.env.DB_USER_ID,
   password: process.env.DB_PASS,
   database: process.env.DATABASE,
+  dateStrings: ["DATE", "DATETIME"],
 });
 
 con.connect(function (err) {
@@ -38,16 +39,16 @@ app.post("/api/login", (req, res) => {
 
 app.post("/api/adminCheck", (req, res) => {
   adminCheck(req.body.user)
-  .then((result) => {
-    if (res.length === 1) {
-      res.send({error: false, admin:true});
-    } else {
-      res.send({error: false, admin:false});
-    }
-  })
-  .catch((err) => {
-    res.send({error: true, admin:false});
-  });
+    .then((result) => {
+      if (res.length === 1) {
+        res.send({ error: false, admin: true });
+      } else {
+        res.send({ error: false, admin: false });
+      }
+    })
+    .catch((err) => {
+      res.send({ error: true, admin: false });
+    });
 });
 
 app.post("/api/getLocationData", (req, res) => {
@@ -117,6 +118,28 @@ app.post("/api/addDesk", (req, res) => {
     });
 });
 
+app.post("/api/addUserToTeam", (req, res) => {
+  addUserToGroup(req.body.email, req.body.group) 
+  .then(() => {
+    res.send({error: false});
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({error: true});
+  });
+});
+
+app.post("/api/removeUserFromTeam", (req, res) => {
+  removeUserFromGroup(req.body.email, req.body.group)
+  .then(() => {
+    res.send({error:false});
+  })
+  .catch((err) => {
+    console.log(err);
+    res.send({error: true});
+  });
+});
+
 app.post("/api/addUser", (req, res) => {
   addUser(req.body.email, req.body.password)
     .then(() => {
@@ -179,7 +202,7 @@ app.post("/api/getBooking", (req, res) => {
       for (booking in bookings) {
         data.push(bookings[booking]);
       }
-      res.send({ data });
+      res.send({ data: bookings });
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
@@ -200,6 +223,72 @@ app.post("/api/makeBooking", (req, res) => {
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
+    });
+});
+
+app.post("/api/getBookingsInMonth", (req, res) => {
+  let newDate = new Date(req.body.date + "-01");
+  let daysInMonth = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth() + 1,
+    0
+  ).getDate();
+  let existingBookings = new Array(daysInMonth);
+  getDesks(req.body.room)
+    .then((desks) => {
+      for (let i = 0; i < daysInMonth; i++) {
+        let k = i;
+        let date = req.body.date;
+        if (i < 10) {
+          date += "-0" + (i + 1).toString();
+        } else {
+          date += "-" + (i + 1).toString();
+        }
+
+        getExistingBookings(req.body.room, date, req.body.am, req.body.pm).then(
+          (bookings) => {
+            let data = [];
+            for (j = 0; j < bookings.length; j++) {
+              if (
+                j < bookings.length - 1 &&
+                bookings[j + 1].DESK === bookings[j].DESK
+              ) {
+                data.push({
+                  user:
+                    bookings[j].USER === bookings[j + 1].USER
+                      ? bookings[j].USER
+                      : bookings[j].USER + "|" + bookings[j + 1].USER,
+                  desk: bookings[j].DESK,
+                });
+                j++;
+              } else {
+                data.push({
+                  user: bookings[j].USER,
+                  desk: bookings[j].DESK,
+                });
+              }
+            }
+            existingBookings[k] = data;
+            if (k == daysInMonth - 1) {
+              console.log("desks: ", desks);
+              console.log("existingBookings: ", existingBookings);
+              res.send({
+                error: false,
+                existingBookings: existingBookings,
+                desks: desks,
+              });
+            }
+          }
+        );
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({
+        error: true,
+        existingBookings: [],
+        desks: [],
+      });
     });
 });
 
@@ -311,7 +400,7 @@ function login(email, password) {
 }
 
 function adminCheck(email) {
-  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='"+email+"';";
+  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -325,7 +414,8 @@ function adminCheck(email) {
 
 function getPastBookings(email) {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+    sql =
+      "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -448,18 +538,18 @@ function getRooms() {
 function getExistingBookings(room, date, am, pm) {
   let times = "";
   if (am && pm) {
-    times = "AM=1 OR PM=1";
+    times = "(AM=1 OR PM=1) ";
   } else {
     times = am ? "AM=1 " : "PM=1 ";
   }
   sql =
-    'SELECT DISTINCT USER FROM BOOKINGS WHERE ROOM="' +
+    'SELECT DISTINCT USER, DESK FROM BOOKINGS WHERE ROOM="' +
     room +
     '" AND DATE="' +
     date +
     '" AND ' +
     times +
-    " ORDER BY DESK ASC;";
+    " ORDER BY DESK ASC, AM DESC;";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -486,6 +576,34 @@ function getUserBookingsBetween(user, start, end) {
         reject(new Error(res));
       } else {
         resolve(res.length);
+      }
+    });
+  });
+}
+
+function removeUserFromGroup(email, group) {
+  sql = "DELETE FROM GROUPS WHERE NAME='"+group+"' AND USER='"+email+"';"
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  })
+}
+
+function addUserToGroup(email, group) {
+  sql =  "INSERT INTO GROUPS VALUES ('"+group+"', '"+email+"');";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
       }
     });
   });

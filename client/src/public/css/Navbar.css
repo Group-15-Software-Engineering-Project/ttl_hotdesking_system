@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #0e73b9;
+  background-color: #008dd3;
   height: 80px;
   display: flex;
   justify-content: start;
@@ -33,6 +33,7 @@
 .menu-bars {
   margin-left: 2rem;
   font-size: 2rem;
+  margin-right: 2%;
   background: none;
 }
 .nav-button {
@@ -41,7 +42,7 @@
   right: 30px;
   color: white;
   border: none;
-  background-color: #0e73b9;
+  background-color: #008dd3;
   font-size: 20px;
   font-family: Arial;
   font-weight: bold;
@@ -52,7 +53,7 @@
 }
 
 .nav-menu {
-  background-color: #0e73b9;
+  background-color: #008dd3;
   width: 250px;
   height: 100vh;
   display: flex;
@@ -92,7 +93,7 @@
 
 .nav-text a:hover {
   cursor: pointer;
-  background-color: #2e93d9;
+  background-color: #00c5ff;
 }
 
 .nav-menu-items {
@@ -100,7 +101,7 @@
 }
 
 .navbar-toggle {
-  background-color: #0e73b9;
+  background-color: #008dd3;
   width: 100%;
   height: 80px;
   display: flex;
