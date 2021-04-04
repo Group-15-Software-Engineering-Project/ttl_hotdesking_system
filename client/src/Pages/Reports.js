@@ -1,24 +1,42 @@
 import React, { Component } from "react";
-import {Bar} from 'react-chartjs-2';
-import {Line} from 'react-chartjs-2';
-import {Pie} from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 
 class Reports extends Component {
-
   constructor() {
     super();
+    this.getData = this.getData.bind(this);
     this.state = {
-      time: "overall",
-      room: "overall",
-      team: "overall",
-      roomlist: ["room1", "room2", "room3"],
+      time: null,
+      room: null,
+      team: null,
+      roomlist: [
+        "Office 2.5: West Theatre",
+        "Office 3.06: Foster Place",
+        "Office 3.2: West Theatre",
+        "Office 5: Front Square",
+      ],
       teamlist: ["team1", "team2", "team3"],
       barData: {
-        labels: ["User1", "User2", "User3", "User4", "User5", "User6","User1", "User2", "User3", "User4", "User5", "User6"],
+        labels: [
+          "User1",
+          "User2",
+          "User3",
+          "User4",
+          "User5",
+          "User6",
+          "User1",
+          "User2",
+          "User3",
+          "User4",
+          "User5",
+          "User6",
+        ],
         datasets: [
           {
             label: "Hours",
-            data: [58, 50, 40, 30, 20, 9,58, 50, 40, 30, 20, 9],
+            data: [58, 50, 40, 30, 20, 9, 58, 50, 40, 30, 20, 9],
             backgroundColor: [
               "rgba(255, 99, 132, 0.6)",
               "rgba(54, 162, 235, 0.6)",
@@ -67,7 +85,7 @@ class Reports extends Component {
       },
 
       pieData: {
-        labels: ["Desk 1", "Desk 2", "Desk 3", "Desk 4", "Desk", "Other desks"],
+        labels: [],
         datasets: [
           {
             label: "Desk",
@@ -90,11 +108,94 @@ class Reports extends Component {
   static defaultProps = {
     displayTitle: true,
     displayLegend: true,
-    legendPosition:'bottom'
-  }
+    legendPosition: "bottom",
+  };
+  reset() {}
 
-  reset() {
+  getData() {
+    console.log(this.state.time + " " + this.state.room);
+    //this.setState({team: "11"})
+    fetch("/api/getReports", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        time: this.state.time,
+        room: this.state.room,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        this.setState({
+          barData: {
+            labels: res.labels,
+            datasets: [
+              {
+                label: "Bookings",
+                data: res.amountOfBookings,
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)",
+                  "rgba(54, 162, 235, 0.6)",
+                  "rgba(255, 206, 86, 0.6)",
+                  "rgba(75, 192, 192, 0.6)",
+                  "rgba(153, 102, 255, 0.6)",
+                  "rgba(255, 159, 64, 0.6)",
+                  "rgba(255, 99, 132, 0.6)",
+                ],
+              },
+            ],
+          },
 
+          lineData: {
+            labels: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Sataurday",
+              "Sunday",
+            ],
+            datasets: [
+              {
+                label: "Day",
+                data: [10, 8, 9, 6, 6, 2, 1],
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)",
+                  "rgba(54, 162, 235, 0.6)",
+                  "rgba(255, 206, 86, 0.6)",
+                  "rgba(75, 192, 192, 0.6)",
+                  "rgba(153, 102, 255, 0.6)",
+                  "rgba(255, 159, 64, 0.6)",
+                  "rgba(255, 99, 132, 0.6)",
+                ],
+              },
+            ],
+          },
+
+          pieData: {
+            labels:res.desks,
+            datasets: [
+              {
+                label: "Desk",
+                data: res.deskBookings,
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)",
+                  "rgba(54, 162, 235, 0.6)",
+                  "rgba(255, 206, 86, 0.6)",
+                  "rgba(75, 192, 192, 0.6)",
+                  "rgba(153, 102, 255, 0.6)",
+                  "rgba(255, 159, 64, 0.6)",
+                  "rgba(255, 99, 132, 0.6)",
+                ],
+              },
+            ],
+          },
+        });
+      });
   }
 
   overall() {
@@ -586,109 +687,148 @@ class Reports extends Component {
         <div>
           <p>Time range:</p>
           <button
-            onClick={(e) =>
-              this.setState({time:"overall"}), this.reset()
+            onClick={
+              (e) => this.setState({ time: "overall" }) //, this.reset()
             }
-          >Overall</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          >
+            Overall
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <button
-            onClick={(e) =>
-              this.setState({time:"last week"}), this.reset()
+            onClick={
+              (e) => this.setState({ time: "last week" }) //, this.reset()
             }
-          >Last Week</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          >
+            Last Week
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <button
-            onClick={(e) =>
-              this.setState({time:"last month"}), this.reset()
+            onClick={
+              (e) => this.setState({ time: "last month" }) //, this.reset()
             }
-          >Last Month</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          >
+            Last Month
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <button
-            onClick={(e) =>
-              this.setState({time:"next week"}), this.reset()
+            onClick={
+              (e) => this.setState({ time: "next week" }) //, this.reset()
             }
-          >Next Week</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-
-
+          >
+            Next Week
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
           <p>Room:</p>
           <button
-            onClick={(e) =>
-              this.setState({room:"overall"}), this.reset()
+            onClick={
+              (e) => this.setState({ room: "overall" }) //, this.reset()
             }
-          >Overall</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-          {this.state.roomlist.map(roomName => <span>
-                                                <button
-                                                  onClick={(e) =>
-                                                    this.setState({room:roomName}), this.reset()}
-                                                >{roomName}</button>
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                              </span>)}
-
-
-
+          >
+            Overall
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
+          {this.state.roomlist.map((roomName) => (
+            <span>
+              <button
+                onClick={
+                  (e) => this.setState({ room: roomName }) //, this.reset())
+                }
+              >
+                {roomName}
+              </button>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              &nbsp; &nbsp; &nbsp;
+            </span>
+          ))}
           <p>Team:</p>
           <button
-            onClick={(e) =>
-              this.setState({team:"overall"}), this.reset()
-            }
-          >Overall</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-          {this.state.teamlist.map(teamName => <span>
-                                                <button
-                                                  onClick={(e) =>
-                                                    this.setState({team:teamName}), this.reset()}
-                                                >{teamName}</button>
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                              </span>)}
-
+            onClick={((e) => this.setState({ team: "overall" }), this.reset())}
+          >
+            Overall
+          </button>{" "}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp;
+          {this.state.teamlist.map((teamName) => (
+            <span>
+              <button
+                onClick={
+                  ((e) => this.setState({ team: teamName }), this.reset())
+                }
+              >
+                {teamName}
+              </button>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              &nbsp; &nbsp; &nbsp;
+            </span>
+          ))}
         </div>
-        <div className="reports" style={{ position: "relative", margin: "auto", width: "70vw" }}>
-          <Bar 
-            data={this.state.barData}
-            options={{
-              title:{
-                display:this.props.displayTitle,
-                text:'Most active user',
-                fontSize:25
-              },
-              legend:{
-                display:this.props.displayLegend,
-                position:this.props.legendPosition
-              },
-            }}
-          />
-        </div>
-        <div className="reports" style={{ position: "relative", margin: "auto", width: "70vw" }}>
-          <Line
-            data={this.state.lineData}
-            options={{
-              title:{
-                display:this.props.displayTitle,
-                text:'Most active day',
-                fontSize:25
-              },
-              legend:{
-                display:this.props.displayLegend,
-                position:this.props.legendPosition
-              },
-            }}
-          />
-        </div>
-        <div className="reports" style={{ position: "relative", margin: "auto", width: "70vw" }}>
-          <Pie
-            data={this.state.pieData}
-            options={{
-              title:{
-                display:this.props.displayTitle,
-                text:'Most used desk',
-                fontSize:25
-              },
-              legend:{
-                display:this.props.displayLegend,
-                position:this.props.legendPosition
-              },
-            }}
-          />
-        </div>
+        {this.state.time !== null && this.state.room !== null ? (
+          <div>
+            <button onClick={this.getData}>Run report</button>
+            <div
+              className="reports"
+              style={{ position: "relative", margin: "auto", width: "70vw" }}
+            >
+              <Bar
+                data={this.state.barData}
+                options={{
+                  title: {
+                    display: this.props.displayTitle,
+                    text: "Most active user",
+                    fontSize: 25,
+                  },
+                  legend: {
+                    display: this.props.displayLegend,
+                    position: this.props.legendPosition,
+                  },
+                }}
+              />
+            </div>
+            <div
+              className="reports"
+              style={{ position: "relative", margin: "auto", width: "70vw" }}
+            >
+              <Line
+                data={this.state.lineData}
+                options={{
+                  title: {
+                    display: this.props.displayTitle,
+                    text: "Most active day",
+                    fontSize: 25,
+                  },
+                  legend: {
+                    display: this.props.displayLegend,
+                    position: this.props.legendPosition,
+                  },
+                }}
+              />
+            </div>
+            <div
+              className="reports"
+              style={{ position: "relative", margin: "auto", width: "70vw" }}
+            >
+              <Pie
+                data={this.state.pieData}
+                options={{
+                  title: {
+                    display: this.props.displayTitle,
+                    text: "Most used desk",
+                    fontSize: 25,
+                  },
+                  legend: {
+                    display: this.props.displayLegend,
+                    position: this.props.legendPosition,
+                  },
+                }}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }

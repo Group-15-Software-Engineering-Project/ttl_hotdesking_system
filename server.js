@@ -172,6 +172,84 @@ app.post("/api/getBooking", (req, res) => {
     });
 });
 
+app.post("/api/getReports", (req, res) => {
+  array = [];
+  getReports(req.body.time, req.body.room)
+    .then((bookings) => {
+      data = [];
+      for (booking in bookings) {
+        data.push(bookings[booking]);
+      }
+      if(data!==null){
+      array = getMostActiveUser(data);
+      labels = array[0];
+      amountOfBookings = array[1];
+      array=getMostActiveDesk(data);
+      desks=array[0];
+      deskBookings=array[1];
+      res.send({ labels, amountOfBookings, desks,deskBookings });
+      }
+    })
+    .catch((err) => {
+      res.send({ error: true, message: err.toString() });
+    });
+});
+function getMostActiveDesk(data) {
+  desk = [];
+    deskBookings = [];
+  if (data !== null) {
+    
+    console.log("success");
+
+    desk.push(data[0].DESK);
+
+    var count = 0;
+    for (var i = 0; i < data.length; i++) {
+      if (desk[0] === data[i].DESK) {
+        count++;
+      }
+    }
+    deskBookings.push(count);
+
+    for (var i = 0; i < data.length; i++) {
+      if (desk[desk.length - 1] !== data[i].DESK) {
+        desk.push(data[i].DESK);
+        count = 0;
+        for (var j = 0; j < data.length; j++) {
+          if (desk[desk.length - 1] === data[j].DESK) {
+            count++;
+          }
+        }
+        deskBookings.push(count);
+      }
+    }
+    
+  }
+  return[desk,deskBookings];
+}
+function getMostActiveUser(data) {
+  console.log(data.length);
+  labels = [];
+  amountOfBookings = [];
+  labels.push(data[0].USER);
+  //console.log(labels.length-1);
+  var countOfBookings;
+  var tmp = 0;
+  for (var i = 0; i < data.length; i++) {
+    if (labels[labels.length - 1] !== data[i].USER) {
+      labels.push(data[i].USER);
+      amountOfBookings.push(i - tmp);
+      tmp = i;
+    }
+    countOfBookings = i - tmp;
+  }
+  amountOfBookings.push(countOfBookings + 1);
+  if (labels.length === 1) {
+    amountOfBookings.push(data.length);
+  }
+  return [labels, amountOfBookings];
+}
+
 app.post("/api/makeBooking", (req, res) => {
   addBooking(
     req.body.email,
@@ -297,7 +375,51 @@ function login(email, password) {
 }
 function getPastBookings(email) {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+    sql =
+      "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+function getReports(time, room) {
+  //console.log("success");
+  return new Promise((resolve, reject) => {
+    if (time === "overall" && room === "overall") {
+      sql = "select * from BOOKINGS ORDER BY USER;";
+    } else if (time === "overall" && room !== "overall") {
+      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' ORDER BY USER;";
+    } else if (time === "last week" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() ORDER BY USER;";
+    } else if (time === "next month" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY USER;";
+    } else if (time === "next week" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
+    } else if (time === "last week" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() ORDER BY USER;";
+    } else if (time === "next month" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY USER;";
+    } else if (time === "next week" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
+    }
+    //console.log("success");
+
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
