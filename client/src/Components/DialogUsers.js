@@ -50,7 +50,7 @@ class DialogUsers extends Component {
                                 <option>Academic Practice</option>
                                 <option>Other</option>
                             </select>
-                        </div> */}
+                        </div> 
                         <button onClick={this.handleSubmit}>submit</button>
                     </div>
                 </div>

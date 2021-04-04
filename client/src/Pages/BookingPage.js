@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
 import { createUniqueID, months } from "../Components/Misc";
+import ConfirmationEmail from "../Components/ConfirmationEmail.js";
 import "../public/css/main.css";
 
 export default class BookingPage extends React.Component {
@@ -75,6 +76,8 @@ export default class BookingPage extends React.Component {
         return res.json();
       })
       .then((res) => {
+        console.log(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm);
+        ConfirmationEmail(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm);
         alert(res.message);
         this.setState({
           chosenArea: "default",
@@ -86,6 +89,10 @@ export default class BookingPage extends React.Component {
         });
       })
       .catch((err) => alert(err));
+
+      
+      
+
   };
 
   positionReference = createRef();
