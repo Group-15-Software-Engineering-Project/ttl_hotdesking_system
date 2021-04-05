@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Desk from "../Components/Desk";
+import { Redirect } from "react-router-dom";
 import { createUniqueID } from "../Components/Misc";
 import "../public/css/main.css";
 
@@ -13,7 +13,7 @@ class Locations extends Component {
     deleteDeskRoom: "",
     deleteDeskList: [],
     desks: [],
-    roomDeskList: null,
+    roomDeskList: [],
     key: "default",
   };
 
@@ -241,7 +241,7 @@ class Locations extends Component {
   };
 
   render() {
-    return (
+    return sessionStorage.__user_is_admin__ ? (
       <div>
         <div className="wrapper TCD-BG" key={this.state.key}>
           <div className="flex-container-1" />
@@ -268,9 +268,7 @@ class Locations extends Component {
                   name="addRoom"
                   onChange={this.handleEvent}
                 ></input>
-                <div
-                  style={{ width: "100%", marginTop: "5%", marginBottom: "5%" }}
-                />
+                <div style={{ width: "100%", marginTop: "5%", marginBottom: "5%" }} />
                 <button
                   className="button-style"
                   onClick={(e) => this.submitAddRoom(this.state.addRoom)}
@@ -294,6 +292,7 @@ class Locations extends Component {
                 />
                 <select
                   className="text-input"
+                  style={{ padding: "0" }}
                   name="addDeskRoom"
                   onChange={this.handleEvent}
                 >
@@ -326,10 +325,7 @@ class Locations extends Component {
                 <button
                   className="button-style"
                   onClick={() =>
-                    this.submitAddDesk(
-                      this.state.addDeskNum,
-                      this.state.addDeskRoom
-                    )
+                    this.submitAddDesk(this.state.addDeskNum, this.state.addDeskRoom)
                   }
                 >
                   Add Desk
@@ -352,6 +348,7 @@ class Locations extends Component {
                 <select
                   className="text-input"
                   name="deleteRoom"
+                  style={{ padding: "0" }}
                   onChange={this.handleEvent}
                 >
                   <option value="">Select location</option>
@@ -391,13 +388,11 @@ class Locations extends Component {
                 />
                 <select
                   className="text-input"
+                  style={{ padding: "0" }}
                   onChange={(e) =>
                     this.setState({ deleteDeskRoom: e.target.value }, () => {
                       for (let key in this.state.roomDeskList) {
-                        if (
-                          this.state.roomDeskList[key].name ===
-                          this.state.deleteDeskRoom
-                        ) {
+                        if (this.state.roomDeskList[key].name === this.state.deleteDeskRoom) {
                           this.setState({
                             deleteDeskList: this.state.roomDeskList[key].desks,
                           });
@@ -423,6 +418,7 @@ class Locations extends Component {
                 <select
                   className="text-input"
                   name="deleteDeskRoom"
+                  style={{ padding: "0" }}
                   onChange={this.handleEvent}
                 >
                   <option value="">Select desk</option>
@@ -442,10 +438,7 @@ class Locations extends Component {
                 <button
                   className="button-style"
                   onClick={(e) =>
-                    this.submitRemoveDesk(
-                      this.state.deleteDeskNum,
-                      this.state.deleteDeskRoom
-                    )
+                    this.submitRemoveDesk(this.state.deleteDeskNum, this.state.deleteDeskRoom)
                   }
                 >
                   Remove Desk
@@ -471,74 +464,10 @@ class Locations extends Component {
           <div className="flex-container-1" />
         </div>
       </div>
+    ) : (
+      <Redirect to="/home" />
     );
   }
 }
 
 export default Locations;
-
-{
-  /* <div className="desks">
-  <div>
-    <h3>Add Room:</h3>
-    <input type="text" onChange={this.addRoomF}></input>
-    <button onClick={(e) => this.submitAddRoom(this.state.addRoom)}>
-      {" "}
-      Add Room{" "}
-    </button>
-  </div>
-
-  <div>
-    <h3>Delete Room:</h3>
-    <input type="text" onChange={this.deleteRoomF}></input>
-    <button onClick={(e) => this.submitRemoveRoom(this.state.deleteRoom)}>
-      {" "}
-      Delete Room{" "}
-    </button>
-  </div>
-
-  <div>
-    <h3>Add Desk:</h3>
-    <input type="text" onChange={this.addDeskNumF}></input>
-    <br></br>
-    <br></br>
-    <input type="text" onChange={this.addDeskRoomF}></input>
-    <button
-      onClick={(e) =>
-        this.submitAddDesk(this.state.addDeskNum, this.state.addDeskRoom)
-      }
-    >
-      {" "}
-      Add Desk{" "}
-    </button>
-  </div>
-
-  <div>
-    <h3>Delete Desk:</h3>
-    <input type="text" onChange={this.deleteDeskNumF}></input>
-    <br></br>
-    <br></br>
-    <input type="text" onChange={this.deleteDeskRoomF}></input>
-    <button
-      onClick={(e) =>
-        this.submitRemoveDesk(
-          this.state.deleteDeskNum,
-          this.state.deleteDeskRoom
-        )
-      }
-    >
-      Delete Desk
-    </button>
-  </div>
-
-  <br></br>
-  <br></br>
-  <br></br>
-  <h2>Desks</h2>
-  <div>
-    {this.state.desks.map((desk) => (
-      <Desk desk={desk} />
-    ))}
-  </div>
-</div>; */
-}

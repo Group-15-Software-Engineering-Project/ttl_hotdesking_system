@@ -1,5 +1,6 @@
-import React from 'react'
-import emailjs from 'emailjs-com'
+import React from "react";
+import emailjs from "emailjs-com";
+
 
 export default function ConfirmationEmail(email, desk_num, room, date, am, pm, time) {
 
@@ -36,32 +37,20 @@ export default function ConfirmationEmail(email, desk_num, room, date, am, pm, t
 
 
     sendEmail(templateParameters);
-    /*
-    Hi {{{to_name}}},
+    
+  return (
+    <div />
+    // <form className="contact-form" onSubmit={sendEmail}>
 
-    The following booking has been confirmed:
-    Seat Number: {{seat_number}}
-    Booking Location: {{{booking_location}}}
-    Date and Time:{{{date_time}}}
+    //   <input type="hidden" name ="email" />
+    //   <input type="hidden" name="to_name" value= "${email}"/>
+    //   <input type="email" name="to_email" />
 
-    //email, desk_num, room, date, am, pm
-    */
+    //   <input type="hidden" name="seat_number"/>
+    //   <input type="hidden" name="booking_location" />
+    //   <input type="hidden" name="date_time" />
 
-
-    return (
-        <div />
-        // <form className="contact-form" onSubmit={sendEmail}>
-            
-        //   <input type="hidden" name ="email" />
-        //   <input type="hidden" name="to_name" value= "${email}"/>
-        //   <input type="email" name="to_email" />
-          
-        //   <input type="hidden" name="seat_number"/>
-        //   <input type="hidden" name="booking_location" />
-        //   <input type="hidden" name="date_time" /> 
-   
-        //   <input type="submit" value="Send" />
-        // </form>
-    );
+    //   <input type="submit" value="Send" />
+    // </form>
+  );
 }
-

@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
-import { createUniqueID, months } from "../Components/Misc";
+import { createUniqueID, months, _GetUserBookings } from "../Components/Misc";
 import ConfirmationEmail from "../Components/ConfirmationEmail.js";
 import "../public/css/main.css";
 
@@ -31,10 +31,7 @@ export default class BookingPage extends React.Component {
     return (
       this.state.chosenDate.split(" ")[2] +
       "-" +
-      String(months.indexOf(this.state.chosenDate.split(" ")[1]) + 1).padStart(
-        2,
-        "0"
-      ) +
+      String(months.indexOf(this.state.chosenDate.split(" ")[1]) + 1).padStart(2, "0") +
       "-" +
       this.state.chosenDate.split(" ")[0]
     );
@@ -64,7 +61,7 @@ export default class BookingPage extends React.Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: this.props.email,
+        email: sessionStorage.email,
         desk: this.state.chosenDesk.split(" ")[1],
         room: this.state.chosenArea,
         date: this.convertDate(),
@@ -76,8 +73,22 @@ export default class BookingPage extends React.Component {
         return res.json();
       })
       .then((res) => {
-        console.log(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm, this.state.chosenTime);
-        ConfirmationEmail(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm, this.state.chosenTime);
+        console.log(
+          this.props.email,
+          this.state.chosenDesk.split(" ")[1],
+          this.state.chosenArea,
+          this.convertDate(),
+          am,
+          pm
+        );
+        ConfirmationEmail(
+          this.props.email,
+          this.state.chosenDesk.split(" ")[1],
+          this.state.chosenArea,
+          this.convertDate(),
+          am,
+          pm
+        );
         alert(res.message);
         this.setState({
           chosenArea: "default",
@@ -87,12 +98,11 @@ export default class BookingPage extends React.Component {
           areaKey: createUniqueID(),
           bookableDesks: [],
         });
+        sessionStorage.removeItem("bookings");
+        sessionStorage.removeItem("upcomingBookings");
+        _GetUserBookings();
       })
       .catch((err) => alert(err));
-
-      
-      
-
   };
 
   positionReference = createRef();
@@ -173,10 +183,7 @@ export default class BookingPage extends React.Component {
             showLabel={true}
             key={this.state.areaKey}
             title={
-              <h1
-                className="page-divider-header"
-                style={{ marginLeft: "2.5%" }}
-              >
+              <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                 Select a Booking Area
               </h1>
             }
@@ -206,10 +213,7 @@ export default class BookingPage extends React.Component {
                 })
               }
               title={
-                <h1
-                  className="page-divider-header"
-                  style={{ marginLeft: "2.5%" }}
-                >
+                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                   Select a Booking Time
                 </h1>
               }
@@ -217,10 +221,7 @@ export default class BookingPage extends React.Component {
           ) : null}
           {this.state.chosenTime !== "default" ? (
             <>
-              <h1
-                className="page-divider-header"
-                style={{ marginLeft: "2.5%" }}
-              >
+              <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                 Select a Booking Date
               </h1>
               <BookingCalendar
@@ -235,16 +236,11 @@ export default class BookingPage extends React.Component {
                 })()}
                 onSelect={(desks, date, m) => {
                   let newDate;
-                  if (
-                    this.state.chosenDate === "default" &&
-                    date.split(" ")[1] !== m
-                  ) {
+                  if (this.state.chosenDate === "default" && date.split(" ")[1] !== m) {
                     newDate = "default";
                   } else if (this.state.chosenDate === "default") {
                     newDate = date;
-                  } else if (
-                    this.state.chosenDate.split(" ")[1] !== date.split(" ")[1]
-                  ) {
+                  } else if (this.state.chosenDate.split(" ")[1] !== date.split(" ")[1]) {
                     newDate = "default";
                   } else {
                     newDate = date;
@@ -273,10 +269,7 @@ export default class BookingPage extends React.Component {
                 showLabel={true}
                 title={
                   <>
-                    <h1
-                      className="page-divider-header"
-                      style={{ marginLeft: "2.5%" }}
-                    >
+                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                       Select a Desk
                     </h1>
                     <div
