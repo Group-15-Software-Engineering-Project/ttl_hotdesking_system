@@ -1,19 +1,24 @@
 import React from 'react'
 import emailjs from 'emailjs-com'
 
-export default function ConfirmationEmail(email, desk_num, room, date, am, pm) {
+export default function ConfirmationEmail(email, desk_num, room, date, am, pm, time) {
 
-    console.log("sup");
+    //"9:00 - 13:00":
+    //"13:30 - 17:30":
     var templateParameters = {
         to_email: email,
         seat_number: desk_num, 
         booking_location: room, 
-        date_time: date, 
-        am_pm: (am == true) ? "am" : "pm" 
+        date: date, 
+        time_first: ("9:00" == time.split(" ")[0]) ? "9:00" : "1:30",
+        time_second: ("13:00" == time.split(" ")[2]) ? "1:00" : "5:30",
+        am_pm_1: ("9:00" == time.split(" ")[0]) ? "am" : "pm",
+        am_pm_2: "pm"
     }
 
     function sendEmail(e) {
-        console.log("haha");
+        //console.log("wrong time:" + time.split(" ")[0] + "then" );
+        //console.log("haha");
         //e.preventDefault();
         console.log(e);
 
@@ -25,7 +30,7 @@ export default function ConfirmationEmail(email, desk_num, room, date, am, pm) {
             console.log(error.text);
         });
         //e.target.reset()
-        console.log("hehe");
+        //console.log("hehe");
     }
 
 

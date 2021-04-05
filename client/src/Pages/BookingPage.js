@@ -76,8 +76,8 @@ export default class BookingPage extends React.Component {
         return res.json();
       })
       .then((res) => {
-        console.log(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm);
-        ConfirmationEmail(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm);
+        console.log(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm, this.state.chosenTime);
+        ConfirmationEmail(this.props.email, this.state.chosenDesk.split(" ")[1], this.state.chosenArea, this.convertDate(), am, pm, this.state.chosenTime);
         alert(res.message);
         this.setState({
           chosenArea: "default",
