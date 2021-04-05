@@ -15,6 +15,7 @@ class Login extends Component {
       password: "",
       validLogin: false,
       errorText: false,
+      admin: false,
     };
   }
   //const [email, setEmail] = useState("");
@@ -38,10 +39,9 @@ class Login extends Component {
         if (res.error) {
           this.setState({ validLogin: false, errorText: true });
         } else {
-          this.setState({ validLogin: true }, () => {
+          this.setState({ validLogin: true, admin: res.admin}, () => {
             sessionStorage.setItem("email", this.state.email);
-            if (this.state.email === "ttl.hotdesking.admin@tcd.ie")
-              sessionStorage.setItem("__user_is_admin__", true);
+            sessionStorage.setItem("__user_is_admin__", res.admin);
             _GetUserBookings();
           });
           this.props.setEmail(this.state.email);
