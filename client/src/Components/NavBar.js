@@ -15,9 +15,7 @@ function Navbar(props) {
     console.log(result);
     if (result[result.length - 1]) {
       SidebarData.splice(SidebarData.length - 1);
-      console.log(
-        "Admin Access Removed: " + SidebarData[SidebarData.length - 2]
-      );
+      console.log("Admin Access Removed: " + SidebarData[SidebarData.length - 2]);
     }
   }
 
@@ -34,8 +32,7 @@ function Navbar(props) {
             <button
               className="nav-button"
               onClick={() => {
-                props.resetEmail("");
-                sessionStorage.removeItem("email");
+                sessionStorage.clear();
               }}
             >
               {"Log Out"}

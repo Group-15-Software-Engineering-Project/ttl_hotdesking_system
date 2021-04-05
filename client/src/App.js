@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import "./public/css/App.css";
 import Navbar from "./Components/NavBar";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Pages/Home";
 import Reports from "./Pages/Reports";
 import Messages from "./Pages/Messages";
@@ -35,17 +30,13 @@ class App extends Component {
   //   if (this.state.email.length === 0 && sessionStorage.getItem("email"))
   //     this.setState({ email: sessionStorage.getItem("email") });
   // };
-
   render() {
     return (
       <div key={sessionStorage.getItem("email")}>
         <p>{this.state.response}</p>
         <p>{this.state.responseToPost}</p>
         <Router>
-          {/* {!this.state.isLoggedIn ? <Redirect to="/login"></Redirect> : null} */}
-          {!sessionStorage.getItem("email") ? (
-            <Redirect to="/login"></Redirect>
-          ) : null}
+          {!sessionStorage.email ? <Redirect to="/login"></Redirect> : null}
 
           <Navbar
             resetEmail={() => {
@@ -53,19 +44,8 @@ class App extends Component {
             }}
           />
           <Switch>
-            {/* <Route exact path="/loading">
-              {sessionStorage.getItem("email") ? (
-                <Redirect to="/home"></Redirect>
-              ) : (
-                <Redirect to="/loading" />
-              )}
-            </Route> */}
             <Route exact path="/loading">
-              {this.state.email.length !== 0 ? (
-                <Redirect to="/home"></Redirect>
-              ) : (
-                <Redirect to="/loading" />
-              )}
+              <Redirect to="/home"></Redirect>
             </Route>
             <Route exact path="/">
               <Redirect to="/login"></Redirect>
@@ -80,25 +60,23 @@ class App extends Component {
             </Route>
 
             <Route path="/booking-page">
-              <BookingPage email={this.state.email} />
+              <BookingPage email={sessionStorage.email} />
             </Route>
             <Route path="/locations" component={Locations} />
             <Route path="/users" component={Users} />
             <Route path="/home">
-              <Home email={this.state.email}></Home>
+              <Home email={sessionStorage.email}></Home>
             </Route>
             <Route path="/account">
-              <Account email={this.state.email} />
+              <Account email={sessionStorage.email} />
             </Route>
             <Route path="/reports" component={Reports} />
             <Route path="/past-bookings">
-              <PastBookings email={this.state.email} />
+              <PastBookings email={sessionStorage.email} />
             </Route>
             <Route path="/messages" component={Messages} />
             <Route path="/chooseDesk" component={ChooseDesk} />
-            {this.state.visible ? (
-              <Route path="/Admin" component={Admin} />
-            ) : null}
+            {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
           </Switch>
         </Router>
       </div>

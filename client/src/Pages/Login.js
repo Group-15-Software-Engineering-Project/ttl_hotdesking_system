@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
 import "../public/css/main.css";
+import { _GetUserBookings } from "../Components/Misc";
 import { Route, Link, Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
@@ -37,9 +38,11 @@ class Login extends Component {
         if (res.error) {
           this.setState({ validLogin: false, errorText: true });
         } else {
-          this.setState({ validLogin: true });
+          this.setState({ validLogin: true }, () => {
+            sessionStorage.setItem("email", this.state.email);
+            _GetUserBookings();
+          });
           this.props.setEmail(this.state.email);
-          // sessionStorage.setItem("email", this.state.email);
         }
       })
       .catch((err) => {
@@ -48,20 +51,13 @@ class Login extends Component {
   };
 
   render() {
-    return this.state.validLogin && this.state.email.length !== 0 ? (
+    return sessionStorage.email ? (
       <Redirect to="/loading"></Redirect>
     ) : (
       <div>
-        <img
-          id="clip"
-          src={TCDLogo}
-          className="login-logo"
-          style={{ zIndex: "6" }}
-        />
+        <img id="clip" src={TCDLogo} className="login-logo" style={{ zIndex: "6" }} />
         <div className="block-top">
-          <div className="title-text">
-            Trinity Teaching & Learning Desk Booking
-          </div>
+          <div className="title-text">Trinity Teaching & Learning Desk Booking</div>
         </div>
         <div className="wrapper">
           <div className="flex-container-1" />
@@ -121,9 +117,7 @@ class Login extends Component {
             paddingTop: "2vh",
           }}
         >
-          {
-            "For issues regarding authentication, please contact: insert.email@here.ie"
-          }
+          {"For issues regarding authentication, please contact: insert.email@here.ie"}
         </footer>
       </div>
     );

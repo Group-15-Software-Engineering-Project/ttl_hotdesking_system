@@ -7,7 +7,7 @@ class Account extends Component {
     this.state = {
       email: props.email,
       username: "N/A",
-      bookingsMade: 0,
+      bookingsMade: JSON.parse(sessionStorage.bookings).data.length,
       oldPassword: "",
       newPassword: "",
       confirmNewPassword: "",
@@ -23,6 +23,8 @@ class Account extends Component {
   submitChangePassword = () => {
     if (this.state.newPassword === this.state.confirmNewPassword) {
       //fetch api to change old password to new password.
+    } else {
+      alert("Passwords must match!");
     }
   };
 
@@ -116,14 +118,8 @@ class Account extends Component {
                 name="confirmNewPassword"
                 onChange={this.handleEvent}
               />
-              <div
-                className="space"
-                style={{ marginBottom: "5%", marginTop: "5%" }}
-              />
-              <button
-                className="button-style"
-                onClick={() => this.submitChangePassword()}
-              >
+              <div className="space" style={{ marginBottom: "5%", marginTop: "5%" }} />
+              <button className="button-style" onClick={() => this.submitChangePassword()}>
                 Change Password
               </button>
             </div>
@@ -142,14 +138,8 @@ class Account extends Component {
                 onChange={this.handleEvent}
                 placeholder="User name"
               />
-              <div
-                className="space"
-                style={{ marginBottom: "5%", marginTop: "5%" }}
-              />
-              <button
-                className="button-style"
-                onClick={() => this.submitUserName()}
-              >
+              <div className="space" style={{ marginBottom: "5%", marginTop: "5%" }} />
+              <button className="button-style" onClick={() => this.submitUserName()}>
                 Set User Name
               </button>
             </div>
@@ -163,8 +153,7 @@ class Account extends Component {
           <div className="space" />
           <h3 style={{ color: "red" }}>Warning!</h3>
           <span style={{ color: "red" }}>
-            This action is irreversible and will result in the loss of all
-            booking history.
+            This action is irreversible and will result in the loss of all booking history.
           </span>
           <div className="space" style={{ marginBottom: "0" }} />
           <span style={{ color: "red" }}>
@@ -172,8 +161,7 @@ class Account extends Component {
           </span>
           <div className="space" style={{ marginBottom: "0" }} />
           <span style={{ color: "red" }}>
-            This account will lose all access to this service unless added again
-            by an admin.
+            This account will lose all access to this service unless added again by an admin.
           </span>
           <div className="space" style={{ marginBottom: "0" }} />
 
@@ -200,15 +188,10 @@ class Account extends Component {
           <input
             type="checkbox"
             name="deleteAccountConfirm"
-            onChange={(e) =>
-              this.setState({ deleteAccountConfirm: e.target.checked })
-            }
+            onChange={(e) => this.setState({ deleteAccountConfirm: e.target.checked })}
           ></input>
           <div className="space" />
-          <button
-            className="button-style-warning"
-            onClick={() => this.submitDeleteAccount()}
-          >
+          <button className="button-style-warning" onClick={() => this.submitDeleteAccount()}>
             Delete Account
           </button>
           <div className="space" />

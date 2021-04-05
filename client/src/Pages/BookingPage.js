@@ -63,7 +63,7 @@ export default class BookingPage extends React.Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: this.props.email,
+        email: sessionStorage.email,
         desk: this.state.chosenDesk.split(" ")[1],
         room: this.state.chosenArea,
         date: this.convertDate(),
@@ -84,6 +84,8 @@ export default class BookingPage extends React.Component {
           areaKey: createUniqueID(),
           bookableDesks: [],
         });
+        sessionStorage.removeItem("bookings");
+        sessionStorage.removeItem("upcomingBookings");
       })
       .catch((err) => alert(err));
   };

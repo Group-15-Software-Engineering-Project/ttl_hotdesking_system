@@ -1,56 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { render } from "react-dom";
 import "../public/css/booking.css";
 import "../public/css/main.css";
-import { months } from "../Components/Misc";
+import { months, _GetUserBookings } from "../Components/Misc";
 
-function PastBookings({ email }) {
-  const [bookings, setData] = useState(null);
+function PastBookings() {
   const [todayDate, setDate] = useState(null);
-  //email= "foo@bar.com";
-  console.log(email);
 
-  useEffect(() => {
+  useEffect(async () => {
     window.scrollTo(0, 0);
     let date = new Date();
-    setDate(
-      date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
-    );
-    fetch("/api/getBooking", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-      }),
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        console.log(res);
-        let data = res.data;
-        let today =
-          date.getFullYear() * 10000 +
-          (date.getMonth() + 1) * 100 +
-          date.getDate();
-        let index = 0;
-        for (let key in data) {
-          console.log(data[key]);
-          let bookingDateComponents = data[key].DATE.split("T")[0].split("-");
-          let bookingDate =
-            parseInt(bookingDateComponents[0]) * 10000 +
-            parseInt(bookingDateComponents[1]) * 100 +
-            parseInt(bookingDateComponents[2]);
-          if (today - bookingDate > 0) break;
-          index++;
-        }
-        for (let i = 0; i < Math.floor(index / 2); i++) {
-          let temp = data[i];
-          data[i] = data[index - 1 - i];
-          data[index - 1 - i] = temp;
-        }
-        setData({ data: data });
-      });
+    setDate(date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate());
+
+    if (!sessionStorage.bookings) _GetUserBookings();
   }, []);
 
   const displayBooking = (data) => {
@@ -115,8 +76,7 @@ function PastBookings({ email }) {
         : {
             backgroundColor: "white",
           };
-    let displayDate =
-      parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
+    let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
     return (
       <div className="bookings-table" style={bg}>
         <div style={{ width: "100%", marginBottom: "1%" }} />
@@ -172,8 +132,8 @@ function PastBookings({ email }) {
           }}
         >
           <div style={{ width: "100%", marginBottom: "2%" }} />
-          {bookings ? (
-            bookings.data ? (
+          {sessionStorage.bookings ? (
+            JSON.parse(sessionStorage.bookings).data ? (
               <>
                 <div
                   className="bookings-table"
@@ -235,7 +195,7 @@ function PastBookings({ email }) {
                     marginLeft: "2%",
                   }}
                 />
-                {bookings.data.map((data) => {
+                {JSON.parse(sessionStorage.bookings).data.map((data) => {
                   return displayBooking(data);
                 })}
               </>
@@ -258,50 +218,5 @@ function PastBookings({ email }) {
     </div>
   );
 }
-
-/*class PastBookings extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      bookings: [],
-    };
-
-  }
-  componentDidMount(){
-    this.getPastBookings();
-
-  }
-
-  getPastBookings = () => {
-      console.log(this.props.email);
-    fetch("/api/getBooking", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: this.props.email,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        this.setState({ bookings: res.data});
-      })
-      .catch((err) => alert(err));
-  };
-
-
-  render() {
-      console.log(this.state.bookings)
-    return (
-      <div className="pastBookings" >
-        <h1> Past Bookings</h1>
-        <li>{this.state.bookings.USER}</li>
-      </div>
-    );
-  }
-}*/
 
 export default PastBookings;

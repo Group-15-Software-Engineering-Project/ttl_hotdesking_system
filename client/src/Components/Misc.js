@@ -13,6 +13,50 @@ export const months = [
   "Dec",
 ];
 
+export const _GetUserBookings = async (ref) => {
+  let date = new Date();
+  fetch("/api/getBooking", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: sessionStorage.email,
+    }),
+  })
+    .then((response) => response.json())
+    .then((res) => {
+      let data = res.data;
+      let today = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+      let index = 0;
+      for (let key in data) {
+        let bookingDateComponents = data[key].DATE.split("T")[0].split("-");
+        let bookingDate =
+          parseInt(bookingDateComponents[0]) * 10000 +
+          parseInt(bookingDateComponents[1]) * 100 +
+          parseInt(bookingDateComponents[2]);
+        if (today - bookingDate > 0) break;
+        index++;
+      }
+      for (let i = 0; i < Math.floor(index / 2); i++) {
+        let temp = data[i];
+        data[i] = data[index - 1 - i];
+        data[index - 1 - i] = temp;
+      }
+      let upB = [];
+      for (let i = 0; i < 3 && i < index; i++) {
+        upB.push(data[i]);
+      }
+      sessionStorage.setItem("bookings", JSON.stringify({ isNull: false, data: data }));
+      sessionStorage.setItem("upcomingBookings", JSON.stringify({ data: upB }));
+      if (ref) {
+        console.log(ref);
+        ref.setState({ bookings: upB });
+      }
+    });
+  return 1;
+};
+
 export const createUniqueID = (idLength, prefix) => {
   let length;
   if (!idLength || idLength <= 0) length = 4;
@@ -46,8 +90,7 @@ export const createUniqueID = (idLength, prefix) => {
     let randomIndex = Math.floor(Math.random() * length * 100) % length;
     if (!visited.includes(randomIndex)) {
       visited.push(randomIndex);
-      uniqueID +=
-        (visited.length === 1 ? ":" : "-") + ID_Components[randomIndex];
+      uniqueID += (visited.length === 1 ? ":" : "-") + ID_Components[randomIndex];
     }
   }
   return prefix ? uniqueID : uniqueID.substring(3);
