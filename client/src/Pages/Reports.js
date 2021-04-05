@@ -5,20 +5,19 @@ import { Pie } from "react-chartjs-2";
 import { Redirect } from "react-router-dom";
 import "../public/css/main.css";
 
-
 class Reports extends Component {
   constructor() {
     super();
-    this.getData = this.getData.bind(this);
     this.state = {
-      timeRanges: ["All time", "1 week", "1 month", "3 months"],
+      timeRanges: ["Next week", "Last week", "Last month", "Last 3 months"],
       time: "overall",
       room: "overall",
       team: "overall",
       chosenLocation: "",
       chosenTimeRange: "",
+      graphsVisible: false,
       chosenTeam: "",
-      roomlist: ["All", "room1", "room2", "room3"],
+      roomlist: [],
       teamlist: ["All", "team1", "team2", "team3"],
       barData: {
         labels: [
@@ -136,17 +135,15 @@ class Reports extends Component {
   };
   reset() {}
 
-  getData() {
-    console.log(this.state.time + " " + this.state.room);
-    //this.setState({team: "11"})
+  getData = () => {
     fetch("/api/getReports", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        time: this.state.time,
-        room: this.state.room,
+        time: this.state.chosenTimeRange.toLowerCase(),
+        room: this.state.chosenLocation,
       }),
     })
       .then((res) => {
@@ -154,6 +151,7 @@ class Reports extends Component {
       })
       .then((res) => {
         this.setState({
+          graphsVisible: true,
           barData: {
             labels: res.labels,
             datasets: [
@@ -201,7 +199,7 @@ class Reports extends Component {
           },
 
           pieData: {
-            labels:res.desks,
+            labels: res.desks,
             datasets: [
               {
                 label: "Desk",
@@ -220,7 +218,7 @@ class Reports extends Component {
           },
         });
       });
-  }
+  };
   handleEvent = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -257,6 +255,7 @@ class Reports extends Component {
                   onChange={this.handleEvent}
                 >
                   <option value="">Select time range</option>
+                  <option value="overall">All time</option>
                   {this.state.timeRanges.map((x) => {
                     return <option value={x}>{x}</option>;
                   })}
@@ -274,7 +273,7 @@ class Reports extends Component {
                   onChange={this.handleEvent}
                 >
                   <option value="">Select location</option>
-                  <option value="All">All</option>
+                  <option value="overall">All</option>
                   {this.state.roomlist.map((x) => {
                     return <option value={x.name}>{x.name}</option>;
                   })}
@@ -299,57 +298,60 @@ class Reports extends Component {
               </div>
             </div>
             <div className="space" />
-            <button className="button-style">Run Report</button>
+            <button className="button-style" onClick={() => this.getData()}>
+              Run Report
+            </button>
           </section>
           <div className="space" />
-          <div>
-            <Bar
-              data={this.state.barData}
-              options={{
-                title: {
-                  display: this.props.displayTitle,
-                  text: "Most active user",
-                  fontSize: 25,
-                },
-                legend: {
-                  display: this.props.displayLegend,
-                  position: this.props.legendPosition,
-                },
-              }}
-            />
-            <div className="space" style={{ marginBottom: "5%" }} />
-            <Line
-              data={this.state.lineData}
-              options={{
-                title: {
-                  display: this.props.displayTitle,
-                  text: "Most active day",
-                  fontSize: 25,
-                },
-                legend: {
-                  display: this.props.displayLegend,
-                  position: this.props.legendPosition,
-                },
-              }}
-            />
-            <div className="space" style={{ marginBottom: "5%" }} />
+          {this.state.graphsVisible ? (
+            <div>
+              <Bar
+                data={this.state.barData}
+                options={{
+                  title: {
+                    display: this.props.displayTitle,
+                    text: "Most active user",
+                    fontSize: 25,
+                  },
+                  legend: {
+                    display: this.props.displayLegend,
+                    position: this.props.legendPosition,
+                  },
+                }}
+              />
+              <div className="space" style={{ marginBottom: "5%" }} />
+              <Line
+                data={this.state.lineData}
+                options={{
+                  title: {
+                    display: this.props.displayTitle,
+                    text: "Most active day",
+                    fontSize: 25,
+                  },
+                  legend: {
+                    display: this.props.displayLegend,
+                    position: this.props.legendPosition,
+                  },
+                }}
+              />
+              <div className="space" style={{ marginBottom: "5%" }} />
 
-
-            <Pie
-              data={this.state.pieData}
-              options={{
-                title: {
-                  display: this.props.displayTitle,
-                  text: "Most used desk",
-                  fontSize: 25,
-                },
-                legend: {
-                  display: this.props.displayLegend,
-                  position: this.props.legendPosition,
-                },
-              }}
-            />
-          </div>
+              <Pie
+                data={this.state.pieData}
+                options={{
+                  title: {
+                    display: this.props.displayTitle,
+                    text: "Most used desk",
+                    fontSize: 25,
+                  },
+                  legend: {
+                    display: this.props.displayLegend,
+                    position: this.props.legendPosition,
+                  },
+                }}
+              />
+            </div>
+          ) : null}
         </div>
         <div className="flex-container-1" />
       </div>
