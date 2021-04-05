@@ -22,7 +22,7 @@ class Home extends React.Component {
       });
       if (sessionStorage.upcomingBookings)
         this.setState({ bookings: JSON.parse(sessionStorage.upcomingBookings).data });
-      if (!sessionStorage.bookings) _GetUserBookings(this);
+      if (!sessionStorage.bookings || this.state.bookings.length === 0) _GetUserBookings(this);
     }
   };
 
@@ -165,24 +165,6 @@ class Home extends React.Component {
           ) : (
             <h1>There are no upcoming bookings.</h1>
           )}
-          {/* {sessionStorage.upcomingBookings ? (
-            JSON.parse(sessionStorage.upcomingBookings).data.length !== 0 ? (
-              <div style={{ marginRight: "2.5%" }}>
-                <div
-                  style={{
-                    borderBottom: "1px solid #ccc",
-                    width: "98%",
-                    marginLeft: "2%",
-                  }}
-                />
-                {JSON.parse(sessionStorage.upcomingBookings).data.map((x) => {
-                  return this.displayBooking(x);
-                })}
-              </div>
-            ) : (
-              <h1>There are no upcoming bookings.</h1>
-            )
-          ) : null} */}
           <div style={{ width: "100%", marginBottom: "3%" }} />
           <div style={{ borderTop: "1px #ccc solid" }} />
           <div style={{ width: "100%", marginBottom: "3%" }} />
@@ -190,6 +172,11 @@ class Home extends React.Component {
           <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
             Notifications
           </h1>
+          <div style={{ border: "1px solid #ccc" }}>
+            <h3 style={{ color: "red" }}>Important!</h3>
+            <div className="space" style={{ marginBottom: "1%" }} />
+            <span style={{ margin: "0" }}>Hello people!</span>
+          </div>
         </div>
         <div className="flex-container-1" />
       </div>

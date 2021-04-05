@@ -139,6 +139,7 @@ class Reports extends Component {
   handleEvent = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
+
   render() {
     return sessionStorage.__user_is_admin__ ? (
       <div className="wrapper TCD-BG">
