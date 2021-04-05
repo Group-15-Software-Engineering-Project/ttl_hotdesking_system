@@ -172,10 +172,22 @@ class Home extends React.Component {
           <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
             Notifications
           </h1>
-          <div style={{ border: "1px solid #ccc" }}>
-            <h3 style={{ color: "red" }}>Important!</h3>
-            <div className="space" style={{ marginBottom: "1%" }} />
-            <span style={{ margin: "0" }}>Hello people!</span>
+          <div className="space" />
+          <div
+            style={{
+              border: "1px solid #ccc",
+              textAlign: "left",
+              width: "90%",
+              marginLeft: "5%",
+            }}
+          >
+            <span
+              style={{ color: "red", marginLeft: "5%", marginRight: "5%", fontWeight: "bold" }}
+            >
+              Important!
+            </span>
+            {/* <div className="space" style={{ marginBottom: "1%" }} /> */}
+            <span style={{ margin: "0" }}>The Trinity Hotdesking Pilot is live!</span>
           </div>
         </div>
         <div className="flex-container-1" />

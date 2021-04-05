@@ -7,7 +7,7 @@ TileSelection.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.exact({
       value: PropTypes.string,
-      label: PropTypes.string,
+      label: PropTypes.any,
       disabled: PropTypes.bool,
     })
   ).isRequired,
@@ -55,9 +55,7 @@ export default function TileSelection(props) {
                 textOverflow: " ellipsis !important",
               }}
             >
-              <h1 style={{ fontSize: "18px", width: props.size[0] }}>
-                {options[i].value}
-              </h1>
+              <h1 style={{ fontSize: "18px", width: props.size[0] }}>{options[i].value}</h1>
               {props.showLabel && options[i].label.length !== 0 ? (
                 <span
                   style={{

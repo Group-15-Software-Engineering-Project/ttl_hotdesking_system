@@ -87,7 +87,8 @@ export default class BookingPage extends React.Component {
           this.state.chosenArea,
           this.convertDate(),
           am,
-          pm
+          pm,
+          this.state.chosenTime
         );
         alert(res.message);
         this.setState({
@@ -102,7 +103,7 @@ export default class BookingPage extends React.Component {
         sessionStorage.removeItem("upcomingBookings");
         _GetUserBookings();
       })
-      .catch((err) => alert(err));
+      .catch((err) => alert(console.log(err)));
   };
 
   positionReference = createRef();
