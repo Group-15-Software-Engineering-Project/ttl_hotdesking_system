@@ -46,14 +46,19 @@ function Navbar(props) {
               </Link>
             </li>
             {SidebarData.map((item, index) => {
-              return (
-                <li key={index} className={item.cName}>
-                  <Link to={item.path}>
-                    {item.icon}
-                    <span>{item.title}</span>
-                  </Link>
-                </li>
-              );
+              if (
+                !item.adminRequired ||
+                (sessionStorage.__user_is_admin__ && item.adminRequired)
+              ) {
+                return (
+                  <li key={index} className={item.cName}>
+                    <Link to={item.path}>
+                      {item.icon}
+                      <span>{item.title}</span>
+                    </Link>
+                  </li>
+                );
+              }
             })}
           </ul>
         </nav>

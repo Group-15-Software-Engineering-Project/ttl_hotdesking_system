@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { _GetUserBookings } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Account extends Component {
@@ -38,6 +39,7 @@ class Account extends Component {
 
   componentDidMount = () => {
     window.scrollTo(0, 0);
+    if (!sessionStorage.bookings) _GetUserBookings();
   };
 
   handleEvent = (event) => {

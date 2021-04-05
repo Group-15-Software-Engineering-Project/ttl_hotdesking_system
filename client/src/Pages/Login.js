@@ -40,6 +40,8 @@ class Login extends Component {
         } else {
           this.setState({ validLogin: true }, () => {
             sessionStorage.setItem("email", this.state.email);
+            if (this.state.email === "ttl.hotdesking.admin@tcd.ie")
+              sessionStorage.setItem("__user_is_admin__", true);
             _GetUserBookings();
           });
           this.props.setEmail(this.state.email);
@@ -47,6 +49,7 @@ class Login extends Component {
       })
       .catch((err) => {
         this.setState({ validLogin: false, errorText: true });
+        this.forceUpdate();
       });
   };
 

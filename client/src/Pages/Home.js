@@ -129,7 +129,9 @@ class Home extends React.Component {
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
           <div style={{ width: "100%", marginBottom: "3%" }} />
-          <h1 style={{ fontSize: "32px" }}>{`Welcome back, ${sessionStorage.email}!`}</h1>
+          <h1 style={{ fontSize: "32px" }}>{`Welcome back, ${
+            sessionStorage.__user_is_admin__ ? "Stephanie" : sessionStorage.email
+          }!`}</h1>
           <div style={{ width: "100%", marginBottom: "3%" }} />
 
           <Link to="/booking-page">
