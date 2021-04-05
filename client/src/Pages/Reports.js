@@ -308,6 +308,20 @@ class Reports extends Component {
               <Bar
                 data={this.state.barData}
                 options={{
+                  scales: {
+                    yAxes: [
+                      {
+                        ticks: {
+                          beginAtZero: true,
+                          userCallback: function (label, index, labels) {
+                            if (Math.floor(label) === label) {
+                              return label;
+                            }
+                          },
+                        },
+                      },
+                    ],
+                  },
                   title: {
                     display: this.props.displayTitle,
                     text: "Most active user",
