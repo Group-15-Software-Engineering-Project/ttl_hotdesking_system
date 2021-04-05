@@ -26,14 +26,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post("/api/login", (req, res) => {
   login(req.body.email, req.body.password)
     .then((result) => {
-      if (result.length != 0) {
-        res.send({ error: false, message: "Success" });
+      adminCheck(req.body.email)
+      .then((admin) => {
+        console.log(admin);
+        if (result.length != 0) {
+        res.send({ error: false, admin: admin, message: "Success" });
       } else {
-        res.send({ error: true, message: "No email with that password" });
+        res.send({ error: true, admin: admin, message: "No email with that password" });
       }
+      })
+      .catch((err) => {
+        res.send({error :true, admin: false, message: "error"});
+      })
     })
     .catch((err) => {
-      res.send({ error: true, message: err });
+      res.send({ error: true, admin: false, message: err });
     });
 });
 
