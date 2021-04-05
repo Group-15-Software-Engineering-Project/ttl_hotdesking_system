@@ -211,21 +211,30 @@ app.post("/api/getBooking", (req, res) => {
 
 app.post("/api/getReports", (req, res) => {
   array = [];
-  getReports(req.body.time, req.body.room)
+  getReportsByUser(req.body.time, req.body.room)
     .then((bookings) => {
       data = [];
       for (booking in bookings) {
         data.push(bookings[booking]);
       }
-      if(data!==null){
-      array = getMostActiveUser(data);
-      labels = array[0];
-      amountOfBookings = array[1];
-      array=getMostActiveDesk(data);
-      desks=array[0];
-      deskBookings=array[1];
-      res.send({ labels, amountOfBookings, desks,deskBookings });
-      }
+      
+      getReportsByDesk(req.body.time, req.body.room)
+      .then((bookings)=> {
+        deskData=[];
+        for (booking in bookings) {
+          deskData.push(bookings[booking]);
+        }
+        array = getMostActiveUser(data);
+        labels = array[0];
+        amountOfBookings = array[1];
+        array=getMostActiveDesk(deskData);
+        desks=array[0];
+        deskBookings=array[1];
+        res.send({ labels, amountOfBookings, desks,deskBookings });
+      })
+      
+     
+      
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
@@ -504,7 +513,7 @@ function getPastBookings(email) {
     });
   });
 }
-function getReports(time, room) {
+function getReportsByUser(time, room) {
   //console.log("success");
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
@@ -535,6 +544,51 @@ function getReports(time, room) {
         "select * from BOOKINGS WHERE ROOM='" +
         room +
         "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
+    }
+    //console.log("success");
+
+
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function getReportsByDesk(time, room) {
+  //console.log("success");
+  return new Promise((resolve, reject) => {
+    if (time === "overall" && room === "overall") {
+      sql = "select * from BOOKINGS ORDER BY DESK;";
+    } else if (time === "overall" && room !== "overall") {
+      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' ORDER BY DESK;";
+    } else if (time === "last week" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() ORDER BY DESK;";
+    } else if (time === "next month" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY DESK;";
+    } else if (time === "next week" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) ORDER BY DESK;";
+    } else if (time === "last week" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() ORDER BY DESK;";
+    } else if (time === "next month" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY DESK;";
+    } else if (time === "next week" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY DESK;";
     }
     //console.log("success");
 
