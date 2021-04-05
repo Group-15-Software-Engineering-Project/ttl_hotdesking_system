@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App key={sessionStorage.getItem("email")} />
   </React.StrictMode>,
   document.getElementById("root")
 );

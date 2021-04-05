@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+
 import "../public/css/main.css";
 class Users extends Component {
   state = {
@@ -162,7 +164,7 @@ class Users extends Component {
   };
 
   render() {
-    return (
+    return sessionStorage.__user_is_admin__ ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
@@ -174,10 +176,7 @@ class Users extends Component {
               >
                 Add Users
               </h1>
-              <div
-                className="space"
-                style={{ marginBottom: "10%", marginTop: "5%" }}
-              />
+              <div className="space" style={{ marginBottom: "10%", marginTop: "5%" }} />
               <input
                 type="email"
                 className="text-input"
@@ -192,17 +191,11 @@ class Users extends Component {
                 onChange={this.addPasswordF}
                 style={{ width: "10%" }}
               ></input>
-              <div
-                className="space"
-                style={{ marginTop: "5%", marginBottom: "5%" }}
-              />
+              <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
                 className="button-style"
                 onClick={() => {
-                  this.submitAddUser(
-                    this.state.addEmail,
-                    this.state.addPassword
-                  );
+                  this.submitAddUser(this.state.addEmail, this.state.addPassword);
                 }}
               >
                 Add User
@@ -218,10 +211,7 @@ class Users extends Component {
               >
                 Add Users to Teams
               </h1>
-              <div
-                className="space"
-                style={{ marginBottom: "10%", marginTop: "5%" }}
-              />
+              <div className="space" style={{ marginBottom: "10%", marginTop: "5%" }} />
               <input
                 className="text-input"
                 placeholder="Team name"
@@ -237,10 +227,7 @@ class Users extends Component {
                 name="addTeamUserName"
                 onChange={this.handleEvent}
               ></input>
-              <div
-                className="space"
-                style={{ marginTop: "5%", marginBottom: "5%" }}
-              />
+              <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
                 className="button-style"
                 onClick={() => {
@@ -260,19 +247,13 @@ class Users extends Component {
               >
                 Remove Users
               </h1>
-              <div
-                className="space"
-                style={{ marginBottom: "10%", marginTop: "5%" }}
-              />
+              <div className="space" style={{ marginBottom: "10%", marginTop: "5%" }} />
               <input
                 className="text-input"
                 placeholder="Email"
                 onChange={this.deleteEmailF}
               ></input>
-              <div
-                className="space"
-                style={{ marginTop: "5%", marginBottom: "5%" }}
-              />
+              <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
                 className="button-style"
                 onClick={() => {
@@ -289,10 +270,7 @@ class Users extends Component {
               >
                 Remove Users from Teams
               </h1>
-              <div
-                className="space"
-                style={{ marginBottom: "10%", marginTop: "5%" }}
-              />
+              <div className="space" style={{ marginBottom: "10%", marginTop: "5%" }} />
               <input
                 className="text-input"
                 placeholder="User team"
@@ -308,10 +286,7 @@ class Users extends Component {
                 name="removeUserFromTeam"
                 onChange={this.handleEvent}
               ></input>
-              <div
-                className="space"
-                style={{ marginTop: "5%", marginBottom: "5%" }}
-              />
+              <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
                 className="button-style"
                 onClick={() => {
@@ -332,13 +307,14 @@ class Users extends Component {
                 flexFlow: "row wrap",
                 alignItems: "left",
                 width: "100%",
+                justifyContent: "center",
               }}
             >
               {this.state.users.map((user) => (
                 <span
                   style={{
                     fontWeight: "bold",
-                    width: "16%",
+                    width: "30%",
                     marginBottom: "12px",
                   }}
                 >
@@ -351,6 +327,8 @@ class Users extends Component {
         </div>
         <div className="flex-container-1"></div>
       </div>
+    ) : (
+      <Redirect to="/home" />
     );
   }
 }
