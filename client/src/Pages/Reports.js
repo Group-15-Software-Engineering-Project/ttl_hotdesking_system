@@ -173,18 +173,18 @@ class Reports extends Component {
 
           lineData: {
             labels: [
+              "Sunday",
               "Monday",
               "Tuesday",
               "Wednesday",
               "Thursday",
               "Friday",
-              "Sataurday",
-              "Sunday",
+              "Sataurday"
             ],
             datasets: [
               {
                 label: "Day",
-                data: [10, 8, 9, 6, 6, 2, 1],
+                data: res.activeDays,
                 backgroundColor: [
                   "rgba(255, 99, 132, 0.6)",
                   "rgba(54, 162, 235, 0.6)",

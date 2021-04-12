@@ -27,17 +27,21 @@ app.post("/api/login", (req, res) => {
   login(req.body.email, req.body.password)
     .then((result) => {
       adminCheck(req.body.email)
-      .then((admin) => {
-        console.log(admin);
-        if (result.length != 0) {
-        res.send({ error: false, admin: admin, message: "Success" });
-      } else {
-        res.send({ error: true, admin: admin, message: "No email with that password" });
-      }
-      })
-      .catch((err) => {
-        res.send({error :true, admin: false, message: "error"});
-      })
+        .then((admin) => {
+          console.log(admin);
+          if (result.length != 0) {
+            res.send({ error: false, admin: admin, message: "Success" });
+          } else {
+            res.send({
+              error: true,
+              admin: admin,
+              message: "No email with that password",
+            });
+          }
+        })
+        .catch((err) => {
+          res.send({ error: true, admin: false, message: "error" });
+        });
     })
     .catch((err) => {
       res.send({ error: true, admin: false, message: err });
@@ -126,25 +130,25 @@ app.post("/api/addDesk", (req, res) => {
 });
 
 app.post("/api/addUserToTeam", (req, res) => {
-  addUserToGroup(req.body.email, req.body.group) 
-  .then(() => {
-    res.send({error: false});
-  })
-  .catch((err) => {
-    console.log(err);
-    res.send({error: true});
-  });
+  addUserToGroup(req.body.email, req.body.group)
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ error: true });
+    });
 });
 
 app.post("/api/removeUserFromTeam", (req, res) => {
   removeUserFromGroup(req.body.email, req.body.group)
-  .then(() => {
-    res.send({error:false});
-  })
-  .catch((err) => {
-    console.log(err);
-    res.send({error: true});
-  });
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ error: true });
+    });
 });
 
 app.post("/api/addUser", (req, res) => {
@@ -224,24 +228,21 @@ app.post("/api/getReports", (req, res) => {
       for (booking in bookings) {
         data.push(bookings[booking]);
       }
-      
-      getReportsByDesk(req.body.time, req.body.room)
-      .then((bookings)=> {
-        deskData=[];
+
+      getReportsByDesk(req.body.time, req.body.room).then((bookings) => {
+        deskData = [];
         for (booking in bookings) {
           deskData.push(bookings[booking]);
         }
         array = getMostActiveUser(data);
         labels = array[0];
         amountOfBookings = array[1];
-        array=getMostActiveDesk(deskData);
-        desks=array[0];
-        deskBookings=array[1];
-        res.send({ labels, amountOfBookings, desks,deskBookings });
-      })
-      
-     
-      
+        array = getMostActiveDesk(deskData);
+        desks = array[0];
+        deskBookings = array[1];
+        activeDays = getMostActiveDay(data);
+        res.send({ labels, amountOfBookings, desks, deskBookings,activeDays });
+      });
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
@@ -249,9 +250,8 @@ app.post("/api/getReports", (req, res) => {
 });
 function getMostActiveDesk(data) {
   desk = [];
-    deskBookings = [];
+  deskBookings = [];
   if (data !== null) {
-    
     console.log("success");
 
     desk.push(data[0].DESK);
@@ -276,12 +276,24 @@ function getMostActiveDesk(data) {
         deskBookings.push(count);
       }
     }
-    
   }
-  return[desk,deskBookings];
+  return [desk, deskBookings];
+}
+
+function getMostActiveDay(data) {
+  var date = new Date(data[0].DATE);
+  var day = date.getDay();
+  mostActiveDays = new Array(0, 0, 0, 0, 0, 0, 0);
+  for (var i = 0; i < data.length; i++) {
+    date = new Date(data[i].DATE);
+    day = date.getDay();
+    addToDay = mostActiveDays[day] + 1;
+    mostActiveDays.splice(day, 1, addToDay);
+  }
+
+  return mostActiveDays;
 }
 function getMostActiveUser(data) {
-  console.log(data.length);
   labels = [];
   amountOfBookings = [];
   labels.push(data[0].USER);
@@ -530,9 +542,12 @@ function getReportsByUser(time, room) {
     } else if (time === "last week" && room === "overall") {
       sql =
         "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() ORDER BY USER;";
-    } else if (time === "next month" && room === "overall") {
+    } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY USER;";
+    } else if (time === "last 3 months" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY USER;";
     } else if (time === "next week" && room === "overall") {
       sql =
         "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
@@ -541,11 +556,16 @@ function getReportsByUser(time, room) {
         "select * from BOOKINGS WHERE ROOM='" +
         room +
         "' AND date between  date_sub(now(),INTERVAL 1 week) and now() ORDER BY USER;";
-    } else if (time === "next month" && room !== "overall") {
+    } else if (time === "last month" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY USER;";
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY USER;";
+    } else if (time === "last 3 months" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY USER;";
     } else if (time === "next week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
@@ -553,7 +573,6 @@ function getReportsByUser(time, room) {
         "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
     }
     //console.log("success");
-
 
     con.query(sql, (err, res) => {
       if (err) {
@@ -575,9 +594,12 @@ function getReportsByDesk(time, room) {
     } else if (time === "last week" && room === "overall") {
       sql =
         "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() ORDER BY DESK;";
-    } else if (time === "next month" && room === "overall") {
+    } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY DESK;";
+    } else if (time === "last 3 months" && room === "overall") {
+      sql =
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY DESK;";
     } else if (time === "next week" && room === "overall") {
       sql =
         "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) ORDER BY DESK;";
@@ -586,11 +608,16 @@ function getReportsByDesk(time, room) {
         "select * from BOOKINGS WHERE ROOM='" +
         room +
         "' AND date between  date_sub(now(),INTERVAL 1 week) and now() ORDER BY DESK;";
-    } else if (time === "next month" && room !== "overall") {
+    } else if (time === "last month" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 MONTH) ORDER BY DESK;";
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY DESK;";
+    } else if (time === "last 3 months" && room !== "overall") {
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY DESK;";
     } else if (time === "next week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
@@ -598,7 +625,6 @@ function getReportsByDesk(time, room) {
         "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY DESK;";
     }
     //console.log("success");
-
 
     con.query(sql, (err, res) => {
       if (err) {
@@ -609,6 +635,7 @@ function getReportsByDesk(time, room) {
     });
   });
 }
+
 
 function addBooking(user, desk, room, date, am, pm) {
   let time;
@@ -766,7 +793,8 @@ function getUserBookingsBetween(user, start, end) {
 }
 
 function removeUserFromGroup(email, group) {
-  sql = "DELETE FROM GROUPS WHERE NAME='"+group+"' AND USER='"+email+"';"
+  sql =
+    "DELETE FROM GROUPS WHERE NAME='" + group + "' AND USER='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -776,11 +804,11 @@ function removeUserFromGroup(email, group) {
         resolve(res);
       }
     });
-  })
+  });
 }
 
 function addUserToGroup(email, group) {
-  sql =  "INSERT INTO GROUPS VALUES ('"+group+"', '"+email+"');";
+  sql = "INSERT INTO GROUPS VALUES ('" + group + "', '" + email + "');";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
