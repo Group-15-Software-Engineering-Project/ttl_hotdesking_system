@@ -24,6 +24,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
+  var sha256 = require('js-sha256');
+  console.log(sha256(req.body.email));
+ 
   login(req.body.email, req.body.password)
     .then((result) => {
       adminCheck(req.body.email)
@@ -248,6 +251,7 @@ app.post("/api/getReports", (req, res) => {
       res.send({ error: true, message: err.toString() });
     });
 });
+
 function getMostActiveDesk(data) {
   desk = [];
   deskBookings = [];
@@ -446,8 +450,10 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 
 //Database Access
 function addUser(email, password) {
+  var sha256 = require('js-sha256');
+  var hashedPassword=sha256(password);
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + password + '");';
+    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + hashedPassword + '");';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
@@ -488,12 +494,14 @@ function addDesk(desk_number, room) {
 }
 
 function login(email, password) {
+  var sha256 = require('js-sha256');
+  var hashedPassword=sha256(password);
   return new Promise((resolve, reject) => {
     sql =
       "SELECT * FROM USERS WHERE email='" +
       email +
       "' AND password='" +
-      password +
+      hashedPassword +
       "';";
     con.query(sql, (err, res) => {
       if (err) {

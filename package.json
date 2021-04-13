@@ -16,6 +16,7 @@
         "emailjs-com": "^2.6.4",
         "express": "^4.17.1",
         "js-cookie": "^2.2.1",
+        "js-sha256": "^0.9.0",
         "mysql": "^2.18.1",
         "nodemon": "^2.0.7",
         "react": "^17.0.2",
