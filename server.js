@@ -102,6 +102,21 @@ app.post("/api/getRooms", (req, res) => {
     });
 });
 
+app.post("/api/getTeams", (req, res) => {
+  let teams = [];
+  getTeams()
+    .then((result) => {
+      for (x in result) {
+        teams.push(result[x]);
+      }
+      res.send({ error: false, teams: teams });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ error: true, teams: [] });
+    });
+});
+
 app.post("/api/getUsers", (req, res) => {
   getUsers()
     .then((result) => {
@@ -740,6 +755,23 @@ async function getDesks(room) {
 function getRooms() {
   return new Promise((resolve, reject) => {
     sql = "SELECT DISTINCT * FROM ROOMS;";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        let results = [];
+        for (var i in res) {
+          results.push(res[i].NAME);
+        }
+        resolve(results);
+      }
+    });
+  });
+}
+
+function getTeams() {
+  return new Promise((resolve, reject) => {
+    sql = "SELECT DISTINCT NAME FROM GROUPS;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
