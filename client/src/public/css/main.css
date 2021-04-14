@@ -196,3 +196,7 @@
   flex-flow: row wrap;
   justify-content: flex-start;
 }
+
+.booking-history {
+  font-size: clamp(0.5rem, 2vw, 1rem);
+}

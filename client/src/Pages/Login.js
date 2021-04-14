@@ -39,9 +39,10 @@ class Login extends Component {
         if (res.error) {
           this.setState({ validLogin: false, errorText: true });
         } else {
-          this.setState({ validLogin: true, admin: res.admin}, () => {
+          this.setState({ validLogin: true, admin: res.admin }, () => {
             sessionStorage.setItem("email", this.state.email);
-            sessionStorage.setItem("__user_is_admin__", res.admin);
+            if (res.admin.length !== 0) sessionStorage.setItem("__user_is_admin__", true);
+            console.log(res.admin);
             _GetUserBookings();
           });
           this.props.setEmail(this.state.email);

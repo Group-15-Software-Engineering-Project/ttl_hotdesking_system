@@ -26,12 +26,13 @@ function PastBookings() {
     let status =
       isUpcoming < 0 ? (
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             marginLeft: "5px",
             color: "#3ABF00",
             fontWeight: "bold",
-            flex: "2",
+            flex: "1.5",
             maxWidth: "16.5%",
           }}
         >
@@ -39,12 +40,13 @@ function PastBookings() {
         </span>
       ) : isUpcoming > 0 ? (
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             marginLeft: "5px",
             color: "#555",
             fontWeight: "bold",
-            flex: "2",
+            flex: "1.5",
             maxWidth: "16.5%",
           }}
         >
@@ -52,13 +54,14 @@ function PastBookings() {
         </span>
       ) : (
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             color: "red",
             marginLeft: "5px",
             fontWeight: "bold",
             maxWidth: "16.5%",
-            flex: "2",
+            flex: "1.5",
           }}
         >
           Today
@@ -82,16 +85,17 @@ function PastBookings() {
         <div style={{ width: "100%", marginBottom: "1%" }} />
         {status}
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             fontWeight: "bold",
             flex: "1",
           }}
         >
-          {"Desk " + data.DESK}
+          {"" + data.DESK}
         </span>
         <span
-          className="ellipsis"
+          className="ellipsis booking-history"
           style={{
             textAlign: "left",
             fontWeight: "bold",
@@ -99,6 +103,7 @@ function PastBookings() {
           }}
         >{`${data.ROOM}`}</span>
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             fontWeight: "bold",
@@ -108,6 +113,7 @@ function PastBookings() {
           {displayDate}
         </span>
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             fontWeight: "bold",
@@ -140,26 +146,29 @@ function PastBookings() {
                   style={{ border: "none", pointerEvents: "none" }}
                 >
                   <span
+                    className="booking-history"
                     style={{
                       textAlign: "left",
                       marginLeft: "5px",
                       fontWeight: "bold",
                       maxWidth: "16.5%",
-                      flex: "2",
+                      flex: "1.25",
                     }}
                   >
                     Status
                   </span>
                   <span
+                    className="booking-history"
                     style={{
                       textAlign: "left",
                       fontWeight: "bold",
-                      flex: "1",
+                      flex: "1.25",
                     }}
                   >
                     Desk No.
                   </span>
                   <span
+                    className="booking-history"
                     style={{
                       textAlign: "left",
                       fontWeight: "bold",
@@ -169,6 +178,7 @@ function PastBookings() {
                     Location
                   </span>
                   <span
+                    className="booking-history"
                     style={{
                       textAlign: "left",
                       fontWeight: "bold",
@@ -178,6 +188,7 @@ function PastBookings() {
                     Date
                   </span>
                   <span
+                    className="booking-history"
                     style={{
                       textAlign: "left",
                       fontWeight: "bold",

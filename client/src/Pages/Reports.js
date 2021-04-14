@@ -173,18 +173,18 @@ class Reports extends Component {
 
           lineData: {
             labels: [
+              "Sunday",
               "Monday",
               "Tuesday",
               "Wednesday",
               "Thursday",
               "Friday",
               "Sataurday",
-              "Sunday",
             ],
             datasets: [
               {
                 label: "Day",
-                data: [10, 8, 9, 6, 6, 2, 1],
+                data: res.activeDays,
                 backgroundColor: [
                   "rgba(255, 99, 132, 0.6)",
                   "rgba(54, 162, 235, 0.6)",
@@ -313,11 +313,7 @@ class Reports extends Component {
                       {
                         ticks: {
                           beginAtZero: true,
-                          userCallback: function (label, index, labels) {
-                            if (Math.floor(label) === label) {
-                              return label;
-                            }
-                          },
+                          precision: 0,
                         },
                       },
                     ],

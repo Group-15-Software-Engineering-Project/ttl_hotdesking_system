@@ -39,12 +39,13 @@ class Home extends React.Component {
     let status =
       isUpcoming < 0 ? (
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             marginLeft: "5px",
             color: "#3ABF00",
             fontWeight: "bold",
-            flex: "2",
+            flex: "1.5",
             maxWidth: "16.5%",
           }}
         >
@@ -52,13 +53,14 @@ class Home extends React.Component {
         </span>
       ) : (
         <span
+          className="booking-history"
           style={{
             textAlign: "left",
             color: "red",
             marginLeft: "5px",
             fontWeight: "bold",
             maxWidth: "16.5%",
-            flex: "2",
+            flex: "1.5",
           }}
         >
           Today
@@ -83,16 +85,17 @@ class Home extends React.Component {
           <div style={{ width: "100%", marginBottom: "1%" }} />
           {status}
           <span
+            className="booking-history"
             style={{
               textAlign: "left",
               fontWeight: "bold",
               flex: "1",
             }}
           >
-            {"Desk " + data.DESK}
+            {"" + data.DESK}
           </span>
           <span
-            className="ellipsis"
+            className="ellipsis booking-history"
             style={{
               textAlign: "left",
               fontWeight: "bold",
@@ -100,6 +103,7 @@ class Home extends React.Component {
             }}
           >{`${data.ROOM}`}</span>
           <span
+            className="booking-history"
             style={{
               textAlign: "left",
               fontWeight: "bold",
@@ -109,6 +113,7 @@ class Home extends React.Component {
             {displayDate}
           </span>
           <span
+            className="booking-history"
             style={{
               textAlign: "left",
               fontWeight: "bold",
@@ -130,7 +135,7 @@ class Home extends React.Component {
         <div className="flex-container-5 main-body">
           <div style={{ width: "100%", marginBottom: "3%" }} />
           <h1 style={{ fontSize: "32px" }}>{`Welcome back, ${
-            sessionStorage.__user_is_admin__ ? "Stephanie" : sessionStorage.email
+            sessionStorage.__user_is_admin__ ? "Boss" : sessionStorage.email
           }!`}</h1>
           <div style={{ width: "100%", marginBottom: "3%" }} />
 
@@ -151,6 +156,64 @@ class Home extends React.Component {
           <div style={{ width: "100%", marginBottom: "3%" }} />
           {this.state.bookings.length !== 0 ? (
             <div style={{ marginRight: "2.5%" }}>
+              <div
+                className="bookings-table"
+                style={{ border: "none", pointerEvents: "none" }}
+              >
+                <span
+                  className="booking-history"
+                  style={{
+                    textAlign: "left",
+                    marginLeft: "5px",
+                    fontWeight: "bold",
+                    maxWidth: "16.5%",
+                    flex: "1.25",
+                  }}
+                >
+                  Status
+                </span>
+                <span
+                  className="booking-history"
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "1.25",
+                  }}
+                >
+                  Desk No.
+                </span>
+                <span
+                  className="booking-history"
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "3",
+                  }}
+                >
+                  Location
+                </span>
+                <span
+                  className="booking-history"
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "2",
+                  }}
+                >
+                  Date
+                </span>
+                <span
+                  className="booking-history"
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    flex: "2",
+                  }}
+                >
+                  Time
+                </span>
+                <div style={{ width: "100%", marginTop: "2%" }} />
+              </div>
               <div
                 style={{
                   borderBottom: "1px solid #ccc",
