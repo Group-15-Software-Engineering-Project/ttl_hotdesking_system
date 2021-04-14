@@ -179,7 +179,7 @@ class Reports extends Component {
               "Wednesday",
               "Thursday",
               "Friday",
-              "Sataurday",
+              "Saturday",
             ],
             datasets: [
               {
