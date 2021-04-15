@@ -99,8 +99,7 @@ class Locations extends Component {
       },
       body: JSON.stringify({
         desk: desk,
-        room,
-        room,
+        room: room
       }),
     })
       .then((res) => {

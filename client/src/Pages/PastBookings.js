@@ -34,7 +34,35 @@ function PastBookings() {
   };
 
   //bookingToCancel is an exact copy of a booking returned from the backend.
-  const submitCancelBooking = (bookingToCancel) => {};
+  const submitCancelBooking = (bookingToCancel) => {
+    fetch("/api/deleteBooking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: bookingToCancel.USER,
+        desk: bookingToCancel.DESK,
+        room: bookingToCancel.ROOM,
+        date: bookingToCancel.DATE,
+        am: bookingToCancel.AM,
+        pm: bookingToCancel.PM
+      }),
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        console.log("Error deleting Booking");
+      } else {
+        console.log("Success");
+      }
+    })
+    .catch((err) => {
+      console.log("API ERROR");
+    });
+  };
 
   const displayBooking = (data) => {
     let time =
@@ -128,7 +156,7 @@ function PastBookings() {
                   JSON.stringify({ isNull: false, data: currentData })
                 );
                 submitCancelBooking(data);
-                window.location.reload();
+                //window.location.reload();
               }
             }
           }, 50);

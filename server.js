@@ -224,6 +224,24 @@ app.post("/api/removeUser", (req, res) => {
     });
 });
 
+app.post("/api/deleteBooking", (req, res) => {
+  console.log(req);
+  deleteBooking(
+    req.body.user, 
+    req.body.desk,
+    req.body.room,
+    req.body.date,
+    req.body.am,
+    req.body.pm)
+    .then(() => {
+      res.send({error:false});
+    })
+    .catch((err) => {
+      res.send({error:true});
+    });
+  
+});
+
 app.post("/api/getBooking", (req, res) => {
   getPastBookings(req.body.email)
     .then((bookings) => {
@@ -888,6 +906,20 @@ function deleteUserBookings(email) {
   });
 }
 
+function deleteBooking(user, desk, room, date, am, pm) {
+  sql = "DELETE FROM BOOKINGS WHERE USER='"+user+"' AND DESK="+desk+" AND ROOM='"+room+"' AND DATE='"+date+"' AND AM="+am+" AND PM="+pm+";";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
 function deleteDesksFromRoom(room) {
   sql = "DELETE FROM DESKS WHERE ROOM='" + room + "';";
   console.log(sql);
@@ -901,6 +933,7 @@ function deleteDesksFromRoom(room) {
     });
   });
 }
+
 function deleteRoom(room) {
   sql = "DELETE FROM ROOMS WHERE NAME='" + room + "';";
   console.log(sql);

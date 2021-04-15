@@ -255,11 +255,7 @@ export default class BookingPage extends React.Component {
               ></BookingCalendar>
               <br />
               {this.state.bookableDesks.length === 0 ? (
-                <>
-                  <br />
-                  <br />
-                  <br />
-                </>
+                <div className="space" style={{ marginBottom: "20%" }} />
               ) : null}
             </>
           ) : null}
