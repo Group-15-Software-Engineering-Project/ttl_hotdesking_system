@@ -9,6 +9,13 @@ import * as RiIcons from "react-icons/ri";
 
 export const SidebarData = [
   {
+    title: "Home",
+    path: "/home",
+    icon: <AiIcons.AiOutlineHome />,
+    cName: "nav-text",
+    adminRequired: false,
+  },
+  {
     title: "Book a Desk",
     path: "/booking-page",
     icon: <BiIcons.BiBookAdd />,
@@ -23,7 +30,7 @@ export const SidebarData = [
     adminRequired: false,
   },
   {
-    title: "Account",
+    title: "My Account",
     path: "/account",
     icon: <CgIcons.CgProfile />,
     cName: "nav-text",
@@ -43,14 +50,14 @@ export const SidebarData = [
     adminRequired: true,
   },
   {
-    title: "Locations",
+    title: "Desks & Locations",
     path: "/locations",
-    icon: <GiIcons.GiDesk />,
+    icon: <BiIcons.BiLocationPlus />,
     cName: "nav-text",
     adminRequired: true,
   },
   {
-    title: "Users",
+    title: "Manage Users",
     path: "/users",
     icon: <AiIcons.AiOutlineUser />,
     cName: "nav-text",

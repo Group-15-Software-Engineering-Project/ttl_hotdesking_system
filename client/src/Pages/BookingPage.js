@@ -302,7 +302,7 @@ export default class BookingPage extends React.Component {
           ) : null}
           {this.state.chosenDesk !== "default" ? (
             <div style={{ alignItems: "center", textAlign: "center" }}>
-              <button className="button-style" onClick={this.submitBooking}>
+              <button className="button-style no-outline" onClick={this.submitBooking}>
                 Confirm Booking
               </button>
               <div style={{ marginBottom: "30px" }} />

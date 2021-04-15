@@ -5,14 +5,36 @@ import { months, _GetUserBookings } from "../Components/Misc";
 
 function PastBookings() {
   const [todayDate, setDate] = useState(null);
+  const [isCancelling, toggleCancelMode] = useState(false);
 
-  useEffect(async () => {
+  useEffect(() => {
     window.scrollTo(0, 0);
     let date = new Date();
     setDate(date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate());
 
     if (!sessionStorage.bookings) _GetUserBookings();
   }, []);
+
+  const getBookingIndex = (booking) => {
+    let data = JSON.parse(sessionStorage.bookings).data;
+    for (let index = 0; index < data.length; index++) {
+      let currentBooking = data[index];
+      if (
+        currentBooking.USER === booking.USER &&
+        currentBooking.DESK === booking.DESK &&
+        currentBooking.DATE === booking.DATE &&
+        currentBooking.ROOM === booking.ROOM &&
+        currentBooking.AM === booking.AM &&
+        currentBooking.PM === booking.PM
+      ) {
+        return index;
+      }
+    }
+    return -1;
+  };
+
+  //bookingToCancel is an exact copy of a booking returned from the backend.
+  const submitCancelBooking = (bookingToCancel) => {};
 
   const displayBooking = (data) => {
     let time =
@@ -81,7 +103,42 @@ function PastBookings() {
           };
     let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
     return (
-      <div className="bookings-table" style={bg}>
+      <button
+        disabled={!isCancelling || isUpcoming > 0}
+        className="bookings-table no-outline"
+        onClick={() => {
+          setTimeout(() => {
+            let displayTime =
+              data.AM && !data.PM
+                ? "9:00 - 13:00"
+                : data.PM && !data.AM
+                ? "13:30 - 17:30"
+                : "9:00 - 17:30";
+            let res = window.confirm(
+              `Are you sure you want to cancel the booking?\n\nLocation: ${data.ROOM}\nDesk: ${data.DESK}\nDate: ${data.DATE}\nTime: ${displayTime}`
+            );
+            if (res) {
+              let currentData = JSON.parse(sessionStorage.bookings).data;
+              let index = getBookingIndex(data);
+              if (index !== -1) {
+                currentData.splice(index, 1);
+                sessionStorage.removeItem("bookings");
+                sessionStorage.setItem(
+                  "bookings",
+                  JSON.stringify({ isNull: false, data: currentData })
+                );
+                submitCancelBooking(data);
+                window.location.reload();
+              }
+            }
+          }, 50);
+        }}
+        style={{
+          backgroundColor: bg.backgroundColor,
+          "--hover-background": isUpcoming > 0 ? "#eee" : isCancelling ? "#ff6655" : "#ddf8ff",
+          "--cursor": isUpcoming < 1 && isCancelling ? "pointer" : "normal",
+        }}
+      >
         <div style={{ width: "100%", marginBottom: "1%" }} />
         {status}
         <span
@@ -123,13 +180,28 @@ function PastBookings() {
           {time}
         </span>
         <div style={{ width: "100%", marginBottom: "1%" }} />
-      </div>
+      </button>
     );
   };
   return (
     <div className="wrapper TCD-BG ">
       <div className="flex-container-1"></div>
       <div className="flex-container-5 main-body">
+        <div className="space" />
+        {sessionStorage.bookings ? (
+          JSON.parse(sessionStorage.bookings).data.length > 0 ? (
+            <button
+              className="button-style no-outline"
+              style={{
+                "--bg-color": isCancelling ? "#4dc300" : "#f32000",
+                "--hover-highlight": isCancelling ? "#5dE300" : "#ff5000",
+              }}
+              onClick={() => toggleCancelMode(!isCancelling)}
+            >
+              {isCancelling ? "Finish" : "Cancel a Booking"}
+            </button>
+          ) : null
+        ) : null}
         <div
           style={{
             display: "flex",
@@ -139,7 +211,7 @@ function PastBookings() {
         >
           <div style={{ width: "100%", marginBottom: "2%" }} />
           {sessionStorage.bookings ? (
-            JSON.parse(sessionStorage.bookings).data ? (
+            JSON.parse(sessionStorage.bookings).data.length > 0 ? (
               <>
                 <div
                   className="bookings-table"
@@ -211,7 +283,18 @@ function PastBookings() {
                 })}
               </>
             ) : (
-              "Booking history not found. If booking history should be present, please wait 10 seconds and re-login if the problem persists."
+              <div
+                style={{
+                  display: "flex",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  paddingLeft: "5%",
+                }}
+              >
+                <h1 style={{ fontSize: "1.5rem", textDecoration: "underline" }}>
+                  You have made no bookings yet.
+                </h1>
+              </div>
             )
           ) : (
             "Booking history not found. If booking history should be present, please wait 10 seconds and re-login if the problem persists."

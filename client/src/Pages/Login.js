@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
 import "../public/css/main.css";
 import { _GetUserBookings } from "../Components/Misc";
-import { Route, Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
 class Login extends Component {
@@ -18,8 +18,6 @@ class Login extends Component {
       admin: false,
     };
   }
-  //const [email, setEmail] = useState("");
-  //const [password, setPassword] = useState("");
 
   submitLogin = () => {
     fetch("/api/login", {
@@ -59,7 +57,13 @@ class Login extends Component {
       <Redirect to="/loading"></Redirect>
     ) : (
       <div>
-        <img id="clip" src={TCDLogo} className="login-logo" style={{ zIndex: "6" }} />
+        <img
+          id="clip"
+          src={TCDLogo}
+          alt="TCD Logo"
+          className="login-logo"
+          style={{ zIndex: "6" }}
+        />
         <div className="block-top">
           <div className="title-text">Trinity Teaching & Learning Desk Booking</div>
         </div>

@@ -30,6 +30,7 @@
   width: 98%;
   margin-left: 2%;
   margin-right: 2%;
+  border-top: none;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -50,6 +51,6 @@
 }
 
 .bookings-table:hover {
-  background-color: #ddf8ff !important;
-  cursor: pointer;
+  background-color: var(--hover-background) !important;
+  cursor: var(--cursor);
 }

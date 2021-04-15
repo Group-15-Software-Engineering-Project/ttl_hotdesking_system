@@ -2,7 +2,7 @@ import React from "react";
 import "../public/css/main.css";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { createUniqueID, months, _GetUserBookings } from "../Components/Misc";
+import { months, _GetUserBookings } from "../Components/Misc";
 
 class Home extends React.Component {
   constructor(props) {
@@ -22,7 +22,10 @@ class Home extends React.Component {
       });
       if (sessionStorage.upcomingBookings)
         this.setState({ bookings: JSON.parse(sessionStorage.upcomingBookings).data });
-      if (!sessionStorage.bookings || this.state.bookings.length === 0) _GetUserBookings(this);
+
+      if (!sessionStorage.upcomingBookings || !sessionStorage.bookings) {
+        _GetUserBookings(this);
+      }
     }
   };
 
@@ -81,7 +84,10 @@ class Home extends React.Component {
 
     return (
       <Link to="/past-bookings" style={{ textDecoration: "none", color: "black" }}>
-        <div className="bookings-table" style={bg}>
+        <div
+          className="bookings-table"
+          style={{ backgroundColor: bg.backgroundColor, "--hover-background": "#ddf8ff" }}
+        >
           <div style={{ width: "100%", marginBottom: "1%" }} />
           {status}
           <span
@@ -134,13 +140,13 @@ class Home extends React.Component {
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
           <div style={{ width: "100%", marginBottom: "3%" }} />
-          <h1 style={{ fontSize: "32px" }}>{`Welcome back, ${
+          <h1 style={{ fontSize: "2rem" }}>{`Welcome back, ${
             sessionStorage.__user_is_admin__ ? "Boss" : sessionStorage.email
           }!`}</h1>
           <div style={{ width: "100%", marginBottom: "3%" }} />
 
           <Link to="/booking-page">
-            <button className="button-style">{"Book a Desk"}</button>
+            <button className="button-style no-outline">{"Book a Desk"}</button>
           </Link>
           <div
             style={{
@@ -226,7 +232,7 @@ class Home extends React.Component {
               })}
             </div>
           ) : (
-            <h1>There are no upcoming bookings.</h1>
+            <h1 style={{ fontSize: "1.5rem" }}>You have no upcoming bookings.</h1>
           )}
           <div style={{ width: "100%", marginBottom: "3%" }} />
           <div style={{ borderTop: "1px #ccc solid" }} />

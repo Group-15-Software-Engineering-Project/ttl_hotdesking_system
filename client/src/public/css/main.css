@@ -88,7 +88,7 @@
   padding: 0px;
   width: 40%;
   min-width: 200px;
-  height: 5vh;
+  height: 35px;
   border-radius: 8px;
   background-color: #fafafa;
   border: 1px #bbb solid;
@@ -100,7 +100,7 @@
 .button-style {
   border: none;
   border-radius: 100px;
-  background-color: #008dd3;
+  background-color: var(--bg-color, #008dd3);
   color: white;
   min-width: 180px;
   height: 40px;
@@ -111,8 +111,11 @@
   padding-left: 12px;
   padding-right: 12px;
 }
+.no-outline {
+  outline: none;
+}
 .button-style:hover {
-  background-color: #00c5ff;
+  background-color: var(--hover-highlight, #00c5ff);
 }
 
 .button-style-warning {
@@ -199,4 +202,5 @@
 
 .booking-history {
   font-size: clamp(0.5rem, 2vw, 1rem);
+  color: black;
 }

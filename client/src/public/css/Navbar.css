@@ -39,23 +39,29 @@
 .nav-button {
   position: absolute;
   top: 30px;
-  right: 30px;
+  right: 20px;
   color: white;
   border: none;
   background-color: #008dd3;
-  font-size: 20px;
+  font-size: 1rem;
   font-family: Arial;
   font-weight: bold;
   cursor: pointer;
+  margin-top: -10px;
+  border: 2px white solid;
+  border-radius: 25px;
+  padding: 5px;
 }
+
 .nav-button:hover {
-  text-decoration: underline !important;
+  color: #333;
+  border: 2px #333 solid;
 }
 
 .nav-menu {
   background-color: #008dd3;
   width: 250px;
-  height: 100vh;
+  height: 150vh;
   display: flex;
   justify-content: center;
   position: fixed;
@@ -99,6 +105,9 @@
 .nav-menu-items {
   width: 100%;
 }
+.nav-menu-items span {
+  margin-left: 16px;
+}
 
 .navbar-toggle {
   background-color: #008dd3;
@@ -107,8 +116,4 @@
   display: flex;
   justify-content: start;
   align-items: center;
-}
-
-span {
-  margin-left: 16px;
 }

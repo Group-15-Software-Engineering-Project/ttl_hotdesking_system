@@ -121,7 +121,10 @@ class Account extends Component {
                 onChange={this.handleEvent}
               />
               <div className="space" style={{ marginBottom: "5%", marginTop: "5%" }} />
-              <button className="button-style" onClick={() => this.submitChangePassword()}>
+              <button
+                className="button-style no-outline"
+                onClick={() => this.submitChangePassword()}
+              >
                 Change Password
               </button>
             </div>
@@ -141,30 +144,62 @@ class Account extends Component {
                 placeholder="User name"
               />
               <div className="space" style={{ marginBottom: "5%", marginTop: "5%" }} />
-              <button className="button-style" onClick={() => this.submitUserName()}>
+              <button
+                className="button-style no-outline"
+                onClick={() => this.submitUserName()}
+              >
                 Set User Name
               </button>
             </div>
           </div>
-          <h1
-            className="page-divider-header"
-            style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}
+          <div
+            style={{
+              display: "flex",
+              flexFlow: "column wrap",
+              textAlign: "center",
+            }}
           >
-            Delete Account
-          </h1>
-          <div className="space" />
-          <h3 style={{ color: "red" }}>Warning!</h3>
-          <span style={{ color: "red" }}>
-            This action is irreversible and will result in the loss of all booking history.
-          </span>
-          <div className="space" style={{ marginBottom: "0" }} />
-          <span style={{ color: "red" }}>
-            Proceeding will remove all information tied to this account.
-          </span>
-          <div className="space" style={{ marginBottom: "0" }} />
-          <span style={{ color: "red" }}>
-            This account will lose all access to this service unless added again by an admin.
-          </span>
+            <h1
+              className="page-divider-header"
+              style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}
+            >
+              Delete Account
+            </h1>
+            <div className="space" />
+            <h3 style={{ color: "red" }}>Warning!</h3>
+            <span
+              style={{
+                color: "red",
+                fontSize: "0.9rem",
+                marginLeft: "2px",
+                marginRight: "2px",
+              }}
+            >
+              This action is irreversible and will result in the loss of all booking history.
+            </span>
+            <div className="space" style={{ marginBottom: "0" }} />
+            <span
+              style={{
+                color: "red",
+                marginLeft: "2px",
+                marginRight: "2px",
+                fontSize: "0.9rem",
+              }}
+            >
+              Proceeding will remove all information tied to this account.
+            </span>
+            <div className="space" style={{ marginBottom: "0" }} />
+            <span
+              style={{
+                color: "red",
+                marginLeft: "2px",
+                marginRight: "2px",
+                fontSize: "0.9rem",
+              }}
+            >
+              This account will lose all access to this service unless added again by an admin.
+            </span>
+          </div>
           <div className="space" style={{ marginBottom: "0" }} />
 
           <input
@@ -185,7 +220,7 @@ class Account extends Component {
           />
           <div className="space" style={{ marginBottom: "1%" }} />
           <label for="deleteAccountConfirm" style={{ marginRight: "1%" }}>
-            Delete my account{" "}
+            I know what I'm doing{" "}
           </label>
           <input
             type="checkbox"
@@ -193,10 +228,13 @@ class Account extends Component {
             onChange={(e) => this.setState({ deleteAccountConfirm: e.target.checked })}
           ></input>
           <div className="space" />
-          <button className="button-style-warning" onClick={() => this.submitDeleteAccount()}>
-            Delete Account
+          <button
+            className="button-style-warning no-outline"
+            onClick={() => this.submitDeleteAccount()}
+          >
+            Delete my Account
           </button>
-          <div className="space" />
+          <div className="space" style={{ marginBottom: "20%" }} />
         </div>
         <div className="flex-container-1" />
       </div>

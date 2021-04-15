@@ -50,7 +50,6 @@ export const _GetUserBookings = async (ref) => {
       sessionStorage.setItem("bookings", JSON.stringify({ isNull: false, data: data }));
       sessionStorage.setItem("upcomingBookings", JSON.stringify({ data: upB }));
       if (ref) {
-        console.log(ref);
         ref.setState({ bookings: upB });
       }
     });

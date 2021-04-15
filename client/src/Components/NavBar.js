@@ -5,9 +5,10 @@ import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 import "../public/css/Navbar.css";
 import { IconContext } from "react-icons";
+import * as BiIcons from "react-icons/bi";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
-function Navbar(props) {
+function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
   const location = useLocation();
@@ -19,7 +20,7 @@ function Navbar(props) {
         <div className="navbar">
           <Link to="/login">
             <button
-              className="nav-button"
+              className="nav-button no-outline"
               onClick={() => {
                 sessionStorage.clear();
               }}
@@ -32,7 +33,7 @@ function Navbar(props) {
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
           <Link to="/home">
-            <img src={TCDLogo} className="nav-logo"></img>
+            <img src={TCDLogo} alt="TCD logo" className="nav-logo"></img>
           </Link>
         </div>
         <nav
@@ -54,12 +55,20 @@ function Navbar(props) {
                   <li key={index} className={item.cName}>
                     <Link to={item.path}>
                       {item.icon}
-                      <span>{item.title}</span>
+                      <span className="nav-menu-items">{item.title}</span>
                     </Link>
                   </li>
                 );
+              } else {
+                return null;
               }
             })}
+            <li className="nav-text">
+              <a target="_blank" href="https://www.tcd.ie/teaching-learning/hotdesk/info.php">
+                <BiIcons.BiGlobe />
+                <span className="nav-menu-items">TT&L Website</span>
+              </a>
+            </li>
           </ul>
         </nav>
       </IconContext.Provider>

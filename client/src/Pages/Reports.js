@@ -298,7 +298,7 @@ class Reports extends Component {
               </div>
             </div>
             <div className="space" />
-            <button className="button-style" onClick={() => this.getData()}>
+            <button className="button-style no-outline" onClick={() => this.getData()}>
               Run Report
             </button>
           </section>

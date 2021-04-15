@@ -4,8 +4,6 @@ import Navbar from "./Components/NavBar";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Pages/Home";
 import Reports from "./Pages/Reports";
-import Messages from "./Pages/Messages";
-import ChooseDesk from "./Pages/ChooseDesk";
 import Login from "./Pages/Login";
 import BookingPage from "./Pages/BookingPage";
 import Locations from "./Pages/Locations";
@@ -21,15 +19,15 @@ class App extends Component {
     isLoggedIn: false,
   };
 
-  // componentDidMount = () => {
-  //   if (sessionStorage.getItem("email"))
-  //     this.setState({ email: sessionStorage.getItem("email") });
-  // };
+  zoomOutMobile = () => {
+    const viewport = document.querySelector('meta[name="viewport"]');
 
-  // componentDidUpdate = () => {
-  //   if (this.state.email.length === 0 && sessionStorage.getItem("email"))
-  //     this.setState({ email: sessionStorage.getItem("email") });
-  // };
+    if (viewport) {
+      viewport.content = "initial-scale=1";
+      viewport.content = "width=device-width";
+    }
+  };
+
   render() {
     return (
       <div key={sessionStorage.getItem("email")}>
@@ -74,11 +72,10 @@ class App extends Component {
             <Route path="/past-bookings">
               <PastBookings email={sessionStorage.email} />
             </Route>
-            <Route path="/messages" component={Messages} />
-            <Route path="/chooseDesk" component={ChooseDesk} />
             {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
           </Switch>
         </Router>
+        {this.zoomOutMobile()}
       </div>
     );
   }

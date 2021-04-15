@@ -24,9 +24,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
-  var sha256 = require('js-sha256');
+  var sha256 = require("js-sha256");
   console.log(sha256(req.body.email));
- 
+
   login(req.body.email, req.body.password)
     .then((result) => {
       adminCheck(req.body.email)
@@ -259,7 +259,7 @@ app.post("/api/getReports", (req, res) => {
         desks = array[0];
         deskBookings = array[1];
         activeDays = getMostActiveDay(data);
-        res.send({ labels, amountOfBookings, desks, deskBookings,activeDays });
+        res.send({ labels, amountOfBookings, desks, deskBookings, activeDays });
       });
     })
     .catch((err) => {
@@ -353,11 +353,7 @@ app.post("/api/makeBooking", (req, res) => {
 
 app.post("/api/getBookingsInMonth", (req, res) => {
   let newDate = new Date(req.body.date + "-01");
-  let daysInMonth = new Date(
-    newDate.getFullYear(),
-    newDate.getMonth() + 1,
-    0
-  ).getDate();
+  let daysInMonth = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 0).getDate();
   let existingBookings = new Array(daysInMonth);
   getDesks(req.body.room)
     .then((desks) => {
@@ -370,41 +366,36 @@ app.post("/api/getBookingsInMonth", (req, res) => {
           date += "-" + (i + 1).toString();
         }
 
-        getExistingBookings(req.body.room, date, req.body.am, req.body.pm).then(
-          (bookings) => {
-            let data = [];
-            for (j = 0; j < bookings.length; j++) {
-              if (
-                j < bookings.length - 1 &&
-                bookings[j + 1].DESK === bookings[j].DESK
-              ) {
-                data.push({
-                  user:
-                    bookings[j].USER === bookings[j + 1].USER
-                      ? bookings[j].USER
-                      : bookings[j].USER + "|" + bookings[j + 1].USER,
-                  desk: bookings[j].DESK,
-                });
-                j++;
-              } else {
-                data.push({
-                  user: bookings[j].USER,
-                  desk: bookings[j].DESK,
-                });
-              }
-            }
-            existingBookings[k] = data;
-            if (k == daysInMonth - 1) {
-              console.log("desks: ", desks);
-              console.log("existingBookings: ", existingBookings);
-              res.send({
-                error: false,
-                existingBookings: existingBookings,
-                desks: desks,
+        getExistingBookings(req.body.room, date, req.body.am, req.body.pm).then((bookings) => {
+          let data = [];
+          for (j = 0; j < bookings.length; j++) {
+            if (j < bookings.length - 1 && bookings[j + 1].DESK === bookings[j].DESK) {
+              data.push({
+                user:
+                  bookings[j].USER === bookings[j + 1].USER
+                    ? bookings[j].USER
+                    : bookings[j].USER + "|" + bookings[j + 1].USER,
+                desk: bookings[j].DESK,
+              });
+              j++;
+            } else {
+              data.push({
+                user: bookings[j].USER,
+                desk: bookings[j].DESK,
               });
             }
           }
-        );
+          existingBookings[k] = data;
+          if (k == daysInMonth - 1) {
+            console.log("desks: ", desks);
+            console.log("existingBookings: ", existingBookings);
+            res.send({
+              error: false,
+              existingBookings: existingBookings,
+              desks: desks,
+            });
+          }
+        });
       }
     })
     .catch((err) => {
@@ -419,11 +410,7 @@ app.post("/api/getBookingsInMonth", (req, res) => {
 
 app.post("/api/getAvailableDesksInMonth", (req, res) => {
   let newDate = new Date(req.body.date + "-01");
-  let daysInMonth = new Date(
-    newDate.getFullYear(),
-    newDate.getMonth() + 1,
-    0
-  ).getDate();
+  let daysInMonth = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 0).getDate();
   let availability = new Array(daysInMonth);
   let existingBookings = new Array(daysInMonth);
   for (let i = 0; i < daysInMonth; i++) {
@@ -435,26 +422,24 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
     }
     getExistingBookings(req.body.room, date, req.body.am, req.body.pm)
       .then((bookings) => {
-        getAvailableDesks(req.body.room, date, req.body.am, req.body.pm).then(
-          (desks) => {
-            data = [];
-            users = [];
-            for (desk in desks) {
-              data.push(desks[desk].DESK_NO);
-            }
-            for (email in bookings) {
-              users.push(bookings[email].USER);
-            }
-            availability[i] = data;
-            existingBookings[i] = users;
-            if (i == daysInMonth - 1) {
-              res.send({
-                data: availability,
-                existingBookings: existingBookings,
-              });
-            }
+        getAvailableDesks(req.body.room, date, req.body.am, req.body.pm).then((desks) => {
+          data = [];
+          users = [];
+          for (desk in desks) {
+            data.push(desks[desk].DESK_NO);
           }
-        );
+          for (email in bookings) {
+            users.push(bookings[email].USER);
+          }
+          availability[i] = data;
+          existingBookings[i] = users;
+          if (i == daysInMonth - 1) {
+            res.send({
+              data: availability,
+              existingBookings: existingBookings,
+            });
+          }
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -465,8 +450,8 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 
 //Database Access
 function addUser(email, password) {
-  var sha256 = require('js-sha256');
-  var hashedPassword=sha256(password);
+  var sha256 = require("js-sha256");
+  var hashedPassword = sha256(password);
   return new Promise((resolve, reject) => {
     sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + hashedPassword + '");';
     console.log(sql);
@@ -509,15 +494,11 @@ function addDesk(desk_number, room) {
 }
 
 function login(email, password) {
-  var sha256 = require('js-sha256');
-  var hashedPassword=sha256(password);
+  var sha256 = require("js-sha256");
+  var hashedPassword = sha256(password);
   return new Promise((resolve, reject) => {
     sql =
-      "SELECT * FROM USERS WHERE email='" +
-      email +
-      "' AND password='" +
-      hashedPassword +
-      "';";
+      "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + hashedPassword + "';";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -543,8 +524,7 @@ function adminCheck(email) {
 
 function getPastBookings(email) {
   return new Promise((resolve, reject) => {
-    sql =
-      "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+    sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
 
     con.query(sql, (err, res) => {
       if (err) {
@@ -658,7 +638,6 @@ function getReportsByDesk(time, room) {
     });
   });
 }
-
 
 function addBooking(user, desk, room, date, am, pm) {
   let time;
@@ -816,12 +795,7 @@ function getUserBookingsBetween(user, start, end) {
   return new Promise((resolve, reject) => {
     startDay = start.toISOString().slice(0, 10);
     endDay = end.toISOString().slice(0, 10);
-    sql =
-      'SELECT * FROM BOOKINGS WHERE DATE>"' +
-      startDay +
-      '" AND DATE<"' +
-      endDay +
-      '";';
+    sql = 'SELECT * FROM BOOKINGS WHERE DATE>"' + startDay + '" AND DATE<"' + endDay + '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(res));
@@ -833,8 +807,7 @@ function getUserBookingsBetween(user, start, end) {
 }
 
 function removeUserFromGroup(email, group) {
-  sql =
-    "DELETE FROM GROUPS WHERE NAME='" + group + "' AND USER='" + email + "';";
+  sql = "DELETE FROM GROUPS WHERE NAME='" + group + "' AND USER='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {

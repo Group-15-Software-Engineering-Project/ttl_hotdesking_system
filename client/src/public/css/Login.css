@@ -91,17 +91,17 @@
   padding: 0px;
   width: 30%;
   min-width: 200px;
-  height: 6vh;
+  height: 35px;
   border-radius: 3px;
   border: 1px #bbb solid;
   margin-top: 3px;
   margin-bottom: 3px;
   padding: 10px;
-  font-size: 2vh;
+  font-size: 1rem;
 }
 
 .login-button {
-  font-size: 4vh;
+  font-size: 1rem;
   margin: 0px;
   padding: 0px;
   background-color: #008dd3;
@@ -109,7 +109,7 @@
   border-radius: 3px;
   min-width: 200px;
   width: 30%;
-  height: 6vh;
+  height: 35px;
   margin-top: 10px;
   border: none;
   font-size: 20px;
@@ -119,4 +119,5 @@
 .login-button:hover {
   background-color: #00bff9;
   box-shadow: none;
+  transform: none;
 }

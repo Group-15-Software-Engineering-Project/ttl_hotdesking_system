@@ -12,14 +12,17 @@ class Users extends Component {
     removeFromTeam: "",
     removeUserFromTeam: "",
     users: [],
+    teams: [],
   };
 
   componentDidMount() {
     this.getUsers();
+    this.getTeams();
     window.scrollTo(0, 0);
   }
 
   submitAddUserToTeam = () => {
+    if (this.state.addTeamName.length === 0 || this.state.addTeamUserName.length === 0) return;
     fetch("/api/addUserToTeam", {
       method: "POST",
       headers: {
@@ -36,6 +39,7 @@ class Users extends Component {
           alert("Failed to add user to team");
         } else {
           alert("Success");
+          window.location.reload();
         }
       })
       .catch((err) => {
@@ -44,6 +48,8 @@ class Users extends Component {
   };
 
   submitRemoveUserFromTeam = () => {
+    if (this.state.removeFromTeam.length === 0 || this.state.removeUserFromTeam.length === 0)
+      return;
     fetch("/api/removeUserFromTeam", {
       method: "POST",
       headers: {
@@ -60,6 +66,7 @@ class Users extends Component {
           alert("error removing user from team");
         } else {
           alert("Success");
+          window.location.reload();
         }
       })
       .catch((err) => {
@@ -68,6 +75,7 @@ class Users extends Component {
   };
 
   submitRemoveUser = (email) => {
+    if (email.length === 0) return;
     fetch("/api/removeUser", {
       method: "POST",
       headers: {
@@ -85,7 +93,8 @@ class Users extends Component {
           alert(res.message);
         } else {
           alert("Success");
-          this.getUsers();
+          window.location.reload();
+          //this.getUsers();
         }
       })
       .catch((err) => {
@@ -94,6 +103,7 @@ class Users extends Component {
   };
 
   submitAddUser = (email, password) => {
+    if (email.length === 0 || password.length === 0) return;
     console.log(email, password);
     fetch("/api/addUser", {
       method: "POST",
@@ -111,7 +121,8 @@ class Users extends Component {
       .then((res) => {
         if (res.error === false) {
           alert("Success!");
-          this.getUsers();
+          window.location.reload();
+          //this.getUsers();
         } else {
           alert("Could not add user.");
           alert(res.message);
@@ -122,6 +133,28 @@ class Users extends Component {
       });
   };
 
+  getTeams = () => {
+    fetch("/api/getTeams", {
+      method: "Post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: "",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          alert("Could not get Users");
+        } else {
+          this.setState({ teams: res.teams });
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
   getUsers = () => {
     fetch("/api/getUsers", {
       method: "Post",
@@ -193,7 +226,7 @@ class Users extends Component {
               ></input>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
-                className="button-style"
+                className="button-style no-outline"
                 onClick={() => {
                   this.submitAddUser(this.state.addEmail, this.state.addPassword);
                 }}
@@ -229,7 +262,7 @@ class Users extends Component {
               ></input>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
-                className="button-style"
+                className="button-style no-outline"
                 onClick={() => {
                   this.submitAddUserToTeam();
                 }}
@@ -255,7 +288,7 @@ class Users extends Component {
               ></input>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
-                className="button-style"
+                className="button-style no-outline"
                 onClick={() => {
                   this.submitRemoveUser(this.state.deleteEmail);
                 }}
@@ -288,7 +321,7 @@ class Users extends Component {
               ></input>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
-                className="button-style"
+                className="button-style no-outline"
                 onClick={() => {
                   this.submitRemoveUserFromTeam();
                 }}
@@ -319,6 +352,32 @@ class Users extends Component {
                   }}
                 >
                   {user}
+                </span>
+              ))}
+            </div>
+            <div className="space" />
+            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+              Teams
+            </h1>
+            <div className="space" />
+            <div
+              style={{
+                display: "flex",
+                flexFlow: "row wrap",
+                alignItems: "left",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              {this.state.teams.map((team) => (
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    width: "30%",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {team}
                 </span>
               ))}
             </div>

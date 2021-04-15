@@ -63,6 +63,7 @@ class Locations extends Component {
   };
 
   submitAddRoom = (room) => {
+    if (room.length < 1) return;
     this.setState({ key: createUniqueID() });
     fetch("/api/addRoom", {
       method: "POST",
@@ -89,6 +90,7 @@ class Locations extends Component {
   };
 
   submitAddDesk = (desk, room) => {
+    if (desk.length < 1 || room.length < 1) return;
     this.setState({ key: createUniqueID() });
     fetch("/api/addDesk", {
       method: "POST",
@@ -117,6 +119,7 @@ class Locations extends Component {
   };
 
   submitRemoveDesk = (desk, room) => {
+    if (desk.length < 1 || room.length < 1) return;
     this.setState({ key: createUniqueID() });
     fetch("/api/removeDesk", {
       method: "POST",
@@ -141,6 +144,7 @@ class Locations extends Component {
   };
 
   submitRemoveRoom = (room) => {
+    if (room.length < 1) return;
     this.setState({ key: createUniqueID() });
     fetch("/api/removeRoom", {
       method: "POST",
@@ -270,7 +274,7 @@ class Locations extends Component {
                 ></input>
                 <div style={{ width: "100%", marginTop: "5%", marginBottom: "5%" }} />
                 <button
-                  className="button-style"
+                  className="button-style no-outline"
                   onClick={(e) => this.submitAddRoom(this.state.addRoom)}
                 >
                   Add Location
@@ -323,7 +327,7 @@ class Locations extends Component {
                   }}
                 />
                 <button
-                  className="button-style"
+                  className="button-style no-outline"
                   onClick={() =>
                     this.submitAddDesk(this.state.addDeskNum, this.state.addDeskRoom)
                   }
@@ -366,7 +370,7 @@ class Locations extends Component {
                   }}
                 />
                 <button
-                  className="button-style"
+                  className="button-style no-outline"
                   onClick={(e) => this.submitRemoveRoom(this.state.deleteRoom)}
                 >
                   Remove Location
@@ -436,7 +440,7 @@ class Locations extends Component {
                   }}
                 />
                 <button
-                  className="button-style"
+                  className="button-style no-outline"
                   onClick={(e) =>
                     this.submitRemoveDesk(this.state.deleteDeskNum, this.state.deleteDeskRoom)
                   }
