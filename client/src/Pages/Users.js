@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { Redirect } from "react-router-dom";
 
 import "../public/css/main.css";
@@ -12,13 +12,15 @@ class Users extends Component {
     addTeamUserName: "",
     removeFromTeam: "",
     removeUserFromTeam: "",
+    usersInTeam: [],
     users: [],
-    teams: [],
     teamList: [],
   };
 
+  positionReference = createRef();
+
   componentDidMount() {
-    this.getUsers();
+    //this.getUsers();
     this.getTeams();
     window.scrollTo(0, 0);
   }
@@ -172,12 +174,44 @@ class Users extends Component {
         if (res.error) {
           alert("Could not get Users");
         } else {
-          this.setState({ users: res.users });
+          this.setState({ users: res.users }, () =>
+            this.positionReference.current.scrollIntoView({ behavior: "smooth" })
+          );
         }
       })
       .catch((err) => {
         alert(err);
       });
+  };
+
+  submitGetUsersInTeam = (team, label) => {
+    if (team === -1) return;
+    else if (team.length === 0) this.getUsers();
+    else {
+      fetch("/api/getUsersInTeam", {
+        method: "Post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ team: team }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          if (res.error) {
+            alert("Could not get Users");
+          } else {
+            this.setState({ [label]: res.users }, () => {
+              if (label === "users")
+                this.positionReference.current.scrollIntoView({ behavior: "smooth" });
+            });
+          }
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    }
   };
 
   checkForm(e) {
@@ -260,6 +294,7 @@ class Users extends Component {
               ></input>
               <div className="space" style={{ marginBottom: "1%" }} />
               <input
+                key={"addUserToTeam"}
                 className="text-input"
                 placeholder="User email"
                 type="email"
@@ -290,7 +325,10 @@ class Users extends Component {
               <input
                 className="text-input"
                 placeholder="Email"
-                onChange={this.deleteEmailF}
+                type="email"
+                name="deleteEmail"
+                autoComplete="none"
+                onChange={this.handleEvent}
               ></input>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
@@ -310,21 +348,43 @@ class Users extends Component {
                 Remove Users from Teams
               </h1>
               <div className="space" style={{ marginBottom: "10%", marginTop: "5%" }} />
-              <input
+              {/* <input
                 className="text-input"
                 placeholder="User team"
                 type="text"
                 name="removeFromTeam"
                 onChange={this.handleEvent}
-              ></input>
+              ></input> */}
+              <select
+                className="text-input"
+                style={{ padding: "0" }}
+                name="removeFromTeam"
+                onChange={(e) => this.submitGetUsersInTeam(e.target.value, "usersInTeam")}
+              >
+                <option value={-1}>Select Team</option>
+                {this.state.teamList.map((x) => (
+                  <option value={x}>{x}</option>
+                ))}
+              </select>
               <div className="space" style={{ marginBottom: "1%" }} />
-              <input
+              {/* <input
                 className="text-input"
                 placeholder="User email"
                 type="email"
                 name="removeUserFromTeam"
                 onChange={this.handleEvent}
-              ></input>
+              ></input> */}
+              <select
+                className="text-input"
+                style={{ padding: "0" }}
+                name="removeUserFromTeam"
+                onChange={this.handleEvent}
+              >
+                <option value={-1}>Select user</option>
+                {this.state.usersInTeam.map((x) => (
+                  <option value={x}>{x}</option>
+                ))}
+              </select>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <button
                 className="button-style no-outline"
@@ -339,21 +399,7 @@ class Users extends Component {
             <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
               Registered Users
             </h1>
-            <div className="space" style={{ marginBottom: "2%", marginTop: "2%"}} />
-            <select
-                  className="text-input"
-                  style={{ padding: "0" , marginLeft:"32%"}}
-                  name="addteam"
-                  onChange={this.handleEvent}
-                >
-                  <option value="">Select team</option>
-                  {this.state.teamList
-                    ? this.state.teamList.map((x) => {
-                        return <option value={x}>{x}</option>;
-                      })
-                    : null}
-                </select>
-            <div className="space" />
+            <div className="space" style={{ marginBottom: "2%", marginTop: "2%" }} />
             <div
               style={{
                 display: "flex",
@@ -363,6 +409,21 @@ class Users extends Component {
                 justifyContent: "center",
               }}
             >
+              <select
+                className="text-input"
+                style={{ padding: "0", width: "25%" }}
+                name="usersInTeam"
+                onChange={(e) => this.submitGetUsersInTeam(e.target.value, "users")}
+              >
+                <option value={-1}>Select team</option>
+                <option value="">All teams</option>
+                {this.state.teamList
+                  ? this.state.teamList.map((x) => {
+                      return <option value={x}>{x}</option>;
+                    })
+                  : null}
+              </select>
+              <div className="space" />
               {this.state.users.map((user) => (
                 <span
                   key={user}
@@ -376,33 +437,7 @@ class Users extends Component {
                 </span>
               ))}
             </div>
-            <div className="space" />
-            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
-              Teams
-            </h1>
-            <div className="space" />
-            <div
-              style={{
-                display: "flex",
-                flexFlow: "row wrap",
-                alignItems: "left",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
-              {this.state.teamList.map((team) => (
-                <span
-                  key={team}
-                  style={{
-                    fontWeight: "bold",
-                    width: "30%",
-                    marginBottom: "12px",
-                  }}
-                >
-                  {team}
-                </span>
-              ))}
-            </div>
+            <div ref={this.positionReference} />
             <div className="space" />
           </div>
         </div>

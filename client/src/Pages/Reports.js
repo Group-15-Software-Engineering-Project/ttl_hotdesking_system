@@ -18,7 +18,7 @@ class Reports extends Component {
       graphsVisible: false,
       chosenTeam: "",
       roomlist: [],
-      teamlist: ["All", "team1", "team2", "team3"],
+      teamlist: [],
       barData: {
         labels: [
           "User1",
@@ -125,6 +125,27 @@ class Reports extends Component {
       })
       .catch((err) => {
         console.log(err);
+      });
+
+    fetch("/api/getTeams", {
+      method: "Post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: "",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          alert("Could not get Users");
+        } else {
+          this.setState({ teamlist: res.teams });
+        }
+      })
+      .catch((err) => {
+        alert(err);
       });
   };
 
@@ -291,6 +312,7 @@ class Reports extends Component {
                   onChange={this.handleEvent}
                 >
                   <option value="">Select team</option>
+                  <option value="overall">All teams</option>
                   {this.state.teamlist.map((x) => {
                     return <option value={x}>{x}</option>;
                   })}
@@ -345,21 +367,22 @@ class Reports extends Component {
                 }}
               />
               <div className="space" style={{ marginBottom: "5%" }} />
-
-              <Pie
-                data={this.state.pieData}
-                options={{
-                  title: {
-                    display: this.props.displayTitle,
-                    text: "Most used desk",
-                    fontSize: 25,
-                  },
-                  legend: {
-                    display: this.props.displayLegend,
-                    position: this.props.legendPosition,
-                  },
-                }}
-              />
+              {this.state.chosenLocation !== "overall" ? (
+                <Pie
+                  data={this.state.pieData}
+                  options={{
+                    title: {
+                      display: this.props.displayTitle,
+                      text: "Most used desk",
+                      fontSize: 25,
+                    },
+                    legend: {
+                      display: this.props.displayLegend,
+                      position: this.props.legendPosition,
+                    },
+                  }}
+                />
+              ) : null}
             </div>
           ) : null}
         </div>
