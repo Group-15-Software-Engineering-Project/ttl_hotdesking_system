@@ -144,6 +144,21 @@ app.post("/api/getTeams", (req, res) => {
     });
 });
 
+app.post("/api/getUsersInTeam", (req, res) => {
+  let users = [];
+  getUsersInTeam(req.body.team)
+    .then((result) => {
+      for (x in result) {
+        users.push(result[x]);
+      }
+      res.send({ error: false, users: users });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ error: true, users: [] });
+    });
+});
+
 app.post("/api/getUsers", (req, res) => {
   getUsers()
     .then((result) => {
@@ -811,6 +826,22 @@ function getRooms() {
         let results = [];
         for (var i in res) {
           results.push(res[i].NAME);
+        }
+        resolve(results);
+      }
+    });
+  });
+}
+function getUsersInTeam(team){
+  return new Promise((resolve, reject) => {
+    sql = "select USER FROM GROUPS WHERE NAME ='"+team+"';";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        let results = [];
+        for (var i in res) {
+          results.push(res[i].USER);
         }
         resolve(results);
       }

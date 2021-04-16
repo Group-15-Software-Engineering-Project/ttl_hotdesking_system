@@ -73,14 +73,6 @@ export default class BookingPage extends React.Component {
         return res.json();
       })
       .then((res) => {
-        console.log(
-          this.props.email,
-          this.state.chosenDesk.split(" ")[1],
-          this.state.chosenArea,
-          this.convertDate(),
-          am,
-          pm
-        );
         ConfirmationEmail(
           this.props.email,
           this.state.chosenDesk.split(" ")[1],
@@ -103,7 +95,7 @@ export default class BookingPage extends React.Component {
         sessionStorage.removeItem("upcomingBookings");
         _GetUserBookings();
       })
-      .catch((err) => alert(console.log(err)));
+      .catch((err) => console.log(err));
   };
 
   positionReference = createRef();
@@ -170,7 +162,6 @@ export default class BookingPage extends React.Component {
         disabled: disabled,
       });
     }
-    console.log("data:", data);
     return data;
   };
 

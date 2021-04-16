@@ -64,7 +64,11 @@ function Navbar() {
               }
             })}
             <li className="nav-text">
-              <a target="_blank" href="https://www.tcd.ie/teaching-learning/hotdesk/info.php">
+              <a
+                target="_blank"
+                href="https://www.tcd.ie/teaching-learning/hotdesk/info.php"
+                rel="noreferrer"
+              >
                 <BiIcons.BiGlobe />
                 <span className="nav-menu-items">TT&L Website</span>
               </a>
