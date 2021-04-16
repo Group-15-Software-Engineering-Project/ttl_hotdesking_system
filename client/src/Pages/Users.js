@@ -5,6 +5,7 @@ import "../public/css/main.css";
 class Users extends Component {
   state = {
     addEmail: "",
+    addteam: "",
     addPassword: "",
     deleteEmail: "",
     addTeamName: "",
@@ -13,6 +14,7 @@ class Users extends Component {
     removeUserFromTeam: "",
     users: [],
     teams: [],
+    teamList: [],
   };
 
   componentDidMount() {
@@ -148,7 +150,7 @@ class Users extends Component {
         if (res.error) {
           alert("Could not get Users");
         } else {
-          this.setState({ teams: res.teams });
+          this.setState({ teamList: res.teams });
         }
       })
       .catch((err) => {
@@ -194,6 +196,10 @@ class Users extends Component {
 
   deleteEmailF = (event) => {
     this.setState({ deleteEmail: event.target.value });
+  };
+
+  addteamF = (event) => {
+    this.setState({ addteam: event.target.value });
   };
 
   render() {
@@ -333,6 +339,20 @@ class Users extends Component {
             <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
               Registered Users
             </h1>
+            <div className="space" style={{ marginBottom: "2%", marginTop: "2%"}} />
+            <select
+                  className="text-input"
+                  style={{ padding: "0" , marginLeft:"32%"}}
+                  name="addteam"
+                  onChange={this.handleEvent}
+                >
+                  <option value="">Select team</option>
+                  {this.state.teamList
+                    ? this.state.teamList.map((x) => {
+                        return <option value={x}>{x}</option>;
+                      })
+                    : null}
+                </select>
             <div className="space" />
             <div
               style={{
@@ -370,7 +390,7 @@ class Users extends Component {
                 justifyContent: "center",
               }}
             >
-              {this.state.teams.map((team) => (
+              {this.state.teamList.map((team) => (
                 <span
                   key={team}
                   style={{
