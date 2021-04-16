@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const mysql = require("mysql");
 require("dotenv").config();
-
+  
+const sha256 = require("js-sha256");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -24,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
-  var sha256 = require("js-sha256");
+  console.log(req.body.email, req.body.password);
   console.log(sha256(req.body.email));
 
   login(req.body.email, req.body.password)
@@ -82,6 +83,32 @@ app.post("/api/getLocationData", (req, res) => {
     .catch((err) => {
       res.send({ error: true, data: [] });
     });
+});
+
+app.post("/api/getUserName", (req, res) =>  {
+  getUserName(req.body.email)
+  .then((result) => {
+    console.log(result);
+    if (result.length===0) {
+      res.send({error:true, username:req.body.email});
+    } else {
+      console.log(result);
+      res.send({error:false, username:result.username});
+    }
+  })
+  .catch((err) => {
+    res.send({error:true, username:req.body.email});
+  });
+});
+
+app.post("/api/setUserName", (req, res) => {
+  setUserName(req.body.email, req.body.username)
+  .then(() => {
+    res.send({error:false});
+  })
+  .catch((err) => {
+    res.send({error:true});
+  });
 });
 
 app.post("/api/getRooms", (req, res) => {
@@ -512,11 +539,9 @@ function addDesk(desk_number, room) {
 }
 
 function login(email, password) {
-  var sha256 = require("js-sha256");
   var hashedPassword = sha256(password);
+  sql = "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + hashedPassword + "';"; 
   return new Promise((resolve, reject) => {
-    sql =
-      "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + hashedPassword + "';";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -540,10 +565,23 @@ function adminCheck(email) {
   });
 }
 
-function getPastBookings(email) {
+function setUserName(email, username) {
+  sql = "UPDATE USERS SET username='"+username+"' WHERE email='"+email+"';";
+  console.log(sql);
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
 
+function getPastBookings(email) {
+  sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+  return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -717,7 +755,7 @@ function getAvailableDesks(room, date, am, pm) {
 
 function getUsers() {
   return new Promise((resolve, reject) => {
-    sql = "SELECT * FROM USERS;";
+    sql = "SELECT email FROM USERS;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -749,9 +787,23 @@ async function getDesks(room) {
   });
 }
 
+function getUserName(email) {
+  sql = "SELECT username FROM USERS WHERE email='"+email+"';";
+  console.log(sql);
+  return new  Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
 function getRooms() {
+  sql = "SELECT DISTINCT * FROM ROOMS;";
   return new Promise((resolve, reject) => {
-    sql = "SELECT DISTINCT * FROM ROOMS;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));

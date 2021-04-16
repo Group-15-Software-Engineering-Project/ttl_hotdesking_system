@@ -19,7 +19,31 @@ class Account extends Component {
     };
   }
 
-  submitUserName = () => {};
+  submitUserName = () => {
+    fetch("/api/setUserName", {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+        username: this.state.setUserName
+      }),
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        alert("error setting username");
+      } else {
+        this.setState({username: this.state.username});
+      }
+    })
+    .catch((err) => {
+      alert("error setting username (API)");
+    });
+  };
 
   submitChangePassword = () => {
     if (this.state.newPassword === this.state.confirmNewPassword) {
@@ -38,6 +62,29 @@ class Account extends Component {
   };
 
   componentDidMount = () => {
+    fetch("/api/getUserName", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: this.state.email
+      }),
+    })
+    .then((res) => {
+      return res.json
+    })
+    .then((res) => {
+      alert(res.username);
+      if (res.err) {  
+        console.log(res.err);
+      }
+      this.setState({username: res.username});
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState({username: this.state.email});
+    });
     window.scrollTo(0, 0);
     if (!sessionStorage.bookings) _GetUserBookings();
   };
