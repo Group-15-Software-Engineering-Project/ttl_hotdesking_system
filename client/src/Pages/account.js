@@ -37,7 +37,7 @@ class Account extends Component {
       if (res.error) {
         alert("error setting username");
       } else {
-        this.setState({username: this.state.username});
+        this.getUserName();
       }
     })
     .catch((err) => {
@@ -54,14 +54,60 @@ class Account extends Component {
   };
 
   submitDeleteAccount = () => {
+    alert(this.state.delPassword);
     if (
-      this.state.delPassword === this.state.confirmDelPassword &&
-      this.state.deleteAccountConfirmation
+      this.state.delPassword === this.state.confirmDelPassword 
+      //&& this.state.deleteAccountConfirmation
     ) {
+      fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.delPassword
+        }),
+      })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        alert("logged in");
+        if (res.error) {
+          alert("Incorrect Password");
+        } else {
+          fetch("/api/removeUser", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              email: this.state.email
+            }),
+          })
+          .then((res1) => {
+            return res1.json();
+          })
+          .then((res1) => {
+            if (res1.error) {
+              alert("Error deleting account");
+            } else {
+              alert("success");
+            }
+          })
+          .catch((err) => {
+            alert("Error deleting account (API)");
+          });
+        }
+      })
+      .catch((err) => {
+        alert("Error deleting account (API)");
+      });
     }
   };
 
-  componentDidMount = () => {
+  getUserName = () => {
     fetch("/api/getUserName", {
       method: "POST",
       headers: {
@@ -72,10 +118,9 @@ class Account extends Component {
       }),
     })
     .then((res) => {
-      return res.json
+      return res.json();
     })
     .then((res) => {
-      alert(res.username);
       if (res.err) {  
         console.log(res.err);
       }
@@ -85,6 +130,10 @@ class Account extends Component {
       console.log(err);
       this.setState({username: this.state.email});
     });
+  };
+
+  componentDidMount = () => {
+    this.getUserName();
     window.scrollTo(0, 0);
     if (!sessionStorage.bookings) _GetUserBookings();
   };

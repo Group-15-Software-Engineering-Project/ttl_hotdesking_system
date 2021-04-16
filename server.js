@@ -48,7 +48,7 @@ app.post("/api/login", (req, res) => {
         });
     })
     .catch((err) => {
-      res.send({ error: true, admin: false, message: err });
+      res.send({ error: true, admin: false, message: err.toString() });
     });
 });
 
@@ -85,15 +85,24 @@ app.post("/api/getLocationData", (req, res) => {
     });
 });
 
+app.post("/api/getBookingsCount", (req, res) => {
+  getBookingsCount(req.body.email)
+  .then((result) => {
+    console.log("count: ", count);
+  })
+  .catch((err) => {
+    res.send({error:true, count:0});
+  })
+});
+
 app.post("/api/getUserName", (req, res) =>  {
   getUserName(req.body.email)
   .then((result) => {
-    console.log(result);
     if (result.length===0) {
       res.send({error:true, username:req.body.email});
     } else {
-      console.log(result);
-      res.send({error:false, username:result.username});
+      console.log(result[0].username);
+      res.send({error:false, username:result[0].username});
     }
   })
   .catch((err) => {
@@ -217,7 +226,7 @@ app.post("/api/addUser", (req, res) => {
       res.send({ error: false, message: "Success" });
     })
     .catch((err) => {
-      res.send({ error: true, message: err });
+      res.send({ error: true, message: err.toString() });
     });
 });
 
@@ -251,6 +260,7 @@ app.post("/api/removeRoom", (req, res) => {
 });
 
 app.post("/api/removeUser", (req, res) => {
+  console.log(res.body);
   deleteUserBookings(req.body.email)
     .then(() => {
       deleteUserFromGroups(req.body.email);
@@ -510,10 +520,9 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 
 //Database Access
 function addUser(email, password) {
-  var sha256 = require("js-sha256");
   var hashedPassword = sha256(password);
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + hashedPassword + '");';
+    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + hashedPassword + '", null);';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
@@ -806,6 +815,20 @@ function getUserName(email) {
   sql = "SELECT username FROM USERS WHERE email='"+email+"';";
   console.log(sql);
   return new  Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function getBookingsCount(email) {
+  sql = "SELECT COUNT(USER) FROM BOOKINGS WHERE USER='"+email+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
