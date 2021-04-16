@@ -57,6 +57,7 @@ function PastBookings() {
         console.log("Error deleting Booking");
       } else {
         console.log("Success");
+        window.location.reload();
       }
     })
     .catch((err) => {
@@ -156,7 +157,6 @@ function PastBookings() {
                   JSON.stringify({ isNull: false, data: currentData })
                 );
                 submitCancelBooking(data);
-                //window.location.reload();
               }
             }
           }, 50);
