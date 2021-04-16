@@ -389,7 +389,7 @@ class Users extends Component {
                 justifyContent: "center",
               }}
             >
-              {this.state.teams.map((team) => (
+              {this.state.teamList.map((team) => (
                 <span
                   style={{
                     fontWeight: "bold",
