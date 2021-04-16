@@ -424,21 +424,31 @@ class Users extends Component {
                   : null}
               </select>
               <div className="space" />
-              {this.state.users.map((user) => (
-                <span
-                  key={user}
-                  style={{
-                    fontWeight: "bold",
-                    width: "30%",
-                    marginBottom: "12px",
-                  }}
-                >
-                  {user}
-                </span>
-              ))}
+              <ol
+                style={{
+                  width: "80%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  columnCount: "2",
+                  columnGap: "10px",
+                }}
+              >
+                {this.state.users.map((user) => (
+                  <li
+                    key={user}
+                    style={{
+                      fontWeight: "bold",
+                      textAlign: "left",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    {user}
+                  </li>
+                ))}
+              </ol>
             </div>
             <div ref={this.positionReference} />
-            <div className="space" />
+            <div className="space" style={{ marginBottom: "10%" }} />
           </div>
         </div>
         <div className="flex-container-1"></div>

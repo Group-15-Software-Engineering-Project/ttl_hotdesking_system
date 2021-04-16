@@ -10,6 +10,34 @@ class Home extends React.Component {
     this.state = {
       todayDate: null,
       bookings: [],
+      notifs: [
+        {
+          type: "normal",
+          date: "16 Apr 2021",
+          title: "The system is live!",
+          text: "The Trinity Hot-Desking system is live!",
+        },
+        {
+          type: "important",
+          date: "15 Apr 2021",
+          title: "Changes to bookings.",
+          text:
+            "Due to high demand for desks in Front square, from next week on, the booking limit for Front square offices will be decreased by 1 per person. Teams wanting to book desks at Front Square will be restricted to only 1 booking per week." +
+            " Teams which require multiple bookings for any valid reason in Front Square may contact Stephanie for the bookings to be manually made by the admin.",
+        },
+        {
+          type: "restrictions",
+          date: "15 Apr 2021",
+          title: "Team SCSS",
+          text: "SCSS team will not be able to make bookings in the upcoming week.",
+        },
+        {
+          type: "news",
+          date: "14 Apr 2021",
+          title: "New location added.",
+          text: "Bookings can now be made for Office 2.5 at Front Square.",
+        },
+      ],
     };
   }
 
@@ -134,17 +162,100 @@ class Home extends React.Component {
     );
   };
 
+  displayNotifications = (notif) => {
+    let color =
+      notif.type === "important"
+        ? "#ff0000"
+        : notif.type === "normal"
+        ? "#008dd3"
+        : notif.type === "news"
+        ? "#5ddd00"
+        : notif.type === "restrictions"
+        ? "#ffdd00"
+        : "#fff";
+
+    return (
+      <div className="notif-box" style={{ "--grad-color": `${color}` }}>
+        {/* <div
+          style={{
+            padding: "3px",
+            border: "none",
+            margin: "5px",
+            marginLeft: "10px",
+            height: "2em",
+            width: "2em",
+            backgroundColor: `${color}`,
+            borderRadius: "50%",
+            boxShadow: ` -0.5px -0.5px 1px 1px ${color}`,
+          }}
+        ></div> */}
+        <div
+          style={{
+            display: "block",
+            textAlign: "left",
+            paddingLeft: "10px",
+            width: "100%",
+          }}
+        >
+          <div
+            style={{
+              display: "inline",
+              fontSize: "clamp(0.6rem, 2vw, 1rem)",
+            }}
+          >
+            <span
+              style={{
+                width: "10%",
+                fontWeight: "700",
+                paddingRight: "2%",
+                marginRight: "2%",
+                //borderRight: "1px dotted #555",
+              }}
+            >
+              {notif.date}
+            </span>
+            <span
+              style={{
+                width: "95%",
+                fontWeight: "bolder",
+              }}
+            >
+              {notif.title}
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginLeft: "-1%",
+              //borderBottom: "1px dotted #555",
+              width: "101.1%",
+              marginBottom: "10px",
+            }}
+          />
+          <p style={{ width: "95%", marginBottom: "10px" }}>{notif.text}</p>
+        </div>
+      </div>
+    );
+  };
+
   render() {
     return (
       <div key={this.state.key} className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
           <div style={{ width: "100%", marginBottom: "3%" }} />
-          <h1 style={{ fontSize: "2rem" }}>{`Welcome back, ${
-            sessionStorage.__user_is_admin__ ? "Boss" : sessionStorage.email
+          <h1 style={{ fontSize: "clamp(1rem, 3vw, 2rem)" }}>{`Welcome back, ${
+            sessionStorage.username ? sessionStorage.username : sessionStorage.email
           }!`}</h1>
+          <div
+            style={{
+              width: "45%",
+              borderTop: "2px solid #444",
+              marginLeft: "27.5%",
+              marginTop: "1%",
+            }}
+          />
           <div style={{ width: "100%", marginBottom: "3%" }} />
-
           <Link to="/booking-page">
             <button className="button-style no-outline">{"Book a Desk"}</button>
           </Link>
@@ -237,27 +348,14 @@ class Home extends React.Component {
           <div style={{ width: "100%", marginBottom: "3%" }} />
           <div style={{ borderTop: "1px #ccc solid" }} />
           <div style={{ width: "100%", marginBottom: "3%" }} />
-
           <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
             Notifications
           </h1>
           <div className="space" />
-          <div
-            style={{
-              border: "1px solid #ccc",
-              textAlign: "left",
-              width: "90%",
-              marginLeft: "5%",
-            }}
-          >
-            <span
-              style={{ color: "red", marginLeft: "5%", marginRight: "5%", fontWeight: "bold" }}
-            >
-              Important!
-            </span>
-            {/* <div className="space" style={{ marginBottom: "1%" }} /> */}
-            <span style={{ margin: "0" }}>The Trinity Hotdesking Pilot is live!</span>
-          </div>
+          {this.state.notifs.map((n) => {
+            return this.displayNotifications(n);
+          })}
+          <div className="space" />
         </div>
         <div className="flex-container-1" />
       </div>

@@ -43,7 +43,7 @@ export const SidebarData = [
   //   cName: "nav-text",
   // },
   {
-    title: "Reports",
+    title: "Usage Reports",
     path: "/reports",
     icon: <IoIcons.IoIosPaper />,
     cName: "nav-text",

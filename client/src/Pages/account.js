@@ -7,7 +7,7 @@ class Account extends Component {
     super(props);
     this.state = {
       email: props.email,
-      username: "N/A",
+      username: sessionStorage.username ? sessionStorage.username : "N/A",
       bookingsMade: JSON.parse(sessionStorage.bookings).data.length,
       oldPassword: "",
       newPassword: "",
@@ -23,26 +23,26 @@ class Account extends Component {
     fetch("/api/setUserName", {
       method: "POST",
       headers: {
-        "Content-Type" : "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: this.state.email,
-        username: this.state.setUserName
+        username: this.state.setUserName,
       }),
     })
-    .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      if (res.error) {
-        alert("error setting username");
-      } else {
-        this.getUserName();
-      }
-    })
-    .catch((err) => {
-      alert("error setting username (API)");
-    });
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          alert("error setting username");
+        } else {
+          this.getUserName();
+        }
+      })
+      .catch((err) => {
+        alert("error setting username (API)");
+      });
   };
 
   submitChangePassword = () => {
@@ -56,54 +56,54 @@ class Account extends Component {
   submitDeleteAccount = () => {
     alert(this.state.delPassword);
     if (
-      this.state.delPassword === this.state.confirmDelPassword 
-      //&& this.state.deleteAccountConfirmation
+      this.state.delPassword === this.state.confirmDelPassword &&
+      this.state.deleteAccountConfirmation
     ) {
       fetch("/api/login", {
         method: "POST",
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: this.state.email,
-          password: this.state.delPassword
+          password: this.state.delPassword,
         }),
       })
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        alert("logged in");
-        if (res.error) {
-          alert("Incorrect Password");
-        } else {
-          fetch("/api/removeUser", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              email: this.state.email
-            }),
-          })
-          .then((res1) => {
-            return res1.json();
-          })
-          .then((res1) => {
-            if (res1.error) {
-              alert("Error deleting account");
-            } else {
-              alert("success");
-            }
-          })
-          .catch((err) => {
-            alert("Error deleting account (API)");
-          });
-        }
-      })
-      .catch((err) => {
-        alert("Error deleting account (API)");
-      });
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          alert("logged in");
+          if (res.error) {
+            alert("Incorrect Password");
+          } else {
+            fetch("/api/removeUser", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: this.state.email,
+              }),
+            })
+              .then((res1) => {
+                return res1.json();
+              })
+              .then((res1) => {
+                if (res1.error) {
+                  alert("Error deleting account");
+                } else {
+                  alert("success");
+                }
+              })
+              .catch((err) => {
+                alert("Error deleting account (API)");
+              });
+          }
+        })
+        .catch((err) => {
+          alert("Error deleting account (API)");
+        });
     }
   };
 
@@ -111,29 +111,30 @@ class Account extends Component {
     fetch("/api/getUserName", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: this.state.email
+        email: this.state.email,
       }),
     })
-    .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      if (res.err) {  
-        console.log(res.err);
-      }
-      this.setState({username: res.username});
-    })
-    .catch((err) => {
-      console.log(err);
-      this.setState({username: this.state.email});
-    });
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.err) {
+          console.log(res.err);
+        }
+        this.setState({ username: res.username });
+        sessionStorage.setItem("username", res.username);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ username: this.state.email });
+      });
   };
 
   componentDidMount = () => {
-    this.getUserName();
+    //this.getUserName();
     window.scrollTo(0, 0);
     if (!sessionStorage.bookings) _GetUserBookings();
   };
@@ -304,7 +305,7 @@ class Account extends Component {
             className="text-input"
             onChange={this.handleEvent}
             placeholder="Password"
-            style={{ margin: "2%" }}
+            style={{ margin: "2%", width: "30%" }}
           />
           <input
             type="password"
@@ -312,7 +313,7 @@ class Account extends Component {
             className="text-input"
             onChange={this.handleEvent}
             placeholder="Confirm password"
-            style={{ margin: "2%" }}
+            style={{ margin: "2%", width: "30%" }}
           />
           <div className="space" style={{ marginBottom: "1%" }} />
           <label for="deleteAccountConfirm" style={{ marginRight: "1%" }}>
@@ -321,7 +322,7 @@ class Account extends Component {
           <input
             type="checkbox"
             name="deleteAccountConfirm"
-            onChange={(e) => this.setState({ deleteAccountConfirm: e.target.checked })}
+            onChange={(e) => this.setState({ deleteAccountConfirmation: e.target.checked })}
           ></input>
           <div className="space" />
           <button

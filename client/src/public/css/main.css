@@ -72,7 +72,7 @@
 
 .page-divider-header {
   margin-top: 8px;
-  font-size: 24px;
+  font-size: clamp(1rem, 3vw, 24px);
   text-align: center;
   box-shadow: 0px 3px 3px #555;
   color: white;
@@ -203,4 +203,27 @@
 .booking-history {
   font-size: clamp(0.5rem, 2vw, 1rem);
   color: black;
+}
+
+.notif-box {
+  display: flex;
+  justify-content: flex-start;
+  margin: 1rem;
+  align-items: center;
+  overflow-wrap: normal;
+  /* border: 0.5px solid #ccc; */
+  border-radius: 5px;
+  background: linear-gradient(
+    45deg,
+    var(--grad-color) 0%,
+    #aaeeff66 20%,
+    #aaeeff66 75%,
+    var(--grad-color) 100%
+  );
+  box-shadow: 2px 2px 2px #555;
+  transition: transform 300ms;
+}
+
+.notif-box:hover {
+  transform: scale(1.0175);
 }
