@@ -345,6 +345,7 @@ class Users extends Component {
             >
               {this.state.users.map((user) => (
                 <span
+                  key={user}
                   style={{
                     fontWeight: "bold",
                     width: "30%",
@@ -371,6 +372,7 @@ class Users extends Component {
             >
               {this.state.teams.map((team) => (
                 <span
+                  key={team}
                   style={{
                     fontWeight: "bold",
                     width: "30%",

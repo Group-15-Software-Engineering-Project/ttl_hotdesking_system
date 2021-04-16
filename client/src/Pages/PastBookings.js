@@ -15,10 +15,9 @@ function PastBookings() {
     if (!sessionStorage.bookings) _GetUserBookings();
   }, []);
 
-  const getBookingIndex = (booking) => {
-    let data = JSON.parse(sessionStorage.bookings).data;
-    for (let index = 0; index < data.length; index++) {
-      let currentBooking = data[index];
+  const getBookingIndex = (source, booking) => {
+    for (let index = 0; index < source.length; index++) {
+      let currentBooking = source[index];
       if (
         currentBooking.USER === booking.USER &&
         currentBooking.DESK === booking.DESK &&
@@ -46,23 +45,23 @@ function PastBookings() {
         room: bookingToCancel.ROOM,
         date: bookingToCancel.DATE,
         am: bookingToCancel.AM,
-        pm: bookingToCancel.PM
+        pm: bookingToCancel.PM,
       }),
     })
-    .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      if (res.error) {
-        console.log("Error deleting Booking");
-      } else {
-        console.log("Success");
-        window.location.reload();
-      }
-    })
-    .catch((err) => {
-      console.log("API ERROR");
-    });
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          console.log("Error deleting Booking");
+        } else {
+          console.log("Success");
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        console.log("API ERROR");
+      });
   };
 
   const displayBooking = (data) => {
@@ -148,7 +147,7 @@ function PastBookings() {
             );
             if (res) {
               let currentData = JSON.parse(sessionStorage.bookings).data;
-              let index = getBookingIndex(data);
+              let index = getBookingIndex(currentData, data);
               if (index !== -1) {
                 currentData.splice(index, 1);
                 sessionStorage.removeItem("bookings");
@@ -156,6 +155,7 @@ function PastBookings() {
                   "bookings",
                   JSON.stringify({ isNull: false, data: currentData })
                 );
+                sessionStorage.removeItem("upcomingBookings");
                 submitCancelBooking(data);
               }
             }

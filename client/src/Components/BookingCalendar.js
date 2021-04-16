@@ -51,7 +51,6 @@ export default class BookingCalendar extends React.Component {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         this.setState(
           {
             availableDesks: res.desks,
@@ -138,7 +137,6 @@ export default class BookingCalendar extends React.Component {
         }
       }
     }
-    console.log(desks);
     return desks;
   };
 
