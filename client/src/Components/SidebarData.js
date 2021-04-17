@@ -70,4 +70,11 @@ export const SidebarData = [
     cName: "nav-text",
     adminRequired: true,
   },
+  {
+    title: "Notifications",
+    path: "/notifications",
+    icon: <AiIcons.AiFillNotification />,
+    cName: "nav-text",
+    adminRequired: true,
+  },
 ];

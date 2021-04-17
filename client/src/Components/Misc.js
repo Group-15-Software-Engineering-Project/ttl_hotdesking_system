@@ -13,6 +13,13 @@ export const months = [
   "Dec",
 ];
 
+export const getDifferenceInDays = (date1, date2) =>
+{
+  let diff = date1.getTime() - date2.getTime();
+  diff = Math.ceil(diff/(1000*60*60*24));
+  return diff;
+}
+
 export const _GetUserBookings = async (ref) => {
   let date = new Date();
   fetch("/api/getBooking", {

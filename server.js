@@ -230,6 +230,10 @@ app.post("/api/removeUserFromTeam", (req, res) => {
     });
 });
 
+app.post("/api/addNotification", (req, res) => {
+  
+});
+
 app.post("/api/addUser", (req, res) => {
   addUser(req.body.email, req.body.password)
     .then(() => {

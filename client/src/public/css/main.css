@@ -83,10 +83,23 @@
   font-weight: normal;
 }
 
+.page-divider-header-smaller {
+  margin-top: 8px;
+  font-size: 24px;
+  text-align: center;
+  box-shadow: 0px 3px 3px #555;
+  color: white;
+  background-color: #4dc300;
+  border-radius: 100px;
+  width: 55% !important;
+  padding: 3px;
+  font-weight: normal;
+}
+
 .text-input {
   margin: 0px;
   padding: 0px;
-  width: 40%;
+  width: 3rem;
   min-width: 200px;
   height: 35px;
   border-radius: 8px;
@@ -95,6 +108,20 @@
   margin-top: 3px;
   margin-bottom: 3px;
   padding: 10px;
+}
+
+.text-input-bigger {
+  text-align:"left";
+  margin: 0px;
+  width: 50%;
+  min-width: 50%;
+  height: 200px;
+  border-radius: 8px;
+  background-color: #fafafa;
+  border: 1px #bbb solid;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  overflow-wrap:"wrap";
 }
 
 .button-style {
@@ -140,6 +167,13 @@
   width: 100%;
   min-height: 35vh;
   float: left;
+  padding: 20px;
+  border: 0.5px #ccc solid;
+}
+.full {
+  width: 100%;
+  min-height: 80vh;
+  float: none;
   padding: 20px;
   border: 0.5px #ccc solid;
 }

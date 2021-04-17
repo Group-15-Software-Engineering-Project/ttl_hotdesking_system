@@ -11,6 +11,7 @@ import Admin from "./Pages/Admin";
 import Users from "./Pages/Users";
 import Account from "./Pages/account";
 import PastBookings from "./Pages/PastBookings";
+import Notifications from "./Pages/Notifications";
 
 class App extends Component {
   state = {
@@ -62,6 +63,7 @@ class App extends Component {
             </Route>
             <Route path="/locations" component={Locations} />
             <Route path="/users" component={Users} />
+            <Route path="/notifications" component={Notifications} />
             <Route path="/home">
               <Home email={sessionStorage.email}></Home>
             </Route>
