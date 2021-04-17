@@ -6,7 +6,6 @@ import * as GiIcons from "react-icons/gi";
 import * as CgIcons from "react-icons/cg";
 import * as BiIcons from "react-icons/bi";
 import * as RiIcons from "react-icons/ri";
-import * as AFNIcons from "react-icons/afn";
 
 export const SidebarData = [
   {
@@ -74,7 +73,7 @@ export const SidebarData = [
   {
     title: "Notifications",
     path: "/notifications",
-    icon: <AFNIcons.AiFillNotification />,
+    icon: <AiIcons.AiFillNotification />,
     cName: "nav-text",
     adminRequired: true,
   },

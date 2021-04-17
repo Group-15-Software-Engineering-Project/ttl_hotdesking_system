@@ -7,7 +7,6 @@ import "../public/css/Navbar.css";
 import { IconContext } from "react-icons";
 import * as BiIcons from "react-icons/bi";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
-import * as AFNIcons from "react-icons/afn";
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
