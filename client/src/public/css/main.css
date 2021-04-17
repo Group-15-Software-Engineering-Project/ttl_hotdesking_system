@@ -99,7 +99,7 @@
 .text-input {
   margin: 0px;
   padding: 0px;
-  width: 40%;
+  width: 3rem;
   min-width: 200px;
   height: 35px;
   border-radius: 8px;
@@ -111,17 +111,17 @@
 }
 
 .text-input-bigger {
+  text-align:"left";
   margin: 0px;
-  padding: 0px;
-  width: 80%;
-  min-width: 200px;
-  height: 35px;
+  width: 50%;
+  min-width: 50%;
+  height: 200px;
   border-radius: 8px;
   background-color: #fafafa;
   border: 1px #bbb solid;
   margin-top: 3px;
   margin-bottom: 3px;
-  padding: 10px;
+  overflow-wrap:"wrap";
 }
 
 .button-style {

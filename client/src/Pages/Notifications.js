@@ -5,38 +5,54 @@ import BookingCalendarNoLimit from "../Components/BookingCalendarNoLimit";
 import "../public/css/main.css";
 class Notifications extends Component {
   state = {
-    addEmail: "",
-    addteam: "",
-    addPassword: "",
-    deleteEmail: "",
-    addTeamName: "",
-    addTeamUserName: "",
-    removeFromTeam: "",
-    removeUserFromTeam: "",
-    usersInTeam: [],
-    users: [],
-    teamList: [],
-    areaKey: "default",
-    chosenArea: "default",
-    chosenDesk: "default",
-    chosenDate: "default",
-    chosenTime: "default",
-    locations: [],
-    bookableDesks: [],
-    selectAM: false,
-    selectPM: false,
-    responseToPost: "",
-    times: [
-      { value: "9:00 - 13:00", label: "AM" },
-      { value: "13:30 - 17:30", label: "PM" },
-      { value: "9:00 - 17:30", label: "AMPM" },
-    ],
+    title:"",
+    text:"",
+    type:"",
+    expiryDate:"",
   };
+
+  handleEvent = (e) =>{
+    this.setState({[e.target.name]:e.target.value});
+  }
 
   positionReference = createRef();
 
   componentDidMount() {
     window.scrollTo(0, 0);
+  }
+
+  submitNotification = () =>
+  {
+    let date = new Date();
+    let today = date.getFullYear() + "-" + String((date.getMonth()+1)).padStart(2, "0") + "-" + date.getDate();
+    console.log(this.state.type, today, this.state.title, this.state.text);
+
+    //api call here: to be stored as {type: this.state.type, date:today, title:this.state.title, text:this.state.text}
+    fetch("/api/addNotification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: this.state.type,
+        date: today,
+        title: this.state.title,
+        text: this.state.text,
+      }),
+    })
+      .then((res) => {
+        let result = res.json();
+        if (result.error) {
+          alert("error adding a notification");
+        } else {
+          alert("Success");
+          //window.location.reload();
+          console.log(this.state.type, today, this.state.title, this.state.text);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -55,52 +71,48 @@ class Notifications extends Component {
               >
                 Add Notifications
               </h1>
-              <div className="space" style={{ marginBottom: "10%", marginTop: "5%" }} />
+              <div className="space" style={{ marginBottom: "5%", marginTop: "5%" }} />
               <input
-                className="text-input-bigger"
-                placeholder="Enter notification here..."
+                className="text-input"
+                placeholder="Notification title"
                 type="text"
-                name="deleteEmail"
+                name="title"
+                style={{overflowWrap:"before"}}
                 autoComplete="none"
+                maxLength="30"
                 onChange={this.handleEvent}
               ></input>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
-              <h1 className="page-divider-header-smaller" style={{ marginLeft: "22.5%" }}>
-                Select an expiration Date
-              </h1>
-              <BookingCalendarNoLimit
-                key={this.state.chosenTime}
-                chosenArea={this.state.chosenArea}
-                bookingTime={(() => {
-                  for (let i in this.state.times) {
-                    if (this.state.chosenTime === this.state.times[i].value) {
-                      return this.state.times[i].label;
-                    }
-                  }
-                })()}
-                onSelect={(desks, date, m) => {
-                  let newDate;
-                  if (this.state.chosenDate === "default" && date.split(" ")[1] !== m) {
-                    newDate = "default";
-                  } else if (this.state.chosenDate === "default") {
-                    newDate = date;
-                  } else if (this.state.chosenDate.split(" ")[1] !== date.split(" ")[1]) {
-                    newDate = "default";
-                  } else {
-                    newDate = date;
-                  }
-                  this.setState({
-                    bookableDesks: desks,
-                    chosenDate: newDate,
-                    chosenDesk: "default",
-                  });
-                }}
-              ></BookingCalendarNoLimit>
+              <textarea
+                className="text-input-bigger"
+                placeholder="Notification content"
+                type="text"
+                name="text"
+                autoComplete="none"
+                onChange={this.handleEvent}
+              ></textarea>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
+              <select
+                className="text-input"
+                style={{ padding: "0", width: "25%" }}
+                name="type"
+                onChange={this.handleEvent}
+              >
+                <option value={-1}>Select type</option>
+                <option value="normal">General</option>
+                <option value="important">Important</option>
+                <option value="restrictions">Restrictions</option>
+                <option value="news">News</option>
+              </select>
+              <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
+              <BookingCalendarNoLimit
+                onSelect={
+                  (date) => this.setState({expiryDate: date}, ()=>console.log(this.state.expiryDate))
+                }
+              ></BookingCalendarNoLimit>
               <button
                 className="button-style no-outline"
-                onClick={() => {
-                }}
+                onClick={() => this.submitNotification()}
               >
                 Submit
               </button>
