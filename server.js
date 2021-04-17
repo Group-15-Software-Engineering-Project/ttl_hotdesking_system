@@ -120,6 +120,16 @@ app.post("/api/setUserName", (req, res) => {
   });
 });
 
+app.post("/api/changePassword", (req, res) => {
+  changePassword(req.body.email, req.body.password)
+  .then(() => {
+    res.send({error:false});
+  })
+  .catch((err) => {
+    res.send({error:true});
+  });
+});
+
 app.post("/api/getRooms", (req, res) => {
   let locations = [];
   getRooms()
@@ -594,6 +604,20 @@ function setUserName(email, username) {
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function changePassword(email, password) {
+  sql = "UPDATE USERS SET password='"+password+"' WHERE email='"+email+"';";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query((err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
