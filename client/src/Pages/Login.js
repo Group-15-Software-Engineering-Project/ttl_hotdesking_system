@@ -19,6 +19,31 @@ class Login extends Component {
     };
   }
 
+  getUserName = () => {
+    fetch("/api/getUserName", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.err) {
+          console.log(res.err);
+        }
+        sessionStorage.setItem("username", res.username);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ username: this.state.email });
+      });
+  };
+
   submitLogin = () => {
     fetch("/api/login", {
       method: "POST",
@@ -37,10 +62,10 @@ class Login extends Component {
         if (res.error) {
           this.setState({ validLogin: false, errorText: true });
         } else {
+          this.getUserName();
           this.setState({ validLogin: true, admin: res.admin }, () => {
             sessionStorage.setItem("email", this.state.email);
             if (res.admin.length !== 0) sessionStorage.setItem("__user_is_admin__", true);
-            console.log(res.admin);
             _GetUserBookings();
           });
           this.props.setEmail(this.state.email);
