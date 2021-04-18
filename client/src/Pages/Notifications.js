@@ -5,15 +5,15 @@ import BookingCalendarNoLimit from "../Components/BookingCalendarNoLimit";
 import "../public/css/main.css";
 class Notifications extends Component {
   state = {
-    title:"",
-    text:"",
-    type:"",
-    expiryDate:"",
+    title: "",
+    text: "",
+    type: "",
+    expiryDate: "",
   };
 
-  handleEvent = (e) =>{
-    this.setState({[e.target.name]:e.target.value});
-  }
+  handleEvent = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
   positionReference = createRef();
 
@@ -21,13 +21,15 @@ class Notifications extends Component {
     window.scrollTo(0, 0);
   }
 
-  submitNotification = () =>
-  {
+  submitNotification = () => {
     let date = new Date();
-    let today = date.getFullYear() + "-" + String((date.getMonth()+1)).padStart(2, "0") + "-" + date.getDate();
-    console.log(this.state.type, today, this.state.title, this.state.text);
-
-    //api call here: to be stored as {type: this.state.type, date:today, title:this.state.title, text:this.state.text}
+    let today =
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      date.getDate();
+    console.log(this.state.expiryDate);
     fetch("/api/addNotification", {
       method: "POST",
       headers: {
@@ -38,6 +40,7 @@ class Notifications extends Component {
         date: today,
         title: this.state.title,
         text: this.state.text,
+        expiryDate: this.state.expiryDate,
       }),
     })
       .then((res) => {
@@ -53,7 +56,7 @@ class Notifications extends Component {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   render() {
     return sessionStorage.__user_is_admin__ ? (
@@ -77,7 +80,7 @@ class Notifications extends Component {
                 placeholder="Notification title"
                 type="text"
                 name="title"
-                style={{overflowWrap:"before"}}
+                style={{ overflowWrap: "before" }}
                 autoComplete="none"
                 maxLength="30"
                 onChange={this.handleEvent}
@@ -106,8 +109,8 @@ class Notifications extends Component {
               </select>
               <div className="space" style={{ marginTop: "5%", marginBottom: "5%" }} />
               <BookingCalendarNoLimit
-                onSelect={
-                  (date) => this.setState({expiryDate: date}, ()=>console.log(this.state.expiryDate))
+                onSelect={(date) =>
+                  this.setState({ expiryDate: date }, () => console.log(this.state.expiryDate))
                 }
               ></BookingCalendarNoLimit>
               <button
