@@ -1,6 +1,6 @@
 # **Software Engineering Group Project: Group 15 - ttl_hotdesking_system**
- **Team Members:** John Keaney, Utkarsh Gupta, Yifan Zhu, Dominik Guzowski,  Mike Kelly, Aaron Byrne.
- **Demonstrator:** Dung Pham.  
+**Team Members:** John Keaney, Utkarsh Gupta, Yifan Zhu, Dominik Guzowski,  Mike Kelly, Aaron Byrne.
+**Demonstrator:** Dung Pham.  
 **Client:** Trinity Teaching & Learning: Stephanie Reilly.
 
 ## Live Demonstration.
