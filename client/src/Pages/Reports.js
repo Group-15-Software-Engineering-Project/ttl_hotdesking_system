@@ -157,6 +157,10 @@ class Reports extends Component {
   reset() {}
 
   getData = () => {
+    if (this.state.chosenTeam!=="1"){
+      var newChosenTeam="NAME='"+this.state.chosenTeam+"'";
+      this.setState({ chosenTeam: newChosenTeam});
+    }
     fetch("/api/getReports", {
       method: "POST",
       headers: {
@@ -165,6 +169,7 @@ class Reports extends Component {
       body: JSON.stringify({
         time: this.state.chosenTimeRange.toLowerCase(),
         room: this.state.chosenLocation,
+        team: this.state.chosenTeam,
       }),
     })
       .then((res) => {
@@ -312,7 +317,7 @@ class Reports extends Component {
                   onChange={this.handleEvent}
                 >
                   <option value="">Select team</option>
-                  <option value="overall">All teams</option>
+                  <option value="1">All teams</option>
                   {this.state.teamlist.map((x) => {
                     return <option value={x}>{x}</option>;
                   })}

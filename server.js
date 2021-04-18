@@ -314,14 +314,14 @@ app.post("/api/getBooking", (req, res) => {
 
 app.post("/api/getReports", (req, res) => {
   array = [];
-  getReportsByUser(req.body.time, req.body.room)
+  getReportsByUser(req.body.time, req.body.room, req.body.team)
     .then((bookings) => {
       data = [];
       for (booking in bookings) {
         data.push(bookings[booking]);
       }
 
-      getReportsByDesk(req.body.time, req.body.room).then((bookings) => {
+      getReportsByDesk(req.body.time, req.body.room, req.body.team).then((bookings) => {
         deskData = [];
         for (booking in bookings) {
           deskData.push(bookings[booking]);
@@ -619,45 +619,45 @@ function getPastBookings(email) {
     });
   });
 }
-function getReportsByUser(time, room) {
+function getReportsByUser(time, room, team) {
   //console.log("success");
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
-      sql = "select * from BOOKINGS ORDER BY USER;";
+      sql = "SELECT * FROM BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")";
     } else if (time === "overall" && room !== "overall") {
-      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' ORDER BY USER;";
+      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")";
     } else if (time === "last week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "last 3 months" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "next week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "last week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() ORDER BY USER;";
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "last month" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY USER;";
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "last 3 months" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY USER;";
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     } else if (time === "next week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY USER;";
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
     }
     //console.log("success");
 
@@ -671,45 +671,45 @@ function getReportsByUser(time, room) {
   });
 }
 
-function getReportsByDesk(time, room) {
+function getReportsByDesk(time, room, team) {
   //console.log("success");
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
-      sql = "select * from BOOKINGS ORDER BY DESK;";
+      sql = "select * from BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "overall" && room !== "overall") {
-      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' ORDER BY DESK;";
+      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "last week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "last 3 months" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "next week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) ORDER BY DESK;";
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "last week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() ORDER BY DESK;";
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "last month" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() ORDER BY DESK;";
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "last 3 months" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() ORDER BY DESK;";
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     } else if (time === "next week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 week) ORDER BY DESK;";
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
     }
     //console.log("success");
 
