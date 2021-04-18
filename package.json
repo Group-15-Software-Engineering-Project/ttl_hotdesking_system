@@ -36,5 +36,9 @@
     },
     "devDependencies": {
         "concurrently": "^4.0.1"
+    },
+    "engine" : {
+        "node" : "14.x",
+        "npm" : "7.x"
     }
 }
