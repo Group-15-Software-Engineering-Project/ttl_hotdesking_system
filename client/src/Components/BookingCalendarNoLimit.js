@@ -25,15 +25,12 @@ export default class BookingCalendarNoLimit extends React.Component {
       (String(date.getMonth() + 1).length === 1 ? "0" : "") +
       (date.getMonth() + 1);
 
-    this.setState(
-      {
-        todayDate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 31 + date.getDate(),
-        selectedDate:
-          date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear(),
-        chosenArea: this.props.chosenArea,
-        currentMonth: curMonth,
-      }
-    );
+    this.setState({
+      todayDate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 31 + date.getDate(),
+      selectedDate: date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear(),
+      chosenArea: this.props.chosenArea,
+      currentMonth: curMonth,
+    });
   }
 
   checkAvailability = (dateInfo) => {
@@ -45,12 +42,18 @@ export default class BookingCalendarNoLimit extends React.Component {
     let date1 = new Date(`${year}/${month}/${day}`);
     let date2 = new Date();
     let diff = getDifferenceInDays(date1, date2);
-    if(diff > -1) return "NONE-Booked";
+    if (diff > -1) return "NONE-Booked";
   };
 
   getDate = (e) => {
     let dateComponent = String(e).split(" ");
-    return dateComponent[2] + "-" + (months.indexOf(dateComponent[1])+1) + "-" + dateComponent[3];
+    return (
+      dateComponent[3] +
+      "-" +
+      String(months.indexOf(dateComponent[1]) + 1).padStart(2, "0") +
+      "-" +
+      dateComponent[2]
+    );
   };
 
   disabledTiles = (e) => {
@@ -77,9 +80,7 @@ export default class BookingCalendarNoLimit extends React.Component {
           tileClassName={this.checkAvailability}
           tileDisabled={this.disabledTiles}
           onChange={(e) => {
-            this.props.onSelect(
-              this.getDate(e)
-            );
+            this.props.onSelect(this.getDate(e));
           }}
         ></Calendar>
       </div>
