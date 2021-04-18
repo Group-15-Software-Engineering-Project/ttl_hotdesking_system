@@ -14,7 +14,7 @@ class Home extends React.Component {
         {
           type: "normal",
           date: "16 Apr 2021",
-          title: "The system is live!",
+          title: "The system is finally live.", //"The system is live!",
           text: "The Trinity Hot-Desking system is live!",
         },
         {
@@ -198,6 +198,7 @@ class Home extends React.Component {
           }}
         >
           <div
+            className="ellipsis"
             style={{
               display: "inline",
               fontSize: "clamp(0.6rem, 2vw, 1rem)",
@@ -209,6 +210,8 @@ class Home extends React.Component {
                 fontWeight: "700",
                 paddingRight: "2%",
                 marginRight: "2%",
+                overflow: "hidden",
+                wordWrap: "break-word",
                 //borderRight: "1px dotted #555",
               }}
             >
@@ -245,7 +248,7 @@ class Home extends React.Component {
         <div className="flex-container-5 main-body">
           <div style={{ width: "100%", marginBottom: "3%" }} />
           <h1 style={{ fontSize: "clamp(1rem, 3vw, 2rem)" }}>{`Welcome back, ${
-            sessionStorage.username ? sessionStorage.username : sessionStorage.email
+            sessionStorage.username !== "null" ? sessionStorage.username : sessionStorage.email
           }!`}</h1>
           <div
             style={{

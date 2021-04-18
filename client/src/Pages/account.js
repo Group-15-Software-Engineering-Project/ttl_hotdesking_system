@@ -8,7 +8,7 @@ class Account extends Component {
     super(props);
     this.state = {
       email: props.email,
-      username: sessionStorage.username ? sessionStorage.username : "N/A",
+      username: sessionStorage.username !== "null" ? sessionStorage.username : "N/A",
       bookingsMade: JSON.parse(sessionStorage.bookings).data.length,
       oldPassword: "",
       newPassword: "",
@@ -49,28 +49,28 @@ class Account extends Component {
   submitChangePassword = () => {
     if (this.state.newPassword === this.state.confirmNewPassword) {
       fetch("/api/changePassword", {
-        method : "POST",
+        method: "POST",
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: this.state.email,
-          password: sha256(this.state.newPassword)
+          password: sha256(this.state.newPassword),
+        }),
+      })
+        .then((res) => {
+          return res.json();
         })
-      })
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.error) {
-          alert("Failed to change password");
-        } else {
-          alert("Success");
-        }
-      })
-      .catch((err) => {
-        alert("Error changing password (API)");
-      });
+        .then((res) => {
+          if (res.error) {
+            alert("Failed to change password");
+          } else {
+            alert("Success");
+          }
+        })
+        .catch((err) => {
+          alert("Error changing password (API)");
+        });
     } else {
       alert("Passwords must match!");
     }
@@ -96,7 +96,7 @@ class Account extends Component {
           return res.json();
         })
         .then((res) => {
-          alert("logged in");
+          //alert("logged in");
           if (res.error) {
             alert("Incorrect Password");
           } else {
@@ -117,6 +117,8 @@ class Account extends Component {
                   alert("Error deleting account");
                 } else {
                   alert("success");
+                  sessionStorage.clear();
+                  window.location = "/login";
                 }
               })
               .catch((err) => {

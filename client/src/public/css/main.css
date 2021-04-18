@@ -78,7 +78,7 @@
   color: white;
   background-color: #008dd3;
   border-radius: 100px;
-  width: 95% !important;
+  width: 95%;
   padding: 3px;
   font-weight: normal;
 }
@@ -111,7 +111,7 @@
 }
 
 .text-input-bigger {
-  text-align:"left";
+  text-align: "left";
   margin: 0px;
   width: 50%;
   min-width: 50%;
@@ -121,7 +121,7 @@
   border: 1px #bbb solid;
   margin-top: 3px;
   margin-bottom: 3px;
-  overflow-wrap:"wrap";
+  overflow-wrap: "wrap";
 }
 
 .button-style {
@@ -138,6 +138,7 @@
   padding-left: 12px;
   padding-right: 12px;
 }
+
 .no-outline {
   outline: none;
 }
@@ -260,4 +261,9 @@
 
 .notif-box:hover {
   transform: scale(1.0175);
+}
+
+.button-style[disabled] {
+  background-color: #777;
+  cursor: auto !important;
 }

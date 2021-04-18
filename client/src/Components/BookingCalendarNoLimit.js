@@ -42,7 +42,8 @@ export default class BookingCalendarNoLimit extends React.Component {
     let date1 = new Date(`${year}/${month}/${day}`);
     let date2 = new Date();
     let diff = getDifferenceInDays(date1, date2);
-    if (diff > -1) return "NONE-Booked";
+    if (diff > 0) return "NONE-Booked";
+    else return "Not-Available";
   };
 
   getDate = (e) => {
@@ -65,7 +66,7 @@ export default class BookingCalendarNoLimit extends React.Component {
     let date1 = new Date(`${year}/${month}/${day}`);
     let date2 = new Date();
     let diff = getDifferenceInDays(date1, date2);
-    return diff < 0;
+    return diff < 1;
   };
 
   render() {
