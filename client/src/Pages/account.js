@@ -47,7 +47,29 @@ class Account extends Component {
 
   submitChangePassword = () => {
     if (this.state.newPassword === this.state.confirmNewPassword) {
-      //fetch api to change old password to new password.
+      fetch("/api/changePassword", {
+        method : "POST",
+        headers: {
+          "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.newPassword
+        })
+      })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          alert("Failed to change password");
+        } else {
+          alert("Success");
+        }
+      })
+      .catch((err) => {
+        alert("Error changing password (API)");
+      });
     } else {
       alert("Passwords must match!");
     }
