@@ -6,6 +6,7 @@ import "../public/css/main.css";
 import { _GetUserBookings } from "../Components/Misc";
 import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
+const sha256 = require("js-sha256");
 
 class Login extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class Login extends Component {
       },
       body: JSON.stringify({
         email: this.state.email,
-        password: this.state.password,
+        password: sha256(this.state.password),
       }),
     })
       .then((res) => {
@@ -120,7 +121,7 @@ class Login extends Component {
                   placeholder="Password"
                   type="password"
                   value={this.state.password}
-                  onChange={(e) => this.setState({ password: e.target.value })}
+                  onChange={(e) => this.setState({password: e.target.value })}
                 />
               </Form.Group>
 

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { _GetUserBookings } from "../Components/Misc";
 import "../public/css/main.css";
 
+const sha256 = require("js-sha256");
 class Account extends Component {
   constructor(props) {
     super(props);
@@ -54,7 +55,7 @@ class Account extends Component {
         },
         body: JSON.stringify({
           email: this.state.email,
-          password: this.state.newPassword
+          password: sha256(this.state.newPassword)
         })
       })
       .then((res) => {
@@ -88,7 +89,7 @@ class Account extends Component {
         },
         body: JSON.stringify({
           email: this.state.email,
-          password: this.state.delPassword,
+          password: sha256(this.state.delPassword),
         }),
       })
         .then((res) => {

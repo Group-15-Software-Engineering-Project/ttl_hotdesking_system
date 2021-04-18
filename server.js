@@ -4,7 +4,7 @@ const path = require("path");
 const mysql = require("mysql");
 require("dotenv").config();
   
-const sha256 = require("js-sha256");
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -25,9 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
-  console.log(req.body.email, req.body.password);
-  console.log(sha256(req.body.email));
-
+console.log(req.body.password);
   login(req.body.email, req.body.password)
     .then((result) => {
       adminCheck(req.body.email)
@@ -534,9 +532,9 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 
 //Database Access
 function addUser(email, password) {
-  var hashedPassword = sha256(password);
+ 
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + hashedPassword + '", null);';
+    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + password + '", null);';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
@@ -577,8 +575,7 @@ function addDesk(desk_number, room) {
 }
 
 function login(email, password) {
-  var hashedPassword = sha256(password);
-  sql = "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + hashedPassword + "';"; 
+  sql = "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + password + "';"; 
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
