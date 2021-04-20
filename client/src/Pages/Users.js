@@ -1,9 +1,9 @@
 import React, { Component, createRef } from "react";
 import { Redirect } from "react-router-dom";
+import { verify } from "../Components/Misc";
 
 import "../public/css/main.css";
 const sha256 = require("js-sha256");
-
 
 class Users extends Component {
   state = {
@@ -240,7 +240,7 @@ class Users extends Component {
   };
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">

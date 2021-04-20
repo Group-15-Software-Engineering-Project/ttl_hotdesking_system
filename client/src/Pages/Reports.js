@@ -3,6 +3,7 @@ import { Bar } from "react-chartjs-2";
 import { Line } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import { Redirect } from "react-router-dom";
+import { verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Reports extends Component {
@@ -155,11 +156,18 @@ class Reports extends Component {
     legendPosition: "bottom",
   };
   reset() {}
-
+  toLabelArray = (data, label) => {
+    let arr = [];
+    for (let d in data) {
+      arr.push(label + " " + data[d]);
+    }
+    return arr;
+  };
   getData = () => {
-    if (this.state.chosenTeam!=="1"){
-      var newChosenTeam="NAME='"+this.state.chosenTeam+"'";
-      this.setState({ chosenTeam: newChosenTeam});
+    let chosenTeam = this.state.chosenTeam;
+    if (this.state.chosenTeam !== "1") {
+      chosenTeam = " NAME='" + this.state.chosenTeam + "'";
+      console.log(chosenTeam);
     }
     fetch("/api/getReports", {
       method: "POST",
@@ -169,7 +177,7 @@ class Reports extends Component {
       body: JSON.stringify({
         time: this.state.chosenTimeRange.toLowerCase(),
         room: this.state.chosenLocation,
-        team: this.state.chosenTeam,
+        team: chosenTeam,
       }),
     })
       .then((res) => {
@@ -225,7 +233,7 @@ class Reports extends Component {
           },
 
           pieData: {
-            labels: res.desks,
+            labels: this.toLabelArray(res.desks),
             datasets: [
               {
                 label: "Desk",
@@ -250,7 +258,7 @@ class Reports extends Component {
   };
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
@@ -332,53 +340,23 @@ class Reports extends Component {
           <div className="space" />
           {this.state.graphsVisible ? (
             <div>
-              <Bar
-                data={this.state.barData}
-                options={{
-                  scales: {
-                    yAxes: [
-                      {
-                        ticks: {
-                          beginAtZero: true,
-                          precision: 0,
-                        },
-                      },
-                    ],
-                  },
-                  title: {
-                    display: this.props.displayTitle,
-                    text: "Most active user",
-                    fontSize: 25,
-                  },
-                  legend: {
-                    display: this.props.displayLegend,
-                    position: this.props.legendPosition,
-                  },
-                }}
-              />
-              <div className="space" style={{ marginBottom: "5%" }} />
-              <Line
-                data={this.state.lineData}
-                options={{
-                  title: {
-                    display: this.props.displayTitle,
-                    text: "Most active day",
-                    fontSize: 25,
-                  },
-                  legend: {
-                    display: this.props.displayLegend,
-                    position: this.props.legendPosition,
-                  },
-                }}
-              />
-              <div className="space" style={{ marginBottom: "5%" }} />
-              {this.state.chosenLocation !== "overall" ? (
-                <Pie
-                  data={this.state.pieData}
+              <div style={{ width: "70%", marginLeft: "15%", marginBottom: "5%" }}>
+                <Bar
+                  data={this.state.barData}
                   options={{
+                    scales: {
+                      yAxes: [
+                        {
+                          ticks: {
+                            beginAtZero: true,
+                            precision: 0,
+                          },
+                        },
+                      ],
+                    },
                     title: {
                       display: this.props.displayTitle,
-                      text: "Most used desk",
+                      text: "Most active user",
                       fontSize: 25,
                     },
                     legend: {
@@ -387,6 +365,42 @@ class Reports extends Component {
                     },
                   }}
                 />
+              </div>
+              <div className="space" style={{ marginBottom: "5%" }} />
+              <div style={{ width: "70%", marginLeft: "15%", marginBottom: "5%" }}>
+                <Bar
+                  data={this.state.lineData}
+                  options={{
+                    title: {
+                      display: this.props.displayTitle,
+                      text: "Most active day",
+                      fontSize: 25,
+                    },
+                    legend: {
+                      display: this.props.displayLegend,
+                      position: this.props.legendPosition,
+                    },
+                  }}
+                />
+              </div>
+              <div className="space" style={{ marginBottom: "5%" }} />
+              {this.state.chosenLocation !== "overall" ? (
+                <div style={{ width: "70%", marginLeft: "15%", marginBottom: "5%" }}>
+                  <Pie
+                    data={this.state.pieData}
+                    options={{
+                      title: {
+                        display: this.props.displayTitle,
+                        text: "Most used desk",
+                        fontSize: 25,
+                      },
+                      legend: {
+                        display: this.props.displayLegend,
+                        position: this.props.legendPosition,
+                      },
+                    }}
+                  />
+                </div>
               ) : null}
             </div>
           ) : null}

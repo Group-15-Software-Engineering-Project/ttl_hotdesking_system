@@ -1,3 +1,5 @@
+import { sha256 } from "js-sha256";
+
 export const months = [
   "Jan",
   "Feb",
@@ -12,13 +14,30 @@ export const months = [
   "Nov",
   "Dec",
 ];
+export const tokenize = (e) => {
+  let a = sessionStorage.email;
+  let b = sessionStorage.username;
+  let date = new Date();
+  let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
+  let token = sha256(a + c + "@$;;:!" + (e ? "@|]|\\/|!|\\|$$" : "*^*") + b);
+  console.log(a, b, c);
+  sessionStorage.setItem("sessionToken", token);
+};
 
-export const getDifferenceInDays = (date1, date2) =>
-{
+export const verify = (e) => {
+  let a = sessionStorage.email;
+  let b = sessionStorage.username;
+  let date = new Date();
+  let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
+  let token = sha256(a + c + "@$;;:!" + (e ? "@|]|\\/|!|\\|$$" : "*^*") + b);
+  return token === sessionStorage.sessionToken;
+};
+
+export const getDifferenceInDays = (date1, date2) => {
   let diff = date1.getTime() - date2.getTime();
-  diff = Math.ceil(diff/(1000*60*60*24));
+  diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
   return diff;
-}
+};
 
 export const _GetUserBookings = async (ref) => {
   let date = new Date();

@@ -7,11 +7,13 @@ import "../public/css/Navbar.css";
 import { IconContext } from "react-icons";
 import * as BiIcons from "react-icons/bi";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
+import { verify } from "./Misc";
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
   const location = useLocation();
+  const verified = verify(true);
   return location.pathname === "/login" ? (
     <></>
   ) : (
@@ -47,10 +49,7 @@ function Navbar() {
               </Link>
             </li>
             {SidebarData.map((item, index) => {
-              if (
-                !item.adminRequired ||
-                (sessionStorage.__user_is_admin__ && item.adminRequired)
-              ) {
+              if (!item.adminRequired || (verified && item.adminRequired)) {
                 return (
                   <li key={index} className={item.cName}>
                     <Link to={item.path}>

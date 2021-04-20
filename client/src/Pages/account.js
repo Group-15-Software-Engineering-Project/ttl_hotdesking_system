@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { _GetUserBookings } from "../Components/Misc";
+import { Redirect } from "react-router";
+import { _GetUserBookings, verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 const sha256 = require("js-sha256");
@@ -169,7 +170,7 @@ class Account extends Component {
   };
 
   render() {
-    return (
+    return verify(true) || verify(false) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
@@ -360,6 +361,8 @@ class Account extends Component {
         </div>
         <div className="flex-container-1" />
       </div>
+    ) : (
+      <Redirect to="/login" />
     );
   }
 }
