@@ -119,6 +119,7 @@ app.post("/api/setUserName", (req, res) => {
 });
 
 app.post("/api/changePassword", (req, res) => {
+  console.log("enteredChangePassword");
   changePassword(req.body.email, req.body.password)
   .then(() => {
     res.send({error:false});
@@ -687,7 +688,7 @@ function changePassword(email, password) {
   sql = "UPDATE USERS SET password='"+password+"' WHERE email='"+email+"';";
   console.log(sql);
   return new Promise((resolve, reject) => {
-    con.query((err, res) => {
+    con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
       } else {
