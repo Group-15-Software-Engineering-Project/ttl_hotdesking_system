@@ -127,6 +127,30 @@ app.post("/api/changePassword", (req, res) => {
     res.send({error:true});
   });
 });
+app.post("/api/getNotifications", (req, res) => {
+  let x = req.body.x;
+  console.log("enter notifications");
+  getNotifications()
+  .then((result) => {
+    console.log(result);
+    res.send({error:false, notifications:result});
+  })
+  .catch((err) => {
+    console.log("sql err");
+    res.send({error:true, notifications:[]});
+  });
+});
+
+app.post("/api/addNotification", (req, res) => {
+  console.log("enetered add NOt");
+  addNotification(req.body.start, req.body.end, req.body.type, req.body.title, req.body.body)
+  .then(() => {
+    res.send({error: false});
+  })
+  .catch((err) => {
+    res.send({error: true});
+  });
+});
 
 app.post("/api/getRooms", (req, res) => {
   let locations = [];
@@ -226,10 +250,6 @@ app.post("/api/removeUserFromTeam", (req, res) => {
       console.log(err);
       res.send({ error: true });
     });
-});
-
-app.post("/api/addNotification", (req, res) => {
-  
 });
 
 app.post("/api/addUser", (req, res) => {
@@ -531,8 +551,57 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 });
 
 //Database Access
+function getMaxNotifcationID() {
+  sql = "SELECT MAX(ID) FROM NOTIFICATIONS;";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new  Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function getNotifications() {
+  sql = "SELECT * FROM NOTIFICATIONS WHERE END>now();";
+  console.log(sql);
+  return new Promise((resolve, reject) => {
+    con.query(sql, (err, res) => {
+      if (err) {
+        reject(new Error(err));
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function addNotification(start, end, type, title, body) {
+  return new Promise((resolve, reject) => {
+    console.log("entered addNotification");
+    getMaxNotifcationID()
+    .then((res) => {
+      console.log(res);
+      let sql = "INSERT INTO NOTIFICATIONS VALUES ("+(res[0]["MAX(ID)"]+1)+", '"+start+"', '"+end+"', '"+type+"', '"+title+"', '"+body+"');";
+      console.log(sql);
+      con.query(sql, (err, res) => {
+        if (err) {
+          reject(new Error(err));
+        } else {
+          resolve(res);
+        }
+      });
+    })
+    .catch((err) => {
+      reject(new Error(err));
+    });
+  });
+}
+
 function addUser(email, password) {
- 
   return new Promise((resolve, reject) => {
     sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + password + '", null);';
     console.log(sql);

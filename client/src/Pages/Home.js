@@ -40,6 +40,31 @@ class Home extends React.Component {
       ],
     };
   }
+  
+  getNotifications = () => {
+    fetch("/api/getNotifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "applications/json"
+      },
+      body: JSON.stringify({
+        x: "this is a test sting"
+      }),
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        alert("Could not load Notifications");
+      } else {
+        this.setState({notifs: res.notifications});
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  };
 
   componentDidMount = () => {
     if (sessionStorage.email) {
@@ -50,7 +75,7 @@ class Home extends React.Component {
       });
       if (sessionStorage.upcomingBookings)
         this.setState({ bookings: JSON.parse(sessionStorage.upcomingBookings).data });
-
+      this.getNotifications();
       if (!sessionStorage.upcomingBookings || !sessionStorage.bookings) {
         _GetUserBookings(this);
       }
