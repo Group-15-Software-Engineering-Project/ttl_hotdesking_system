@@ -255,7 +255,13 @@ app.post("/api/removeUserFromTeam", (req, res) => {
 app.post("/api/addUser", (req, res) => {
   addUser(req.body.email, req.body.password)
     .then(() => {
-      res.send({ error: false, message: "Success" });
+      addUserToGroup(req.body.email, "All Users")
+      .then(() => {
+        res.send({ error: false, message: "Success" });
+      })
+      .catch((err) => {
+        res.send({error:true, message: err.toString()});
+      });
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
