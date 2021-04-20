@@ -275,88 +275,96 @@ class Account extends Component {
               </button>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexFlow: "column wrap",
-              textAlign: "center",
-            }}
-          >
-            <h1
-              className="page-divider-header"
-              style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}
-            >
-              Delete Account
-            </h1>
-            <div className="space" />
-            <h3 style={{ color: "red" }}>Warning!</h3>
-            <span
-              style={{
-                color: "red",
-                fontSize: "0.9rem",
-                marginLeft: "2px",
-                marginRight: "2px",
-              }}
-            >
-              This action is irreversible and will result in the loss of all booking history.
-            </span>
-            <div className="space" style={{ marginBottom: "0" }} />
-            <span
-              style={{
-                color: "red",
-                marginLeft: "2px",
-                marginRight: "2px",
-                fontSize: "0.9rem",
-              }}
-            >
-              Proceeding will remove all information tied to this account.
-            </span>
-            <div className="space" style={{ marginBottom: "0" }} />
-            <span
-              style={{
-                color: "red",
-                marginLeft: "2px",
-                marginRight: "2px",
-                fontSize: "0.9rem",
-              }}
-            >
-              This account will lose all access to this service unless added again by an admin.
-            </span>
-          </div>
-          <div className="space" style={{ marginBottom: "0" }} />
+          {!verify(true) ? (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  flexFlow: "column wrap",
+                  textAlign: "center",
+                }}
+              >
+                <h1
+                  className="page-divider-header"
+                  style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}
+                >
+                  Delete Account
+                </h1>
+                <div className="space" />
+                <h3 style={{ color: "red" }}>Warning!</h3>
+                <span
+                  style={{
+                    color: "red",
+                    fontSize: "0.9rem",
+                    marginLeft: "2px",
+                    marginRight: "2px",
+                  }}
+                >
+                  This action is irreversible and will result in the loss of all booking
+                  history.
+                </span>
+                <div className="space" style={{ marginBottom: "0" }} />
+                <span
+                  style={{
+                    color: "red",
+                    marginLeft: "2px",
+                    marginRight: "2px",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  Proceeding will remove all information tied to this account.
+                </span>
+                <div className="space" style={{ marginBottom: "0" }} />
+                <span
+                  style={{
+                    color: "red",
+                    marginLeft: "2px",
+                    marginRight: "2px",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  This account will lose all access to this service unless added again by an
+                  admin.
+                </span>
+              </div>
+              <div className="space" style={{ marginBottom: "0" }} />
 
-          <input
-            type="password"
-            name="delPassword"
-            className="text-input"
-            onChange={this.handleEvent}
-            placeholder="Password"
-            style={{ margin: "2%", width: "30%" }}
-          />
-          <input
-            type="password"
-            name="confirmDelPassword"
-            className="text-input"
-            onChange={this.handleEvent}
-            placeholder="Confirm password"
-            style={{ margin: "2%", width: "30%" }}
-          />
-          <div className="space" style={{ marginBottom: "1%" }} />
-          <label for="deleteAccountConfirm" style={{ marginRight: "1%" }}>
-            I know what I'm doing{" "}
-          </label>
-          <input
-            type="checkbox"
-            name="deleteAccountConfirm"
-            onChange={(e) => this.setState({ deleteAccountConfirmation: e.target.checked })}
-          ></input>
-          <div className="space" />
-          <button
-            className="button-style-warning no-outline"
-            onClick={() => this.submitDeleteAccount()}
-          >
-            Delete my Account
-          </button>
+              <input
+                type="password"
+                name="delPassword"
+                className="text-input"
+                onChange={this.handleEvent}
+                placeholder="Password"
+                style={{ margin: "2%", width: "30%" }}
+              />
+              <input
+                type="password"
+                name="confirmDelPassword"
+                className="text-input"
+                onChange={this.handleEvent}
+                placeholder="Confirm password"
+                style={{ margin: "2%", width: "30%" }}
+              />
+              <div className="space" style={{ marginBottom: "1%" }} />
+              <label for="deleteAccountConfirm" style={{ marginRight: "1%" }}>
+                I know what I'm doing{" "}
+              </label>
+              <input
+                type="checkbox"
+                name="deleteAccountConfirm"
+                onChange={(e) =>
+                  this.setState({ deleteAccountConfirmation: e.target.checked })
+                }
+              ></input>
+              <div className="space" />
+              <button
+                className="button-style-warning no-outline"
+                onClick={() => this.submitDeleteAccount()}
+              >
+                Delete my Account
+              </button>
+            </>
+          ) : null}
           <div className="space" style={{ marginBottom: "20%" }} />
         </div>
         <div className="flex-container-1" />

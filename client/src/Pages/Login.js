@@ -20,7 +20,48 @@ class Login extends Component {
     };
   }
 
+  transformNotifications = (data) => {
+    let notifs = [];
+    for (let i in data) {
+      notifs.push({
+        type: data[i].TYPE,
+        date: data[i].START,
+        text: data[i].BODY,
+        title: data[i].TITLE,
+      });
+    }
+    return notifs;
+  };
+
+  getNotifications = () => {
+    fetch("/api/getNotifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "applications/json",
+      },
+      body: JSON.stringify({
+        x: "this is a test sting",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) {
+          alert("Could not load Notifications");
+        } else {
+          alert("notifs");
+          let data = this.transformNotifications(res.notifications);
+          sessionStorage.setItem("notifications", JSON.stringify({ data }));
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
   componentDidMount = () => {
+    this.getNotifications();
     if (!(verify(true) || verify(false))) {
       sessionStorage.clear();
     }
@@ -76,7 +117,6 @@ class Login extends Component {
         } else {
           this.setState({ validLogin: true, admin: res.admin }, () => {
             this.getUserName();
-
             _GetUserBookings();
           });
           this.props.setEmail(this.state.email);

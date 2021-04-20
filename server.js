@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const mysql = require("mysql");
 require("dotenv").config();
-  
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -25,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
-console.log(req.body.password);
+  console.log(req.body.password);
   login(req.body.email, req.body.password)
     .then((result) => {
       adminCheck(req.body.email)
@@ -85,72 +84,72 @@ app.post("/api/getLocationData", (req, res) => {
 
 app.post("/api/getBookingsCount", (req, res) => {
   getBookingsCount(req.body.email)
-  .then((result) => {
-    console.log("count: ", count);
-  })
-  .catch((err) => {
-    res.send({error:true, count:0});
-  })
+    .then((result) => {
+      console.log("count: ", count);
+    })
+    .catch((err) => {
+      res.send({ error: true, count: 0 });
+    });
 });
 
-app.post("/api/getUserName", (req, res) =>  {
+app.post("/api/getUserName", (req, res) => {
   getUserName(req.body.email)
-  .then((result) => {
-    if (result.length===0) {
-      res.send({error:true, username:req.body.email});
-    } else {
-      console.log(result[0].username);
-      res.send({error:false, username:result[0].username});
-    }
-  })
-  .catch((err) => {
-    res.send({error:true, username:req.body.email});
-  });
+    .then((result) => {
+      if (result.length === 0) {
+        res.send({ error: true, username: req.body.email });
+      } else {
+        console.log(result[0].username);
+        res.send({ error: false, username: result[0].username });
+      }
+    })
+    .catch((err) => {
+      res.send({ error: true, username: req.body.email });
+    });
 });
 
 app.post("/api/setUserName", (req, res) => {
   setUserName(req.body.email, req.body.username)
-  .then(() => {
-    res.send({error:false});
-  })
-  .catch((err) => {
-    res.send({error:true});
-  });
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((err) => {
+      res.send({ error: true });
+    });
 });
 
 app.post("/api/changePassword", (req, res) => {
   console.log("enteredChangePassword");
   changePassword(req.body.email, req.body.password)
-  .then(() => {
-    res.send({error:false});
-  })
-  .catch((err) => {
-    res.send({error:true});
-  });
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((err) => {
+      res.send({ error: true });
+    });
 });
 app.post("/api/getNotifications", (req, res) => {
   let x = req.body.x;
   console.log("enter notifications");
   getNotifications()
-  .then((result) => {
-    console.log(result);
-    res.send({error:false, notifications:result});
-  })
-  .catch((err) => {
-    console.log("sql err");
-    res.send({error:true, notifications:[]});
-  });
+    .then((result) => {
+      console.log(result);
+      res.send({ error: false, notifications: result });
+    })
+    .catch((err) => {
+      console.log("sql err");
+      res.send({ error: true, notifications: [] });
+    });
 });
 
 app.post("/api/addNotification", (req, res) => {
   console.log("enetered add NOt");
   addNotification(req.body.start, req.body.end, req.body.type, req.body.title, req.body.body)
-  .then(() => {
-    res.send({error: false});
-  })
-  .catch((err) => {
-    res.send({error: true});
-  });
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((err) => {
+      res.send({ error: true });
+    });
 });
 
 app.post("/api/getRooms", (req, res) => {
@@ -312,19 +311,19 @@ app.post("/api/removeUser", (req, res) => {
 app.post("/api/deleteBooking", (req, res) => {
   console.log(req);
   deleteBooking(
-    req.body.user, 
+    req.body.user,
     req.body.desk,
     req.body.room,
     req.body.date,
     req.body.am,
-    req.body.pm)
+    req.body.pm
+  )
     .then(() => {
-      res.send({error:false});
+      res.send({ error: false });
     })
     .catch((err) => {
-      res.send({error:true});
+      res.send({ error: true });
     });
-  
 });
 
 app.post("/api/getBooking", (req, res) => {
@@ -558,7 +557,7 @@ function getMaxNotifcationID() {
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
-        reject(new  Error(err));
+        reject(new Error(err));
       } else {
         resolve(res);
       }
@@ -567,7 +566,7 @@ function getMaxNotifcationID() {
 }
 
 function getNotifications() {
-  sql = "SELECT * FROM NOTIFICATIONS WHERE END>now();";
+  sql = "SELECT * FROM NOTIFICATIONS WHERE END>now() ORDER BY START DESC;";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -584,21 +583,34 @@ function addNotification(start, end, type, title, body) {
   return new Promise((resolve, reject) => {
     console.log("entered addNotification");
     getMaxNotifcationID()
-    .then((res) => {
-      console.log(res);
-      let sql = "INSERT INTO NOTIFICATIONS VALUES ("+(res[0]["MAX(ID)"]+1)+", '"+start+"', '"+end+"', '"+type+"', '"+title+"', '"+body+"');";
-      console.log(sql);
-      con.query(sql, (err, res) => {
-        if (err) {
-          reject(new Error(err));
-        } else {
-          resolve(res);
-        }
+      .then((res) => {
+        console.log(res);
+        let sql =
+          "INSERT INTO NOTIFICATIONS VALUES (" +
+          (res[0]["MAX(ID)"] + 1) +
+          ", '" +
+          start +
+          "', '" +
+          end +
+          "', '" +
+          type +
+          "', '" +
+          title +
+          "', '" +
+          body +
+          "');";
+        console.log(sql);
+        con.query(sql, (err, res) => {
+          if (err) {
+            reject(new Error(err));
+          } else {
+            resolve(res);
+          }
+        });
+      })
+      .catch((err) => {
+        reject(new Error(err));
       });
-    })
-    .catch((err) => {
-      reject(new Error(err));
-    });
   });
 }
 
@@ -645,7 +657,7 @@ function addDesk(desk_number, room) {
 }
 
 function login(email, password) {
-  sql = "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + password + "';"; 
+  sql = "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + password + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -671,7 +683,7 @@ function adminCheck(email) {
 }
 
 function setUserName(email, username) {
-  sql = "UPDATE USERS SET username='"+username+"' WHERE email='"+email+"';";
+  sql = "UPDATE USERS SET username='" + username + "' WHERE email='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -685,7 +697,7 @@ function setUserName(email, username) {
 }
 
 function changePassword(email, password) {
-  sql = "UPDATE USERS SET password='"+password+"' WHERE email='"+email+"';";
+  sql = "UPDATE USERS SET password='" + password + "' WHERE email='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -714,41 +726,73 @@ function getReportsByUser(time, room, team) {
   console.log(team);
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
-      sql = "SELECT * FROM BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")";
+      sql =
+        "SELECT * FROM BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")";
     } else if (time === "overall" && room !== "overall") {
-      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")";
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")";
     } else if (time === "last week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "last 3 months" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "next week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "last week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "last month" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "last 3 months" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     } else if (time === "next week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +" ORDER BY USER;";
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        " ORDER BY USER;";
     }
     //console.log("success");
 
@@ -766,41 +810,75 @@ function getReportsByDesk(time, room, team) {
   //console.log("success");
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
-      sql = "select * from BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+      sql =
+        "select * from BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "overall" && room !== "overall") {
-      sql = "select * from BOOKINGS WHERE ROOM='" + room + "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+      sql =
+        "select * from BOOKINGS WHERE ROOM='" +
+        room +
+        "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "last week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "last 3 months" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "next week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "last week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "last month" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "last 3 months" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     } else if (time === "next week" && room !== "overall") {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")" +"ORDER BY DESK;";
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        team +
+        ")" +
+        "ORDER BY DESK;";
     }
     //console.log("success");
 
@@ -907,9 +985,9 @@ async function getDesks(room) {
 }
 
 function getUserName(email) {
-  sql = "SELECT username FROM USERS WHERE email='"+email+"';";
+  sql = "SELECT username FROM USERS WHERE email='" + email + "';";
   console.log(sql);
-  return new  Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -921,7 +999,7 @@ function getUserName(email) {
 }
 
 function getBookingsCount(email) {
-  sql = "SELECT COUNT(USER) FROM BOOKINGS WHERE USER='"+email+"';";
+  sql = "SELECT COUNT(USER) FROM BOOKINGS WHERE USER='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -950,9 +1028,9 @@ function getRooms() {
     });
   });
 }
-function getUsersInTeam(team){
+function getUsersInTeam(team) {
   return new Promise((resolve, reject) => {
-    sql = "select USER FROM GROUPS WHERE NAME ='"+team+"';";
+    sql = "select USER FROM GROUPS WHERE NAME ='" + team + "';";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -1108,7 +1186,20 @@ function deleteUserBookings(email) {
 }
 
 function deleteBooking(user, desk, room, date, am, pm) {
-  sql = "DELETE FROM BOOKINGS WHERE USER='"+user+"' AND DESK="+desk+" AND ROOM='"+room+"' AND DATE='"+date+"' AND AM="+am+" AND PM="+pm+";";
+  sql =
+    "DELETE FROM BOOKINGS WHERE USER='" +
+    user +
+    "' AND DESK=" +
+    desk +
+    " AND ROOM='" +
+    room +
+    "' AND DATE='" +
+    date +
+    "' AND AM=" +
+    am +
+    " AND PM=" +
+    pm +
+    ";";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
