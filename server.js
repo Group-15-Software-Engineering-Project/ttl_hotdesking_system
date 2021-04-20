@@ -641,7 +641,7 @@ function getPastBookings(email) {
   });
 }
 function getReportsByUser(time, room, team) {
-  //console.log("success");
+  console.log(team);
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
       sql = "SELECT * FROM BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE"+team+")";

@@ -157,9 +157,11 @@ class Reports extends Component {
   reset() {}
 
   getData = () => {
+    let chosenTeam=this.state.chosenTeam;
     if (this.state.chosenTeam!=="1"){
-      var newChosenTeam="NAME='"+this.state.chosenTeam+"'";
-      this.setState({ chosenTeam: newChosenTeam});
+      chosenTeam=" NAME='"+this.state.chosenTeam+"'";
+      
+      console.log(chosenTeam);
     }
     fetch("/api/getReports", {
       method: "POST",
@@ -169,10 +171,10 @@ class Reports extends Component {
       body: JSON.stringify({
         time: this.state.chosenTimeRange.toLowerCase(),
         room: this.state.chosenLocation,
-        team: this.state.chosenTeam,
+        team: chosenTeam,
       }),
     })
-      .then((res) => {
+      .then((res) => { 
         return res.json();
       })
       .then((res) => {
@@ -357,7 +359,7 @@ class Reports extends Component {
                 }}
               />
               <div className="space" style={{ marginBottom: "5%" }} />
-              <Line
+              <Bar
                 data={this.state.lineData}
                 options={{
                   title: {
