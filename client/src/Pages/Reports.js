@@ -3,6 +3,7 @@ import { Bar } from "react-chartjs-2";
 import { Line } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import { Redirect } from "react-router-dom";
+import { verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Reports extends Component {
@@ -157,9 +158,9 @@ class Reports extends Component {
   reset() {}
 
   getData = () => {
-    if (this.state.chosenTeam!=="1"){
-      var newChosenTeam="NAME='"+this.state.chosenTeam+"'";
-      this.setState({ chosenTeam: newChosenTeam});
+    if (this.state.chosenTeam !== "1") {
+      var newChosenTeam = "NAME='" + this.state.chosenTeam + "'";
+      this.setState({ chosenTeam: newChosenTeam });
     }
     fetch("/api/getReports", {
       method: "POST",
@@ -250,7 +251,7 @@ class Reports extends Component {
   };
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">

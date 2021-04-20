@@ -2,7 +2,7 @@ import React from "react";
 import "../public/css/main.css";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { months, _GetUserBookings } from "../Components/Misc";
+import { months, _GetUserBookings, verify } from "../Components/Misc";
 
 class Home extends React.Component {
   constructor(props) {
@@ -242,7 +242,7 @@ class Home extends React.Component {
   };
 
   render() {
-    return (
+    return verify(true) || verify(false) ? (
       <div key={this.state.key} className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
@@ -362,6 +362,8 @@ class Home extends React.Component {
         </div>
         <div className="flex-container-1" />
       </div>
+    ) : (
+      <Redirect to="/login" />
     );
   }
 }

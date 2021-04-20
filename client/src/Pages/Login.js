@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
 import "../public/css/main.css";
-import { _GetUserBookings } from "../Components/Misc";
+import { _GetUserBookings, tokenize, verify } from "../Components/Misc";
 import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 const sha256 = require("js-sha256");
@@ -19,6 +19,12 @@ class Login extends Component {
       admin: false,
     };
   }
+
+  componentDidMount = () => {
+    if (!(verify(true) || verify(false))) {
+      sessionStorage.clear();
+    }
+  };
 
   getUserName = () => {
     fetch("/api/getUserName", {
@@ -38,6 +44,9 @@ class Login extends Component {
           console.log(res.err);
         }
         sessionStorage.setItem("username", res.username);
+        if (this.state.admin.length !== 0) tokenize(true);
+        else tokenize(false);
+        window.location = "/home";
       })
       .catch((err) => {
         console.log(err);
@@ -63,10 +72,10 @@ class Login extends Component {
         if (res.error) {
           this.setState({ validLogin: false, errorText: true });
         } else {
-          this.getUserName();
           this.setState({ validLogin: true, admin: res.admin }, () => {
+            this.getUserName();
             sessionStorage.setItem("email", this.state.email);
-            if (res.admin.length !== 0) sessionStorage.setItem("__user_is_admin__", true);
+
             _GetUserBookings();
           });
           this.props.setEmail(this.state.email);
@@ -79,7 +88,7 @@ class Login extends Component {
   };
 
   render() {
-    return sessionStorage.email ? (
+    return verify(true) || verify(false) ? (
       <Redirect to="/loading"></Redirect>
     ) : (
       <div>
@@ -121,7 +130,7 @@ class Login extends Component {
                   placeholder="Password"
                   type="password"
                   value={this.state.password}
-                  onChange={(e) => this.setState({password: e.target.value })}
+                  onChange={(e) => this.setState({ password: e.target.value })}
                 />
               </Form.Group>
 

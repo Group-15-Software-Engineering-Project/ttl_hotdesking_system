@@ -1,9 +1,10 @@
 import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
-import { createUniqueID, months, _GetUserBookings } from "../Components/Misc";
+import { createUniqueID, months, verify, _GetUserBookings } from "../Components/Misc";
 import ConfirmationEmail from "../Components/ConfirmationEmail.js";
 import "../public/css/main.css";
+import { Redirect } from "react-router";
 
 export default class BookingPage extends React.Component {
   constructor(props) {
@@ -166,7 +167,7 @@ export default class BookingPage extends React.Component {
   };
 
   render() {
-    return (
+    return verify(true) || verify(false) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1"></div>
         <div className="flex-container-5 main-body">
@@ -300,6 +301,8 @@ export default class BookingPage extends React.Component {
         </div>
         <div className="flex-container-1"></div>
       </div>
+    ) : (
+      <Redirect to="/login" />
     );
   }
 }

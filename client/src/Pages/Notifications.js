@@ -95,6 +95,7 @@ class Notifications extends Component {
             </select>
 
             <input
+              id="title_id"
               className="text-input"
               placeholder="Notification title (max. 30 characters)"
               type="text"

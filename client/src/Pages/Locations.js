@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { createUniqueID } from "../Components/Misc";
+import { createUniqueID, verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Locations extends Component {
@@ -255,7 +255,7 @@ class Locations extends Component {
   };
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div>
         <div className="wrapper TCD-BG" key={this.state.key}>
           <div key={"side_cont_1"} className="flex-container-1" />

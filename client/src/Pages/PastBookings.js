@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "../public/css/booking.css";
 import "../public/css/main.css";
-import { months, _GetUserBookings } from "../Components/Misc";
+import { months, verify, _GetUserBookings } from "../Components/Misc";
+import { Redirect } from "react-router-dom";
 
 function PastBookings() {
   const [todayDate, setDate] = useState(null);
   const [isCancelling, toggleCancelMode] = useState(false);
+  const verified = verify(true) || verify(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -212,7 +214,7 @@ function PastBookings() {
     );
   };
 
-  return (
+  return verified ? (
     <div className="wrapper TCD-BG ">
       <div className="flex-container-1"></div>
       <div className="flex-container-5 main-body">
@@ -339,6 +341,8 @@ function PastBookings() {
       </div>
       <div className="flex-container-1"></div>
     </div>
+  ) : (
+    <Redirect to="/login" />
   );
 }
 

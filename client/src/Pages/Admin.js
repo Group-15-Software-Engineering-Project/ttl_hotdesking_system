@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import { verify } from "../Components/Misc";
 
 import "../public/css/main.css";
 
@@ -12,7 +13,7 @@ class Admin extends Component {
   }
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
