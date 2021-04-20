@@ -325,7 +325,6 @@ class Reports extends Component {
                   onChange={this.handleEvent}
                 >
                   <option value="">Select team</option>
-                  <option value="1">All teams</option>
                   {this.state.teamlist.map((x) => {
                     return <option value={x}>{x}</option>;
                   })}
