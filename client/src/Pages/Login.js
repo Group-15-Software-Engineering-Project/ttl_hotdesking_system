@@ -43,9 +43,11 @@ class Login extends Component {
         if (res.err) {
           console.log(res.err);
         }
+        sessionStorage.setItem("email", this.state.email);
         sessionStorage.setItem("username", res.username);
         if (this.state.admin.length !== 0) tokenize(true);
         else tokenize(false);
+
         window.location = "/home";
       })
       .catch((err) => {
@@ -74,7 +76,6 @@ class Login extends Component {
         } else {
           this.setState({ validLogin: true, admin: res.admin }, () => {
             this.getUserName();
-            sessionStorage.setItem("email", this.state.email);
 
             _GetUserBookings();
           });
