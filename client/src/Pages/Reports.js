@@ -3,6 +3,7 @@ import { Bar } from "react-chartjs-2";
 import { Line } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import { Redirect } from "react-router-dom";
+import { verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Reports extends Component {
@@ -157,10 +158,10 @@ class Reports extends Component {
   reset() {}
 
   getData = () => {
+
     let chosenTeam=this.state.chosenTeam;
     if (this.state.chosenTeam!=="1"){
       chosenTeam=" NAME='"+this.state.chosenTeam+"'";
-      
       console.log(chosenTeam);
     }
     fetch("/api/getReports", {
@@ -252,7 +253,7 @@ class Reports extends Component {
   };
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
