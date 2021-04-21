@@ -20,6 +20,8 @@ class Reports extends Component {
       chosenTeam: "",
       roomlist: [],
       teamlist: [],
+      error: "",
+      isError: false,
       barData: {
         labels: [
           "User1",
@@ -185,6 +187,8 @@ class Reports extends Component {
       })
       .then((res) => {
         this.setState({
+          error: res.message,
+          isError: res.isError,
           graphsVisible: true,
           barData: {
             labels: res.labels,
@@ -278,7 +282,10 @@ class Reports extends Component {
               }}
             >
               <div style={{ flex: "1", height: "100%" }}>
-                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                <h1
+                  className="page-divider-header"
+                  style={{ marginLeft: "2.5%" }}
+                >
                   Time Range
                 </h1>
                 <div className="space" />
@@ -296,7 +303,10 @@ class Reports extends Component {
                 </select>
               </div>
               <div style={{ flex: "1", height: "100%" }}>
-                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                <h1
+                  className="page-divider-header"
+                  style={{ marginLeft: "2.5%" }}
+                >
                   Locations
                 </h1>
                 <div className="space" />
@@ -314,7 +324,10 @@ class Reports extends Component {
                 </select>
               </div>
               <div style={{ flex: "1", height: "100%" }}>
-                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                <h1
+                  className="page-divider-header"
+                  style={{ marginLeft: "2.5%" }}
+                >
                   Teams
                 </h1>
                 <div className="space" />
@@ -332,75 +345,102 @@ class Reports extends Component {
               </div>
             </div>
             <div className="space" />
-            <button className="button-style no-outline" onClick={() => this.getData()}>
+            <button
+              className="button-style no-outline"
+              onClick={() => this.getData()}
+            >
               Run Report
             </button>
           </section>
           <div className="space" />
           {this.state.graphsVisible ? (
             <div>
-              <div style={{ width: "70%", marginLeft: "15%", marginBottom: "5%" }}>
-                <Bar
-                  data={this.state.barData}
-                  options={{
-                    scales: {
-                      yAxes: [
-                        {
-                          ticks: {
-                            beginAtZero: true,
-                            precision: 0,
-                          },
-                        },
-                      ],
-                    },
-                    title: {
-                      display: this.props.displayTitle,
-                      text: "Most active user",
-                      fontSize: 25,
-                    },
-                    legend: {
-                      display: this.props.displayLegend,
-                      position: this.props.legendPosition,
-                    },
-                  }}
-                />
-              </div>
-              <div className="space" style={{ marginBottom: "5%" }} />
-              <div style={{ width: "70%", marginLeft: "15%", marginBottom: "5%" }}>
-                <Bar
-                  data={this.state.lineData}
-                  options={{
-                    title: {
-                      display: this.props.displayTitle,
-                      text: "Most active day",
-                      fontSize: 25,
-                    },
-                    legend: {
-                      display: this.props.displayLegend,
-                      position: this.props.legendPosition,
-                    },
-                  }}
-                />
-              </div>
-              <div className="space" style={{ marginBottom: "5%" }} />
-              {this.state.chosenLocation !== "overall" ? (
-                <div style={{ width: "70%", marginLeft: "15%", marginBottom: "5%" }}>
-                  <Pie
-                    data={this.state.pieData}
-                    options={{
-                      title: {
-                        display: this.props.displayTitle,
-                        text: "Most used desk",
-                        fontSize: 25,
-                      },
-                      legend: {
-                        display: this.props.displayLegend,
-                        position: this.props.legendPosition,
-                      },
+              {!this.state.isError ? (
+                <div>
+                  <div
+                    style={{
+                      width: "70%",
+                      marginLeft: "15%",
+                      marginBottom: "5%",
                     }}
-                  />
+                  >
+                    <Bar
+                      data={this.state.barData}
+                      options={{
+                        scales: {
+                          yAxes: [
+                            {
+                              ticks: {
+                                beginAtZero: true,
+                                precision: 0,
+                              },
+                            },
+                          ],
+                        },
+                        title: {
+                          display: this.props.displayTitle,
+                          text: "Most active user",
+                          fontSize: 25,
+                        },
+                        legend: {
+                          display: this.props.displayLegend,
+                          position: this.props.legendPosition,
+                        },
+                      }}
+                    />
+                  </div>
+                  <div className="space" style={{ marginBottom: "5%" }} />
+                  <div
+                    style={{
+                      width: "70%",
+                      marginLeft: "15%",
+                      marginBottom: "5%",
+                    }}
+                  >
+                    <Bar
+                      data={this.state.lineData}
+                      options={{
+                        title: {
+                          display: this.props.displayTitle,
+                          text: "Most active day",
+                          fontSize: 25,
+                        },
+                        legend: {
+                          display: this.props.displayLegend,
+                          position: this.props.legendPosition,
+                        },
+                      }}
+                    />
+                  </div>
+                  <div className="space" style={{ marginBottom: "5%" }} />
+                  {this.state.chosenLocation !== "overall" ? (
+                    <div
+                      style={{
+                        width: "70%",
+                        marginLeft: "15%",
+                        marginBottom: "5%",
+                      }}
+                    >
+                      <Pie
+                        data={this.state.pieData}
+                        options={{
+                          title: {
+                            display: this.props.displayTitle,
+                            text: "Most used desk",
+                            fontSize: 25,
+                          },
+                          legend: {
+                            display: this.props.displayLegend,
+                            position: this.props.legendPosition,
+                          },
+                        }}
+                      />
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
+              ) : (
+                <h1>{this.state.error}</h1>
+              )}
             </div>
           ) : null}
         </div>

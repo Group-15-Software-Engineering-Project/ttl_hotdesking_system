@@ -354,7 +354,11 @@ app.post("/api/getReports", (req, res) => {
       for (booking in bookings) {
         data.push(bookings[booking]);
       }
-
+      if(bookings.length===0){
+        console.log("Error");
+        res.send({message: "No data", isError:true});
+      }
+      else{
       getReportsByDesk(req.body.time, req.body.room, req.body.team).then((bookings) => {
         deskData = [];
         for (booking in bookings) {
@@ -367,8 +371,9 @@ app.post("/api/getReports", (req, res) => {
         desks = array[0];
         deskBookings = array[1];
         activeDays = getMostActiveDay(data);
-        res.send({ labels, amountOfBookings, desks, deskBookings, activeDays });
+        res.send({ labels, amountOfBookings, desks, deskBookings, activeDays,message:"", isError:false,});
       });
+    }
     })
     .catch((err) => {
       res.send({ error: true, message: err.toString() });
