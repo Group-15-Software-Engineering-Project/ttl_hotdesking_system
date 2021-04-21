@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-var con = mysql.createConnection({
+var con = mysql.createConnection({  
   host: process.env.DB_ENDPOINT,
   user: process.env.DB_USER_ID,
   password: process.env.DB_PASS,
@@ -41,7 +41,7 @@ app.post("/api/login", (req, res) => {
           }
         })
         .catch((err) => {
-          console.log(err.toStirng());
+          console.log(err.toString());
           res.send({ error: true, admin: false, message: "error" });
         });
     })
@@ -683,7 +683,7 @@ function login(email, password) {
 }
 
 function adminCheck(email) {
-  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='" + email + "';";
+  sql = "SELECT * FROM hotdesking.GROUPS WHERE NAME='ADMIN' AND USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
