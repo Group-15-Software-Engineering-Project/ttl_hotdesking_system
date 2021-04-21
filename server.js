@@ -34,7 +34,7 @@ app.post("/api/login", (req, res) => {
             res.send({ error: false, admin: admin, message: "Success" });
           } else {
             res.send({
-              error: true,
+              error: false,
               admin: admin,
               message: "No email with that password",
             });
