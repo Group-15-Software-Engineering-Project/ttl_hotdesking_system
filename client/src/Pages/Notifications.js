@@ -1,6 +1,7 @@
 import React, { Component, createRef } from "react";
 import { Redirect } from "react-router-dom";
 import BookingCalendarNoLimit from "../Components/BookingCalendarNoLimit";
+import { verify } from "../Components/Misc";
 
 import "../public/css/main.css";
 class Notifications extends Component {
@@ -59,7 +60,7 @@ class Notifications extends Component {
   };
 
   render() {
-    return sessionStorage.__user_is_admin__ ? (
+    return verify(true) ? (
       <div className="wrapper TCD-BG">
         <div className="flex-container-1" />
         <div className="flex-container-5 main-body">
