@@ -565,7 +565,7 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 
 //Database Access
 function getMaxNotifcationID() {
-  sql = "SELECT MAX(ID) FROM NOTIFICATIONS;";
+  sql = "SELECT MAX(ID) FROM hotdesking.NOTIFICATIONS;";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -579,7 +579,7 @@ function getMaxNotifcationID() {
 }
 
 function getNotifications() {
-  sql = "SELECT * FROM NOTIFICATIONS WHERE END>now() ORDER BY START DESC;";
+  sql = "SELECT * FROM hotdesking.NOTIFICATIONS WHERE END>now() ORDER BY START DESC;";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -599,7 +599,7 @@ function addNotification(start, end, type, title, body) {
       .then((res) => {
         console.log(res);
         let sql =
-          "INSERT INTO NOTIFICATIONS VALUES (" +
+          "INSERT INTO hotdesking.NOTIFICATIONS VALUES (" +
           (res[0]["MAX(ID)"] + 1) +
           ", '" +
           start +
@@ -629,7 +629,7 @@ function addNotification(start, end, type, title, body) {
 
 function addUser(email, password) {
   return new Promise((resolve, reject) => {
-    sql = 'INSERT INTO USERS VALUES ("' + email + '", "' + password + '", null);';
+    sql = 'INSERT INTO hotdesking.USERS VALUES ("' + email + '", "' + password + '", null);';
     console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
@@ -643,7 +643,7 @@ function addUser(email, password) {
 }
 
 function addRoom(name) {
-  sql = 'INSERT INTO ROOMS VALUES ("' + name + '");';
+  sql = 'INSERT INTO hotdesking.ROOMS VALUES ("' + name + '");';
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -657,7 +657,7 @@ function addRoom(name) {
 }
 
 function addDesk(desk_number, room) {
-  sql = "INSERT INTO DESKS VALUES (" + desk_number + ', "' + room + '");';
+  sql = "INSERT INTO hotdesking.DESKS VALUES (" + desk_number + ', "' + room + '");';
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -670,7 +670,7 @@ function addDesk(desk_number, room) {
 }
 
 function login(email, password) {
-  sql = "SELECT * FROM USERS WHERE email='" + email + "' AND password='" + password + "';";
+  sql = "SELECT * FROM hotdesking.USERS WHERE email='" + email + "' AND password='" + password + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -696,7 +696,7 @@ function adminCheck(email) {
 }
 
 function setUserName(email, username) {
-  sql = "UPDATE USERS SET username='" + username + "' WHERE email='" + email + "';";
+  sql = "UPDATE hotdesking.USERS SET username='" + username + "' WHERE email='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -710,7 +710,7 @@ function setUserName(email, username) {
 }
 
 function changePassword(email, password) {
-  sql = "UPDATE USERS SET password='" + password + "' WHERE email='" + email + "';";
+  sql = "UPDATE hotdesking.USERS SET password='" + password + "' WHERE email='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -724,7 +724,7 @@ function changePassword(email, password) {
 }
 
 function getPastBookings(email) {
-  sql = "SELECT * FROM BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
+  sql = "SELECT * FROM hotdesking.BOOKINGS WHERE USER='" + email + "' ORDER BY DATE DESC;";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -740,37 +740,37 @@ function getReportsByUser(time, room, team) {
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
       sql =
-        "SELECT * FROM BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "SELECT * FROM hotdesking.BOOKINGS WHERE hotdesking.BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")";
     } else if (time === "overall" && room !== "overall") {
       sql =
-        "select * from BOOKINGS WHERE ROOM='" +
+        "select * from hotdesking.BOOKINGS WHERE ROOM='" +
         room +
-        "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")";
     } else if (time === "last week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from hotdesking.BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND hotdesking.BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
     } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from hotdesking.BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND hotdesking.BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
     } else if (time === "last 3 months" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from hotdesking.BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND hotdesking.BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
     } else if (time === "next week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from hotdesking.BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
@@ -778,7 +778,7 @@ function getReportsByUser(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
@@ -786,7 +786,7 @@ function getReportsByUser(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
@@ -794,7 +794,7 @@ function getReportsByUser(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
@@ -802,7 +802,7 @@ function getReportsByUser(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         " ORDER BY USER;";
@@ -824,7 +824,7 @@ function getReportsByDesk(time, room, team) {
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
       sql =
-        "select * from BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from BOOKINGS WHERE BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
@@ -832,31 +832,31 @@ function getReportsByDesk(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
     } else if (time === "last week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
     } else if (time === "last month" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
     } else if (time === "last 3 months" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from BOOKINGS where date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
     } else if (time === "next week" && room === "overall") {
       sql =
-        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "select * from BOOKINGS where date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
@@ -864,7 +864,7 @@ function getReportsByDesk(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between  date_sub(now(),INTERVAL 1 week) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
@@ -872,7 +872,7 @@ function getReportsByDesk(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between date_sub(now(),INTERVAL 1 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
@@ -880,7 +880,7 @@ function getReportsByDesk(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between date_sub(now(),INTERVAL 3 MONTH) and now() AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
@@ -888,7 +888,7 @@ function getReportsByDesk(time, room, team) {
       sql =
         "select * from BOOKINGS WHERE ROOM='" +
         room +
-        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM GROUPS WHERE" +
+        "' AND date between now() and date_add(now(),INTERVAL 1 week) AND BOOKINGS.USER IN (SELECT USER FROM hotdesking.GROUPS WHERE" +
         team +
         ")" +
         "ORDER BY DESK;";
@@ -914,7 +914,7 @@ function addBooking(user, desk, room, date, am, pm) {
   }
   return new Promise((resolve, reject) => {
     sql =
-      'INSERT INTO BOOKINGS VALUES ("' +
+      'INSERT INTO hotdesking.BOOKINGS VALUES ("' +
       user +
       '", ' +
       desk +
@@ -944,13 +944,13 @@ function getAvailableDesks(room, date, am, pm) {
   }
   return new Promise((resolve, reject) => {
     sql =
-      'SELECT DESK_NO FROM DESKS where ROOM="' +
+      'SELECT DESK_NO FROM hotdesking.DESKS where ROOM="' +
       room +
       '" AND NOT DESK_NO IN (SELECT DISTINCT BOOKINGS.DESK FROM DESKS RIGHT JOIN BOOKINGS ON DESKS.ROOM=BOOKINGS.ROOM where BOOKINGS.ROOM="' +
       room +
       '" AND ' +
       times +
-      'AND BOOKINGS.DATE="' +
+      'AND hotdesking.BOOKINGS.DATE="' +
       date +
       '");';
     con.query(sql, (err, res) => {
@@ -965,7 +965,7 @@ function getAvailableDesks(room, date, am, pm) {
 
 function getUsers() {
   return new Promise((resolve, reject) => {
-    sql = "SELECT email FROM USERS;";
+    sql = "SELECT email FROM hotdesking.USERS;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -982,7 +982,7 @@ function getUsers() {
 
 async function getDesks(room) {
   return new Promise((resolve, reject) => {
-    sql = 'SELECT * FROM DESKS WHERE room = "' + room + '";';
+    sql = 'SELECT * FROM hotdesking.DESKS WHERE room = "' + room + '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -998,7 +998,7 @@ async function getDesks(room) {
 }
 
 function getUserName(email) {
-  sql = "SELECT username FROM USERS WHERE email='" + email + "';";
+  sql = "SELECT username FROM hotdesking.USERS WHERE email='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1012,7 +1012,7 @@ function getUserName(email) {
 }
 
 function getBookingsCount(email) {
-  sql = "SELECT COUNT(USER) FROM BOOKINGS WHERE USER='" + email + "';";
+  sql = "SELECT COUNT(USER) FROM hotdesking.BOOKINGS WHERE USER='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1026,7 +1026,7 @@ function getBookingsCount(email) {
 }
 
 function getRooms() {
-  sql = "SELECT DISTINCT * FROM ROOMS;";
+  sql = "SELECT DISTINCT * FROM hotdesking.ROOMS;";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1043,7 +1043,7 @@ function getRooms() {
 }
 function getUsersInTeam(team) {
   return new Promise((resolve, reject) => {
-    sql = "select USER FROM GROUPS WHERE NAME ='" + team + "';";
+    sql = "select USER FROM hotdesking.GROUPS WHERE NAME ='" + team + "';";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -1060,7 +1060,7 @@ function getUsersInTeam(team) {
 
 function getTeams() {
   return new Promise((resolve, reject) => {
-    sql = "SELECT DISTINCT NAME FROM GROUPS;";
+    sql = "SELECT DISTINCT NAME FROM hotdesking.GROUPS;";
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -1083,7 +1083,7 @@ function getExistingBookings(room, date, am, pm) {
     times = am ? "AM=1 " : "PM=1 ";
   }
   sql =
-    'SELECT DISTINCT USER, DESK FROM BOOKINGS WHERE ROOM="' +
+    'SELECT DISTINCT USER, DESK FROM hotdesking.BOOKINGS WHERE ROOM="' +
     room +
     '" AND DATE="' +
     date +
@@ -1105,7 +1105,7 @@ function getUserBookingsBetween(user, start, end) {
   return new Promise((resolve, reject) => {
     startDay = start.toISOString().slice(0, 10);
     endDay = end.toISOString().slice(0, 10);
-    sql = 'SELECT * FROM BOOKINGS WHERE DATE>"' + startDay + '" AND DATE<"' + endDay + '";';
+    sql = 'SELECT * FROM hotdesking.BOOKINGS WHERE DATE>"' + startDay + '" AND DATE<"' + endDay + '";';
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(res));
@@ -1117,7 +1117,7 @@ function getUserBookingsBetween(user, start, end) {
 }
 
 function removeUserFromGroup(email, group) {
-  sql = "DELETE FROM GROUPS WHERE NAME='" + group + "' AND USER='" + email + "';";
+  sql = "DELETE FROM hotdesking.GROUPS WHERE NAME='" + group + "' AND USER='" + email + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1131,7 +1131,7 @@ function removeUserFromGroup(email, group) {
 }
 
 function addUserToGroup(email, group) {
-  sql = "INSERT INTO GROUPS VALUES ('" + group + "', '" + email + "');";
+  sql = "INSERT INTO hotdesking.GROUPS VALUES ('" + group + "', '" + email + "');";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1145,7 +1145,7 @@ function addUserToGroup(email, group) {
 }
 
 function deleteUserFromGroups(email) {
-  sql = "DELETE FROM GROUPS WHERE USER='" + email + "';";
+  sql = "DELETE FROM hotdesking.GROUPS WHERE USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1158,7 +1158,7 @@ function deleteUserFromGroups(email) {
 }
 
 function deleteRoomBookings(room) {
-  sql = "DELETE FROM BOOKINGS WHERE ROOM='" + room + "';";
+  sql = "DELETE FROM hotdesking.BOOKINGS WHERE ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1172,7 +1172,7 @@ function deleteRoomBookings(room) {
 }
 
 function deleteDeskBookings(desk, room) {
-  sql = "DELETE FROM BOOKINGS WHERE DESK=" + desk + " AND ROOM='" + room + "';";
+  sql = "DELETE FROM hotdesking.BOOKINGS WHERE DESK=" + desk + " AND ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1186,7 +1186,7 @@ function deleteDeskBookings(desk, room) {
 }
 
 function deleteUserBookings(email) {
-  sql = "DELETE FROM BOOKINGS WHERE USER='" + email + "';";
+  sql = "DELETE FROM hotdesking.BOOKINGS WHERE USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1200,7 +1200,7 @@ function deleteUserBookings(email) {
 
 function deleteBooking(user, desk, room, date, am, pm) {
   sql =
-    "DELETE FROM BOOKINGS WHERE USER='" +
+    "DELETE FROM hotdesking.BOOKINGS WHERE USER='" +
     user +
     "' AND DESK=" +
     desk +
@@ -1226,7 +1226,7 @@ function deleteBooking(user, desk, room, date, am, pm) {
 }
 
 function deleteDesksFromRoom(room) {
-  sql = "DELETE FROM DESKS WHERE ROOM='" + room + "';";
+  sql = "DELETE FROM hotdesking.DESKS WHERE ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1240,7 +1240,7 @@ function deleteDesksFromRoom(room) {
 }
 
 function deleteRoom(room) {
-  sql = "DELETE FROM ROOMS WHERE NAME='" + room + "';";
+  sql = "DELETE FROM hotdesking.ROOMS WHERE NAME='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1254,7 +1254,7 @@ function deleteRoom(room) {
 }
 
 function deleteDesk(desk, room) {
-  sql = "DELETE FROM DESKS WHERE DESK_NO=" + desk + " AND ROOM='" + room + "';";
+  sql = "DELETE FROM hotdesking.DESKS WHERE DESK_NO=" + desk + " AND ROOM='" + room + "';";
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
@@ -1268,7 +1268,7 @@ function deleteDesk(desk, room) {
 }
 
 function deleteUser(email) {
-  sql = 'DELETE FROM USERS WHERE email="' + email + '";';
+  sql = 'DELETE FROM hotdesking.USERS WHERE email="' + email + '";';
   console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
