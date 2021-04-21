@@ -8,7 +8,7 @@ class Notifications extends Component {
   state = {
     title: "",
     text: "",
-    type: "",
+    type: -1,
     expiryDate: "",
   };
 
@@ -133,7 +133,7 @@ class Notifications extends Component {
           )}
           <div className="space" />
           <button
-            disabled={!(this.state.type && this.state.expiryDate && this.state.text)}
+            disabled={!(this.state.type != -1 && this.state.expiryDate && this.state.text)}
             className="button-style no-outline"
             onClick={() => this.submitNotification()}
           >
