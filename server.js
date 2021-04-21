@@ -34,17 +34,19 @@ app.post("/api/login", (req, res) => {
             res.send({ error: false, admin: admin, message: "Success" });
           } else {
             res.send({
-              error: false,
+              error: true,
               admin: admin,
               message: "No email with that password",
             });
           }
         })
         .catch((err) => {
+          console.log(err.toStirng());
           res.send({ error: true, admin: false, message: "error" });
         });
     })
     .catch((err) => {
+      console.log(err.toString());
       res.send({ error: true, admin: false, message: err.toString() });
     });
 });
