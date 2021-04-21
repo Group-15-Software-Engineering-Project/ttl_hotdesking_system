@@ -683,7 +683,7 @@ function login(email, password) {
 }
 
 function adminCheck(email) {
-  sql = "SELECT * FROM GROUPS WHERE NAME='ADMIN' AND USER='" + email + "';";
+  sql = "SELECT * FROM hotdesking.GROUPS WHERE NAME='ADMIN' AND USER='" + email + "';";
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
