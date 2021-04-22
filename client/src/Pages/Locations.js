@@ -142,6 +142,9 @@ class Locations extends Component {
           alert("Success");
           this.getLocationData();
         }
+      })
+      .catch((err) => {
+        alert(err);
       });
   };
 
