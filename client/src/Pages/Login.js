@@ -50,7 +50,6 @@ class Login extends Component {
         if (res.error) {
           alert("Could not load Notifications");
         } else {
-          alert("notifs");
           let data = this.transformNotifications(res.notifications);
           sessionStorage.setItem("notifications", JSON.stringify({ data }));
         }

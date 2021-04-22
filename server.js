@@ -1252,7 +1252,7 @@ function deleteRoom(room) {
       } else {
         resolve(res);
       }
-    });
+    }); 
   });
 }
 
