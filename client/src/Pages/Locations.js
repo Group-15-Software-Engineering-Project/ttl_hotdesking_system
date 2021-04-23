@@ -133,7 +133,6 @@ class Locations extends Component {
       }),
     })
       .then((res) => {
-        console.log(res);
         return res.json();
       })
       .then((res) => {
@@ -464,7 +463,7 @@ class Locations extends Component {
                 />
                 <select
                   className="text-input"
-                  name="deleteDeskNum"
+                  name="deleteDeskRoom"
                   style={{ padding: "0" }}
                   onChange={this.handleEvent}
                 >

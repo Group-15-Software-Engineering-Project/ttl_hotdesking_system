@@ -17,19 +17,17 @@ var con = mysql.createConnection({
 
 con.connect(function (err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log("Connected to database");
 });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
-  console.log(req.body.password);
   login(req.body.email, req.body.password)
     .then((result) => {
       adminCheck(req.body.email)
         .then((admin) => {
-          console.log(admin);
           if (result.length != 0) {
             res.send({ error: false, admin: admin, message: "Success" });
           } else {
@@ -41,13 +39,11 @@ app.post("/api/login", (req, res) => {
           }
         })
         .catch((err) => {
-          console.log(err.toString());
-          res.send({ error: true, admin: false, message: "error" });
+          res.send({ error: true, admin: false, message: err });
         });
     })
     .catch((err) => {
-      console.log(err.toString());
-      res.send({ error: true, admin: false, message: err.toString() });
+      res.send({ error: true, admin: false, message: err});
     });
 });
 
@@ -84,23 +80,12 @@ app.post("/api/getLocationData", (req, res) => {
     });
 });
 
-app.post("/api/getBookingsCount", (req, res) => {
-  getBookingsCount(req.body.email)
-    .then((result) => {
-      console.log("count: ", count);
-    })
-    .catch((err) => {
-      res.send({ error: true, count: 0 });
-    });
-});
-
 app.post("/api/getUserName", (req, res) => {
   getUserName(req.body.email)
     .then((result) => {
       if (result.length === 0) {
         res.send({ error: true, username: req.body.email });
       } else {
-        console.log(result[0].username);
         res.send({ error: false, username: result[0].username });
       }
     })
@@ -120,7 +105,6 @@ app.post("/api/setUserName", (req, res) => {
 });
 
 app.post("/api/changePassword", (req, res) => {
-  console.log("enteredChangePassword");
   changePassword(req.body.email, req.body.password)
     .then(() => {
       res.send({ error: false });
@@ -129,22 +113,19 @@ app.post("/api/changePassword", (req, res) => {
       res.send({ error: true });
     });
 });
+
 app.post("/api/getNotifications", (req, res) => {
   let x = req.body.x;
-  console.log("enter notifications");
   getNotifications()
     .then((result) => {
-      console.log(result);
       res.send({ error: false, notifications: result });
     })
     .catch((err) => {
-      console.log("sql err");
       res.send({ error: true, notifications: [] });
     });
 });
 
 app.post("/api/addNotification", (req, res) => {
-  console.log("enetered add NOt");
   addNotification(req.body.start, req.body.end, req.body.type, req.body.title, req.body.body)
     .then(() => {
       res.send({ error: false });
@@ -167,7 +148,6 @@ app.post("/api/getRooms", (req, res) => {
       res.send({ error: false, rooms: locations });
     })
     .catch((err) => {
-      console.log(err);
       res.send({ error: true, rooms: [] });
     });
 });
@@ -1014,19 +994,6 @@ function getUserName(email) {
   });
 }
 
-function getBookingsCount(email) {
-  sql = "SELECT COUNT(USER) FROM hotdesking.BOOKINGS WHERE USER='" + email + "';";
-  console.log(sql);
-  return new Promise((resolve, reject) => {
-    con.query(sql, (err, res) => {
-      if (err) {
-        reject(new Error(err));
-      } else {
-        resolve(res);
-      }
-    });
-  });
-}
 
 function getRooms() {
   sql = "SELECT DISTINCT * FROM hotdesking.ROOMS;";
