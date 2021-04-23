@@ -4,7 +4,7 @@
 **Client:** Trinity Teaching & Learning: Stephanie Reilly.
 
 ## Live Demonstration.
-If you wish to see a live version of the app you can view it here: https://polar-waters-74159.herokuapp.com/
+If you wish to see a live version of the app you can view it here: https://ttl-hotdesking.herokuapp.com
 
 ## Build on localhost
 1. Clone the repo: 
