@@ -13,7 +13,7 @@ export default class BookingCalendar extends React.Component {
       availableDesks: "",
       existingBookings: [],
       key: 0,
-      dayLimit: 14,
+      dayLimit: 7,
     };
   }
 
@@ -102,9 +102,6 @@ export default class BookingCalendar extends React.Component {
           return "NONE-Booked";
         }
       }
-   // } else {
-    //  return "Not-Available";
-   // }
   };
 
   getDate = (e) => {
