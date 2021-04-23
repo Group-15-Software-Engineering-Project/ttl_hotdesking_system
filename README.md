@@ -19,7 +19,12 @@ cd ttl_hotdesking_system
 ```
 npm install
 ```
-4. Start the server
+4. Install Yarn
+```
+npm install -g yarn
+yarn
+```
+5. Start the server
 ```
 yarn dev
 ```
