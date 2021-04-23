@@ -18,6 +18,7 @@ cd ttl_hotdesking_system
 3. Install dependencies
 ```
 npm install
+cd client && npm install
 ```
 4. Install Yarn
 ```
