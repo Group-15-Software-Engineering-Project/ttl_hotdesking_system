@@ -162,7 +162,6 @@ app.post("/api/getTeams", (req, res) => {
       res.send({ error: false, teams: teams });
     })
     .catch((err) => {
-      console.log(err);
       res.send({ error: true, teams: [] });
     });
 });
@@ -177,7 +176,6 @@ app.post("/api/getUsersInTeam", (req, res) => {
       res.send({ error: false, users: users });
     })
     .catch((err) => {
-      console.log(err);
       res.send({ error: true, users: [] });
     });
 });
@@ -218,7 +216,6 @@ app.post("/api/addUserToTeam", (req, res) => {
       res.send({ error: false });
     })
     .catch((err) => {
-      console.log(err);
       res.send({ error: true });
     });
 });
@@ -229,7 +226,6 @@ app.post("/api/removeUserFromTeam", (req, res) => {
       res.send({ error: false });
     })
     .catch((err) => {
-      console.log(err);
       res.send({ error: true });
     });
 });
@@ -242,11 +238,11 @@ app.post("/api/addUser", (req, res) => {
         res.send({ error: false, message: "Success" });
       })
       .catch((err) => {
-        res.send({error:true, message: err.toString()});
+        res.send({error:true, message: err});
       });
     })
     .catch((err) => {
-      res.send({ error: true, message: err.toString() });
+      res.send({ error: true, message: err});
     });
 });
 
@@ -280,7 +276,6 @@ app.post("/api/removeRoom", (req, res) => {
 });
 
 app.post("/api/removeUser", (req, res) => {
-  console.log(res.body);
   deleteUserBookings(req.body.email)
     .then(() => {
       deleteUserFromGroups(req.body.email);
@@ -297,7 +292,6 @@ app.post("/api/removeUser", (req, res) => {
 });
 
 app.post("/api/deleteBooking", (req, res) => {
-  console.log(req);
   deleteBooking(
     req.body.user,
     req.body.desk,
@@ -324,7 +318,7 @@ app.post("/api/getBooking", (req, res) => {
       res.send({ data: bookings });
     })
     .catch((err) => {
-      res.send({ error: true, message: err.toString() });
+      res.send({ error: true, message: err});
     });
 });
 
@@ -337,11 +331,11 @@ app.post("/api/getReports", (req, res) => {
         data.push(bookings[booking]);
       }
       if(bookings.length===0){
-        console.log("Error");
         res.send({message: "No data", isError:true});
       }
       else{
-      getReportsByDesk(req.body.time, req.body.room, req.body.team).then((bookings) => {
+      getReportsByDesk(req.body.time, req.body.room, req.body.team)
+      .then((bookings) => {
         deskData = [];
         for (booking in bookings) {
           deskData.push(bookings[booking]);
@@ -366,10 +360,7 @@ function getMostActiveDesk(data) {
   desk = [];
   deskBookings = [];
   if (data !== null) {
-    console.log("success");
-
     desk.push(data[0].DESK);
-
     var count = 0;
     for (var i = 0; i < data.length; i++) {
       if (desk[0] === data[i].DESK) {
@@ -404,14 +395,13 @@ function getMostActiveDay(data) {
     addToDay = mostActiveDays[day] + 1;
     mostActiveDays.splice(day, 1, addToDay);
   }
-
   return mostActiveDays;
 }
+
 function getMostActiveUser(data) {
   labels = [];
   amountOfBookings = [];
   labels.push(data[0].USER);
-  //console.log(labels.length-1);
   var countOfBookings;
   var tmp = 0;
   for (var i = 0; i < data.length; i++) {
@@ -445,7 +435,7 @@ app.post("/api/makeBooking", (req, res) => {
       res.send({ error: false, message: "Success" });
     })
     .catch((err) => {
-      res.send({ error: true, message: err.toString() });
+      res.send({ error: true, message: err});
     });
 });
 
@@ -485,8 +475,6 @@ app.post("/api/getBookingsInMonth", (req, res) => {
           }
           existingBookings[k] = data;
           if (k == daysInMonth - 1) {
-            console.log("desks: ", desks);
-            console.log("existingBookings: ", existingBookings);
             res.send({
               error: false,
               existingBookings: existingBookings,
@@ -497,7 +485,6 @@ app.post("/api/getBookingsInMonth", (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       res.send({
         error: true,
         existingBookings: [],
@@ -540,7 +527,6 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
         });
       })
       .catch((err) => {
-        console.log(err);
         res.send({ date: availability });
       });
   }
@@ -549,7 +535,6 @@ app.post("/api/getAvailableDesksInMonth", (req, res) => {
 //Database Access
 function getMaxNotifcationID() {
   sql = "SELECT MAX(ID) FROM hotdesking.NOTIFICATIONS;";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -563,7 +548,6 @@ function getMaxNotifcationID() {
 
 function getNotifications() {
   sql = "SELECT * FROM hotdesking.NOTIFICATIONS WHERE END>now() ORDER BY START DESC;";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -577,7 +561,6 @@ function getNotifications() {
 
 function addNotification(start, end, type, title, body) {
   return new Promise((resolve, reject) => {
-    console.log("entered addNotification");
     getMaxNotifcationID()
       .then((res) => {
         console.log(res);
@@ -595,7 +578,6 @@ function addNotification(start, end, type, title, body) {
           "', '" +
           body +
           "');";
-        console.log(sql);
         con.query(sql, (err, res) => {
           if (err) {
             reject(new Error(err));
@@ -613,7 +595,6 @@ function addNotification(start, end, type, title, body) {
 function addUser(email, password) {
   return new Promise((resolve, reject) => {
     sql = 'INSERT INTO hotdesking.USERS VALUES ("' + email + '", "' + password + '", null);';
-    console.log(sql);
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -627,7 +608,6 @@ function addUser(email, password) {
 
 function addRoom(name) {
   sql = 'INSERT INTO hotdesking.ROOMS VALUES ("' + name + '");';
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -680,7 +660,6 @@ function adminCheck(email) {
 
 function setUserName(email, username) {
   sql = "UPDATE hotdesking.USERS SET username='" + username + "' WHERE email='" + email + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -694,7 +673,6 @@ function setUserName(email, username) {
 
 function changePassword(email, password) {
   sql = "UPDATE hotdesking.USERS SET password='" + password + "' WHERE email='" + email + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -719,7 +697,6 @@ function getPastBookings(email) {
   });
 }
 function getReportsByUser(time, room, team) {
-  console.log(team);
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
       sql =
@@ -790,8 +767,6 @@ function getReportsByUser(time, room, team) {
         ")" +
         " ORDER BY USER;";
     }
-    //console.log("success");
-
     con.query(sql, (err, res) => {
       if (err) {
         reject(new Error(err));
@@ -803,7 +778,6 @@ function getReportsByUser(time, room, team) {
 }
 
 function getReportsByDesk(time, room, team) {
-  //console.log("success");
   return new Promise((resolve, reject) => {
     if (time === "overall" && room === "overall") {
       sql =
@@ -876,7 +850,6 @@ function getReportsByDesk(time, room, team) {
         ")" +
         "ORDER BY DESK;";
     }
-    //console.log("success");
 
     con.query(sql, (err, res) => {
       if (err) {
@@ -982,7 +955,6 @@ async function getDesks(room) {
 
 function getUserName(email) {
   sql = "SELECT username FROM hotdesking.USERS WHERE email='" + email + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1088,7 +1060,6 @@ function getUserBookingsBetween(user, start, end) {
 
 function removeUserFromGroup(email, group) {
   sql = "DELETE FROM hotdesking.GROUPS WHERE NAME='" + group + "' AND USER='" + email + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1102,7 +1073,6 @@ function removeUserFromGroup(email, group) {
 
 function addUserToGroup(email, group) {
   sql = "INSERT INTO hotdesking.GROUPS VALUES ('" + group + "', '" + email + "');";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1129,7 +1099,6 @@ function deleteUserFromGroups(email) {
 
 function deleteRoomBookings(room) {
   sql = "DELETE FROM hotdesking.BOOKINGS WHERE ROOM='" + room + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1143,7 +1112,6 @@ function deleteRoomBookings(room) {
 
 function deleteDeskBookings(desk, room) {
   sql = "DELETE FROM hotdesking.BOOKINGS WHERE DESK=" + desk + " AND ROOM='" + room + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1183,7 +1151,6 @@ function deleteBooking(user, desk, room, date, am, pm) {
     " AND PM=" +
     pm +
     ";";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1197,7 +1164,6 @@ function deleteBooking(user, desk, room, date, am, pm) {
 
 function deleteDesksFromRoom(room) {
   sql = "DELETE FROM hotdesking.DESKS WHERE ROOM='" + room + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1211,7 +1177,6 @@ function deleteDesksFromRoom(room) {
 
 function deleteRoom(room) {
   sql = "DELETE FROM hotdesking.ROOMS WHERE NAME='" + room + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1225,7 +1190,6 @@ function deleteRoom(room) {
 
 function deleteDesk(desk, room) {
   sql = "DELETE FROM hotdesking.DESKS WHERE DESK_NO=" + desk + " AND ROOM='" + room + "';";
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {
@@ -1239,7 +1203,6 @@ function deleteDesk(desk, room) {
 
 function deleteUser(email) {
   sql = 'DELETE FROM hotdesking.USERS WHERE email="' + email + '";';
-  console.log(sql);
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) {

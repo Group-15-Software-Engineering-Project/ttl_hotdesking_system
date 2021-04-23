@@ -13,7 +13,7 @@ export default class BookingCalendar extends React.Component {
       availableDesks: "",
       existingBookings: [],
       key: 0,
-      dayLimit: 14,
+      dayLimit: 7,
     };
   }
 
@@ -88,7 +88,6 @@ export default class BookingCalendar extends React.Component {
   checkAvailability = (dateInfo) => {
     let month = months.indexOf(String(dateInfo.date).split(" ")[1]);
     let day = parseInt(String(dateInfo.date).split(" ")[2]) - 1;
-    //if (this.state.currentMonth.substring(5) === String(month + 1).padStart(2, "0")) {
     if (this.state.existingBookings) {
       if (this.state.existingBookings[day]) {
         if (this.state.existingBookings[day].length < this.state.availableDesks.length) {
@@ -100,9 +99,6 @@ export default class BookingCalendar extends React.Component {
         return "NONE-Booked";
       }
     }
-    // } else {
-    //  return "Not-Available";
-    // }
   };
 
   getDate = (e) => {
