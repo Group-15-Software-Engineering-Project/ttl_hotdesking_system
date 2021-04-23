@@ -121,14 +121,11 @@ class Reports extends Component {
       })
       .then((res) => {
         if (res.error) {
-          console.log("error fetching location data");
         } else {
           this.setState({ roomlist: res.data });
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
 
     fetch("/api/getTeams", {
       method: "Post",
@@ -169,7 +166,6 @@ class Reports extends Component {
     let chosenTeam = this.state.chosenTeam;
     if (this.state.chosenTeam !== "1") {
       chosenTeam = " NAME='" + this.state.chosenTeam + "'";
-      console.log(chosenTeam);
     }
     fetch("/api/getReports", {
       method: "POST",
@@ -282,10 +278,7 @@ class Reports extends Component {
               }}
             >
               <div style={{ flex: "1", height: "100%" }}>
-                <h1
-                  className="page-divider-header"
-                  style={{ marginLeft: "2.5%" }}
-                >
+                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                   Time Range
                 </h1>
                 <div className="space" />
@@ -303,10 +296,7 @@ class Reports extends Component {
                 </select>
               </div>
               <div style={{ flex: "1", height: "100%" }}>
-                <h1
-                  className="page-divider-header"
-                  style={{ marginLeft: "2.5%" }}
-                >
+                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                   Locations
                 </h1>
                 <div className="space" />
@@ -324,10 +314,7 @@ class Reports extends Component {
                 </select>
               </div>
               <div style={{ flex: "1", height: "100%" }}>
-                <h1
-                  className="page-divider-header"
-                  style={{ marginLeft: "2.5%" }}
-                >
+                <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                   Teams
                 </h1>
                 <div className="space" />
@@ -345,10 +332,7 @@ class Reports extends Component {
               </div>
             </div>
             <div className="space" />
-            <button
-              className="button-style no-outline"
-              onClick={() => this.getData()}
-            >
+            <button className="button-style no-outline" onClick={() => this.getData()}>
               Run Report
             </button>
           </section>

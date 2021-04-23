@@ -2,8 +2,6 @@ import React from "react";
 import emailjs from "emailjs-com";
 
 export default function ConfirmationEmail(email, desk_num, room, date, am, pm, time) {
-  //"9:00 - 13:00":
-  //"13:30 - 17:30":
   var templateParameters = {
     to_email: email,
     seat_number: desk_num,
@@ -16,9 +14,6 @@ export default function ConfirmationEmail(email, desk_num, room, date, am, pm, t
   };
 
   function sendEmail(e) {
-    //console.log("wrong time:" + time.split(" ")[0] + "then" );
-    //console.log("haha");
-    //e.preventDefault();
     console.log(e);
 
     //emailjs.send('service_v5sua9l', 'template_jym7drh', e, 'user_Hcgw9XLPLBz7iL1Bm4Tq6')
@@ -30,25 +25,9 @@ export default function ConfirmationEmail(email, desk_num, room, date, am, pm, t
         console.log(error.text);
       }
     );
-    //e.target.reset()
-    //console.log("hehe");
   }
 
   sendEmail(templateParameters);
 
-  return (
-    <div />
-    // <form className="contact-form" onSubmit={sendEmail}>
-
-    //   <input type="hidden" name ="email" />
-    //   <input type="hidden" name="to_name" value= "${email}"/>
-    //   <input type="email" name="to_email" />
-
-    //   <input type="hidden" name="seat_number"/>
-    //   <input type="hidden" name="booking_location" />
-    //   <input type="hidden" name="date_time" />
-
-    //   <input type="submit" value="Send" />
-    // </form>
-  );
+  return <div />;
 }

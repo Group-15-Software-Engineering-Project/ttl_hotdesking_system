@@ -49,9 +49,7 @@ class Users extends Component {
           window.location.reload();
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   submitRemoveUserFromTeam = () => {
@@ -76,9 +74,7 @@ class Users extends Component {
           window.location.reload();
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   submitRemoveUser = (email) => {
@@ -101,7 +97,6 @@ class Users extends Component {
         } else {
           alert("Success");
           window.location.reload();
-          //this.getUsers();
         }
       })
       .catch((err) => {
@@ -111,7 +106,6 @@ class Users extends Component {
 
   submitAddUser = (email, password) => {
     if (email.length === 0 || password.length === 0) return;
-    console.log(email, password);
     fetch("/api/addUser", {
       method: "POST",
       headers: {
@@ -129,7 +123,6 @@ class Users extends Component {
         if (res.error === false) {
           alert("Success!");
           window.location.reload();
-          //this.getUsers();
         } else {
           alert("Could not add user.");
           alert(res.message);
@@ -189,7 +182,6 @@ class Users extends Component {
 
   submitGetUsersInTeam = (team, label) => {
     if (team === -1) return;
-    else if (team.length === 0) this.getUsers();
     else {
       fetch("/api/getUsersInTeam", {
         method: "Post",
@@ -217,9 +209,6 @@ class Users extends Component {
     }
   };
 
-  checkForm(e) {
-    console.log(e);
-  }
   handleEvent = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -419,7 +408,6 @@ class Users extends Component {
                 onChange={(e) => this.submitGetUsersInTeam(e.target.value, "users")}
               >
                 <option value={-1}>Select team</option>
-                <option value="">All teams</option>
                 {this.state.teamList
                   ? this.state.teamList.map((x) => {
                       return <option value={x}>{x}</option>;

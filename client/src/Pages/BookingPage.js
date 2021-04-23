@@ -96,7 +96,7 @@ export default class BookingPage extends React.Component {
         sessionStorage.removeItem("upcomingBookings");
         _GetUserBookings();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {});
   };
 
   positionReference = createRef();
@@ -113,7 +113,6 @@ export default class BookingPage extends React.Component {
       })
       .then((res) => {
         if (res.error) {
-          console.log("Error fetching rooms");
         } else {
           this.setState(
             {
@@ -123,9 +122,7 @@ export default class BookingPage extends React.Component {
           );
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }
 
   componentDidUpdate() {

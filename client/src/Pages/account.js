@@ -97,7 +97,6 @@ class Account extends Component {
           return res.json();
         })
         .then((res) => {
-          //alert("logged in");
           if (res.error) {
             alert("Incorrect Password");
           } else {

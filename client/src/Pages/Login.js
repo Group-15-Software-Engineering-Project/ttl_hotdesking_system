@@ -81,7 +81,6 @@ class Login extends Component {
       })
       .then((res) => {
         if (res.err) {
-          console.log(res.err);
         }
         sessionStorage.setItem("email", this.state.email);
         sessionStorage.setItem("username", res.username);
@@ -91,7 +90,6 @@ class Login extends Component {
         window.location = "/home";
       })
       .catch((err) => {
-        console.log(err);
         this.setState({ username: this.state.email });
       });
   };

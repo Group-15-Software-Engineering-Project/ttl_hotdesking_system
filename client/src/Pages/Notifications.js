@@ -30,7 +30,6 @@ class Notifications extends Component {
       String(date.getMonth() + 1).padStart(2, "0") +
       "-" +
       date.getDate();
-    console.log(this.state.expiryDate);
     fetch("/api/addNotification", {
       method: "POST",
       headers: {
@@ -47,16 +46,12 @@ class Notifications extends Component {
       .then((res) => {
         let result = res.json();
         if (result.error) {
-          alert("error adding a notification");
+          alert("Error adding a notification");
         } else {
           alert("Success");
-          //window.location.reload();
-          console.log(this.state.type, today, this.state.title, this.state.text);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   render() {
@@ -122,9 +117,7 @@ class Notifications extends Component {
             Set Notification Expiry Date
           </h1>
           <BookingCalendarNoLimit
-            onSelect={(date) =>
-              this.setState({ expiryDate: date }, () => console.log(this.state.expiryDate))
-            }
+            onSelect={(date) => this.setState({ expiryDate: date })}
           ></BookingCalendarNoLimit>
           {this.state.expiryDate ? (
             <h3 style={{ height: "2rem" }}>{`Expiry Date: ${this.state.expiryDate}`}</h3>

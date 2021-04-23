@@ -20,7 +20,6 @@ export const tokenize = (e) => {
   let date = new Date();
   let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
   let token = sha256(a + c + "@$;;:!" + (e ? "@|]|\\/|!|\\|$$" : "*^*") + b);
-  console.log(a, b, c);
   sessionStorage.setItem("sessionToken", token);
 };
 

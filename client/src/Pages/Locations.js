@@ -29,14 +29,11 @@ class Locations extends Component {
       })
       .then((res) => {
         if (res.error) {
-          console.log("error fetching location data");
         } else {
           this.setState({ roomDeskList: res.data });
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   componentDidMount = () => {
@@ -52,14 +49,11 @@ class Locations extends Component {
       })
       .then((res) => {
         if (res.error) {
-          console.log("error fetching location data");
         } else {
           this.setState({ roomDeskList: res.data });
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   submitAddRoom = (room) => {
@@ -79,7 +73,6 @@ class Locations extends Component {
       })
       .then((res) => {
         if (res.error) {
-          console.log(res.message);
         } else {
           alert("Success");
           this.getLocationData();

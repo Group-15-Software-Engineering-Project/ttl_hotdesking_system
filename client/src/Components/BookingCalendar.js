@@ -89,22 +89,20 @@ export default class BookingCalendar extends React.Component {
     let month = months.indexOf(String(dateInfo.date).split(" ")[1]);
     let day = parseInt(String(dateInfo.date).split(" ")[2]) - 1;
     //if (this.state.currentMonth.substring(5) === String(month + 1).padStart(2, "0")) {
-      if (this.state.existingBookings) {
-        if (this.state.existingBookings[day]) {
-          if (this.state.existingBookings[day].length < this.state.availableDesks.length) {
-            return "NONE-Booked";
-          } else {
-            return "ALL-Booked";
-          }
-        }
-        else
-        {
+    if (this.state.existingBookings) {
+      if (this.state.existingBookings[day]) {
+        if (this.state.existingBookings[day].length < this.state.availableDesks.length) {
           return "NONE-Booked";
+        } else {
+          return "ALL-Booked";
         }
+      } else {
+        return "NONE-Booked";
       }
-   // } else {
+    }
+    // } else {
     //  return "Not-Available";
-   // }
+    // }
   };
 
   getDate = (e) => {
@@ -154,9 +152,7 @@ export default class BookingCalendar extends React.Component {
     let date2 = new Date();
     let diff = getDifferenceInDays(date1, date2);
     let tileDate = year * 10000 + month * 100 + day;
-    return (
-      this.state.todayDate > tileDate || diff > this.state.dayLimit
-    );
+    return this.state.todayDate > tileDate || diff > this.state.dayLimit;
   };
 
   render() {
@@ -192,7 +188,6 @@ export default class BookingCalendar extends React.Component {
               date[3] + "-" + (String(month + 1).length === 1 ? "0" : "") + (month + 1);
             this.setState({ currentMonth: dateStr }, () => {
               this.fetchAvailableDesks();
-              console.log(dateStr);
             });
           }}
         ></Calendar>

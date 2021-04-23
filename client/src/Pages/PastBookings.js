@@ -55,15 +55,11 @@ function PastBookings() {
       })
       .then((res) => {
         if (res.error) {
-          console.log("Error deleting Booking");
         } else {
-          console.log("Success");
           window.location.reload();
         }
       })
-      .catch((err) => {
-        console.log("API ERROR");
-      });
+      .catch((err) => {});
   };
 
   const displayBooking = (data) => {
