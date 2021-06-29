@@ -6,8 +6,8 @@ const GroupModel = require('./models/group');
 const NotificationModel = require('./models/notification');
 
 //const sequelize = new Sequelize('sqlite::memory:');
-const sequelize = new Sequelize('cloudserver', 'admin', 'Fn28ht91', {
-    host: 'localhost',
+const sequelize = new Sequelize('hotdesking', 'Group15', 'Group15!', {
+    host: 'ttl-hotdesking-system.cje6t78s3xcx.eu-west-1.rds.amazonaws.com',
     dialect: 'mysql',
 });
 
@@ -53,7 +53,7 @@ User.hasMany(Group, {
 });
 Group.belongsTo(User);
 
-sequelize.sync()
+sequelize.sync({})
 .then(() => {
     console.log("Database & tables created");
 })
