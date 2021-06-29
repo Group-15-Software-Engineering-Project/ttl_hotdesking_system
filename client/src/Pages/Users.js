@@ -30,7 +30,7 @@ class Users extends Component {
 
   submitAddUserToTeam = () => {
     if (this.state.addTeamName.length === 0 || this.state.addTeamUserName.length === 0) return;
-    fetch("/api/addUserToTeam", {
+    fetch("/api/addUserToGroup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -134,13 +134,7 @@ class Users extends Component {
   };
 
   getTeams = () => {
-    fetch("/api/getTeams", {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: "",
-    })
+    fetch("/api/getGroups")
       .then((res) => {
         return res.json();
       })

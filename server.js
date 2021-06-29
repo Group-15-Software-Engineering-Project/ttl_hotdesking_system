@@ -4,6 +4,7 @@ const path = require("path");
 const mysql = require("mysql");
 require("dotenv").config();
 
+const routes = require('./api/routes');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -22,6 +23,7 @@ con.connect(function (err) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api', routes);
 
 app.post("/api/login", (req, res) => {
   login(req.body.email, req.body.password)

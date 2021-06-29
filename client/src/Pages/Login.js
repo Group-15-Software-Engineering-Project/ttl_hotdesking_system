@@ -34,15 +34,7 @@ class Login extends Component {
   };
 
   getNotifications = () => {
-    fetch("/api/getNotifications", {
-      method: "POST",
-      headers: {
-        "Content-Type": "applications/json",
-      },
-      body: JSON.stringify({
-        x: "this is a test sting",
-      }),
-    })
+    fetch("/api/getNotifications")
       .then((res) => {
         return res.json();
       })

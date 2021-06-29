@@ -40,7 +40,7 @@ export const getDifferenceInDays = (date1, date2) => {
 
 export const _GetUserBookings = async (ref) => {
   let date = new Date();
-  fetch("/api/getBooking", {
+  fetch("/api/getBookings", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
