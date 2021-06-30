@@ -253,7 +253,7 @@ class Locations extends Component {
                     <div key={"side_cont_1"} className="flex-container-1" />
                     <div key={"main_cont_5"} className="flex-container-5 main-body">
                         <div key={"quad_cont_1"} className="quadrant-container">
-                            <div key={"quad_1"} className="quadrant">
+                            {/* <div key={"quad_1"} className="quadrant">
                                 <h1
                                     className="page-divider-header"
                                     style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}>
@@ -286,8 +286,8 @@ class Locations extends Component {
                                     onClick={(e) => this.submitAddRoom(this.state.addRoom)}>
                                     Add Location
                                 </button>
-                            </div>
-                            <div key={"quad_2"} className="quadrant">
+                            </div> */}
+                            <div key={"quad_2"} className="double-quadrant">
                                 <h1
                                     className="page-divider-header"
                                     style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}>
@@ -298,7 +298,7 @@ class Locations extends Component {
                                     style={{
                                         width: "100%",
                                         marginTop: "5%",
-                                        marginBottom: "10%",
+                                        marginBottom: "2%",
                                     }}
                                 />
                                 <select
