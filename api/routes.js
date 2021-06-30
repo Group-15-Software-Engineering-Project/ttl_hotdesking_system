@@ -163,9 +163,9 @@ router.get('/getReports', (req, res) => {
 // Returns all the bookings in the specified month for a room       TODO
 router.post('/getBookingsInMonth', (req, res) => {
     console.log('getBookingsInMonth');
-    services.getBookingsInMonth(/*TODO */)
+    services.getBookingsInMonth(req.body.room, req.body.date, req.body.am, req.body.pm)
     .then((result) => {
-        //TODO
+        res.status(200),send({error: false, existingBookings: result[1], desks: result[0]});
     })
     .catch((err) => {
         console.log(err);
@@ -191,7 +191,7 @@ router.post('/addUser', (req, res) => {
     console.log('addUser');
     services.addUser(req.body.email, req.body.password)
     .then(() => {
-        res.status(200).send({error:  false, message: "Success"});
+        res.status(200).send({error: false, message: "Success"});
     })
     .catch((err) => {
         console.log(err);

@@ -55,7 +55,7 @@ class Users extends Component {
   submitRemoveUserFromTeam = () => {
     if (this.state.removeFromTeam.length === 0 || this.state.removeUserFromTeam.length === 0)
       return;
-    fetch("/api/removeUserFromTeam", {
+    fetch("/api/removeUserFromGroup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -177,7 +177,7 @@ class Users extends Component {
   submitGetUsersInTeam = (team, label) => {
     if (team === -1) return;
     else {
-      fetch("/api/getUsersInTeam", {
+      fetch("/api/getUsersInGroup", {
         method: "Post",
         headers: {
           "Content-Type": "application/json",

@@ -44,15 +44,24 @@ module.exports = {
         model.save();
     },
     getRooms: async () => {
-        let rooms = await Desk.aggregate("room", "DISTINCT");
+        let rooms = [];
+        let distinctRooms = await sequelize.query('SELECT DISTINCT room FROM desks;', {
+            type: QueryTypes.SELECT
+        });
+        for (let room in distinctRooms) {
+            rooms.push(distinctRooms[room].room);
+        }
         return rooms;
     },
     getGroups: async () => {
-        let groups = await sequelize.query("SELECT DISTINCT name FROM groups;", {
+        let groups = [];
+        let distinctNames = await sequelize.query('SELECT DISTINCT name FROM groups;', {
             type: QueryTypes.SELECT,
         });
-        console.log(groups);
-        return [];
+        for (let group in distinctNames) {
+            groups.push(distinctNames[group].name);
+        }
+        return groups;
     },
     getUsers: async () => {
         let users = [];
@@ -60,7 +69,7 @@ module.exports = {
             attributes: ["email"],
         });
         for (let model in models) {
-            users.push(model.getDataValue("email"));
+            users.push(models[model].getDataValue("email"));
         }
         return users;
     },
@@ -73,7 +82,7 @@ module.exports = {
             attributes: ["userEmail"],
         });
         for (let model in models) {
-            users.push(model.getDataValue("userEmail"));
+            users.push(models[model].getDataValue("userEmail"));
         }
         return users;
     },
@@ -85,12 +94,36 @@ module.exports = {
             },
         });
         for (let model in models) {
-            bookings.push(model.values);
+            bookings.push(models[model].values);
         }
         return bookings;
     },
     getReports: () => {},
-    getBookingsInMonth: (/* TODO */) => {},
+    getBookingsInMonth: async (room, date, am, pm) => {
+        let deskModel = await Desk.findAll({
+            where: {
+                room: room
+            },
+            attributes: 'deskId'
+        });
+        console.log('deskModel:', deskModel);
+        let bookingModel = await Booking.finall({
+            where: {
+                room: room,
+                am: am,
+                pm: pm,
+                [Op.and] : [
+                    {date: {
+                        [Op.gt] : new Date(date.getFullYear(), date.getMonth())
+                    }},
+                    {date: {
+                        [Op.lt] : new Date(date.getFullYear(), date.getMonth()+1)
+                    }}
+                ]
+            }
+        });
+        return [deskModel, bookingModel.values];
+    },
     getNotifications: async () => {
         let notifications = [];
         let models = await Notification.findAll({
@@ -104,13 +137,13 @@ module.exports = {
             },
         });
         for (let model in models) {
-            notifications.push(JSON.parse(model));
+            notifications.push(JSON.parse(models[model]));
         }
         return notifications;
     },
     addUser: async (email, password) => {
         await User.create({ email: email, password: password });
-        await Group.create({ userEmai: email, name: "All Users" });
+        await Group.create({ userEmail: email, name: "All Users" });
     },
     addDesk: async (id, room) => {
         await Desk.create({ id: id, room: room });
