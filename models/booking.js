@@ -1,7 +1,7 @@
 module.exports = (sequelize, type) => {
     return sequelize.define('booking', {
         date: {
-            type: type.DATE,
+            type: type.DATEONLY,
             primaryKey: true
         },
         am: {

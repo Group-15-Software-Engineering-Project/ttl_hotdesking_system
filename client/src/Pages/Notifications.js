@@ -37,10 +37,9 @@ class Notifications extends Component {
       },
       body: JSON.stringify({
         type: this.state.type,
-        start: today,
         title: this.state.title,
         body: this.state.text,
-        end: this.state.expiryDate,
+        date: this.state.expiryDate,
       }),
     })
       .then((res) => {

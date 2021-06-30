@@ -1,14 +1,12 @@
 module.exports = (sequelize, type) => {
     return sequelize.define('notification', {
         id: {
-            type: type.INTEGER,
+            type: type.UUID,
+            defaultValue: type.UUIDV4,
             primaryKey: true
         },
-        start: {
-            type: type.DATE,
-        },
-        end: {
-            type: type.DATE
+        date: {
+            type: type.DATEONLY
         },
         type: {
             type: type.STRING

@@ -28,11 +28,21 @@ module.exports = {
         return model.length > 0 ? true : false;
     },
     getLocationData: async () => {
-        // let data = [];
-        // let models = await Desk.findAll();
-        // for (let model in models) {
-        //     data.push[{name: models[model].getDataValue('room'), desk}]
-        // }
+        let data = [];
+        let rooms = await this.getRooms();
+        for  (let room in rooms) {
+            let models = Desk.findAll({
+                where: {
+                    room: rooms[room]
+                }
+            });
+            let desks = [];
+            for (model of models) {
+                desks.push(models[model].getDataValue('id'));
+            }
+            data[room] = {name: rooms[room], desks: desks};
+        }
+        return await Promises.all(data);
     },
     getUserName: async (email) => {
         let model = await User.findByPk(email);
@@ -133,18 +143,17 @@ module.exports = {
     getNotifications: async () => {
         let notifications = [];
         let models = await Notification.findAll({
+            raw: true,
             where: {
-                start: {
-                    [Op.lt]: new Date(),
-                },
-                end: {
+                date: {
                     [Op.gt]: new Date(),
                 },
             },
         });
         for (let model in models) {
-            notifications.push(JSON.parse(models[model]));
+            notifications.push(models[model]);
         }
+        console.log(notifications);
         return notifications;
     },
     addUser: async (email, password) => {
@@ -166,6 +175,14 @@ module.exports = {
     },
     addUserToGroup: async (email, group) => {
         await Group.create({ name: group, userEmail: email });
+    },
+    addNotification: async (date, type, title, body) => {
+        await Notification.create({
+            date: date,
+            type: type,
+            title: title,
+            body: body
+        });
     },
     removeUser: async (email) => {
         let model = await User.findByPk(email);

@@ -214,7 +214,7 @@ class Home extends React.Component {
                             marginBottom: "10px",
                         }}
                     />
-                    <p style={{ width: "95%", marginBottom: "10px" }}>{notif.text}</p>
+                    <p style={{ width: "95%", marginBottom: "10px" }}>{notif.body}</p>
                 </div>
             </div>
         );

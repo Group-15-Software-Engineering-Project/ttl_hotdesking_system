@@ -238,6 +238,18 @@ router.post('/addUserToGroup', (req, res) => {
     });
 });
 
+//  Adds a notification
+router.post('/addNotification', (req, res) => {
+    services.addNotification(req.body.date, req.body.type, req.body.title, req.body.body)
+    .then(() => {
+        res.status(200).send({error: false});
+    })
+    .catch((err) => {
+        res.status(500).send({error: true});
+    });
+});    
+
+
 //  Removes the specified user
 router.post('/removeUser', (req, res) => {
     console.log('removeUser');

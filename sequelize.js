@@ -53,7 +53,7 @@ User.hasMany(Group, {
 });
 Group.belongsTo(User);
 
-sequelize.sync({})
+sequelize.sync()
 .then(() => {
     console.log("Database & tables created");
 })
