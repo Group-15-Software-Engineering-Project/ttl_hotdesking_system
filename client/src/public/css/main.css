@@ -273,3 +273,11 @@
     background-color: #777;
     cursor: auto !important;
 }
+
+.i-icon {
+    align-self: center;
+    width: 25px;
+    background-color: white;
+    color: #008dd3;
+    position: relative;
+}

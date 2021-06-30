@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { createUniqueID, verify } from "../Components/Misc";
 import "../public/css/main.css";
+import { BsInfoCircleFill } from "react-icons/bs";
 
 class Locations extends Component {
     state = {
@@ -15,6 +16,8 @@ class Locations extends Component {
         desks: [],
         roomDeskList: [],
         key: "default",
+        customInput: false,
+        showTooltip: false,
     };
 
     getLocationData = () => {
@@ -83,33 +86,95 @@ class Locations extends Component {
             });
     };
 
-    submitAddDesk = (desk, room) => {
+    submitAddDesk = async (desk, room) => {
         if (desk.length < 1 || room.length < 1) return;
         this.setState({ key: createUniqueID() });
-        fetch("/api/addDesk", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                desk: desk,
-                room: room,
-            }),
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                if (res.error) {
-                    alert(res.message);
-                } else {
-                    alert("Success");
-                    this.getLocationData();
+        if (desk.includes(",")) {
+            let desks = desk.split(",");
+            for (let i = 0; i < desks.length; i++) {
+                desks[i] = desks[i].replaceAll(/[^0-9]/giu, "");
+                if (desks[i].length > 0) {
+                    console.log(desks[i], "added");
+                    await fetch("/api/addDesk", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            id: desks[i],
+                            room: room,
+                        }),
+                    })
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((res) => {
+                            if (res.error) {
+                                alert("error adding desks");
+                            } else {
+                                //this.getLocationData();
+                            }
+                        })
+                        .catch((err) => {
+                            alert(err);
+                        });
                 }
+            }
+            this.getLocationData();
+        } else if (desk.includes("-")) {
+            let desks = desk.split("-");
+            if (desks.length > 2) return;
+            for (let i = parseInt(desks[0]); i <= parseInt(desks[1]); i++) {
+                await fetch("/api/addDesk", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: i,
+                        room: room,
+                    }),
+                })
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((res) => {
+                        if (res.error) {
+                            alert("error adding desks");
+                        } else {
+                            //this.getLocationData();
+                        }
+                    })
+                    .catch((err) => {
+                        alert(err);
+                    });
+            }
+            this.getLocationData();
+        } else if (!isNaN(desk))
+            fetch("/api/addDesk", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: desk,
+                    room: room,
+                }),
             })
-            .catch((err) => {
-                alert(err);
-            });
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    if (res.error) {
+                        alert(res.message);
+                    } else {
+                        alert("Success");
+                        this.getLocationData();
+                    }
+                })
+                .catch((err) => {
+                    alert(err);
+                });
     };
 
     submitRemoveDesk = (desk, room) => {
@@ -301,24 +366,54 @@ class Locations extends Component {
                                         marginBottom: "2%",
                                     }}
                                 />
-                                <select
-                                    className="text-input"
-                                    style={{ padding: "0" }}
-                                    name="addDeskRoom"
-                                    onChange={this.handleEvent}>
-                                    <option key={"_empty_loc"} value="">
-                                        Select location
-                                    </option>
-                                    {this.state.roomDeskList
-                                        ? this.state.roomDeskList.map((x) => {
-                                              return (
-                                                  <option key={x.name} value={x.name}>
-                                                      {x.name}
-                                                  </option>
-                                              );
-                                          })
-                                        : null}
-                                </select>
+                                <label htmlFor="checkbox_custominput">
+                                    <input
+                                        style={{ margin: "5px" }}
+                                        name="checkbox_custominput"
+                                        type="checkbox"
+                                        onChange={() =>
+                                            this.setState({
+                                                customInput: !this.state.customInput,
+                                            })
+                                        }
+                                    />
+                                    Use new location
+                                </label>
+                                <div
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "2%",
+                                    }}
+                                />
+                                {this.state.customInput ? (
+                                    <input
+                                        className="text-input"
+                                        type="text"
+                                        name="addDeskRoom"
+                                        placeholder="New Location"
+                                        onChange={this.handleEvent}
+                                    />
+                                ) : (
+                                    <select
+                                        className="text-input"
+                                        style={{ padding: "0" }}
+                                        name="addDeskRoom"
+                                        onChange={this.handleEvent}>
+                                        <option key={"_empty_loc"} value="">
+                                            Select location
+                                        </option>
+                                        {this.state.roomDeskList
+                                            ? this.state.roomDeskList.map((x) => {
+                                                  return (
+                                                      <option key={x.name} value={x.name}>
+                                                          {x.name}
+                                                      </option>
+                                                  );
+                                              })
+                                            : null}
+                                    </select>
+                                )}
+
                                 <div
                                     key={"quad_2_space_1"}
                                     style={{
@@ -326,6 +421,7 @@ class Locations extends Component {
                                         marginTop: "1%",
                                     }}
                                 />
+
                                 <input
                                     className="text-input"
                                     placeholder="Desk Number"
@@ -333,10 +429,38 @@ class Locations extends Component {
                                     name="addDeskNum"
                                     onChange={this.handleEvent}></input>
                                 <div
+                                    className="space"
+                                    style={{ margin: 0, marginTop: "10px" }}
+                                />
+                                <BsInfoCircleFill
+                                    className="i-icon"
+                                    onMouseEnter={() => this.setState({ showTooltip: true })}
+                                    onMouseLeave={() => this.setState({ showTooltip: false })}
+                                />
+                                <div className="space" style={{ margin: 0 }} />
+
+                                {this.state.showTooltip ? (
+                                    <p
+                                        style={{
+                                            position: "absolute",
+                                            zIndex: "2",
+                                            borderRadius: "10px",
+                                            backgroundColor: "#008dd3a7",
+                                            color: "white",
+                                            padding: "10px",
+                                            width: "300px",
+                                            wordWrap: "wrap",
+                                        }}>
+                                        You may list desk numbers individually, separated by
+                                        commas, or by a range eg. 1-5.
+                                    </p>
+                                ) : null}
+
+                                <div
                                     key={"quad_2_space_0"}
                                     style={{
                                         width: "100%",
-                                        marginTop: "5%",
+                                        marginTop: "1%",
                                     }}
                                 />
                                 <button
