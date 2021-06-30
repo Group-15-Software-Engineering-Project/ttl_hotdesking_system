@@ -204,7 +204,7 @@ router.post('/addDesk', (req, res) => {
     console.log('addDesk');
     services.addDesk(req.body.id, req.body.room)
     .then(() => {
-        res.status(200).send({error: fasle, message: "Success"});
+        res.status(200).send({error: false, message: "Success"});
     })
     .catch((err) => {
         console.log(err);

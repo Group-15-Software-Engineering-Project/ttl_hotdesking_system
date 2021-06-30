@@ -158,7 +158,7 @@ class Locations extends Component {
     };
 
     submitRemoveDesk = (desk, room) => {
-        if (desk.length < 1 || room.length < 1) return;
+        //if (desk.length < 1 || room.length < 1) return;
         this.setState({ key: createUniqueID() });
         fetch("/api/removeDesk", {
             method: "POST",
@@ -166,7 +166,7 @@ class Locations extends Component {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                desk: desk,
+                id: desk,
                 room: room,
             }),
         })
@@ -563,7 +563,7 @@ class Locations extends Component {
                                     className="text-input"
                                     name="deleteDeskRoom"
                                     style={{ padding: "0" }}
-                                    onChange={this.handleEvent}>
+                                    onChange={this.deleteDeskNumF}>
                                     <option key={"_empty_desk"} value="">
                                         Select desk
                                     </option>
