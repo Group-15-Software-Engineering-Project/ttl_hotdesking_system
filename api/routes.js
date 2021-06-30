@@ -69,7 +69,7 @@ router.post('/getUserName', (req, res) => {
     });
 });
 
-// Changes the username of the given user
+//  Changes the username of the given user
 router.post('/setUserName', (req, res) => {
     console.log('setUserName');
     services.setUserName(req.body.email, req.body.username)
@@ -160,7 +160,7 @@ router.get('/getReports', (req, res) => {
     });
 });
 
-// Returns all the bookings in the specified month for a room       TODO
+//  Returns all the bookings in the specified month for a room       TODO
 router.post('/getBookingsInMonth', (req, res) => {
     console.log('getBookingsInMonth');
     services.getBookingsInMonth(req.body.room, req.body.date, req.body.am, req.body.pm)
@@ -173,7 +173,7 @@ router.post('/getBookingsInMonth', (req, res) => {
     });
 });
 
-// Return active notifications
+//  Return active notifications
 router.get('/getNotifications', (req, res) => {
     console.log('getNotifications');
     services.getNotifications()
@@ -212,7 +212,7 @@ router.post('/addDesk', (req, res) => {
     });
 });
 
-// Adds a booking with a given email, desk, date, AM, and PM (booleans)
+//  Adds a booking with a given email, desk, date, AM, and PM (booleans)
 router.post('/addBooking', (req, res) => {
     console.log('addBooking');
     services.addBooking(req.body.email, req.body.deskId, req.body.deskRoom, req.body.date, req.body.am, req.body.pm)
@@ -238,7 +238,7 @@ router.post('/addUserToGroup', (req, res) => {
     });
 });
 
-// Removes the specified user
+//  Removes the specified user
 router.post('/removeUser', (req, res) => {
     console.log('removeUser');
     services.removeUser(req.body.email)
@@ -251,7 +251,7 @@ router.post('/removeUser', (req, res) => {
     });
 });
 
-// Removes the specifed desk 
+//  Removes the specifed desk 
 router.post('/removeDesk', (req, res) => {
     console.log('removeDesk');
     services.removeDesk(req.body.id, req.body.room)
@@ -264,7 +264,20 @@ router.post('/removeDesk', (req, res) => {
     });
 });
 
-// Removes the specified booking 
+//  Removes all desks in the specified room
+router.post('/removeRoom', (req, res) => {
+    console.log('removeRoom');
+    services.removeRoom(req.body.room)
+    .then(() => {
+        res.status(200).send({error: false, message: "Success"});
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send({error: true, message: err});
+    });
+});
+
+//  Removes the specified booking 
 router.post('/removeBooking', (req, res) => {
     console.log('removeBooking');
     services.removeBooking(req.body.email, req.body.deskId, req.body.deskRoom, req.body.date, req.body.am, req.body.pm)

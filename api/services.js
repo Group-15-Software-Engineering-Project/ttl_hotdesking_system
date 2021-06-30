@@ -180,6 +180,16 @@ module.exports = {
         });
         model.destroy();
     },
+    removeRoom: async (room) => {
+        let models = await Desk.findAll({
+            where: {
+                room: room
+            }
+        });
+        for (let model in models) {
+            models[model].destroy();
+        }
+    },
     removeBooking: async (email, id, room, date, am, pm) => {
         let model = await Booking.findOne({
             where: {
