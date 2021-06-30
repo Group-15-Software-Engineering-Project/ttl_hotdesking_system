@@ -21,12 +21,7 @@ class Locations extends Component {
     };
 
     getLocationData = () => {
-        fetch("/api/getLocationData", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        fetch("/api/getLocationData")
             .then((res) => {
                 return res.json();
             })
@@ -41,22 +36,7 @@ class Locations extends Component {
 
     componentDidMount = () => {
         window.scrollTo(0, 0);
-        fetch("/api/getLocationData", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                if (res.error) {
-                } else {
-                    this.setState({ roomDeskList: res.data });
-                }
-            })
-            .catch((err) => {});
+        this.getLocationData();
     };
 
     submitAddRoom = (room) => {

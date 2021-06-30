@@ -128,7 +128,7 @@ module.exports = {
         }
         console.log('deskModel:', deskModel);
         let bookings = await Booking.findall({
-            raw: true
+            raw: true,
             where: {
                 room: room,
                 am: am,
