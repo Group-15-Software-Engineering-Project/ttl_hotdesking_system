@@ -27,7 +27,13 @@ module.exports = {
         });
         return model.length > 0 ? true : false;
     },
-    getLocationData: () => {},
+    getLocationData: async () => {
+        // let data = [];
+        // let models = await Desk.findAll();
+        // for (let model in models) {
+        //     data.push[{name: models[model].getDataValue('room'), desk}]
+        // }
+    },
     getUserName: async (email) => {
         let model = await User.findByPk(email);
         let username = model.getDataValue("username");
