@@ -362,7 +362,7 @@ class Locations extends Component {
                                     key={"quad_2_space_2"}
                                     style={{
                                         width: "100%",
-                                        marginTop: "5%",
+                                        marginTop: "2%",
                                         marginBottom: "2%",
                                     }}
                                 />
