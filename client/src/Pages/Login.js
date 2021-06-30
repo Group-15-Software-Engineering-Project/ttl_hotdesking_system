@@ -53,6 +53,11 @@ class Login extends Component {
     };
 
     componentDidMount = () => {
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && this.state.password.length > 0) {
+                this.submitLogin();
+            }
+        });
         this.getNotifications();
         if (!(verify(true) || verify(false))) {
             sessionStorage.clear();

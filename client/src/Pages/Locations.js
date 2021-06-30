@@ -407,33 +407,43 @@ class Locations extends Component {
                                     placeholder="Desk Number"
                                     type="text"
                                     name="addDeskNum"
-                                    onChange={this.handleEvent}></input>
+                                    onChange={this.handleEvent}
+                                    onMouseEnter={() => this.setState({ showTooltip: true })}
+                                    onMouseLeave={() =>
+                                        this.setState({ showTooltip: false })
+                                    }></input>
                                 <div
                                     className="space"
                                     style={{ margin: 0, marginTop: "10px" }}
                                 />
-                                <BsInfoCircleFill
+                                {/* <BsInfoCircleFill
+                                    name="info-icon"
                                     className="i-icon"
                                     onMouseEnter={() => this.setState({ showTooltip: true })}
-                                    onMouseLeave={() => this.setState({ showTooltip: false })}
-                                />
+                                    onMouseLeave={() => this.setState({ showTooltip: false })}>
+                                    afafva
+                                </BsInfoCircleFill> */}
                                 <div className="space" style={{ margin: 0 }} />
 
                                 {this.state.showTooltip ? (
-                                    <p
+                                    <span
+                                        className="tooltip"
                                         style={{
                                             position: "absolute",
                                             zIndex: "2",
                                             borderRadius: "10px",
-                                            backgroundColor: "#008dd3a7",
-                                            color: "white",
+                                            backgroundColor: "#BBBBBBd7",
+                                            color: "black",
+                                            border: "2px solid #555",
                                             padding: "10px",
-                                            width: "300px",
+                                            width: "25%",
                                             wordWrap: "wrap",
+                                            whiteSpace: "pre-wrap",
+                                            marginRight: "20px",
                                         }}>
                                         You may list desk numbers individually, separated by
                                         commas, or by a range eg. 1-5.
-                                    </p>
+                                    </span>
                                 ) : null}
 
                                 <div

@@ -281,3 +281,12 @@
     color: #008dd3;
     position: relative;
 }
+
+.tooltip span {
+    display: none;
+}
+.tooltip:hover span {
+    display: block;
+    position: fixed;
+    overflow: hidden;
+}
