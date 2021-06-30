@@ -122,8 +122,13 @@ module.exports = {
             },
             attributes: 'deskId'
         });
+        let desks = [];
+        for (let desk of deskModel) {
+            desks.push(deskModel[desk].getDataValue('id'));
+        }
         console.log('deskModel:', deskModel);
-        let bookingModel = await Booking.finall({
+        let bookings = await Booking.findall({
+            raw: true
             where: {
                 room: room,
                 am: am,
@@ -138,7 +143,7 @@ module.exports = {
                 ]
             }
         });
-        return [deskModel, bookingModel.values];
+        return [desks, bookings];
     },
     getNotifications: async () => {
         let notifications = [];
