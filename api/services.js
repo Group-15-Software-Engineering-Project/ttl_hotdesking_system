@@ -29,20 +29,20 @@ module.exports = {
     },
     getLocationData: async () => {
         let data = [];
-        let rooms = await this.getRooms();
+        let rooms = await module.exports.getRooms();
         for  (let room in rooms) {
-            let models = Desk.findAll({
+            let deskModels = await Desk.findAll({
                 where: {
                     room: rooms[room]
                 }
             });
             let desks = [];
-            for (model of models) {
-                desks.push(models[model].getDataValue('id'));
+            for (desk of deskModels) {
+                desks.push(desk.getDataValue('id'));
             }
             data[room] = {name: rooms[room], desks: desks};
         }
-        return await Promises.all(data);
+        return data;
     },
     getUserName: async (email) => {
         let model = await User.findByPk(email);
