@@ -102,12 +102,7 @@ export default class BookingPage extends React.Component {
   positionReference = createRef();
 
   componentDidMount() {
-    fetch("/api/getRooms", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    fetch("/api/getRooms")
       .then((res) => {
         return res.json();
       })
