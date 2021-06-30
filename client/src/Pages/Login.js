@@ -106,7 +106,7 @@ class Login extends Component {
                 } else {
                     this.setState({ validLogin: true, admin: res.admin }, () => {
                         this.getUserName();
-                        _GetUserBookings();
+                        _GetUserBookings(null, this.state.email);
                     });
                     this.props.setEmail(this.state.email);
                 }
