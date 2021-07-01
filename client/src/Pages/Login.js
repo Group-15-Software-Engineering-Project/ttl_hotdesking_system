@@ -26,7 +26,7 @@ class Login extends Component {
         for (let i in data) {
             notifs.push({
                 type: data[i].type,
-                date: data[i].date,
+                date: data[i].start,
                 body: data[i].body,
                 title: data[i].title,
             });
