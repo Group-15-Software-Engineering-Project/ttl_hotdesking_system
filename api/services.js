@@ -29,15 +29,7 @@ module.exports = {
     },
     getLocationData: async () => {
         let data = [];
-        let rooms = [];
-        let distinctRooms = await sequelize.query('SELECT DISTINCT room FROM desks;', {
-            type: QueryTypes.SELECT
-        });
-        console.log(distinctRooms);
-        for (let room in distinctRooms) {
-            rooms.push(distinctRooms[room].room);
-        }
-        console.log(rooms);
+        let rooms = await module.exports.getRoomsList();
         for  (let room in rooms) {
             let deskModels = await Desk.findAll({
                 where: {
@@ -51,6 +43,16 @@ module.exports = {
             data[room] = {name: rooms[room], desks: desks};
         }
         return data;
+    },
+    getRoomsList: async () => {
+        let rooms = [];
+        let distinctRooms = await sequelize.query('SELECT DISTINCT room FROM desks;', {
+            type: QueryTypes.SELECT
+        });
+        for (let room in distinctRooms) {
+            rooms.push(distinctRooms[room].room);
+        }
+        return rooms;
     },
     getUserName: async (email) => {
         let model = await User.findByPk(email);
