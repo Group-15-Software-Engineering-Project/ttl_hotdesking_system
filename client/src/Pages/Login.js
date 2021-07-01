@@ -58,7 +58,6 @@ class Login extends Component {
                 this.submitLogin();
             }
         });
-        this.getNotifications();
         if (!(verify(true) || verify(false))) {
             sessionStorage.clear();
         }
@@ -109,6 +108,7 @@ class Login extends Component {
                 if (res.error) {
                     this.setState({ validLogin: false, errorText: true });
                 } else {
+                    if (!sessionStorage.notifications) this.getNotifications();
                     this.setState({ validLogin: true, admin: res.admin }, () => {
                         this.getUserName();
                         _GetUserBookings(null, this.state.email);

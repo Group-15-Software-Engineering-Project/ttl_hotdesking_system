@@ -441,8 +441,10 @@ class Locations extends Component {
                                             whiteSpace: "pre-wrap",
                                             marginRight: "20px",
                                         }}>
-                                        You may list desk numbers individually, separated by
-                                        commas, or by a range eg. 1-5.
+                                        You may list desk numbers individually and add them one
+                                        by one, separated by commas (eg. 1,2,5,7), or by a
+                                        range (eg. 1-5). The methods cannot be combined, ie.
+                                        you may not type 1,2,5-7,9.
                                     </span>
                                 ) : null}
 

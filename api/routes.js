@@ -180,8 +180,11 @@ router.post("/getBookingsInMonth", (req, res) => {
     services
         .getBookingsInMonth(req.body.room, req.body.date, req.body.am, req.body.pm)
         .then((result) => {
-            res.status(200),
-                send({ error: false, existingBookings: result[1], desks: result[0] });
+            res.status(200).send({
+                error: false,
+                existingBookings: result[1],
+                desks: result[0],
+            });
         })
         .catch((err) => {
             console.log(err);

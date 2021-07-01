@@ -1,7 +1,7 @@
 import React, { Component, createRef } from "react";
 import { Redirect } from "react-router-dom";
 import BookingCalendarNoLimit from "../Components/BookingCalendarNoLimit";
-import { verify } from "../Components/Misc";
+import { verify, months } from "../Components/Misc";
 
 import "../public/css/main.css";
 class Notifications extends Component {
@@ -47,6 +47,15 @@ class Notifications extends Component {
                 if (result.error) {
                     alert("Error adding a notification");
                 } else {
+                    let notifs = JSON.parse(sessionStorage.notifications);
+                    let date = String(new Date()).split(" ");
+                    notifs.data.push({
+                        type: this.state.type,
+                        title: this.state.title,
+                        body: this.state.text,
+                        date: date[3] + "-" + (months.indexOf(date[1]) + 1) + "-" + date[2],
+                    });
+                    sessionStorage.setItem("notifications", JSON.stringify(notifs));
                     alert("Success");
                 }
             })

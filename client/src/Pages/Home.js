@@ -10,34 +10,6 @@ class Home extends React.Component {
         this.state = {
             todayDate: null,
             bookings: [],
-            notifs: [
-                {
-                    type: "normal",
-                    date: "16 Apr 2021",
-                    title: "The system is finally live.", //"The system is live!",
-                    text: "The Trinity Hot-Desking system is live!",
-                },
-                {
-                    type: "important",
-                    date: "15 Apr 2021",
-                    title: "Changes to bookings.",
-                    text:
-                        "Due to high demand for desks in Front square, from next week on, the booking limit for Front square offices will be decreased by 1 per person. Teams wanting to book desks at Front Square will be restricted to only 1 booking per week." +
-                        " Teams which require multiple bookings for any valid reason in Front Square may contact Stephanie for the bookings to be manually made by the admin.",
-                },
-                {
-                    type: "restrictions",
-                    date: "15 Apr 2021",
-                    title: "Team SCSS",
-                    text: "SCSS team will not be able to make bookings in the upcoming week.",
-                },
-                {
-                    type: "news",
-                    date: "14 Apr 2021",
-                    title: "New location added.",
-                    text: "Bookings can now be made for Office 2.5 at Front Square.",
-                },
-            ],
         };
     }
 

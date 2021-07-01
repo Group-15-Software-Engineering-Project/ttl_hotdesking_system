@@ -127,6 +127,7 @@ module.exports = {
     },
     getReports: () => {},
     getBookingsInMonth: async (room, date, am, pm) => {
+        console.log("SERVICE:", typeof date);
         let deskModel = await Desk.findAll({
             where: {
                 room: room,
@@ -134,28 +135,35 @@ module.exports = {
         });
         let desks = [];
         for (let desk of deskModel) {
+            console.log("SERVICE DESK:", desk);
             desks.push(desk.getDataValue("id"));
         }
-        let bookings = await Booking.findall({
+        let dateComp = date.split("-");
+        let bookings = await Booking.findAll({
             raw: true,
             where: {
-                room: room,
+                deskRoom: room,
                 am: am,
                 pm: pm,
                 [Op.and]: [
                     {
                         date: {
-                            [Op.gt]: new Date(date.getFullYear(), date.getMonth()),
+                            [Op.gt]: new Date(
+                                parseInt(dateComp[0]),
+                                parseInt(dateComp[1]) - 1,
+                                1
+                            ),
                         },
                     },
                     {
                         date: {
-                            [Op.lt]: new Date(date.getFullYear(), date.getMonth() + 1),
+                            [Op.lt]: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]), 1),
                         },
                     },
                 ],
             },
         });
+        console.log("DESKS:", desks, "BOOKINGS:", bookings);
         return [desks, bookings];
     },
     getNotifications: async () => {
