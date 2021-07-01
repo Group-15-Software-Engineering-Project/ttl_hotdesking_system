@@ -168,12 +168,12 @@ router.get("/getReports", (req, res) => {
     services.getReports(req.body.time, req.body.room, req.body.team)
         .then((result) => {
             res.status(200).send({
-                result[0],
-                result[1],
-                result[2],  
-                result[3],
-                result[4],
-                result[5],
+                labels:result[0],
+                amountOfBookings:result[1],
+                desks:result[2],  
+                deskBookings:result[3],
+                activeDays:result[4],
+                message:result[5],
                 isError: false,
             });
         })
