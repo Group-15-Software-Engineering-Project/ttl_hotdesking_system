@@ -30,25 +30,25 @@ module.exports = {
     getLocationData: async () => {
         let data = [];
         let rooms = [];
-        let distinctRooms = await sequelize.query('SELECT DISTINCT room FROM desks;', {
-            type: QueryTypes.SELECT
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+            type: QueryTypes.SELECT,
         });
         console.log(distinctRooms);
         for (let room in distinctRooms) {
             rooms.push(distinctRooms[room].room);
         }
         console.log(rooms);
-        for  (let room in rooms) {
+        for (let room in rooms) {
             let deskModels = await Desk.findAll({
                 where: {
-                    room: rooms[room]
-                }
+                    room: rooms[room],
+                },
             });
             let desks = [];
             for (desk of deskModels) {
-                desks.push(desk.getDataValue('id'));
+                desks.push(desk.getDataValue("id"));
             }
-            data[room] = {name: rooms[room], desks: desks};
+            data[room] = { name: rooms[room], desks: desks };
         }
         return data;
     },
@@ -69,20 +69,20 @@ module.exports = {
     },
     getRooms: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query('SELECT DISTINCT room FROM desks;', {
-            type: QueryTypes.SELECT
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+            type: QueryTypes.SELECT,
         });
         for (let room in distinctRooms) {
             rooms.push({
                 value: distinctRooms[room].room,
-                label: ""
+                label: "",
             });
         }
         return rooms;
     },
     getGroups: async () => {
         let groups = [];
-        let distinctNames = await sequelize.query('SELECT DISTINCT name FROM groups;', {
+        let distinctNames = await sequelize.query("SELECT DISTINCT name FROM groups;", {
             type: QueryTypes.SELECT,
         });
         for (let group in distinctNames) {
@@ -129,12 +129,12 @@ module.exports = {
     getBookingsInMonth: async (room, date, am, pm) => {
         let deskModel = await Desk.findAll({
             where: {
-                room: room
-            }
+                room: room,
+            },
         });
         let desks = [];
         for (let desk of deskModel) {
-            desks.push(desk.getDataValue('id'));
+            desks.push(desk.getDataValue("id"));
         }
         let bookings = await Booking.findall({
             raw: true,
@@ -142,15 +142,19 @@ module.exports = {
                 room: room,
                 am: am,
                 pm: pm,
-                [Op.and] : [
-                    {date: {
-                        [Op.gt] : new Date(date.getFullYear(), date.getMonth())
-                    }},
-                    {date: {
-                        [Op.lt] : new Date(date.getFullYear(), date.getMonth()+1)
-                    }}
-                ]
-            }
+                [Op.and]: [
+                    {
+                        date: {
+                            [Op.gt]: new Date(date.getFullYear(), date.getMonth()),
+                        },
+                    },
+                    {
+                        date: {
+                            [Op.lt]: new Date(date.getFullYear(), date.getMonth() + 1),
+                        },
+                    },
+                ],
+            },
         });
         return [desks, bookings];
     },
@@ -159,7 +163,7 @@ module.exports = {
         let models = await Notification.findAll({
             raw: true,
             where: {
-                date: {
+                end: {
                     [Op.gt]: new Date(),
                 },
             },
@@ -190,12 +194,13 @@ module.exports = {
     addUserToGroup: async (email, group) => {
         await Group.create({ name: group, userEmail: email });
     },
-    addNotification: async (date, type, title, body) => {
+    addNotification: async (end, type, title, body) => {
         await Notification.create({
-            date: date,
+            start: new Date(),
+            end: end,
             type: type,
             title: title,
-            body: body
+            body: body,
         });
     },
     removeUser: async (email) => {
@@ -214,8 +219,8 @@ module.exports = {
     removeRoom: async (room) => {
         let models = await Desk.findAll({
             where: {
-                room: room
-            }
+                room: room,
+            },
         });
         for (let model in models) {
             models[model].destroy();
