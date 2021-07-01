@@ -21,12 +21,12 @@ function PastBookings() {
     for (let index = 0; index < source.length; index++) {
       let currentBooking = source[index];
       if (
-        currentBooking.USER === booking.USER &&
-        currentBooking.DESK === booking.DESK &&
-        currentBooking.DATE === booking.DATE &&
-        currentBooking.ROOM === booking.ROOM &&
-        currentBooking.AM === booking.AM &&
-        currentBooking.PM === booking.PM
+        currentBooking.user === booking.user &&
+        currentBooking.desk === booking.desk &&
+        currentBooking.date === booking.date &&
+        currentBooking.room === booking.room &&
+        currentBooking.am === booking.am &&
+        currentBooking.pm === booking.pm
       ) {
         return index;
       }
@@ -42,12 +42,12 @@ function PastBookings() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user: bookingToCancel.USER,
-        desk: bookingToCancel.DESK,
-        room: bookingToCancel.ROOM,
-        date: bookingToCancel.DATE,
-        am: bookingToCancel.AM,
-        pm: bookingToCancel.PM,
+        user: bookingToCancel.user,
+        deskId: bookingToCancel.deskId,
+        deskRoom: bookingToCancel.deskRoom,
+        date: bookingToCancel.date,
+        am: bookingToCancel.am,
+        pm: bookingToCancel.pm,
       }),
     })
       .then((res) => {
@@ -64,12 +64,12 @@ function PastBookings() {
 
   const displayBooking = (data) => {
     let time =
-      data.PM && !data.AM
+      data.pm && !data.am
         ? "13:30 - 17:30"
-        : data.AM && !data.PM
+        : data.am && !data.pm
         ? "09:00 - 13:00"
         : "09:00 - 17:30";
-    let date = data.DATE.split("T")[0].split("-");
+    let date = data.date.split("T")[0].split("-");
     let isUpcoming = todayDate - parseInt(date[0] + date[1] + date[2]);
     let status =
       isUpcoming < 0 ? (
@@ -135,13 +135,13 @@ function PastBookings() {
         onClick={() => {
           setTimeout(() => {
             let displayTime =
-              data.AM && !data.PM
+              data.am && !data.pm
                 ? "9:00 - 13:00"
-                : data.PM && !data.AM
+                : data.pm && !data.am
                 ? "13:30 - 17:30"
                 : "9:00 - 17:30";
             let res = window.confirm(
-              `Are you sure you want to cancel the booking?\n\nLocation: ${data.ROOM}\nDesk: ${data.DESK}\nDate: ${data.DATE}\nTime: ${displayTime}`
+              `Are you sure you want to cancel the booking?\n\nLocation: ${data.deskRoom}\nDesk: ${data.deskId}\nDate: ${data.date}\nTime: ${displayTime}`
             );
             if (res) {
               let currentData = JSON.parse(sessionStorage.bookings).data;
@@ -175,7 +175,7 @@ function PastBookings() {
             flex: "1",
           }}
         >
-          {"" + data.DESK}
+          {"" + data.deskId}
         </span>
         <span
           className="ellipsis booking-history"
@@ -184,7 +184,7 @@ function PastBookings() {
             fontWeight: "bold",
             flex: "3",
           }}
-        >{`${data.ROOM}`}</span>
+        >{`${data.deskRoom}`}</span>
         <span
           className="booking-history"
           style={{
