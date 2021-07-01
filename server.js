@@ -351,7 +351,7 @@ app.post("/api/getReports", (req, res) => {
                         res.send({
                             labels,
                             amountOfBookings,
-                            desks,
+                            desks,  
                             deskBookings,
                             activeDays,
                             message: "",

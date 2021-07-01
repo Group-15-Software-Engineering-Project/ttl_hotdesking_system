@@ -128,7 +128,9 @@ module.exports = {
         }
         return bookings;
     },
-    getReports: () => {},
+    getReports: (time, room, team) => {
+        
+    },
     getBookingsInMonth: async (room, date, am, pm) => {
         let deskModel = await Desk.findAll({
             where: {
