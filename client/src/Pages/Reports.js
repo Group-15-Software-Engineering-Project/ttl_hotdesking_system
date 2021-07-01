@@ -110,22 +110,20 @@ class Reports extends Component {
   }
   componentDidMount = () => {
     window.scrollTo(0, 0);
-    fetch("/api/getLocationData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
+    fetch("/api/getLocationData")
+    .then((res) => {
         return res.json();
-      })
-      .then((res) => {
+    })
+    .then((res) => {
         if (res.error) {
         } else {
-          this.setState({ roomlist: res.data });
+            this.setState({ roomlist: res.data });
+            
         }
-      })
-      .catch((err) => {});
+    })
+    .catch((err) => {});
+
+   
 
     fetch("/api/getTeams", {
       method: "Post",
@@ -308,9 +306,12 @@ class Reports extends Component {
                 >
                   <option value="">Select location</option>
                   <option value="overall">All</option>
-                  {this.state.roomlist.map((x) => {
-                    return <option value={x.name}>{x.name}</option>;
-                  })}
+                  {this.state.roomlist?this.state.roomlist.map((x) => {
+                    
+                    return( <option key={x.name} value={x.name}>{x.name}</option>);
+                    
+                  }): null}
+                  
                 </select>
               </div>
               <div style={{ flex: "1", height: "100%" }}>

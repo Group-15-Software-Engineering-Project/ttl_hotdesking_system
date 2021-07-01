@@ -165,12 +165,23 @@ router.post("/getBookings", (req, res) => {
 //  Returns usage reports       TODO
 router.get("/getReports", (req, res) => {
     console.log("getReports");
-    services
-        .getReports()
-        .then((result) => {})
+    services.getReports(req.body.time, req.body.room, req.body.team)
+        .then((result) => {
+            res.status(200).send({
+                labels:result[0],
+                amountOfBookings:result[1],
+                desks:result[2],  
+                deskBookings:result[3],
+                activeDays:result[4],
+                message:result[5],
+                isError: false,
+            });
+        })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({});
+            res.status(500).send({
+                error: true, message: err.toString()
+            });
         });
 });
 
