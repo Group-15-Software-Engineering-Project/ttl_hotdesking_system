@@ -56,7 +56,7 @@ export const _GetUserBookings = async (ref, email) => {
                 date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
             let index = 0;
             for (let key in data) {
-                let bookingDateComponents = data[key].DATE.split("T")[0].split("-");
+                let bookingDateComponents = data[key].date.split("T")[0].split("-");
                 let bookingDate =
                     parseInt(bookingDateComponents[0]) * 10000 +
                     parseInt(bookingDateComponents[1]) * 100 +

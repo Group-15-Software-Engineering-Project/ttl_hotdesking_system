@@ -119,17 +119,19 @@ module.exports = {
     getBookings: async (email) => {
         let bookings = [];
         let models = await Booking.findAll({
+            raw: true,
             where: {
                 userEmail: email,
             },
         });
         for (let model in models) {
-            bookings.push(models[model].values);
+            bookings.push(models[model]);
         }
+        console.log(bookings);
         return bookings;
     },
     getReports: (time, room, team) => {
-        
+
     },
     getBookingsInMonth: async (room, date, am, pm) => {
         let deskModel = await Desk.findAll({

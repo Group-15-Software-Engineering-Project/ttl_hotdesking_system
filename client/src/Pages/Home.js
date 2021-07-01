@@ -59,12 +59,12 @@ class Home extends React.Component {
 
     displayBooking = (data) => {
         let time =
-            data.PM && !data.AM
+            data.am && !data.pm
                 ? "13:30 - 17:30"
-                : data.AM && !data.PM
+                : data.am && !data.pm
                 ? "09:00 - 13:00"
                 : "09:00 - 17:30";
-        let date = data.DATE.split("T")[0].split("-");
+        let date = data.date.split("T")[0].split("-");
         let isUpcoming = this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
         let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
         let status =
@@ -125,7 +125,7 @@ class Home extends React.Component {
                             fontWeight: "bold",
                             flex: "1",
                         }}>
-                        {"" + data.DESK}
+                        {"" + data.deskId}
                     </span>
                     <span
                         className="ellipsis booking-history"
@@ -133,7 +133,7 @@ class Home extends React.Component {
                             textAlign: "left",
                             fontWeight: "bold",
                             flex: "3",
-                        }}>{`${data.ROOM}`}</span>
+                        }}>{`${data.deskRoom}`}</span>
                     <span
                         className="booking-history"
                         style={{
