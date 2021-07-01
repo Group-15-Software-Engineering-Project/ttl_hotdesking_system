@@ -159,6 +159,7 @@ class Home extends React.Component {
     };
 
     displayNotifications = (notif) => {
+        let date = notif.date.split("-");
         let color =
             notif.type === "important"
                 ? "#ff0000"
@@ -195,7 +196,11 @@ class Home extends React.Component {
                                 wordWrap: "break-word",
                                 //borderRight: "1px dotted #555",
                             }}>
-                            {notif.date}
+                            {parseInt(date[2]) +
+                                " " +
+                                months[parseInt(date[1]) - 1] +
+                                " " +
+                                date[0]}
                         </span>
                         <span
                             style={{
