@@ -134,44 +134,38 @@ module.exports = {
 
     },
     getBookingsInMonth: async (room, date, am, pm) => {
-        console.log("SERVICE:", typeof date);
+        let dateComp = date.split("-");
+        let desks = [];
+        let existingBookings = [];
+        let daysInMonth = new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, 0).getDate()
+
         let deskModel = await Desk.findAll({
             where: {
                 room: room,
             },
         });
-        let desks = [];
         for (let desk of deskModel) {
-            console.log("SERVICE DESK:", desk);
             desks.push(desk.getDataValue("id"));
         }
-        let dateComp = date.split("-");
-        let bookings = await Booking.findAll({
-            raw: true,
-            where: {
-                deskRoom: room,
-                am: am,
-                pm: pm,
-                [Op.and]: [
-                    {
-                        date: {
-                            [Op.gt]: new Date(
-                                parseInt(dateComp[0]),
-                                parseInt(dateComp[1]) - 1,
-                                1
-                            ),
-                        },
-                    },
-                    {
-                        date: {
-                            [Op.lt]: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]), 1),
-                        },
-                    },
-                ],
-            },
-        });
-        console.log("DESKS:", desks, "BOOKINGS:", bookings);
-        return [desks, bookings];
+        for (let day = 0; day <= daysInMonth; day++) {
+            existingBookings[day] = [];
+            let bookings = await Booking.findAll({
+                where: {
+                    deskRoom: room,
+                    am: am,
+                    pm: pm,
+                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day+1),
+                },
+            });
+            for (let booking in bookings) {
+                console.log(booking);
+                existingBookings[day].push({
+                    user: bookings[booking].getDataValue('userEmail'),
+                    desk: bookings[booking].getDataValue('deskId')
+                });
+            }
+        }
+        return [desks, existingBookings];
     },
     getNotifications: async () => {
         let notifications = [];
