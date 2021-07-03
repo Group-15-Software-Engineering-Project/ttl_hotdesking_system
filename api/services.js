@@ -1,5 +1,7 @@
 const { sequelize, User, Desk, Booking, Group, Notification } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
+const user = require("../models/user");
+const { now } = require("sequelize/types/lib/utils");
 
 module.exports = {
     login: async (email, password) => {
@@ -95,7 +97,7 @@ module.exports = {
     },
     getUsers: async () => {
         let users = [];
-        let models = await User.findaAll({
+        let models = await User.findAll({
             attributes: ["email"],
         });
         for (let model in models) {
@@ -262,5 +264,153 @@ module.exports = {
             },
         });
         model.destroy();
+    },
+    getReportsByUser: async (time, room, team) => {
+        let bookings = [];
+        if (time === "overall" && room === "overall") {
+            let users = this.getUsersInGroup(team);
+            for (let user in users) {
+                let bookingsByUser = this.getBookings(user);
+                for (let booking in bookingsByUser) {
+                    bookings.push(booking);
+                }
+            }
+            return bookings;
+        } else if (time === "overall" && room !== "overall") {
+            let users = this.getUsersInGroup(team);
+            for (email in users) {
+                let models = await Booking.findAll({
+                    where: {
+                        userEmail: email,
+                        deskRoom: room,
+                    },
+                });
+                for (let model in models) {
+                    bookings.push(models[model]);
+                }
+            }
+            return bookings;
+        } else if (time === "last week" && room === "overall") {
+            let users = this.getUsersInGroup(team);
+            for (let user in users) {
+                let bookingsByUser = this.getBookings(user);
+                for (let booking in bookingsByUser) {
+                    if (now() - booking.getDataValue("date") <= 7 && now() - booking.getDataValue("date") > 0) {
+                        bookings.push(booking);
+                    }
+                }
+            }
+            return bookings;
+        } else if (time === "last month" && room === "overall") {
+            let users = this.getUsersInGroup(team);
+            for (let user in users) {
+                let bookingsByUser = this.getBookings(user);
+                for (let booking in bookingsByUser) {
+                    if (now() - booking.getDataValue("date") <= 30 && now() - booking.getDataValue("date") > 0) {
+                        bookings.push(booking);
+                    }
+                }
+            }
+        } else if (time === "last 3 months" && room === "overall") {
+            let users = this.getUsersInGroup(team);
+            for (let user in users) {
+                let bookingsByUser = this.getBookings(user);
+                for (let booking in bookingsByUser) {
+                    if (now() - booking.getDataValue("date") <= 90 && now() - booking.getDataValue("date") > 0) {
+                        bookings.push(booking);
+                    }
+                }
+            }
+        } else if (time === "next week" && room === "overall") {
+            let users = this.getUsersInGroup(team);
+            for (let user in users) {
+                let bookingsByUser = this.getBookings(user);
+                for (let booking in bookingsByUser) {
+                    if (booking.getDataValue("date") - now() <= 7 && booking.getDataValue("date") - now() > 0) {
+                        bookings.push(booking);
+                    }
+                }
+            }
+        } else if (time === "last week" && room !== "overall") {
+            let users = this.getUsersInGroup(team);
+            let bookingsByUserAndRoom = [];
+            for (email in users) {
+                let models = await Booking.findAll({
+                    where: {
+                        userEmail: email,
+                        deskRoom: room,
+                    },
+                });
+                for (let model in models) {
+                    bookingsByUserAndRoom.push(models[model]);
+                }
+            }
+            for (let booking in bookingsByUserAndRoom) {
+                if (now() - booking.getDataValue("date") <= 7 && now() - booking.getDataValue("date") > 0) {
+                    bookings.push(booking);
+                }
+            }
+            return bookings;
+        } else if (time === "last month" && room !== "overall") {
+            let users = this.getUsersInGroup(team);
+            let bookingsByUserAndRoom = [];
+            for (email in users) {
+                let models = await Booking.findAll({
+                    where: {
+                        userEmail: email,
+                        deskRoom: room,
+                    },
+                });
+                for (let model in models) {
+                    bookingsByUserAndRoom.push(models[model]);
+                }
+            }
+            for (let booking in bookingsByUserAndRoom) {
+                if (now() - booking.getDataValue("date") <= 30 && now() - booking.getDataValue("date") > 0) {
+                    bookings.push(booking);
+                }
+            }
+            return bookings;
+        } else if (time === "last 3 months" && room !== "overall") {
+            let users = this.getUsersInGroup(team);
+            let bookingsByUserAndRoom = [];
+            for (email in users) {
+                let models = await Booking.findAll({
+                    where: {
+                        userEmail: email,
+                        deskRoom: room,
+                    },
+                });
+                for (let model in models) {
+                    bookingsByUserAndRoom.push(models[model]);
+                }
+            }
+            for (let booking in bookingsByUserAndRoom) {
+                if (now() - booking.getDataValue("date") <= 90 && now() - booking.getDataValue("date") > 0) {
+                    bookings.push(booking);
+                }
+            }
+            return bookings;
+        } else if (time === "next week" && room !== "overall") {
+            let users = this.getUsersInGroup(team);
+            let bookingsByUserAndRoom = [];
+            for (email in users) {
+                let models = await Booking.findAll({
+                    where: {
+                        userEmail: email,
+                        deskRoom: room,
+                    },
+                });
+                for (let model in models) {
+                    bookingsByUserAndRoom.push(models[model]);
+                }
+            }
+            for (let booking in bookingsByUserAndRoom) {
+                if (booking.getDataValue("date") - now() <= 7 && booking.getDataValue("date") - now() > 0) {
+                    bookings.push(booking);
+                }
+            }
+            return bookings;
+        }
     },
 };
