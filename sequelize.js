@@ -21,7 +21,6 @@ User.hasMany(Booking, {
     onDelete: "CASCADE",
     foreignKey: {
         name: "userEmail",
-        primaryKey: true,
     },
 });
 Booking.belongsTo(User);
@@ -31,16 +30,15 @@ Desk.hasMany(Booking, {
     foreignKey: {
         name: "deskId",
         primaryKey: true,
-    },
+    }
 });
-Booking.belongsTo(Desk);
-
 Desk.hasMany(Booking, {
     onDelete: "CASCADE",
     foreignKey: {
         name: "deskRoom",
         primaryKey: true,
     },
+    sourceKey: 'room'
 });
 Booking.belongsTo(Desk);
 
