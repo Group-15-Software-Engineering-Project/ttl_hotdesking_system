@@ -261,8 +261,9 @@ module.exports = {
     },
     getReportsByUser: async (time, room, team) => {
         let bookings = [];
+        // An array of two arrays, user emails and their booking amount
         if (time === "overall" && room === "overall") {
-            let users = this.getUsersInGroup(team);
+            let users = await module.exports.getUsersInGroup(team);
             for (let user in users) {
                 let bookingsByUser = this.getBookings(user);
                 for (let booking in bookingsByUser) {
@@ -289,7 +290,9 @@ module.exports = {
             for (let user in users) {
                 let bookingsByUser = this.getBookings(user);
                 for (let booking in bookingsByUser) {
-                    if (now() - booking.getDataValue("date") <= 7 && now() - booking.getDataValue("date") > 0) {
+                    // No subtraction, Using methods online for Date
+                    // new Date('2021-07-03')
+                    if (new Date() - booking.getDataValue("date") <= 7 && now() - booking.getDataValue("date") > 0) {
                         bookings.push(booking);
                     }
                 }
