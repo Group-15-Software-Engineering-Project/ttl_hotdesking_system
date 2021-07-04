@@ -261,15 +261,16 @@ module.exports = {
     },
     getReportsByUser: async (time, room, team) => {
         let bookings = [];
+        let users = await module.exports.getUsersInGroup(team);
+        bookings[0] = users;
         // An array of two arrays, user emails and their booking amount
         if (time === "overall" && room === "overall") {
-            let users = await module.exports.getUsersInGroup(team);
+            let amount = [];
             for (let user in users) {
-                let bookingsByUser = this.getBookings(user);
-                for (let booking in bookingsByUser) {
-                    bookings.push(booking);
-                }
+                let bookingsByUser = await module.exports.getBookings(user);
+                amount.push(bookingsByUser.length);
             }
+            bookings[1] = amount;
             return bookings;
         } else if (time === "overall" && room !== "overall") {
             let users = this.getUsersInGroup(team);
@@ -290,9 +291,8 @@ module.exports = {
             for (let user in users) {
                 let bookingsByUser = this.getBookings(user);
                 for (let booking in bookingsByUser) {
-                    // No subtraction, Using methods online for Date
-                    // new Date('2021-07-03')
-                    if (new Date() - booking.getDataValue("date") <= 7 && now() - booking.getDataValue("date") > 0) {
+                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 7 && diffDays > 0) {
                         bookings.push(booking);
                     }
                 }
@@ -303,7 +303,8 @@ module.exports = {
             for (let user in users) {
                 let bookingsByUser = this.getBookings(user);
                 for (let booking in bookingsByUser) {
-                    if (now() - booking.getDataValue("date") <= 30 && now() - booking.getDataValue("date") > 0) {
+                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 30 && diffDays > 0) {
                         bookings.push(booking);
                     }
                 }
@@ -313,7 +314,8 @@ module.exports = {
             for (let user in users) {
                 let bookingsByUser = this.getBookings(user);
                 for (let booking in bookingsByUser) {
-                    if (now() - booking.getDataValue("date") <= 90 && now() - booking.getDataValue("date") > 0) {
+                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 90 && diffDays > 0) {
                         bookings.push(booking);
                     }
                 }
@@ -323,7 +325,8 @@ module.exports = {
             for (let user in users) {
                 let bookingsByUser = this.getBookings(user);
                 for (let booking in bookingsByUser) {
-                    if (booking.getDataValue("date") - now() <= 7 && booking.getDataValue("date") - now() > 0) {
+                    let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 7 && diffDays > 0) {
                         bookings.push(booking);
                     }
                 }
@@ -343,7 +346,8 @@ module.exports = {
                 }
             }
             for (let booking in bookingsByUserAndRoom) {
-                if (now() - booking.getDataValue("date") <= 7 && now() - booking.getDataValue("date") > 0) {
+                let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                if (diffDays <= 7 && diffDays > 0) {
                     bookings.push(booking);
                 }
             }
@@ -363,7 +367,8 @@ module.exports = {
                 }
             }
             for (let booking in bookingsByUserAndRoom) {
-                if (now() - booking.getDataValue("date") <= 30 && now() - booking.getDataValue("date") > 0) {
+                let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                if (diffDays <= 30 && diffDays > 0) {
                     bookings.push(booking);
                 }
             }
@@ -383,7 +388,8 @@ module.exports = {
                 }
             }
             for (let booking in bookingsByUserAndRoom) {
-                if (now() - booking.getDataValue("date") <= 90 && now() - booking.getDataValue("date") > 0) {
+                let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                if (diffDays <= 90 && diffDays > 0) {
                     bookings.push(booking);
                 }
             }
@@ -403,7 +409,8 @@ module.exports = {
                 }
             }
             for (let booking in bookingsByUserAndRoom) {
-                if (booking.getDataValue("date") - now() <= 7 && booking.getDataValue("date") - now() > 0) {
+                let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
+                if (diffDays <= 7 && diffDays > 0) {
                     bookings.push(booking);
                 }
             }
