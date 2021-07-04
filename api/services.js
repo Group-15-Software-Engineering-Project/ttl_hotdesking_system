@@ -263,158 +263,142 @@ module.exports = {
         let bookings = [];
         let users = await module.exports.getUsersInGroup(team);
         bookings[0] = users;
+        let amount = [];
         // An array of two arrays, user emails and their booking amount
         if (time === "overall" && room === "overall") {
-            let amount = [];
-            for (let user in users) {
+            for (let user of users) {
                 let bookingsByUser = await module.exports.getBookings(user);
                 amount.push(bookingsByUser.length);
             }
-            bookings[1] = amount;
-            return bookings;
         } else if (time === "overall" && room !== "overall") {
-            let users = this.getUsersInGroup(team);
-            for (email in users) {
+            for (let email of users) {
                 let models = await Booking.findAll({
                     where: {
                         userEmail: email,
                         deskRoom: room,
                     },
                 });
-                for (let model in models) {
-                    bookings.push(models[model]);
-                }
+                amount.push(models.length);
             }
-            return bookings;
         } else if (time === "last week" && room === "overall") {
-            let users = this.getUsersInGroup(team);
-            for (let user in users) {
-                let bookingsByUser = this.getBookings(user);
-                for (let booking in bookingsByUser) {
+            for (let user of users) {
+                let counter = 0;
+                let bookingsByUser = await module.exports.getBookings(user);
+                for (let booking of bookingsByUser) {
                     let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
                     if (diffDays <= 7 && diffDays > 0) {
-                        bookings.push(booking);
+                        counter++;
                     }
                 }
+                amount.push(counter);
             }
-            return bookings;
         } else if (time === "last month" && room === "overall") {
-            let users = this.getUsersInGroup(team);
-            for (let user in users) {
-                let bookingsByUser = this.getBookings(user);
-                for (let booking in bookingsByUser) {
+            for (let user of users) {
+                let counter = 0;
+                let bookingsByUser = await module.exports.getBookings(user);
+                for (let booking of bookingsByUser) {
                     let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
                     if (diffDays <= 30 && diffDays > 0) {
-                        bookings.push(booking);
+                        counter++;
                     }
                 }
+                amount.push(counter);
             }
         } else if (time === "last 3 months" && room === "overall") {
-            let users = this.getUsersInGroup(team);
-            for (let user in users) {
-                let bookingsByUser = this.getBookings(user);
-                for (let booking in bookingsByUser) {
+            for (let user of users) {
+                let counter = 0;
+                let bookingsByUser = await module.exports.getBookings(user);
+                for (let booking of bookingsByUser) {
                     let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
                     if (diffDays <= 90 && diffDays > 0) {
-                        bookings.push(booking);
+                        counter++;
                     }
                 }
+                amount.push(counter);
             }
         } else if (time === "next week" && room === "overall") {
-            let users = this.getUsersInGroup(team);
-            for (let user in users) {
-                let bookingsByUser = this.getBookings(user);
-                for (let booking in bookingsByUser) {
+            for (let user of users) {
+                let counter = 0;
+                let bookingsByUser = await module.exports.getBookings(user);
+                for (let booking of bookingsByUser) {
                     let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
                     if (diffDays <= 7 && diffDays > 0) {
-                        bookings.push(booking);
+                        counter++;
                     }
                 }
+                amount.push(counter);
             }
         } else if (time === "last week" && room !== "overall") {
-            let users = this.getUsersInGroup(team);
-            let bookingsByUserAndRoom = [];
-            for (email in users) {
+            for (let email of users) {
+                let counter = 0;
                 let models = await Booking.findAll({
                     where: {
                         userEmail: email,
                         deskRoom: room,
                     },
                 });
-                for (let model in models) {
-                    bookingsByUserAndRoom.push(models[model]);
+                for (let booking of models) {
+                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 7 && diffDays > 0) {
+                        counter++;
+                    }
                 }
+                amount.push(counter);
             }
-            for (let booking in bookingsByUserAndRoom) {
-                let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
-                if (diffDays <= 7 && diffDays > 0) {
-                    bookings.push(booking);
-                }
-            }
-            return bookings;
         } else if (time === "last month" && room !== "overall") {
-            let users = this.getUsersInGroup(team);
-            let bookingsByUserAndRoom = [];
-            for (email in users) {
+            for (let email of users) {
+                let counter = 0;
                 let models = await Booking.findAll({
                     where: {
                         userEmail: email,
                         deskRoom: room,
                     },
                 });
-                for (let model in models) {
-                    bookingsByUserAndRoom.push(models[model]);
+                for (let booking of models) {
+                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 30 && diffDays > 0) {
+                        counter++;
+                    }
                 }
+                amount.push(counter);
             }
-            for (let booking in bookingsByUserAndRoom) {
-                let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
-                if (diffDays <= 30 && diffDays > 0) {
-                    bookings.push(booking);
-                }
-            }
-            return bookings;
         } else if (time === "last 3 months" && room !== "overall") {
-            let users = this.getUsersInGroup(team);
-            let bookingsByUserAndRoom = [];
-            for (email in users) {
+            for (let email of users) {
+                let counter = 0;
                 let models = await Booking.findAll({
                     where: {
                         userEmail: email,
                         deskRoom: room,
                     },
                 });
-                for (let model in models) {
-                    bookingsByUserAndRoom.push(models[model]);
+                for (let booking of models) {
+                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 90 && diffDays > 0) {
+                        counter++;
+                    }
                 }
+                amount.push(counter);
             }
-            for (let booking in bookingsByUserAndRoom) {
-                let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
-                if (diffDays <= 90 && diffDays > 0) {
-                    bookings.push(booking);
-                }
-            }
-            return bookings;
         } else if (time === "next week" && room !== "overall") {
-            let users = this.getUsersInGroup(team);
-            let bookingsByUserAndRoom = [];
-            for (email in users) {
+            for (let email of users) {
+                let counter = 0;
                 let models = await Booking.findAll({
                     where: {
                         userEmail: email,
                         deskRoom: room,
                     },
                 });
-                for (let model in models) {
-                    bookingsByUserAndRoom.push(models[model]);
+                for (let booking of models) {
+                    let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 7 && diffDays > 0) {
+                        counter++;
+                    }
                 }
+                amount.push(counter);
             }
-            for (let booking in bookingsByUserAndRoom) {
-                let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
-                if (diffDays <= 7 && diffDays > 0) {
-                    bookings.push(booking);
-                }
-            }
-            return bookings;
         }
+
+        bookings[1] = amount;
+        return bookings;
     },
 };
