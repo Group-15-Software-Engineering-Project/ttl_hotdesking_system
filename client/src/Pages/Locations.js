@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { createUniqueID, verify } from "../Components/Misc";
+import { createUniqueID, verify, parseNumberList } from "../Components/Misc";
 import "../public/css/main.css";
-import { BsInfoCircleFill } from "react-icons/bs";
 
 class Locations extends Component {
     state = {
@@ -18,6 +17,10 @@ class Locations extends Component {
         key: "default",
         customInput: false,
         showTooltip: false,
+    };
+
+    verifyInput = (input) => {
+        return (input.match(/[^\s0-9,-]/giu) || []).length === 0;
     };
 
     getLocationData = () => {
@@ -69,92 +72,32 @@ class Locations extends Component {
     submitAddDesk = async (desk, room) => {
         if (desk.length < 1 || room.length < 1) return;
         this.setState({ key: createUniqueID() });
-        if (desk.includes(",")) {
-            let desks = desk.split(",");
-            for (let i = 0; i < desks.length; i++) {
-                desks[i] = desks[i].replaceAll(/[^0-9]/giu, "");
-                if (desks[i].length > 0) {
-                    console.log(desks[i], "added");
-                    await fetch("/api/addDesk", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            id: desks[i],
-                            room: room,
-                        }),
-                    })
-                        .then((res) => {
-                            return res.json();
-                        })
-                        .then((res) => {
-                            if (res.error) {
-                                alert("error adding desks");
-                            } else {
-                                //this.getLocationData();
-                            }
-                        })
-                        .catch((err) => {
-                            alert(err);
-                        });
-                }
-            }
-            this.getLocationData();
-        } else if (desk.includes("-")) {
-            let desks = desk.split("-");
-            if (desks.length > 2) return;
-            for (let i = parseInt(desks[0]); i <= parseInt(desks[1]); i++) {
-                await fetch("/api/addDesk", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: i,
-                        room: room,
-                    }),
-                })
-                    .then((res) => {
-                        return res.json();
-                    })
-                    .then((res) => {
-                        if (res.error) {
-                            alert("error adding desks");
-                        } else {
-                            //this.getLocationData();
-                        }
-                    })
-                    .catch((err) => {
-                        alert(err);
-                    });
-            }
-            this.getLocationData();
-        } else if (!isNaN(desk))
-            fetch("/api/addDesk", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: desk,
-                    room: room,
-                }),
+        console.log(desk);
+        fetch("/api/addDesk", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: parseNumberList(desk),
+                room: room,
+            }),
+        })
+            .then((res) => {
+                return res.json();
             })
-                .then((res) => {
-                    return res.json();
-                })
-                .then((res) => {
-                    if (res.error) {
-                        alert(res.message);
-                    } else {
-                        alert("Success");
-                        this.getLocationData();
-                    }
-                })
-                .catch((err) => {
-                    alert(err);
-                });
+            .then((res) => {
+                if (res.error) {
+                    alert(res.message);
+                } else {
+                    alert("Success");
+                    this.getLocationData();
+                    this.setState({ customInput: false });
+                }
+            })
+            .catch((err) => {
+                alert(err);
+            });
     };
 
     submitRemoveDesk = (desk, room) => {
@@ -298,40 +241,6 @@ class Locations extends Component {
                     <div key={"side_cont_1"} className="flex-container-1" />
                     <div key={"main_cont_5"} className="flex-container-5 main-body">
                         <div key={"quad_cont_1"} className="quadrant-container">
-                            {/* <div key={"quad_1"} className="quadrant">
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}>
-                                    Add Locations
-                                </h1>
-                                <div
-                                    key={"quad_1_space_1"}
-                                    style={{
-                                        width: "100%",
-                                        marginTop: "5%",
-                                        marginBottom: "10%",
-                                    }}
-                                />
-                                <input
-                                    className="text-input"
-                                    type="text"
-                                    placeholder="Location display name"
-                                    name="addRoom"
-                                    onChange={this.handleEvent}></input>
-                                <div
-                                    key={"quad_1_space_0"}
-                                    style={{
-                                        width: "100%",
-                                        marginTop: "5%",
-                                        marginBottom: "5%",
-                                    }}
-                                />
-                                <button
-                                    className="button-style no-outline"
-                                    onClick={(e) => this.submitAddRoom(this.state.addRoom)}>
-                                    Add Location
-                                </button>
-                            </div> */}
                             <div key={"quad_2"} className="double-quadrant">
                                 <h1
                                     className="page-divider-header"
@@ -404,6 +313,13 @@ class Locations extends Component {
 
                                 <input
                                     className="text-input"
+                                    style={{
+                                        backgroundColor: `${
+                                            this.verifyInput(this.state.addDeskNum)
+                                                ? ""
+                                                : "#ff6666"
+                                        }`,
+                                    }}
                                     placeholder="Desk Number"
                                     type="text"
                                     name="addDeskNum"
@@ -416,13 +332,7 @@ class Locations extends Component {
                                     className="space"
                                     style={{ margin: 0, marginTop: "10px" }}
                                 />
-                                {/* <BsInfoCircleFill
-                                    name="info-icon"
-                                    className="i-icon"
-                                    onMouseEnter={() => this.setState({ showTooltip: true })}
-                                    onMouseLeave={() => this.setState({ showTooltip: false })}>
-                                    afafva
-                                </BsInfoCircleFill> */}
+
                                 <div className="space" style={{ margin: 0 }} />
 
                                 {this.state.showTooltip ? (
@@ -443,8 +353,8 @@ class Locations extends Component {
                                         }}>
                                         You may list desk numbers individually and add them one
                                         by one, separated by commas (eg. 1,2,5,7), or by a
-                                        range (eg. 1-5). The methods cannot be combined, ie.
-                                        you may not type 1,2,5-7,9.
+                                        range (eg. 1-5). The methods can be combined, ie. you
+                                        may type 1,2,5-7,9.
                                     </span>
                                 ) : null}
 
@@ -462,6 +372,10 @@ class Locations extends Component {
                                             this.state.addDeskNum,
                                             this.state.addDeskRoom
                                         )
+                                    }
+                                    disabled={
+                                        !this.verifyInput(this.state.addDeskNum) ||
+                                        this.state.addDeskNum.length === 0
                                     }>
                                     Add Desk
                                 </button>

@@ -2,7 +2,7 @@ import React from "react";
 import "../public/css/main.css";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { months, _GetUserBookings, verify } from "../Components/Misc";
+import { months, _GetUserBookings, verify, parseNumberList } from "../Components/Misc";
 
 class Home extends React.Component {
     constructor(props) {
@@ -14,6 +14,7 @@ class Home extends React.Component {
     }
 
     componentDidMount = () => {
+        console.log(parseNumberList("1-5,10-15,-"));
         if (sessionStorage.email) {
             window.scrollTo(0, 0);
             let date = new Date();

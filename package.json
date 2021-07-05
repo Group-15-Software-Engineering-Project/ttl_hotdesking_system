@@ -31,7 +31,7 @@
         "react-scripts": "^4.0.3",
         "react-select": "^4.3.0",
         "reactjs": "^1.0.0",
-        "sequelize": "^6.6.2",
+        "sequelize": "^6.6.4",
         "sqlite3": "^5.0.2",
         "web-vitals": "^1.1.0",
         "yarn": "^1.22.10"

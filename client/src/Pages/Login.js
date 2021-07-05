@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
 import "../public/css/main.css";
-import { _GetUserBookings, tokenize, verify } from "../Components/Misc";
+import { _GetUserBookings, setSessionToken, verify } from "../Components/Misc";
 import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 //const sha256 = require("js-sha256");
@@ -81,7 +81,7 @@ class Login extends Component {
                 }
                 sessionStorage.setItem("email", this.state.email);
                 sessionStorage.setItem("username", res.username);
-                tokenize(this.state.admin);
+                setSessionToken(this.state.admin);
 
                 window.location = "/home";
             })
@@ -123,7 +123,7 @@ class Login extends Component {
     };
 
     render() {
-        return verify(true) || verify(false) ? (
+        return (verify(true) || verify(false)) && sessionStorage.notifications ? (
             <Redirect to="/loading"></Redirect>
         ) : (
             <div>

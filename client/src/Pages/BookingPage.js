@@ -30,11 +30,14 @@ export default class BookingPage extends React.Component {
 
     convertDate = () => {
         return (
-            this.state.chosenDate.split(" ")[2] +
+            String(this.state.chosenDate).split(" ")[2] +
             "-" +
-            String(months.indexOf(this.state.chosenDate.split(" ")[1]) + 1).padStart(2, "0") +
+            String(months.indexOf(String(this.state.chosenDate).split(" ")[1]) + 1).padStart(
+                2,
+                "0"
+            ) +
             "-" +
-            this.state.chosenDate.split(" ")[0]
+            String(this.state.chosenDate).split(" ")[3]
         );
     };
 
@@ -96,7 +99,9 @@ export default class BookingPage extends React.Component {
                 sessionStorage.removeItem("upcomingBookings");
                 _GetUserBookings();
             })
-            .catch((err) => {});
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     positionReference = createRef();

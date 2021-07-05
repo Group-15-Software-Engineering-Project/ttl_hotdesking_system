@@ -14,7 +14,7 @@ export const months = [
     "Nov",
     "Dec",
 ];
-export const tokenize = (e) => {
+export const setSessionToken = (e) => {
     let a = sessionStorage.email;
     let b = sessionStorage.username;
     let date = new Date();
@@ -80,6 +80,29 @@ export const _GetUserBookings = async (ref, email) => {
             }
         });
     return 1;
+};
+
+export const parseNumberList = (inputString) => {
+    let list = inputString.replaceAll(" ", "");
+    list = list.replaceAll(/-+/g, "-");
+    list = list.replaceAll(/,+/g, ",");
+
+    if ((list.match(/[^0-9,-]/giu) || []).length !== 0) return [];
+    let divisions = list.split(",");
+    let finalList = [];
+    for (let number of divisions) {
+        if (number.includes("-")) {
+            let limit = number.split("-");
+            if (limit.length !== 2) return [];
+            for (let i = parseInt(limit[0]); i <= parseInt(limit[1]); i++) {
+                if (finalList.indexOf(i) === -1) finalList.push(i);
+            }
+        } else {
+            if (finalList.indexOf(parseInt(number)) === -1 && !isNaN(parseInt(number)))
+                finalList.push(parseInt(number));
+        }
+    }
+    return finalList;
 };
 
 export const createUniqueID = (idLength, prefix) => {

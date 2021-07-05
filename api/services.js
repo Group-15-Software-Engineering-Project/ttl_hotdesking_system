@@ -1,7 +1,7 @@
 const { sequelize, User, Desk, Booking, Group, Notification } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
-const { now } = require("sequelize/types/lib/utils");
+//const { now } = require("sequelize");
 
 module.exports = {
     login: async (email, password) => {
@@ -32,15 +32,14 @@ module.exports = {
     getLocationData: async () => {
         let data = [];
         let rooms = await module.exports.getRoomsList();
-        console.log(rooms);
-        for  (let room in rooms) {
+        for (let room in rooms) {
             let deskModels = await Desk.findAll({
                 where: {
                     room: rooms[room],
                 },
             });
             let desks = [];
-            for (desk of deskModels) {
+            for (let desk of deskModels) {
                 desks.push(desk.getDataValue("id"));
             }
             data[room] = { name: rooms[room], desks: desks };
@@ -49,8 +48,8 @@ module.exports = {
     },
     getRoomsList: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query('SELECT DISTINCT room FROM desks;', {
-            type: QueryTypes.SELECT
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+            type: QueryTypes.SELECT,
         });
         for (let room in distinctRooms) {
             rooms.push(distinctRooms[room].room);
@@ -129,17 +128,18 @@ module.exports = {
         for (let model in models) {
             bookings.push(models[model]);
         }
-        console.log(bookings);
         return bookings;
     },
-    getReports: (time, room, team) => {
-
-    },
+    getReports: async (time, room, team) => {},
     getBookingsInMonth: async (room, date, am, pm) => {
         let dateComp = date.split("-");
         let desks = [];
         let existingBookings = [];
-        let daysInMonth = new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, 0).getDate()
+        let daysInMonth = new Date(
+            parseInt(dateComp[0]),
+            parseInt(dateComp[1]) - 1,
+            0
+        ).getDate();
 
         let deskModel = await Desk.findAll({
             where: {
@@ -151,19 +151,30 @@ module.exports = {
         }
         for (let day = 0; day <= daysInMonth; day++) {
             existingBookings[day] = [];
-            let bookings = await Booking.findAll({
-                where: {
+            let whereClause;
+            //If full day requested, check for either am or pm being booked.
+            if (am && pm) {
+                whereClause = {
                     deskRoom: room,
-                    am: am,
-                    pm: pm,
-                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day+1),
-                },
+                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1),
+                    [Op.or]: [{ am: true }, { pm: true }],
+                };
+            } else {
+                //Else if am or pm requested, add them accordingly, with the other being absent since we don't care.
+                whereClause = {
+                    deskRoom: room,
+                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1),
+                };
+                if (am) whereClause["am"] = true;
+                if (pm) whereClause["pm"] = true;
+            }
+            let bookings = await Booking.findAll({
+                where: whereClause,
             });
             for (let booking in bookings) {
-                console.log(booking);
                 existingBookings[day].push({
-                    user: bookings[booking].getDataValue('userEmail'),
-                    desk: bookings[booking].getDataValue('deskId')
+                    user: bookings[booking].getDataValue("userEmail"),
+                    desk: bookings[booking].getDataValue("deskId"),
                 });
             }
         }
@@ -182,7 +193,6 @@ module.exports = {
         for (let model in models) {
             notifications.push(models[model]);
         }
-        console.log(notifications);
         return notifications;
     },
     addUser: async (email, password) => {
@@ -190,7 +200,12 @@ module.exports = {
         await Group.create({ userEmail: email, name: "All Users" });
     },
     addDesk: async (id, room) => {
-        await Desk.create({ id: id, room: room });
+        let arr = [];
+        for (let desk of id) {
+            arr.push({ id: desk, room: room });
+        }
+        console.log(id, arr);
+        await Desk.bulkCreate(arr);
     },
     addBooking: async (email, id, room, date, am, pm) => {
         await Booking.create({
@@ -238,6 +253,7 @@ module.exports = {
         }
     },
     removeBooking: async (email, id, room, date, am, pm) => {
+        console.log(email, id, room, date, am, pm);
         let model = await Booking.findOne({
             where: {
                 userEmail: email,
@@ -285,7 +301,9 @@ module.exports = {
                 let counter = 0;
                 let bookingsByUser = await module.exports.getBookings(user);
                 for (let booking of bookingsByUser) {
-                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 7 && diffDays > 0) {
                         counter++;
                     }
@@ -297,7 +315,9 @@ module.exports = {
                 let counter = 0;
                 let bookingsByUser = await module.exports.getBookings(user);
                 for (let booking of bookingsByUser) {
-                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 30 && diffDays > 0) {
                         counter++;
                     }
@@ -309,7 +329,9 @@ module.exports = {
                 let counter = 0;
                 let bookingsByUser = await module.exports.getBookings(user);
                 for (let booking of bookingsByUser) {
-                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 90 && diffDays > 0) {
                         counter++;
                     }
@@ -321,7 +343,9 @@ module.exports = {
                 let counter = 0;
                 let bookingsByUser = await module.exports.getBookings(user);
                 for (let booking of bookingsByUser) {
-                    let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 7 && diffDays > 0) {
                         counter++;
                     }
@@ -338,7 +362,9 @@ module.exports = {
                     },
                 });
                 for (let booking of models) {
-                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 7 && diffDays > 0) {
                         counter++;
                     }
@@ -355,7 +381,9 @@ module.exports = {
                     },
                 });
                 for (let booking of models) {
-                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 30 && diffDays > 0) {
                         counter++;
                     }
@@ -372,7 +400,9 @@ module.exports = {
                     },
                 });
                 for (let booking of models) {
-                    let diffDays = Math.ceil((new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 90 && diffDays > 0) {
                         counter++;
                     }
@@ -389,7 +419,9 @@ module.exports = {
                     },
                 });
                 for (let booking of models) {
-                    let diffDays = Math.ceil((booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24));
+                    let diffDays = Math.ceil(
+                        (booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24)
+                    );
                     if (diffDays <= 7 && diffDays > 0) {
                         counter++;
                     }
