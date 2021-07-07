@@ -296,26 +296,6 @@ class Users extends Component {
                                 placeholder="Email"
                                 onChange={this.addEmailF}></input>
                             <div className="space" style={{ marginBottom: "1%" }} />
-                            {/* <input
-                type="text"
-                className="text-input"
-                placeholder="Password"
-                onChange={this.addPasswordF}
-                style={{ width: "10%" }}
-              ></input> */}
-                            <div
-                                style={{
-                                    display: "flex",
-                                    width: "100%",
-                                    justifyContent: "center",
-                                    marginTop: "15px",
-                                }}>
-                                <h6 style={{ width: "50%" }}>
-                                    The default password to new accounts is 'tcd_username'
-                                    where 'username' comes from 'username@email.com', all lower
-                                    case.
-                                </h6>
-                            </div>
                             <div
                                 className="space"
                                 style={{ marginTop: "5%", marginBottom: "5%" }}
