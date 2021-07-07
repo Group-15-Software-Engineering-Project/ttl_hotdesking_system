@@ -1,6 +1,7 @@
 const { sequelize, User, Desk, Booking, Group, Notification } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
+const emailjs = require("emailjs-com");
 //const { now } = require("sequelize");
 
 module.exports = {

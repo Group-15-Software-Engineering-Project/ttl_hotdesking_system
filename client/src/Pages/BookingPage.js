@@ -314,7 +314,7 @@ export default class BookingPage extends React.Component {
                             <p>{this.state.responseToPost}</p>
                         </div>
                     ) : null}
-                    <div ref={this.positionReference} />
+                    <div ref={this.positionReference} style={{ marginBottom: "150px" }} />
                 </div>
                 <div className="flex-container-1"></div>
             </div>

@@ -11,10 +11,10 @@ class Home extends React.Component {
             todayDate: null,
             bookings: [],
         };
+        this.headingRef = React.createRef();
     }
 
     componentDidMount = () => {
-        console.log(parseNumberList("1-5,10-15,-"));
         if (sessionStorage.email) {
             window.scrollTo(0, 0);
             let date = new Date();
@@ -28,8 +28,18 @@ class Home extends React.Component {
                 _GetUserBookings(this);
             }
         }
+        window.addEventListener("resize", () => {
+            this.forceUpdate();
+        });
     };
 
+    getGreeting = () => {
+        let time = new Date();
+        if (time.getHours() > 4 && time.getHours() < 12) return "Good morning";
+        else if (time.getHours() > 11 && time.getHours() < 19) return "Good afternoon";
+        else if (time.getHours() > 18 && time.getHours() <= 23) return "Good evening";
+        else return "Welcome";
+    };
     displayBooking = (data) => {
         let time =
             data.am && !data.pm
@@ -204,19 +214,30 @@ class Home extends React.Component {
                 <div className="flex-container-1" />
                 <div className="flex-container-5 main-body">
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <h1 style={{ fontSize: "clamp(1rem, 3vw, 2rem)" }}>{`Welcome back, ${
+                    <h1
+                        ref={this.headingRef}
+                        style={{
+                            display: "inline-block",
+                            fontSize: "clamp(1.25rem, 3vw, 2rem)",
+                        }}>{`${this.getGreeting()}, ${
                         sessionStorage.username !== "null"
                             ? sessionStorage.username
                             : sessionStorage.email
                     }!`}</h1>
-                    <div
-                        style={{
-                            width: "45%",
-                            borderTop: "2px solid #444",
-                            marginLeft: "27.5%",
-                            marginTop: "1%",
-                        }}
-                    />
+                    <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
+                        <div
+                            style={{
+                                width: ` ${
+                                    this.headingRef.current
+                                        ? this.headingRef.current.offsetWidth * 1.1 + "px"
+                                        : "45%"
+                                }`,
+                                borderTop: "2px solid #444",
+                                // marginLeft: "27.5%",
+                                marginTop: "1%",
+                            }}
+                        />
+                    </div>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
                     <Link to="/booking-page">
                         <button className="button-style no-outline">{"Book a Desk"}</button>
@@ -299,7 +320,7 @@ class Home extends React.Component {
                             })}
                         </div>
                     ) : (
-                        <h1 style={{ fontSize: "1.5rem" }}>You have no upcoming bookings.</h1>
+                        <h2>You have no upcoming bookings.</h2>
                     )}
                     <div style={{ width: "100%", marginBottom: "3%" }} />
                     <div style={{ borderTop: "1px #ccc solid" }} />
@@ -308,11 +329,17 @@ class Home extends React.Component {
                         Notifications
                     </h1>
                     <div className="space" />
-                    {sessionStorage.notifications
-                        ? JSON.parse(sessionStorage.notifications).data.map((n) => {
-                              return this.displayNotifications(n);
-                          })
-                        : null}
+                    {sessionStorage.notifications ? (
+                        sessionStorage.notifications.data ? (
+                            JSON.parse(sessionStorage.notifications).data.map((n) => {
+                                return this.displayNotifications(n);
+                            })
+                        ) : (
+                            <h2>*cricket noises*</h2>
+                        )
+                    ) : (
+                        <h2>*cricket noises*</h2>
+                    )}
                     <div className="space" />
                 </div>
                 <div className="flex-container-1" />

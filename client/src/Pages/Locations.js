@@ -263,6 +263,7 @@ class Locations extends Component {
                                         onChange={() =>
                                             this.setState({
                                                 customInput: !this.state.customInput,
+                                                addDeskRoom: "",
                                             })
                                         }
                                     />
@@ -375,7 +376,8 @@ class Locations extends Component {
                                     }
                                     disabled={
                                         !this.verifyInput(this.state.addDeskNum) ||
-                                        this.state.addDeskNum.length === 0
+                                        this.state.addDeskNum.length === 0 ||
+                                        this.state.addDeskRoom.length === 0
                                     }>
                                     Add Desk
                                 </button>
@@ -422,6 +424,7 @@ class Locations extends Component {
                                 />
                                 <button
                                     className="button-style no-outline"
+                                    disabled={this.state.deleteRoom.length === 0}
                                     onClick={(e) =>
                                         this.submitRemoveRoom(this.state.deleteRoom)
                                     }>
@@ -513,6 +516,10 @@ class Locations extends Component {
                                 />
                                 <button
                                     className="button-style no-outline"
+                                    disabled={
+                                        this.state.deleteDeskRoom.length === 0 ||
+                                        String(this.state.deleteDeskNum).length === 0
+                                    }
                                     onClick={(e) =>
                                         this.submitRemoveDesk(
                                             this.state.deleteDeskNum,

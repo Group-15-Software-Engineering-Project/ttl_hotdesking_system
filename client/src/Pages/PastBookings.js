@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../public/css/booking.css";
 import "../public/css/main.css";
 import { months, verify, _GetUserBookings } from "../Components/Misc";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 function PastBookings() {
     const [todayDate, setDate] = useState(null);
@@ -300,21 +300,21 @@ function PastBookings() {
                             <div
                                 style={{
                                     display: "flex",
-                                    textAlign: "center",
+                                    width: "100%",
                                     justifyContent: "center",
-                                    paddingLeft: "5%",
+                                    flexDirection: "column",
                                 }}>
-                                <h1
-                                    style={{
-                                        fontSize: "1.5rem",
-                                        textDecoration: "underline",
-                                    }}>
-                                    You have made no bookings yet.
-                                </h1>
+                                <h2>You have made no bookings yet.</h2>
+                                <div className="space" />
+                                <Link to="/booking-page">
+                                    <button className="button-style no-outline">
+                                        {"Book a Desk"}
+                                    </button>
+                                </Link>
                             </div>
                         )
                     ) : (
-                        "Booking history not found. If booking history should be present, please wait 10 seconds and re-login if the problem persists."
+                        "Booking history not found. Try re-logging in if booking history should be present."
                     )}
                 </div>
                 <div

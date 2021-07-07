@@ -9,7 +9,10 @@ class Account extends Component {
         super(props);
         this.state = {
             email: props.email,
-            username: sessionStorage.username !== "null" ? sessionStorage.username : "N/A",
+            username:
+                sessionStorage.username !== sessionStorage.email
+                    ? sessionStorage.username
+                    : "N/A",
             bookingsMade: JSON.parse(sessionStorage.bookings).data.length,
             oldPassword: "",
             newPassword: "",
@@ -66,6 +69,8 @@ class Account extends Component {
                     if (res.error) {
                         alert("Failed to change password");
                     } else {
+                        if (sessionStorage.passwordWarning)
+                            sessionStorage.removeItem("passwordWarning");
                         alert("Success");
                     }
                 })
@@ -246,6 +251,11 @@ class Account extends Component {
                             />
                             <button
                                 className="button-style no-outline"
+                                disabled={
+                                    this.state.oldPassword.length === 0 ||
+                                    this.state.confirmNewPassword.length === 0 ||
+                                    this.state.newPassword.length === 0
+                                }
                                 onClick={() => this.submitChangePassword()}>
                                 Change Password
                             </button>
@@ -270,6 +280,7 @@ class Account extends Component {
                             />
                             <button
                                 className="button-style no-outline"
+                                disabled={this.state.setUserName.length === 0}
                                 onClick={() => this.submitUserName()}>
                                 Set User Name
                             </button>
@@ -355,6 +366,11 @@ class Account extends Component {
                                 }></input>
                             <div className="space" />
                             <button
+                                disabled={
+                                    this.state.delPassword.length === 0 ||
+                                    this.state.confirmDelPassword.length === 0 ||
+                                    this.state.deleteAccountConfirmation === false
+                                }
                                 className="button-style-warning no-outline"
                                 onClick={() => this.submitDeleteAccount()}>
                                 Delete my Account
