@@ -6,8 +6,6 @@ import "../public/css/main.css";
 import { _GetUserBookings, setSessionToken, verify } from "../Components/Misc";
 import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
-//const sha256 = require("js-sha256");
-import { sha256 } from "js-sha256";
 
 class Login extends Component {
     constructor(props) {
@@ -98,7 +96,7 @@ class Login extends Component {
             },
             body: JSON.stringify({
                 email: this.state.email,
-                password: sha256(this.state.password),
+                password: this.state.password,
             }),
         })
             .then((res) => {

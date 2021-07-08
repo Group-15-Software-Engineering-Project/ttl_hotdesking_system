@@ -2,14 +2,14 @@ const { sequelize, User, Desk, Booking, Group, Notification } = require("../sequ
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
 const emailjs = require("emailjs-com");
-//const { now } = require("sequelize");
+const sha256 = require("js-sha256");
 
 module.exports = {
     login: async (email, password) => {
         let model = await User.findAll({
             where: {
                 email: email,
-                password: password,
+                password: sha256(password),
             },
         });
         let groupModel = await Group.findAll({
@@ -69,7 +69,7 @@ module.exports = {
     },
     changePassword: async (email, password) => {
         let model = await User.findByPk(email);
-        model.password = password;
+        model.password = sha256(password);
         model.save();
     },
     getRooms: async () => {
@@ -197,7 +197,7 @@ module.exports = {
         return notifications;
     },
     addUser: async (email, password) => {
-        await User.create({ email: email, password: password });
+        await User.create({ email: email, password: sha256(password) });
         await Group.create({ userEmail: email, name: "All Users" });
     },
     addDesk: async (id, room) => {

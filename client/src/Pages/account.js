@@ -3,7 +3,6 @@ import { Redirect } from "react-router";
 import { _GetUserBookings, verify, setSessionToken } from "../Components/Misc";
 import "../public/css/main.css";
 
-const sha256 = require("js-sha256");
 class Account extends Component {
     constructor(props) {
         super(props);
@@ -59,7 +58,7 @@ class Account extends Component {
                 },
                 body: JSON.stringify({
                     email: this.state.email,
-                    password: sha256(this.state.newPassword),
+                    password: this.state.newPassword,
                 }),
             })
                 .then((res) => {
@@ -95,7 +94,7 @@ class Account extends Component {
                 },
                 body: JSON.stringify({
                     email: this.state.email,
-                    password: sha256(this.state.delPassword),
+                    password: this.state.delPassword,
                 }),
             })
                 .then((res) => {
