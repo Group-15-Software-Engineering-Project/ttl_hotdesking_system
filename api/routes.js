@@ -163,10 +163,10 @@ router.post("/getBookings", (req, res) => {
 });
 
 //  Returns usage reports       TODO
-router.get("/getReports", (req, res) => {
+router.post("/getReports", (req, res) => {
     console.log("getReports");
-    services
-        .getReports(req.body.time, req.body.room, req.body.team)
+    console.log(req.body);
+    services.getReports(req.body.time, req.body.room, req.body.team)
         .then((result) => {
             res.status(200).send({
                 labels: result[0],
@@ -223,7 +223,7 @@ router.get("/getNotifications", (req, res) => {
 router.post("/addUser", (req, res) => {
     console.log("addUser");
     services
-        .addUser(req.body.email, req.body.password)
+        .addUser(req.body.email)
         .then(() => {
             res.status(200).send({ error: false, message: "Success" });
         })

@@ -125,13 +125,7 @@ class Reports extends Component {
 
    
 
-    fetch("/api/getTeams", {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: "",
-    })
+    fetch("/api/getGroups")
       .then((res) => {
         return res.json();
       })
@@ -161,10 +155,6 @@ class Reports extends Component {
     return arr;
   };
   getData = () => {
-    let chosenTeam = this.state.chosenTeam;
-    if (this.state.chosenTeam !== "1") {
-      chosenTeam = " NAME='" + this.state.chosenTeam + "'";
-    }
     fetch("/api/getReports", {
       method: "POST",
       headers: {
@@ -173,7 +163,7 @@ class Reports extends Component {
       body: JSON.stringify({
         time: this.state.chosenTimeRange.toLowerCase(),
         room: this.state.chosenLocation,
-        team: chosenTeam,
+        team: this.state.chosenTeam,
       }),
     })
       .then((res) => {

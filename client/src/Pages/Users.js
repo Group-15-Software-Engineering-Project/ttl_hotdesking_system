@@ -4,7 +4,6 @@ import { verify, createUniqueID } from "../Components/Misc";
 import emailjs from "emailjs-com";
 
 import "../public/css/main.css";
-const sha256 = require("js-sha256");
 
 class Users extends Component {
     state = {
@@ -138,7 +137,6 @@ class Users extends Component {
             },
             body: JSON.stringify({
                 email: email,
-                password: sha256(password),
             }),
         })
             .then((res) => {
