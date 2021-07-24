@@ -143,7 +143,7 @@ module.exports = {
     },
     getBookingsCount: async (options) => {
         let bookings = await Booking.findAll(options);
-        console.log(bookings);
+        console.log("Number of bookings: ", bookings);
         return bookings.length;
     },
     getReports: async (time, room, team) => {
@@ -167,24 +167,24 @@ module.exports = {
             case 'next week':
                 options.where['date'] = {
                     [Op.gte] : today,
-                    [Op.lt] : new Date(today.getFullYear(), today.getMonth(), today.getDay()+7)
+                    [Op.lt] : new Date(today.getFullYear(), today.getMonth(), today.getDate()+7)
                 };
                 break;
             case 'last week':
                 options.where['date'] = {
-                    [Op.gte] : new Date(today.getFullYear(), today.getMonth(), today.getDay()-7),
+                    [Op.gte] : new Date(today.getFullYear(), today.getMonth(), today.getDate()-7),
                     [Op.lt] : today
                 };
                 break;
             case 'last month':
                 options.where['date'] = {
-                    [Op.gte] : new Date(today.getFullYear(), today.getMonth()-1, today.getDay()),
+                    [Op.gte] : new Date(today.getFullYear(), today.getMonth()-1, today.getDate()),
                     [Op.lt] : today
                 };
                 break;
             case 'last 3 months':
                 options.where['date'] = {
-                    [Op.gte] : new Date(today.getFullYear(), today.getMonth()-3, today.getDay()),
+                    [Op.gte] : new Date(today.getFullYear(), today.getMonth()-3, today.getDate()),
                     [Op.lt] : today
                 };
                 break;
