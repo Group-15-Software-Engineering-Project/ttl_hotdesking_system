@@ -56,7 +56,7 @@ User.hasMany(Group, {
 Group.belongsTo(User);
 
 sequelize
-    .sync({force: true})
+    .sync()
     .then(() => {
         console.log("Database & tables created");
     })
