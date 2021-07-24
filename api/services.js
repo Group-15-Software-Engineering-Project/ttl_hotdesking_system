@@ -141,22 +141,17 @@ module.exports = {
         }
         return bookings;
     },
-    getBookingsCount: async (options) => {
+    getBookingsWithOptions: async (options) => {
         let bookings = await Booking.findAll(options);
-        console.log("Number of bookings: ", bookings);
-        return bookings.length;
+        return [bookings.length, bookings];
     },
     getReports: async (time, room, team) => {
-        let userReports = await module.exports.getReportsByUser(time, room, team);
-        return [userReports[0], userReports[1], [], [], 'Success'];
-    },
-    getReportsByUser: async (time, room, team) => {
+        let userBookingsCount = [];
         let bookings = [[], []];
+        let allBookings = [];
+        let bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
         let users = await module.exports.getUsersInGroup(team);
-        bookings[0] = users;
-        let amount = [];
         let options = {
-            raw: true,
             where: {}
         };
         if (room != 'overall') {
@@ -195,8 +190,17 @@ module.exports = {
         }
         for (let user in users) {
             options.where['userEmail'] = users[user];
-            bookings[1][user] = await module.exports.getBookingsCount(options);
+            let userBookings = await module.exports.getBookingsWithOptions(options);
+            userBookingsCount[user] = userBookings[0];
+            allBookings = allBookings.concat(userBookings[1]);
         }
+        for (let booking in allBookings) {
+            bookingDistribution[new Date(allBookings[booking].getDataValue('date')).getDay()]++;
+        };
+        return [users, userBookingsCount, [], [], bookingDistribution, 'Success'];
+        //  Empty values are for deprecated desk report piechart
+    },
+    getReportsByUser: async (time, room, team) => {
         // An array of two arrays, user emails and their booking amount
         // if (time === "overall" && room === "overall") {
         //     for (let user of users) {

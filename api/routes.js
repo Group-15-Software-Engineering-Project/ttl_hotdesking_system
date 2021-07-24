@@ -165,7 +165,6 @@ router.post("/getBookings", (req, res) => {
 //  Returns usage reports       TODO
 router.post("/getReports", (req, res) => {
     console.log("getReports");
-    console.log(req.body);
     services.getReports(req.body.time, req.body.room, req.body.team)
         .then((result) => {
             res.status(200).send({

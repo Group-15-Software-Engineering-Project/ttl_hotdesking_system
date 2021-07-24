@@ -241,6 +241,7 @@ class Reports extends Component {
         });
       });
   };
+  
   handleEvent = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
