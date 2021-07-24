@@ -19,6 +19,7 @@ const Notification = NotificationModel(sequelize, Sequelize);
 
 User.hasMany(Booking, {
     onDelete: "CASCADE",
+    hooks: true,
     foreignKey: {
         name: "userEmail",
     },
@@ -27,6 +28,7 @@ Booking.belongsTo(User);
 
 Desk.hasMany(Booking, {
     onDelete: "CASCADE",
+    hooks: true,
     foreignKey: {
         name: "deskId",
         primaryKey: true,
@@ -34,6 +36,7 @@ Desk.hasMany(Booking, {
 });
 Desk.hasMany(Booking, {
     onDelete: "CASCADE",
+    hooks: true,
     foreignKey: {
         name: "deskRoom",
         primaryKey: true,
@@ -44,6 +47,7 @@ Booking.belongsTo(Desk);
 
 User.hasMany(Group, {
     onDelete: "CASCADE",
+    hooks: true,
     foreignKey: {
         name: "userEmail",
         primaryKey: true,
@@ -52,7 +56,7 @@ User.hasMany(Group, {
 Group.belongsTo(User);
 
 sequelize
-    .sync()
+    .sync({force: true})
     .then(() => {
         console.log("Database & tables created");
     })
