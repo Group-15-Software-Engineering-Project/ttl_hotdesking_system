@@ -34,15 +34,12 @@
         "reactjs": "^1.0.0",
         "sequelize": "^6.6.4",
         "sqlite3": "^5.0.2",
+        "ttl_hotdesking_system": "file:client",
         "web-vitals": "^1.1.0",
         "yarn": "^1.22.10"
     },
     "devDependencies": {
         "concurrently": "^6.0.2",
         "nodemon": "^2.0.7"
-    },
-    "engines": {
-        "node": ">=14.15.x",
-        "npm": "7.5.x"
     }
 }

@@ -1,0 +1,1 @@
+docker run --name hotdesking -v .:/usr/src/app -w /usr/src/app -d -p 5000:5000 -p 3000:3000 node:16
