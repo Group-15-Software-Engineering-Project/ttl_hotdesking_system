@@ -46,7 +46,7 @@ export const _GetUserBookings = async (ref, email) => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            email: email ? email : sessionStorage.email,
+            email: (email) ? email : sessionStorage.email,
         }),
     })
         .then((response) => response.json())

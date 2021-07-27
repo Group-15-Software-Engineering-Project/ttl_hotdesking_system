@@ -1,1 +1,1 @@
-docker run --name hotdesking -v test:/usr/src/app -w /usr/src/app -d -it -p 5000:5000 -p 3000:3000 node:14
+docker build -t mkelly32/hotdesking .

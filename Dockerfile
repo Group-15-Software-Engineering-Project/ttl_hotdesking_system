@@ -1,13 +1,15 @@
-FROM node:16
+FROM node:14
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-COPY ./client/package*.json ./client
 COPY yarn.lock ./
-
 RUN npm install
-RUN npm install ./client
+RUN mkdir client
+COPY client/package*.json client
+WORKDIR  /usr/src/app/client 
+RUN npm install --only=dev
+WORKDIR /usr/src/app/
 RUN yarn
 
 COPY . .
