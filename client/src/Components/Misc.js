@@ -71,6 +71,7 @@ export const _GetUserBookings = async (ref, email) => {
             }
             let upB = [];
             for (let i = 0; i < 3 && i < index; i++) {
+                console.log(data[i]);
                 upB.push(data[i]);
             }
             sessionStorage.setItem("bookings", JSON.stringify({ isNull: false, data: data }));

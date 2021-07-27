@@ -249,12 +249,17 @@ router.post("/addDesk", (req, res) => {
 //  Adds a booking with a given email, desk, date, AM, and PM (booleans)
 router.post("/addBooking", (req, res) => {
     console.log("addBooking");
+    console.log("date: ", req.body.date);
     services
         .addBooking(
             req.body.email,
             req.body.deskId,
             req.body.deskRoom,
-            req.body.date,
+            new Date(
+                req.body.date[0],
+                req.body.date[1],
+                req.body.date[2] 
+            ),
             req.body.am,
             req.body.pm
         )

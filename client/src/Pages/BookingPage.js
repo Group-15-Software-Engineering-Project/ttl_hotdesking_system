@@ -59,16 +59,22 @@ export default class BookingPage extends React.Component {
                 break;
         }
         console.log(this.state.chosenArea);
+        console.log("Chosen Date: ", this.state.chosenDate.getFullYear(),
+            this.state.chosenDate.getMonth(), this.state.chosenDate.getDate());
         fetch("/api/addBooking", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
+            body: JSON.stringify({  
                 email: sessionStorage.email,
                 deskId: this.state.chosenDesk.split(" ")[1],
                 deskRoom: this.state.chosenArea,
-                date: this.state.chosenDate,
+                date: [
+                    this.state.chosenDate.getFullYear(),
+                    this.state.chosenDate.getMonth(),
+                    this.state.chosenDate.getDate(),
+                ],
                 am: am,
                 pm: pm,
             }),

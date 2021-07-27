@@ -135,6 +135,9 @@ module.exports = {
             where: {
                 userEmail: email,
             },
+            order: [
+                ['date', 'DESC']
+            ]
         });
         for (let model in models) {
             bookings.push(models[model]);
