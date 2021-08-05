@@ -237,11 +237,11 @@ router.post("/addUser", (req, res) => {
     services
         .addUser(req.body.email)
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(201).end();
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: true, message: err });
+            res.status(500).end();
         });
 });
 

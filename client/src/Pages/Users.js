@@ -42,15 +42,9 @@ class Users extends Component {
             }),
         })
             .then((res) => {
-                let result = res.json();
-                if (result.error) {
-                    alert("Failed to add user to team");
-                } else {
-                    alert("Success");
-                    window.location.reload();
-                }
+                if (!res.ok) throw new Error(`Failed to add user to group (status:${res.status})`);
             })
-            .catch((err) => {});
+            .catch((err) => alert(err));
     };
 
     submitRemoveUserFromTeam = () => {
@@ -109,7 +103,7 @@ class Users extends Component {
     };
 
     submitAddUser = (email) => {
-        if (email.length === 0 || !email.includes("@")) return;
+        /*if (email.length === 0 || !email.includes("@")) return;
         let password = createUniqueID(2, false).replaceAll("-", "");
         let emailTemplate = {
             user_email: email,
@@ -129,7 +123,7 @@ class Users extends Component {
                 (error) => {
                     console.log(error.text);
                 }
-            );
+            );*/
         fetch("/api/addUser", {
             method: "POST",
             headers: {
@@ -140,45 +134,10 @@ class Users extends Component {
             }),
         })
             .then((res) => {
-                return res.json();
+                if (!res.ok) throw new Error(`Failed to add user (status:${res.status})`);
             })
-            .then((res) => {
-                if (res.error === false) {
-                    alert("Success!");
-                    window.location.reload();
-                } else {
-                    alert("Could not add user.");
-                    alert(res.message);
-                }
-            })
-            .catch((err) => {
-                alert(err);
-            });
-        // fetch("/api/addUser", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //         email: email,
-        //         password: sha256(password),
-        //     }),
-        // })
-        //     .then((res) => {
-        //         return res.json();
-        //     })
-        //     .then((res) => {
-        //         if (res.error === false) {
-        //             alert("Success!");
-        //             window.location.reload();
-        //         } else {
-        //             alert("Could not add user.");
-        //             alert(res.message);
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         alert(err);
-        //     });
+            .then(() =>  window.location.reload())
+            .catch((err) => alert(err));
     };
 
     getTeams = () => {
