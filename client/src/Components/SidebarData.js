@@ -71,6 +71,12 @@ export const SidebarData = [
     adminRequired: true,
   },
   {
+    title: "Admin Booking View",
+    path: "/AdminBookingView",
+    cName: "nav-text",
+    adminRequired: true,
+  },
+  {
     title: "Notifications",
     path: "/notifications",
     icon: <AiIcons.AiFillNotification />,

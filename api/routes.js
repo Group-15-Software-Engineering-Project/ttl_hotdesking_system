@@ -162,6 +162,19 @@ router.post("/getBookings", (req, res) => {
         });
 });
 
+//  Returns a list of bookings on a date
+router.get("/getBookingsOnDate/:date", (req, res) => {
+    console.log("getBookingsOnDate");
+    services.getBookingsOnDate(req.params.date)
+    .then((result) => {
+        res.status(200).send({bookings: result});
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).end();
+    })
+});
+
 //  Returns usage reports       TODO
 router.post("/getReports", (req, res) => {
     console.log("getReports");

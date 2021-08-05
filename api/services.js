@@ -144,6 +144,19 @@ module.exports = {
         }
         return bookings;
     },
+    getBookingsOnDate: async (date) => {
+        let bookings = await Booking.findAll({
+            raw: true,
+            where: {
+                date: date
+            },
+            order: [
+                ['deskRoom', 'ASC'],
+                ['deskId', 'ASC']
+            ]
+        });
+        return bookings;
+    },
     getBookingsWithOptions: async (options) => {
         let bookings = await Booking.findAll(options);
         return [bookings.length, bookings];
