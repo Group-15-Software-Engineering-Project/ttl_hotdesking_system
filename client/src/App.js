@@ -12,6 +12,7 @@ import Users from "./Pages/Users";
 import Account from "./Pages/account";
 import PastBookings from "./Pages/PastBookings";
 import Notifications from "./Pages/Notifications";
+import AdminBookingView from "./Pages/AdminBookingView";
 
 class App extends Component {
   state = {
@@ -75,6 +76,7 @@ class App extends Component {
               <PastBookings email={sessionStorage.email} />
             </Route>
             {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
+            {this.state.visible ? <Route path="/AdminBookingView" component={AdminBookingView} /> : null}
           </Switch>
         </Router>
         {this.zoomOutMobile()}

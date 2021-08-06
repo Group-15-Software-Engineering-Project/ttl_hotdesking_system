@@ -135,10 +135,26 @@ module.exports = {
             where: {
                 userEmail: email,
             },
+            order: [
+                ['date', 'DESC']
+            ]
         });
         for (let model in models) {
             bookings.push(models[model]);
         }
+        return bookings;
+    },
+    getBookingsOnDate: async (date) => {
+        let bookings = await Booking.findAll({
+            raw: true,
+            where: {
+                date: date
+            },
+            order: [
+                ['deskRoom', 'ASC'],
+                ['deskId', 'ASC']
+            ]
+        });
         return bookings;
     },
     getBookingsWithOptions: async (options) => {

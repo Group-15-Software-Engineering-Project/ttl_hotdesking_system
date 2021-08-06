@@ -162,6 +162,19 @@ router.post("/getBookings", (req, res) => {
         });
 });
 
+//  Returns a list of bookings on a date
+router.get("/getBookingsOnDate/:date", (req, res) => {
+    console.log("getBookingsOnDate");
+    services.getBookingsOnDate(req.params.date)
+    .then((result) => {
+        res.status(200).send({bookings: result});
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).end();
+    })
+});
+
 //  Returns usage reports       TODO
 router.post("/getReports", (req, res) => {
     console.log("getReports");
@@ -249,12 +262,17 @@ router.post("/addDesk", (req, res) => {
 //  Adds a booking with a given email, desk, date, AM, and PM (booleans)
 router.post("/addBooking", (req, res) => {
     console.log("addBooking");
+    console.log("date: ", req.body.date);
     services
         .addBooking(
             req.body.email,
             req.body.deskId,
             req.body.deskRoom,
-            req.body.date,
+            new Date(
+                req.body.date[0],
+                req.body.date[1],
+                req.body.date[2] 
+            ),
             req.body.am,
             req.body.pm
         )

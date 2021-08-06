@@ -72,6 +72,7 @@ export const _GetUserBookings = async (ref, email) => {
             console.log(data, index);
             let upB = [];
             for (let i = 0; i < 3 && i < index; i++) {
+                console.log(data[i]);
                 upB.push(data[i]);
             }
             console.log(upB);
