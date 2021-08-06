@@ -46,7 +46,7 @@ export const _GetUserBookings = async (ref, email) => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            email: (email) ? email : sessionStorage.email,
+            email: email ? email : sessionStorage.email,
         }),
     })
         .then((response) => response.json())
@@ -69,10 +69,12 @@ export const _GetUserBookings = async (ref, email) => {
                 data[i] = data[index - 1 - i];
                 data[index - 1 - i] = temp;
             }
+            console.log(data, index);
             let upB = [];
             for (let i = 0; i < 3 && i < index; i++) {
                 upB.push(data[i]);
             }
+            console.log(upB);
             sessionStorage.setItem("bookings", JSON.stringify({ isNull: false, data: data }));
             sessionStorage.setItem("upcomingBookings", JSON.stringify({ data: upB }));
             if (ref) {
