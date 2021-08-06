@@ -172,7 +172,7 @@ router.get("/getBookingsOnDate/:date", (req, res) => {
     .catch((err) => {
         console.error(err);
         res.status(500).end();
-    })
+    });
 });
 
 //  Returns usage reports       TODO
