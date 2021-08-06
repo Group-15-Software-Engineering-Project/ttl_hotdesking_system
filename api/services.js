@@ -95,6 +95,18 @@ module.exports = {
         }
         return rooms;
     },
+    getDesks: async (room) => {
+        let desks = [];
+        let models = await Desk.findAll({
+            where: {
+                room: room
+            }
+        });
+        for (let model in models) {
+            desks.push(models[model].getDataValue('id'));
+        }
+        return desks;
+    },
     getGroups: async () => {
         let groups = [];
         let distinctNames = await sequelize.query("SELECT DISTINCT name FROM groups;", {
@@ -462,8 +474,7 @@ module.exports = {
             from: process.env.EMAIL,
             to: email,
             subject: 'ttl_hotdesking Booking Confirmation',
-            text: 'Your booking for: ' + room + 
-                'desk ' + id + ' on' + date + ' has been confirmed'
+            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`
         };
         await Booking.create({
             userEmail: email,
@@ -477,6 +488,21 @@ module.exports = {
         //     console.log(err);
         //     throw err;
         // });
+    },
+    addRoomRestriction: async (email, room, date, am, pm) => {
+        let bookings = [];
+        let desks = await module.exports.getDesks(room);
+        for (desk in desks) {
+            bookings.push({
+                userEmail: email,
+                deskId: desks[desk],
+                deskRoom: room,
+                date: date,
+                am: am,
+                pm: pm,
+            });
+        }
+        await Booking.bulkCreate(bookings);
     },
     addUserToGroup: async (email, group) => {
         await Group.create({ name: group, userEmail: email });
