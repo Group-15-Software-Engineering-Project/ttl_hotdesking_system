@@ -11,8 +11,8 @@ export default class AdminBookingView extends React.Component {
         };
     }
 
-    getBookingsOnDate = (date) => {
-        date = date.toISOString();
+    getBookingsOnDate = () => {
+        let date = this.state.chosenDate.toISOString();
         fetch(`/api/getBookingsOnDate/${date}`)
         .then((res) => {
             if (!res.ok) throw new Error(`Failed to fetch bookings on this date (status:${res.status})`);
@@ -23,7 +23,7 @@ export default class AdminBookingView extends React.Component {
     }
 
     componentDidMount() {
-        this.getBookingsOnDate(new Date());
+        this.getBookingsOnDate();
     }
 
     render() {

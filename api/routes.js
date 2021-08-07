@@ -175,7 +175,7 @@ router.get("/getBookingsOnDate/:date", (req, res) => {
     });
 });
 
-//  Returns usage reports       TODO
+//  Returns usage reports
 router.post("/getReports", (req, res) => {
     console.log("getReports");
     services.getReports(req.body.time, req.body.room, req.body.team)
@@ -199,7 +199,7 @@ router.post("/getReports", (req, res) => {
         });
 });
 
-//  Returns all the bookings in the specified month for a room       TODO
+//  Returns all the bookings in the specified month for a room
 router.post("/getBookingsInMonth", (req, res) => {
     console.log("getBookingsInMonth");
     services
@@ -283,6 +283,19 @@ router.post("/addBooking", (req, res) => {
             console.log(err);
             res.status(500).send({ error: true, message: err });
         });
+});
+
+//  Books all desks in a room on a date for a specific time
+router.post("/addRoomRestriction", (req, res) => {
+    console.log("addRoomRestriction");
+    services.addRoomRestriction(req.body.email, req.body.room, req.body.date, req.body.am, req.body.pm)
+    .then(() => {
+        res.status(201).end();
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
 });
 
 //  Adds a users to a group
