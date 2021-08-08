@@ -146,6 +146,8 @@ export default class BookingCalendar extends React.Component {
     };
 
     disabledTiles = (e) => {
+        if (e.date.getDay() === 0 || e.date.getDay() === 6) return true;
+
         let date = String(e.date).split(" ");
         let year = parseInt(date[3]);
         let month = months.indexOf(date[1]) + 1;

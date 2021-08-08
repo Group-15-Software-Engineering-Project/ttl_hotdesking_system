@@ -135,7 +135,7 @@ class Login extends Component {
                 <div className="block-top">
                     <div className="title-text">Trinity Teaching & Learning Desk Booking</div>
                 </div>
-                <div className="wrapper">
+                <div className="wrapper TCD">
                     <div className="flex-container-1" />
                     <div
                         className="flex-container-5"

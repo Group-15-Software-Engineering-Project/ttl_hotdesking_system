@@ -9,6 +9,9 @@
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
     },
     "dependencies": {
+        "@devexpress/dx-react-core": "^2.7.6",
+        "@devexpress/dx-react-scheduler": "^2.7.6",
+        "@devexpress/dx-react-scheduler-material-ui": "^2.7.6",
         "body-parser": "^1.18.3",
         "chart.js": "^2.9.4",
         "create-react-app": "^4.0.3",
