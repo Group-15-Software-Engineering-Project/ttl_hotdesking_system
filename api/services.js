@@ -452,12 +452,9 @@ module.exports = {
             from: process.env.EMAIL,
             to: email,
             subject: 'ttl_hotdesking Account',
-            text: 'Email: ' + email + '\nPassword: ' + password
+            text: `Email: ${email}\nPassword: ${password}`
         };
-        // transporter.sendMail(options, (err) => {
-        //     console.log(err);
-        //     throw(err);
-        // });
+        transporter.sendMail(options);
         await User.create({ email: email, password: sha256(password) });
         await Group.create({ userEmail: email, name: "All Users" });
     },
@@ -484,10 +481,7 @@ module.exports = {
             am: am,
             pm: pm,
         });
-        // transporter.sendMail(options, (err) => {
-        //     console.log(err);
-        //     throw err;
-        // });
+        transporter.sendMail(options);
     },
     addRoomRestriction: async (email, room, date, am, pm) => {
         let bookings = [];
