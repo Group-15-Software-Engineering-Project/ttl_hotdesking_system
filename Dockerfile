@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY yarn.lock ./
 RUN npm install
-RUN mkdir client
+#RUN mkdir client
 COPY client/package*.json client
 WORKDIR  /usr/src/app/client 
 RUN npm install --only=dev
