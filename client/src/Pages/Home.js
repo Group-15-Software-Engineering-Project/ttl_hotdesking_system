@@ -330,7 +330,8 @@ class Home extends React.Component {
                     </h1>
                     <div className="space" />
                     {sessionStorage.notifications ? (
-                        sessionStorage.notifications.data ? (
+                        JSON.parse(sessionStorage.notifications).data &&
+                        JSON.parse(sessionStorage.notifications).data.length > 0 ? (
                             JSON.parse(sessionStorage.notifications).data.map((n) => {
                                 return this.displayNotifications(n);
                             })
