@@ -304,3 +304,9 @@ body {
     position: fixed;
     overflow: hidden;
 }
+#scheduler .dx-scheduler-cell-sizes-vertical {
+    height: 20px;
+}
+#scheduler .dx-scheduler-cell-sizes-horizontal {
+    width: 20px;
+}

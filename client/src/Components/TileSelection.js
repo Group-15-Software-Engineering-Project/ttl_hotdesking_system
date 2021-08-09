@@ -1,6 +1,7 @@
 import React from "react";
 import "../public/css/RadioTile.css";
 import PropTypes from "prop-types";
+import { createUniqueID } from "./Misc";
 
 TileSelection.propTypes = {
     title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
@@ -18,17 +19,18 @@ TileSelection.propTypes = {
 
 export default function TileSelection(props) {
     const [chosenOption, setChosenOption] = React.useState("");
+    const [uniqueID] = createUniqueID();
 
     const getAllTiles = () => {
         let tiles = [];
         let options = props.options;
         for (let i in options) {
             tiles.push(
-                <div key={options[i].value}>
+                <div key={options[i].value + uniqueID}>
                     <input
                         type="radio"
                         checked={chosenOption === options[i].value}
-                        id={options[i].value}
+                        id={options[i].value + uniqueID}
                         disabled={options[i].disabled}
                         value={options[i].value}
                         onChange={(e) => {
@@ -37,7 +39,7 @@ export default function TileSelection(props) {
                         }}
                         className="hide-input"
                     />
-                    <label htmlFor={options[i].value}>
+                    <label htmlFor={options[i].value + uniqueID}>
                         <div
                             className={
                                 options[i].disabled
