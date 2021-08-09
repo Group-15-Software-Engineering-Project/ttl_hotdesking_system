@@ -6,9 +6,13 @@ const GroupModel = require("./models/group");
 const NotificationModel = require("./models/notification");
 
 //const sequelize = new Sequelize('sqlite::memory:');
-const sequelize = new Sequelize("hotdesking", "Group15", "Group15!", {
-    host: "ttl-hotdesking-system.cje6t78s3xcx.eu-west-1.rds.amazonaws.com",
-    dialect: "mysql",
+const sequelize = new Sequelize(
+    process.env.DATABASE, 
+    process.env.DB_USER_ID, 
+    process.env.DB_PASS, 
+    {
+        host: process.env.DB_ENDPOINT,
+        dialect: "mysql",
 });
 
 const User = UserModel(sequelize, Sequelize);
