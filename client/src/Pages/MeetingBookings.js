@@ -11,6 +11,7 @@ function MeetingBookings() {
             new Date().getDate() - new Date().getDay() + (new Date().getDay() === 6 ? 7 : 0)
         )
     );
+    const [state, setState] = React.useState(0);
 
     React.useEffect(() => {
         getMeetingRooms();
@@ -181,6 +182,13 @@ function MeetingBookings() {
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(`Failed to create appointment ${meetingTitle}`);
+                } else {
+                    getCurrentBookings(location);
+                    setStartTime("");
+                    setEndTime("");
+                    setDay(0);
+                    setLocation("");
+                    setState(state + 1);
                 }
             })
             .catch(console.error);
@@ -226,6 +234,7 @@ function MeetingBookings() {
             <div className="flex-container-1" />
             <div className="flex-container-5 main-body">
                 <TileSelection
+                    key={state + "meeting_room_key"}
                     elementID="Meeting_room_selection"
                     title={
                         <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
