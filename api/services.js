@@ -293,21 +293,18 @@ module.exports = {
     },
     getMeetingRooms: async () => {
         let rooms = [];
-        let models = await Rooms.findAll();
+        let models = await Room.findAll();
         models.forEach((value) => {
             rooms.push({value: value.getDataValue("name")});
         });
         return rooms;
     },
     getAppointments: async (room, date) => {
-        let nextDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         let appointments = await Appointment.findAll({
             raw: true,
             where: {
-                room: room,
                 date: {
-                    [Op.gte] : date,
-                    [Op.lt] : nextDay
+                    [Op.gte] : date
                 }
             }
         });
