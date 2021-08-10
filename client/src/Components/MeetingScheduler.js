@@ -1,5 +1,4 @@
 import * as React from "react";
-import Paper from "@material-ui/core/Paper";
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { getDifferenceInDays } from "./Misc";
 import {
@@ -17,6 +16,9 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles({
     timeTableCell: {
         height: "30px",
+        "&:hover": {
+            backgroundColor: "inherit",
+        },
     },
     timeLabel: {
         height: "30px",
@@ -123,7 +125,7 @@ export default class MeetingScheduler extends React.PureComponent {
         const { data, currentDate } = this.state;
 
         return (
-            <Scheduler data={data} height={610} view={view}>
+            <Scheduler data={data} height={632} view={view}>
                 <ViewState
                     currentDate={currentDate}
                     onCurrentDateChange={(e) => {
@@ -132,7 +134,7 @@ export default class MeetingScheduler extends React.PureComponent {
                 />
                 <WeekView
                     displayName
-                    startDayHour={"9:30"}
+                    startDayHour={"9:00"}
                     endDayHour={"17:30"}
                     timeTableCellComponent={TimeTableCell}
                     timeScaleLabelComponent={TimeLabel}

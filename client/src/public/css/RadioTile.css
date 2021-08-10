@@ -8,6 +8,7 @@
     border: #ddd solid 1px;
     background-color: white;
     cursor: pointer;
+    user-select: none;
 }
 
 h3,
