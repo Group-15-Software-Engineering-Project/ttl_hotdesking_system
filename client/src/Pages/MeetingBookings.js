@@ -142,7 +142,7 @@ function MeetingBookings() {
         fetch("/api/meetingRooms")
             .then((res) => {
                 if (!res.ok) {
-                    throw new Error(`Failed to fetch Meeting Rooms status(${res.status})`);
+                    throw new Error(`Failed to fetch Meeting Rooms`);
                 }
                 return res.json();
             })
@@ -151,30 +151,64 @@ function MeetingBookings() {
             });
     };
 
-    const getCurrentBookings = (e) => {
-        // fetch(`/api/`);
-        if (e)
-            setBookings([
-                {
-                    title: "SCSS Team Meeting | Foster Place",
-                    startDate: new Date(2021, 7, 9, 9, 30),
-                    endDate: new Date(2021, 7, 9, 11, 30),
-                    location: "Foster Place",
-                },
-                {
-                    title: "SCSS Team | Foster Place",
-                    text: "Well what do we have here?",
-                    startDate: new Date(2021, 7, 9, 11, 30),
-                    endDate: new Date(2021, 7, 9, 12, 30),
-                    location: "Foster Place",
-                },
-                {
-                    title: "SCS | Foster Place",
-                    startDate: new Date(2021, 7, 9, 15, 30),
-                    endDate: new Date(2021, 7, 9, 16, 30),
-                    location: "Foster Place",
-                },
-            ]);
+    const submitAppointmentBooking = () => {
+        let startTime = new Date(
+            currentWeek.getFullYear(),
+            currentWeek.getMonth(),
+            currentWeek.getDate() + day,
+            startT.split(":")[0],
+            startT.split(":")[1]
+        );
+        let endTime = new Date(
+            currentWeek.getFullYear(),
+            currentWeek.getMonth(),
+            currentWeek.getDate() + day,
+            endT.split(":")[0],
+            endT.split(":")[1]
+        );
+        fetch(`/api/appointments/`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title: meetingTitle + " | " + location,
+                start: startTime,
+                end: endTime,
+                room: location,
+            }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed to create appointment ${meetingTitle}`);
+                }
+            })
+            .catch(console.error);
+    };
+
+    const getCurrentBookings = (location) => {
+        fetch(`/api/getAppointments/${location}/${currentWeek.toISOString()}`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch appointments for ${location}`);
+                }
+                return res.json();
+            })
+            .then((data) => {
+                console.log(data);
+
+                let appointments = [];
+                for (let app of data.appointments) {
+                    appointments.push({
+                        id: app.id,
+                        startDate: new Date(app.start),
+                        endDate: new Date(app.end),
+                        location: app.roomName,
+                        title: app.title,
+                    });
+                }
+                setBookings(appointments);
+            });
     };
 
     const disableDay = (day) => {
@@ -345,7 +379,7 @@ function MeetingBookings() {
                         <button
                             className="button-style"
                             disabled={meetingTitle.length === 0}
-                            onClick={() => console.log("Submit The Meeting!")}>
+                            onClick={() => submitAppointmentBooking()}>
                             Confirm
                         </button>
                     </div>

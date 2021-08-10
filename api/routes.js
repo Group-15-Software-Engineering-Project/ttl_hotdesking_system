@@ -165,20 +165,22 @@ router.post("/getBookings", (req, res) => {
 //  Returns a list of bookings on a date
 router.get("/getBookingsOnDate/:date", (req, res) => {
     console.log("getBookingsOnDate");
-    services.getBookingsOnDate(req.params.date)
-    .then((result) => {
-        res.status(200).send({bookings: result});
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).end();
-    });
+    services
+        .getBookingsOnDate(req.params.date)
+        .then((result) => {
+            res.status(200).send({ bookings: result });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).end();
+        });
 });
 
 //  Returns usage reports
 router.post("/getReports", (req, res) => {
     console.log("getReports");
-    services.getReports(req.body.time, req.body.room, req.body.team)
+    services
+        .getReports(req.body.time, req.body.room, req.body.team)
         .then((result) => {
             res.status(200).send({
                 labels: result[0],
@@ -268,11 +270,7 @@ router.post("/addBooking", (req, res) => {
             req.body.email,
             req.body.deskId,
             req.body.deskRoom,
-            new Date(
-                req.body.date[0],
-                req.body.date[1],
-                req.body.date[2] 
-            ),
+            new Date(req.body.date[0], req.body.date[1], req.body.date[2]),
             req.body.am,
             req.body.pm
         )
@@ -288,14 +286,21 @@ router.post("/addBooking", (req, res) => {
 //  Books all desks in a room on a date for a specific time
 router.post("/addRoomRestriction", (req, res) => {
     console.log("addRoomRestriction");
-    services.addRoomRestriction(req.body.email, req.body.room, req.body.date, req.body.am, req.body.pm)
-    .then(() => {
-        res.status(201).end();
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .addRoomRestriction(
+            req.body.email,
+            req.body.room,
+            req.body.date,
+            req.body.am,
+            req.body.pm
+        )
+        .then(() => {
+            res.status(201).end();
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 //  Adds a users to a group
@@ -404,72 +409,73 @@ router.post("/removeUserFromGroup", (req, res) => {
 //  Returns a list of meeting rooms
 router.get("/meetingRooms", (req, res) => {
     console.log("getMeetingRooms");
-    services.getMeetingRooms()
-    .then((rooms) => {
-        res.status(200).send({data: rooms});
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .getMeetingRooms()
+        .then((rooms) => {
+            res.status(200).send({ data: rooms });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 //  Adds a meeting room
 router.put("/meetingRooms/:name", (req, res) => {
     console.log("addMeetingRoom");
-    services.addMeetingRoom(req.params.name)
-    .then(() => {
-        res.status(201).end();
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .addMeetingRoom(req.params.name)
+        .then(() => {
+            res.status(201).end();
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 router.delete("/meetingRooms/:name", (req, res) => {
     console.log("removeMeetingRoom");
-    services.removeMeetingRoom(req.params.name)
-    .then(() => res.status(204).end())
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .removeMeetingRoom(req.params.name)
+        .then(() => res.status(204).end())
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
-router.get("/getAppointments", (req, res) => {
+router.get("/getAppointments/:room/:date", (req, res) => {
     console.log("getAppointments");
-    services.getAppointments(req.body.room, req.body.date)
-    .then((appointments) => res.status(200).send({appointments: appointments}))
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .getAppointments(req.params.room, req.params.date)
+        .then((appointments) => res.status(200).send({ appointments: appointments }))
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 router.put("/appointments", (req, res) => {
     console.log("addAppointment");
-    services.addAppointment(
-        req.body.title,
-        req.body.start,
-        req.body.end,
-        req.body.room
-    )
-    .then(() => res.status(201).end())
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .addAppointment(req.body.title, req.body.start, req.body.end, req.body.room)
+        .then(() => res.status(201).end())
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 router.delete("/appointments/:id", (req, res) => {
     console.log("removeAppointment");
-    services.removeAppointment(req.params.id)
-    .then(() => res.status(204).end())
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .removeAppointment(req.params.id)
+        .then(() => res.status(204).end())
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 module.exports = router;

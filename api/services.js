@@ -328,7 +328,8 @@ module.exports = {
         let appointments = await Appointment.findAll({
             raw: true,
             where: {
-                date: {
+                roomName: room,
+                start: {
                     [Op.gte]: date,
                 },
             },
@@ -409,7 +410,7 @@ module.exports = {
             title: title,
             start: start,
             end: end,
-            room: room,
+            roomName: room,
         });
     },
     removeUser: async (email) => {
