@@ -299,6 +299,10 @@
   height: 48px;
 }
 
+.Some-Available {
+  background-color: #FFFEAA;
+}
+
 .Not-Available {
   background-color: #f0f0f0;
 }
