@@ -295,7 +295,7 @@ module.exports = {
         let rooms = [];
         let models = await Rooms.findAll();
         models.forEach((value) => {
-            rooms.push(value.getDataValue("name"));
+            rooms.push({value: value.getDataValue("name")});
         });
         return rooms;
     },
