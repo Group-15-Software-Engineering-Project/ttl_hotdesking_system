@@ -67,7 +67,7 @@ module.exports = {
     },
     getRoomsList: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
             type: QueryTypes.SELECT,
         });
         for (let room in distinctRooms) {
@@ -92,7 +92,7 @@ module.exports = {
     },
     getRooms: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
             type: QueryTypes.SELECT,
         });
         for (let room in distinctRooms) {
@@ -117,7 +117,7 @@ module.exports = {
     },
     getGroups: async () => {
         let groups = [];
-        let distinctNames = await sequelize.query("SELECT DISTINCT name FROM groups;", {
+        let distinctNames = await sequelize.query("SELECT DISTINCT name FROM hotdesking.groups;", {
             type: QueryTypes.SELECT,
         });
         for (let group in distinctNames) {
