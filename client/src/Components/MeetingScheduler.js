@@ -9,8 +9,39 @@ import {
     DateNavigator,
     Appointments,
     AppointmentTooltip,
-    TodayButton,
 } from "@devexpress/dx-react-scheduler-material-ui";
+import "../public/css/main.css";
+
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles({
+    timeTableCell: {
+        height: "30px",
+    },
+    timeLabel: {
+        height: "30px",
+        lineHeight: "29.4px",
+        "&:first-child": {
+            height: "15px",
+        },
+        "&:last-child": {
+            height: "15px",
+        },
+    },
+});
+
+const TimeTableCell = (props) => {
+    const classes = useStyles();
+    return <WeekView.TimeTableCell {...props} className={classes.timeTableCell} />;
+};
+const TimeLabel = (props) => {
+    const classes = useStyles();
+    return <WeekView.TimeScaleLabel {...props} className={classes.timeLabel} />;
+};
+const TickCell = (props) => {
+    const classes = useStyles();
+    return <WeekView.TimeScaleTickCell {...props} className={classes.timeTableCell} />;
+};
 
 function hashColor(str) {
     let p = 31;
@@ -92,17 +123,25 @@ export default class MeetingScheduler extends React.PureComponent {
         const { data, currentDate } = this.state;
 
         return (
-            <Scheduler data={data} height={660} view={view}>
+            <Scheduler data={data} height={610} view={view}>
                 <ViewState
                     currentDate={currentDate}
                     onCurrentDateChange={(e) => {
                         this.currentDateChange(e);
                     }}
                 />
-                <WeekView displayName startDayHour={"9:30"} endDayHour={"17:30"} />
+                <WeekView
+                    displayName
+                    startDayHour={"9:30"}
+                    endDayHour={"17:30"}
+                    timeTableCellComponent={TimeTableCell}
+                    timeScaleLabelComponent={TimeLabel}
+                    timeScaleTickCellComponent={TickCell}
+                />
+
                 <Toolbar />
                 <DateNavigator />
-                <TodayButton />
+                {/* <TodayButton /> */}
                 <Appointments appointmentComponent={Appointment} />
                 <AppointmentTooltip
                     showCloseButton
