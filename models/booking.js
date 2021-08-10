@@ -1,7 +1,6 @@
 module.exports = (sequelize, type) => {
     return sequelize.define(
-        "booking",
-        {
+        "booking", {
             date: {
                 type: type.DATEONLY,
                 primaryKey: true,
@@ -14,8 +13,7 @@ module.exports = (sequelize, type) => {
                 type: type.BOOLEAN,
                 primaryKey: true,
             },
-        },
-        {
+        }, {
             timestamps: false,
         }
     );
