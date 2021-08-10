@@ -1,7 +1,6 @@
-const { sequelize, User, Desk, Booking, Group, Notification } = require("../sequelize");
+const { sequelize, User, Desk, Booking, Group, Notification, Appointment, Room } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
-const emailjs = require("emailjs-com");
 const sha256 = require("js-sha256");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
@@ -228,160 +227,6 @@ module.exports = {
         return [users, userBookingsCount, [], [], bookingDistribution, 'Success'];
         //  Empty values are for deprecated desk report piechart
     },
-    getReportsByUser: async (time, room, team) => {
-        // An array of two arrays, user emails and their booking amount
-        // if (time === "overall" && room === "overall") {
-        //     for (let user of users) {
-        //         let bookingsByUser = await module.exports.getBookings(user);
-        //         amount.push(bookingsByUser.length);
-        //     }
-        // } else if (time === "overall" && room !== "overall") {
-        //     for (let email of users) {
-        //         let models = await Booking.findAll({
-        //             where: {
-        //                 userEmail: email,
-        //                 deskRoom: room,
-        //             },
-        //         });
-        //         amount.push(models.length);
-        //     }
-        // } else if (time === "last week" && room === "overall") {
-        //     for (let user of users) {
-        //         let counter = 0;
-        //         let bookingsByUser = await module.exports.getBookings(user);
-        //         for (let booking of bookingsByUser) {
-        //             let diffDays = Math.ceil(
-        //                 (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 7 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "last month" && room === "overall") {
-        //     for (let user of users) {
-        //         let counter = 0;
-        //         let bookingsByUser = await module.exports.getBookings(user);
-        //         for (let booking of bookingsByUser) {
-        //             let diffDays = Math.ceil(
-        //                 (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 30 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "last 3 months" && room === "overall") {
-        //     for (let user of users) {
-        //         let counter = 0;
-        //         let bookingsByUser = await module.exports.getBookings(user);
-        //         for (let booking of bookingsByUser) {
-        //             let diffDays = Math.ceil(
-        //                 (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 90 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "next week" && room === "overall") {
-        //     for (let user of users) {
-        //         let counter = 0;
-        //         let bookingsByUser = await module.exports.getBookings(user);
-        //         for (let booking of bookingsByUser) {
-        //             let diffDays = Math.ceil(
-        //                 (booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 7 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "last week" && room !== "overall") {
-        //     for (let email of users) {
-        //         let counter = 0;
-        //         let models = await Booking.findAll({
-        //             where: {
-        //                 userEmail: email,
-        //                 deskRoom: room,
-        //             },
-        //         });
-        //         for (let booking of models) {
-        //             let diffDays = Math.ceil(
-        //                 (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 7 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "last month" && room !== "overall") {
-        //     for (let email of users) {
-        //         let counter = 0;
-        //         let models = await Booking.findAll({
-        //             where: {
-        //                 userEmail: email,
-        //                 deskRoom: room,
-        //             },
-        //         });
-        //         for (let booking of models) {
-        //             let diffDays = Math.ceil(
-        //                 (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 30 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "last 3 months" && room !== "overall") {
-        //     for (let email of users) {
-        //         let counter = 0;
-        //         let models = await Booking.findAll({
-        //             where: {
-        //                 userEmail: email,
-        //                 deskRoom: room,
-        //             },
-        //         });
-        //         for (let booking of models) {
-        //             let diffDays = Math.ceil(
-        //                 (new Date() - booking.getDataValue("date")) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 90 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // } else if (time === "next week" && room !== "overall") {
-        //     for (let email of users) {
-        //         let counter = 0;
-        //         let models = await Booking.findAll({
-        //             where: {
-        //                 userEmail: email,
-        //                 deskRoom: room,
-        //             },
-        //         });
-        //         for (let booking of models) {
-        //             let diffDays = Math.ceil(
-        //                 (booking.getDataValue("date") - new Date()) / (1000 * 60 * 60 * 24)
-        //             );
-        //             if (diffDays <= 7 && diffDays > 0) {
-        //                 counter++;
-        //             }
-        //         }
-        //         amount.push(counter);
-        //     }
-        // }
-
-        //bookings[1] = amount;
-        return bookings;
-    },
     getBookingsInMonth: async (room, date, am, pm) => {
         let dateComp = date.split("-");
         let desks = [];
@@ -445,6 +290,28 @@ module.exports = {
             notifications.push(models[model]);
         }
         return notifications;
+    },
+    getMeetingRooms: async () => {
+        let rooms = [];
+        let models = await Rooms.findAll();
+        models.forEach((value) => {
+            rooms.push(value.getDataValue("name"));
+        });
+        return rooms;
+    },
+    getAppointments: async (room, date) => {
+        let nextDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        let appointments = await Appointment.findAll({
+            raw: true,
+            where: {
+                room: room,
+                date: {
+                    [Op.gte] : date,
+                    [Op.lt] : nextDay
+                }
+            }
+        });
+        return appointments;
     },
     addUser: async (email) => {
         let password = email;
@@ -510,6 +377,19 @@ module.exports = {
             body: body,
         });
     },
+    addMeetingRoom: async (name) => {
+        await Room.create({
+            name: name
+        });
+    },
+    addAppointment: async (title, start, end, room) => {
+        await Appointment.create({
+            title: title,
+            start: start,
+            end: end,
+            room: room
+        });
+    },
     removeUser: async (email) => {
         let model = await User.findByPk(email);
         model.destroy();
@@ -556,4 +436,12 @@ module.exports = {
         });
         model.destroy();
     },
+    removeMeetingRoom: async (name) => {
+        let model = await Room.findByPk(name);
+        model.destroy();
+    },
+    removeAppointment: async (id) => {
+        let model = await Appointment.findByPK(id);
+        model.destroy();
+    }
 };

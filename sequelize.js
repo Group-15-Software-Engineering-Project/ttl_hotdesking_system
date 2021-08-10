@@ -4,6 +4,8 @@ const DeskModel = require("./models/desk");
 const BookingModel = require("./models/booking");
 const GroupModel = require("./models/group");
 const NotificationModel = require("./models/notification");
+const AppointmentModel = require("./models/appointment");
+const RoomModel = require("./models/room");
 
 //const sequelize = new Sequelize('sqlite::memory:');
 const sequelize = new Sequelize(
@@ -20,6 +22,8 @@ const Desk = DeskModel(sequelize, Sequelize);
 const Booking = BookingModel(sequelize, Sequelize);
 const Group = GroupModel(sequelize, Sequelize);
 const Notification = NotificationModel(sequelize, Sequelize);
+const Appointment = AppointmentModel(sequelize, Sequelize);
+const Room = RoomModel(sequelize, Sequelize);
 
 User.hasMany(Booking, {
     onDelete: "CASCADE",
@@ -59,8 +63,16 @@ User.hasMany(Group, {
 });
 Group.belongsTo(User);
 
+Room.hasMany(Appointment, {
+    onDelete: "CASCADE",
+    hooks: true,
+    foreignKey: {
+        name: "roomName"
+    }
+});
+
 sequelize
-    .sync({alter: true})
+    .sync()
     .then(() => {
         console.log("Database & tables created");
     })
@@ -75,4 +87,6 @@ module.exports = {
     Booking,
     Group,
     Notification,
+    Appointment,
+    Room
 };

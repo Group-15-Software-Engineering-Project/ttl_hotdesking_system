@@ -7,6 +7,8 @@ module.exports = (sequelize, type) => {
                 primaryKey: true,
             },
             title: type.STRING,
+            start: type.DATE,
+            end: type.DATE
         }, {
             timestamps: false
         }
