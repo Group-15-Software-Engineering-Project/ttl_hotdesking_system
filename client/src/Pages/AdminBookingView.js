@@ -6,6 +6,7 @@ import { Redirect } from "react-router";
 import { Link } from "react-router-dom"
 
 import BookingCalendarNoLimit from "../Components/BookingCalendarNoLimit";
+import BookingCalendarAllTiles from "../Components/BookingCalendarAllTiles";
 
 
 
@@ -23,6 +24,8 @@ export default class AdminBookingView extends React.Component {
             location:[],
             chosenLocation:"",
             chosen:"",
+            date:new Date(),
+            todayDate:""
             
         };
        
@@ -158,8 +161,11 @@ displaydelete=()=>{
             : data.am && !data.pm
             ? "09:00 - 13:00"
             : "09:00 - 17:30";
-    let date = data.date.split("T")[0].split("-");
-    let isUpcoming = -1;  
+            let date = new Date();
+            this.state.todayDate=(date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate());
+             date = data.date.split("T")[0].split("-");
+    let isUpcoming = this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
+   // let isUpcoming = -1;  
     let status =
             isUpcoming < 0 ? (
                 <span
@@ -213,7 +219,7 @@ displaydelete=()=>{
                 : {
                       backgroundColor: "white",
                   };
-                  let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
+    let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
                 
                   
                     return (
@@ -327,13 +333,13 @@ displaydelete=()=>{
                     <div className="space" />
                     {this.state.slider ? (
                     <div>
-                    <BookingCalendarNoLimit
+                    <BookingCalendarAllTiles
                         onSelect={(date) =>
                             {this.setState({ chosenDate: date });
                             this.getBookingsOnDate();
                             document.getElementById('selectlocation').value = "";
                       }
-                        }></BookingCalendarNoLimit>
+                        }></BookingCalendarAllTiles>
                     {this.state.chosenDate ? (
                         <h3
                             style={{
