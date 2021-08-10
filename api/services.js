@@ -325,14 +325,11 @@ module.exports = {
         return rooms;
     },
     getAppointments: async (room, date) => {
-        let nextDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         let appointments = await Appointment.findAll({
             raw: true,
             where: {
-                room: room,
                 date: {
                     [Op.gte]: date,
-                    [Op.lt]: nextDay,
                 },
             },
         });
