@@ -239,7 +239,7 @@ class Home extends React.Component {
                         />
                     </div>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <Link to="/booking-page">
+                    <Link tabindex="-1" to="/booking-page">
                         <button className="button-style no-outline">{"Book a Desk"}</button>
                     </Link>
                     <div

@@ -34,7 +34,9 @@ const useStyles = makeStyles({
 
 const TimeTableCell = (props) => {
     const classes = useStyles();
-    return <WeekView.TimeTableCell {...props} className={classes.timeTableCell} />;
+    return (
+        <WeekView.TimeTableCell {...props} tabindex="-1" className={classes.timeTableCell} />
+    );
 };
 const TimeLabel = (props) => {
     const classes = useStyles();

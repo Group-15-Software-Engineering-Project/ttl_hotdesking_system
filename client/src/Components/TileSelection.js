@@ -27,6 +27,7 @@ export default function TileSelection(props) {
                 <div key={options[i].value + props.elementID}>
                     <input
                         type="radio"
+                        tabindex="-1"
                         checked={chosenOption === options[i].value}
                         id={options[i].value + props.elementID}
                         disabled={options[i].disabled}
@@ -39,6 +40,14 @@ export default function TileSelection(props) {
                     />
                     <label htmlFor={options[i].value + props.elementID}>
                         <div
+                            tabindex={
+                                options[i].disabled || options[i].value === chosenOption
+                                    ? "-1"
+                                    : 0
+                            }
+                            onKeyPress={(e) => {
+                                e.target.click();
+                            }}
                             className={
                                 options[i].disabled
                                     ? "radioTile-disabled"
