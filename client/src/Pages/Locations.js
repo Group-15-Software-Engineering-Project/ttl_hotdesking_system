@@ -4,23 +4,78 @@ import { createUniqueID, verify, parseNumberList } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Locations extends Component {
-    state = {
-        addRoom: "",
-        deleteRoom: "",
-        addDeskNum: "",
-        addDeskRoom: "",
-        deleteDeskNum: "",
-        deleteDeskRoom: "",
-        deleteDeskList: [],
-        desks: [],
-        roomDeskList: [],
-        key: "default",
-        customInput: false,
-        showTooltip: false,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            addRoom: "",
+            deleteRoom: "",
+            addDeskNum: "",
+            addDeskRoom: "",
+            deleteDeskNum: "",
+            deleteDeskRoom: "",
+            deleteDeskList: [],
+            desks: [],
+            roomDeskList: [],
+            key: "default",
+            customInput: false,
+            showTooltip: false,
+            addMeetingRoom: "",
+            removeMeetingRoom: "",
+            meetingRoomList: [],
+        };
+    }
 
     verifyInput = (input) => {
         return (input.match(/[^\s0-9,-]/giu) || []).length === 0;
+    };
+
+    submitMeetingRoom = () => {
+        fetch(`/api/meetingRooms/${this.state.addMeetingRoom}`, {
+            method: "PUT",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed adding ${this.state.addMeetingRoom}`);
+                } else {
+                    alert("Success");
+                    this.setState({ addMeetingRoom: "" });
+                    this.getMeetingRooms();
+                }
+            })
+            .catch(console.error);
+    };
+
+    getMeetingRooms = () => {
+        fetch("/api/meetingRooms")
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch Meeting Rooms`);
+                }
+                return res.json();
+            })
+            .then((rooms) => {
+                let data = [];
+                for (let room of rooms.data) {
+                    data.push(room.value);
+                }
+                this.setState({ meetingRoomList: data });
+            });
+    };
+
+    submitRemoveMeetingRoom = () => {
+        fetch(`/api/meetingRooms/${this.state.removeMeetingRoom}`, {
+            method: "DELETE",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed deleting ${this.state.removeMeetingRoom}`);
+                } else {
+                    alert("Success");
+                    this.setState({ removeMeetingRoom: "" });
+                    this.getMeetingRooms();
+                }
+            })
+            .catch(console.error);
     };
 
     getLocationData = () => {
@@ -40,6 +95,7 @@ class Locations extends Component {
     componentDidMount = () => {
         window.scrollTo(0, 0);
         this.getLocationData();
+        this.getMeetingRooms();
     };
 
     submitAddRoom = (room) => {
@@ -428,7 +484,7 @@ class Locations extends Component {
                                     onClick={(e) =>
                                         this.submitRemoveRoom(this.state.deleteRoom)
                                     }>
-                                    Remove Location
+                                    Remove Desk Locations
                                 </button>
                             </div>
                             <div key={"quad_4"} className="quadrant">
@@ -529,7 +585,94 @@ class Locations extends Component {
                                     Remove Desk
                                 </button>
                             </div>
+                            <div className="quadrant">
+                                <h1
+                                    className="page-divider-header"
+                                    style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}>
+                                    Add Meeting Rooms
+                                </h1>
+                                <div
+                                    key={"quad_4_space_2"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "10%",
+                                    }}
+                                />
+
+                                <input
+                                    className="text-input"
+                                    placeholder="Meeting Room Name"
+                                    type="text"
+                                    name="addMeetingRoom"
+                                    onChange={this.handleEvent}
+                                    value={this.state.addMeetingRoom}></input>
+                                <div
+                                    key={"quad_4_space_0"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "5%",
+                                    }}
+                                />
+                                <button
+                                    className="button-style no-outline"
+                                    disabled={this.state.addMeetingRoom.length === 0}
+                                    onClick={this.submitMeetingRoom}>
+                                    Add Meeting Room
+                                </button>
+                            </div>
+
+                            <div className="quadrant">
+                                <h1
+                                    className="page-divider-header"
+                                    style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}>
+                                    Remove Meeting Rooms
+                                </h1>
+                                <div
+                                    key={"quad_4_space_2"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "10%",
+                                    }}
+                                />
+
+                                <select
+                                    className="text-input"
+                                    name="removeMeetingRoom"
+                                    style={{ padding: "0" }}
+                                    onChange={this.handleEvent}>
+                                    <option key={"_empty_room"} value="">
+                                        Select meeting room
+                                    </option>
+                                    {this.state.meetingRoomList
+                                        ? this.state.meetingRoomList.map((x) => {
+                                              return (
+                                                  <option key={`_room_${x}`} value={x}>
+                                                      {x}
+                                                  </option>
+                                              );
+                                          })
+                                        : null}
+                                </select>
+                                <div
+                                    key={"quad_4_space_0"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "5%",
+                                    }}
+                                />
+                                <button
+                                    className="button-style no-outline"
+                                    disabled={this.state.removeMeetingRoom.length === 0}
+                                    onClick={this.submitRemoveMeetingRoom}>
+                                    Remove Meeting Room
+                                </button>
+                            </div>
                         </div>
+
                         <div
                             style={{
                                 display: "flex",
