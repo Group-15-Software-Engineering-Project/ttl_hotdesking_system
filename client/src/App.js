@@ -16,6 +16,7 @@ import AdminBookingView from "./Pages/AdminBookingView";
 import MeetingBookings from "./Pages/MeetingBookings";
 import NavigationSidebar from "./Components/NavigationSidebar";
 import Navbar from "./Components/NavBar";
+import { verify } from "./Components/Misc";
 
 class App extends Component {
     state = {
@@ -38,8 +39,8 @@ class App extends Component {
             <div>
                 <Router>
                     {!sessionStorage.email ? <Redirect to="/login"></Redirect> : null}
+                    {(verify(true) || verify(false)) && <NavigationSidebar />}
 
-                    {!window.location.href.includes("/login") && <NavigationSidebar />}
                     <Switch>
                         <Route exact path="/loading">
                             <Redirect to="/home"></Redirect>

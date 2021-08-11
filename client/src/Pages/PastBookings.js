@@ -129,7 +129,7 @@ function PastBookings() {
         return (
             <button
                 disabled={!isCancelling || isUpcoming > 0}
-                className="bookings-table no-outline"
+                className="bookings-table"
                 onClick={() => {
                     setTimeout(() => {
                         let displayTime =

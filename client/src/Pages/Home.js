@@ -233,7 +233,6 @@ class Home extends React.Component {
                                         : "45%"
                                 }`,
                                 borderTop: "2px solid #444",
-                                // marginLeft: "27.5%",
                                 marginTop: "1%",
                             }}
                         />
@@ -241,6 +240,10 @@ class Home extends React.Component {
                     <div style={{ width: "100%", marginBottom: "3%" }} />
                     <Link tabindex="-1" to="/booking-page">
                         <button className="button-style no-outline">{"Book a Desk"}</button>
+                    </Link>
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    <Link tabindex="-1" to="/book-meeting-room">
+                        <button className="button-style no-outline">{"Book a Meeting"}</button>
                     </Link>
                     <div
                         style={{

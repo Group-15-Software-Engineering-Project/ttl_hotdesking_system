@@ -145,7 +145,6 @@ export default class MeetingScheduler extends React.PureComponent {
 
                 <Toolbar />
                 <DateNavigator />
-                {/* <TodayButton /> */}
                 <Appointments appointmentComponent={Appointment} />
                 <AppointmentTooltip
                     showCloseButton

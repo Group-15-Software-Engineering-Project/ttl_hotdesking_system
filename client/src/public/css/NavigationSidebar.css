@@ -20,6 +20,7 @@
 
 #navigation-sidebar {
     position: fixed;
+    z-index: 1000;
     left: -225px;
     width: 225px;
     height: 100vh;
@@ -32,13 +33,19 @@
     font-family: "Lato", sans-serif;
 }
 
+#navigation-sidebar::before {
+    content: "";
+    width: 225px;
+    height: 300px;
+    position: absolute;
+    top: 100vh;
+    background-color: var(--nav-bg);
+    box-shadow: 0 3.5px 2px 2px hsl(0 0% 30% / 0.5);
+    z-index: 700;
+}
 #navigation-sidebar[class~="open"] {
     left: 0px;
 }
-
-/* #navigation-sidebar[class~="pinned"] {
-    left: 0px;
-} */
 
 #navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle {
     -webkit-tap-highlight-color: transparent;
@@ -74,7 +81,7 @@
     height: 15px;
     z-index: -1;
     border-bottom-left-radius: 15px;
-    box-shadow: -15px 15px 0 15px var(--nav-bg);
+    box-shadow: -15.5px 15.5px 0 15px var(--nav-bg);
 }
 
 #navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle::before {
@@ -86,7 +93,7 @@
     height: 15px;
     z-index: -1;
     border-top-left-radius: 15px;
-    box-shadow: -15px -15px 0 15px var(--nav-bg);
+    box-shadow: -15.5px -15.5px 0 15px var(--nav-bg);
 }
 
 #navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:focus-visible,
@@ -223,7 +230,7 @@
     flex-direction: row;
     align-items: flex-end;
     flex-wrap: wrap;
-    height: 20%;
+    height: 15%;
     justify-content: space-evenly;
     margin: 15px 0 5px 0;
 }

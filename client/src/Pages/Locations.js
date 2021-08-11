@@ -125,10 +125,9 @@ class Locations extends Component {
             });
     };
 
-    submitAddDesk = async (desk, room) => {
+    submitAddDesk = (desk, room) => {
         if (desk.length < 1 || room.length < 1) return;
         this.setState({ key: createUniqueID() });
-        console.log(desk);
         fetch("/api/addDesk", {
             method: "POST",
             headers: {
@@ -148,7 +147,7 @@ class Locations extends Component {
                 } else {
                     alert("Success");
                     this.getLocationData();
-                    this.setState({ customInput: false });
+                    this.setState({ customInput: false, addDeskNum: "", addDeskRoom: "" });
                 }
             })
             .catch((err) => {
@@ -178,6 +177,7 @@ class Locations extends Component {
                 } else {
                     alert("Success");
                     this.getLocationData();
+                    this.setState({ deleteDeskRoom: "", deleteDeskNum: "" });
                 }
             })
             .catch((err) => {
@@ -206,6 +206,7 @@ class Locations extends Component {
                 } else {
                     alert("Success");
                     this.getLocationData();
+                    this.setState({ deleteRoom: "" });
                 }
             })
             .catch((err) => {
@@ -256,7 +257,7 @@ class Locations extends Component {
                     key={`title_${room.name}`}
                     className="page-divider-header"
                     style={{ margin: "0px" }}>
-                    {room.name}
+                    {"Desks in " + room.name}
                 </span>
                 <div key={`space_div`} style={{ width: "100%", margin: "10px" }} />
                 {room.desks.length === 0 ? (
@@ -277,8 +278,15 @@ class Locations extends Component {
                                     key={`_desk_${x}`}
                                     style={{
                                         fontWeight: "bold",
-                                        width: "16%",
+                                        width: "fit-content",
+                                        marginLeft: "10px",
+                                        marginRight: " 10px",
                                         marginBottom: "10px",
+                                        borderRadius: "20px",
+                                        backgroundColor: "#ddd",
+                                        padding: "10px",
+                                        paddingLeft: "15px",
+                                        paddingRight: "15px",
                                     }}>
                                     {"Desk " + x}
                                 </span>
@@ -338,13 +346,15 @@ class Locations extends Component {
                                         name="addDeskRoom"
                                         placeholder="New Location"
                                         onChange={this.handleEvent}
+                                        value={this.state.addDeskRoom}
                                     />
                                 ) : (
                                     <select
                                         className="text-input"
                                         style={{ padding: "0" }}
                                         name="addDeskRoom"
-                                        onChange={this.handleEvent}>
+                                        onChange={this.handleEvent}
+                                        value={this.state.addDeskRoom}>
                                         <option key={"_empty_loc"} value="">
                                             Select location
                                         </option>
@@ -380,6 +390,7 @@ class Locations extends Component {
                                     placeholder="Desk Number"
                                     type="text"
                                     name="addDeskNum"
+                                    value={this.state.addDeskNum}
                                     onChange={this.handleEvent}
                                     onMouseEnter={() => this.setState({ showTooltip: true })}
                                     onMouseLeave={() =>
@@ -401,7 +412,7 @@ class Locations extends Component {
                                             borderRadius: "10px",
                                             backgroundColor: "#BBBBBBd7",
                                             color: "black",
-                                            border: "2px solid #555",
+                                            border: "1px solid #555",
                                             padding: "10px",
                                             width: "25%",
                                             wordWrap: "wrap",
@@ -671,6 +682,46 @@ class Locations extends Component {
                                     Remove Meeting Room
                                 </button>
                             </div>
+                        </div>
+                        <h1
+                            className="page-divider-header"
+                            style={{ backgroundColor: "#fd9f12", marginLeft: "2.5%" }}>
+                            Meeting Rooms
+                        </h1>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+
+                                width: "100%",
+                                flexWrap: "wrap",
+                            }}
+                            key={"_meeting_room_list_"}>
+                            {this.state.meetingRoomList.map((x) => {
+                                return (
+                                    <div
+                                        key={`_meeting_room_${x}`}
+                                        id={`_meeting_room_listing_${x}`}
+                                        style={{
+                                            fontWeight: "bold",
+                                            backgroundColor: "#ddd",
+                                            borderRadius: "20px",
+                                            padding: "10px",
+                                            marginTop: "15px",
+                                            marginLeft: "15px",
+                                            marginRight: "15px",
+                                            flexBasis: "30%",
+                                            maxWidth: "30%",
+                                            textOverflow: "ellipsis",
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            minWidth: "fit-content",
+                                        }}>
+                                        {x}
+                                    </div>
+                                );
+                            })}
                         </div>
 
                         <div

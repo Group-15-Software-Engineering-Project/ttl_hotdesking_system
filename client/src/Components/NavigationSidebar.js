@@ -138,22 +138,24 @@ function NavigationSidebar() {
                         Log Out
                     </div>
                 </div>
-                <div
-                    className="navigation-pin"
-                    onKeyPress={(e) => e.target.click()}
-                    onClick={() => {
-                        document
-                            .getElementById("navigation-sidebar")
-                            .classList.toggle("pinned");
+                {window.innerWidth < 768 ? null : (
+                    <div
+                        className="navigation-pin"
+                        onKeyPress={(e) => e.target.click()}
+                        onClick={() => {
+                            document
+                                .getElementById("navigation-sidebar")
+                                .classList.toggle("pinned");
 
-                        if (sessionStorage.pinnedNavbar) {
-                            sessionStorage.removeItem("pinnedNavbar");
-                        } else {
-                            sessionStorage.setItem("pinnedNavbar", "pinned");
-                        }
-                    }}>
-                    <AiFillPushpin />
-                </div>
+                            if (sessionStorage.pinnedNavbar) {
+                                sessionStorage.removeItem("pinnedNavbar");
+                            } else {
+                                sessionStorage.setItem("pinnedNavbar", "pinned");
+                            }
+                        }}>
+                        <AiFillPushpin />
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -1,10 +1,19 @@
 import React from "react";
 import MeetingScheduler from "../Components/MeetingScheduler";
 import TileSelection from "../Components/TileSelection";
+import { Redirect } from "react-router-dom";
+import { verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 function MeetingBookings() {
-    const [currentWeek, setCurrentWeek] = React.useState(
+    const [currentSelectedWeek, setCurrentWeek] = React.useState(
+        new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate() - new Date().getDay() + (new Date().getDay() === 6 ? 7 : 0)
+        )
+    );
+    const [currentWeek] = React.useState(
         new Date(
             new Date().getFullYear(),
             new Date().getMonth(),
@@ -48,6 +57,7 @@ function MeetingBookings() {
     const [meetingTitle, setMeetingTitle] = React.useState("");
     const [bookings, setBookings] = React.useState(null);
     const [meetingRooms, setMeetingRooms] = React.useState([]);
+    const [show, toggleShow] = React.useState(false);
     const today = new Date().setHours(0, 0, 0, 0);
 
     const numberToTime = (num) => {
@@ -154,16 +164,16 @@ function MeetingBookings() {
 
     const submitAppointmentBooking = () => {
         let startTime = new Date(
-            currentWeek.getFullYear(),
-            currentWeek.getMonth(),
-            currentWeek.getDate() + day,
+            currentSelectedWeek.getFullYear(),
+            currentSelectedWeek.getMonth(),
+            currentSelectedWeek.getDate() + day,
             startT.split(":")[0],
             startT.split(":")[1]
         );
         let endTime = new Date(
-            currentWeek.getFullYear(),
-            currentWeek.getMonth(),
-            currentWeek.getDate() + day,
+            currentSelectedWeek.getFullYear(),
+            currentSelectedWeek.getMonth(),
+            currentSelectedWeek.getDate() + day,
             endT.split(":")[0],
             endT.split(":")[1]
         );
@@ -177,6 +187,7 @@ function MeetingBookings() {
                 start: startTime,
                 end: endTime,
                 room: location,
+                email: sessionStorage.email,
             }),
         })
             .then((res) => {
@@ -189,13 +200,15 @@ function MeetingBookings() {
                     setDay(0);
                     setLocation("");
                     setState(state + 1);
+                    toggleShow(false);
+                    setCurrentWeek(currentWeek);
                 }
             })
             .catch(console.error);
     };
 
     const getCurrentBookings = (location) => {
-        fetch(`/api/getAppointments/${location}/${currentWeek.toISOString()}`)
+        fetch(`/api/getAppointments/${location}/${currentSelectedWeek.toISOString()}`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(`Failed to fetch appointments for ${location}`);
@@ -213,23 +226,25 @@ function MeetingBookings() {
                         endDate: new Date(app.end),
                         location: app.roomName,
                         title: app.title,
+                        email: app.bookedBy,
                     });
                 }
                 setBookings(appointments);
+                toggleShow(true);
             });
     };
 
     const disableDay = (day) => {
         let date = new Date(
-            currentWeek.getFullYear(),
-            currentWeek.getMonth(),
-            currentWeek.getDate() + day
+            currentSelectedWeek.getFullYear(),
+            currentSelectedWeek.getMonth(),
+            currentSelectedWeek.getDate() + day
         ).setHours(0, 0, 0, 0);
         if (date.valueOf() < today.valueOf()) {
             return true;
         } else return false;
     };
-    return (
+    return verify(true) || verify(false) ? (
         <div className="wrapper TCD-BG">
             <div className="flex-container-1" />
             <div className="flex-container-5 main-body">
@@ -244,14 +259,16 @@ function MeetingBookings() {
                         </h1>
                     }
                     options={meetingRooms}
-                    size={["175px", "75px"]}
+                    size={["300px", "75px"]}
                     showLabel={true}
                     onSelect={(e) => {
+                        setCurrentWeek(currentWeek);
+                        toggleShow(false);
                         setLocation(e);
                         getCurrentBookings(e);
                     }}
                 />
-                {location && bookings && (
+                {show && location && (
                     <div>
                         <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
                             {`Current Bookings for ${location}`}
@@ -270,7 +287,7 @@ function MeetingBookings() {
                                 height: "fit-content",
                             }}>
                             <MeetingScheduler
-                                key={location}
+                                key={bookings}
                                 appointments={bookings}
                                 weekChange={(e) => {
                                     setCurrentWeek(e);
@@ -279,12 +296,12 @@ function MeetingBookings() {
                                     setMeetingTitle("");
                                     setDay(0);
                                 }}
-                                currentWeek={currentWeek}
+                                currentWeek={currentSelectedWeek}
                             />
                         </div>
                         <TileSelection
                             elementID="Day_of_week_selection"
-                            key={currentWeek}
+                            key={currentSelectedWeek}
                             title={
                                 <div>
                                     <h1
@@ -328,7 +345,7 @@ function MeetingBookings() {
                                 </h1>
                             </div>
                         }
-                        options={getStartTimes(day, bookings, currentWeek)}
+                        options={getStartTimes(day, bookings, currentSelectedWeek)}
                         size={["90px", "50px"]}
                         onSelect={(e) => {
                             setStartTime(e);
@@ -349,7 +366,7 @@ function MeetingBookings() {
                                 </h1>
                             </div>
                         }
-                        options={getEndTimes(day, bookings, currentWeek)}
+                        options={getEndTimes(day, bookings, currentSelectedWeek)}
                         size={["90px", "50px"]}
                         onSelect={setEndTime}
                     />
@@ -377,9 +394,9 @@ function MeetingBookings() {
                             {" on "}
                             <span style={{ color: "red" }}>
                                 {new Date(
-                                    currentWeek.getFullYear(),
-                                    currentWeek.getMonth(),
-                                    currentWeek.getDate() + day
+                                    currentSelectedWeek.getFullYear(),
+                                    currentSelectedWeek.getMonth(),
+                                    currentSelectedWeek.getDate() + day
                                 ).toDateString()}
                             </span>
                             {"."}
@@ -400,6 +417,8 @@ function MeetingBookings() {
             </div>
             <div className="flex-container-1" />
         </div>
+    ) : (
+        <Redirect to="/login" />
     );
 }
 
