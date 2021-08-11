@@ -44,15 +44,10 @@ class Users extends Component {
             .then((res) => {
                 if (!res.ok) throw new Error(`Failed to add user to group (status:${res.status})`);
             })
-            .catch((err) => alert(err));
+            .catch(alert);
     };
 
     submitRemoveUserFromTeam = () => {
-        if (
-            this.state.removeFromTeam.length === 0 ||
-            this.state.removeUserFromTeam.length === 0
-        )
-            return;
         fetch("/api/removeUserFromGroup", {
             method: "POST",
             headers: {
@@ -357,8 +352,10 @@ class Users extends Component {
                                 className="text-input"
                                 style={{ padding: "0" }}
                                 name="removeFromTeam"
-                                onChange={(e) =>
-                                    this.submitGetUsersInTeam(e.target.value, "usersInTeam")
+                                onChange={(e) => {
+                                    this.submitGetUsersInTeam(e.target.value, "usersInTeam");
+                                    this.handleEvent(e);
+                                }
                                 }>
                                 <option value={-1}>Select Team</option>
                                 {this.state.teamList.map((x) => (
