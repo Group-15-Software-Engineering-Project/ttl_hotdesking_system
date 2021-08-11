@@ -459,7 +459,7 @@ router.get("/getAppointments/:room/:date", (req, res) => {
 router.put("/appointments", (req, res) => {
     console.log("addAppointment");
     services
-        .addAppointment(req.body.title, req.body.start, req.body.end, req.body.room)
+        .addAppointment(req.body.email, req.body.title, req.body.start, req.body.end, req.body.room)
         .then(() => res.status(201).end())
         .catch((err) => {
             console.log(err);
