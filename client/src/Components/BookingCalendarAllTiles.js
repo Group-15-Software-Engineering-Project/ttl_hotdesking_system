@@ -79,7 +79,7 @@ export default class BookingCalendarAllTiles extends React.Component {
           defaultView="month"
           prev2Label={null}
           next2Label={null}
-          tileClassName={this.checkAvailability}
+          tileClassName="Not-Available"
          // tileDisabled={this.disabledTiles}
           onChange={(e) => {
             this.props.onSelect(this.getDate(e));
