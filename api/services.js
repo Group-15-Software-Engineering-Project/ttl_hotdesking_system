@@ -405,8 +405,9 @@ module.exports = {
             name: name,
         });
     },
-    addAppointment: async (title, start, end, room) => {
+    addAppointment: async (email, title, start, end, room) => {
         await Appointment.create({
+            bookedBy: email,
             title: title,
             start: start,
             end: end,
