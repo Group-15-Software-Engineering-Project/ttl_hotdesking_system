@@ -233,6 +233,8 @@ function MeetingBookings() {
         <div className="wrapper TCD-BG">
             <div className="flex-container-1" />
             <div className="flex-container-5 main-body">
+                <div className="space" />
+
                 <TileSelection
                     key={state + "meeting_room_key"}
                     elementID="Meeting_room_selection"

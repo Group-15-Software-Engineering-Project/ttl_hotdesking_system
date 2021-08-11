@@ -10,7 +10,7 @@ export const SidebarData = [
     {
         title: "Home",
         path: "/home",
-        icon: <AiIcons.AiOutlineHome />,
+        icon: <AiIcons.AiOutlineHome style={{ backgroundColor: "transparent" }} />,
         cName: "nav-text",
         adminRequired: false,
     },
@@ -22,7 +22,7 @@ export const SidebarData = [
         adminRequired: false,
     },
     {
-        title: "Book a Meeting Room",
+        title: "Book a Meeting",
         path: "/book-meeting-room",
         icon: <FaIcons.FaEnvelopeOpenText />,
         cName: "nav-text",
