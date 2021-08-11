@@ -29,8 +29,8 @@ export default class AdminBookingView extends React.Component {
     };
   }
 
-  getBookingsOnDate = async () => {
-    let date = this.state.chosenDate;
+  getBookingsOnDate = async (date) => {
+    
     {console.log("fetching Booking", date)}
     fetch(`/api/getBookingsOnDate/${date}`)
       .then((res) => {
@@ -380,9 +380,9 @@ export default class AdminBookingView extends React.Component {
             <div>
               <BookingCalendarAllTiles
                 onSelect={(date) => {   
-                  this.setState({ chosenDate: date });
-                  this.getBookingsOnDate();
-                  this.filterBookings();
+                   this.setState({ chosenDate: date });
+                   this.getBookingsOnDate(date);
+                   this.filterBookings();
                   document.getElementById("selectlocation").value = "overall";
                 }}
               ></BookingCalendarAllTiles>
