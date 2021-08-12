@@ -23,13 +23,6 @@ class Notifications extends Component {
     }
 
     submitNotification = () => {
-        let date = new Date();
-        let today =
-            date.getFullYear() +
-            "-" +
-            String(date.getMonth() + 1).padStart(2, "0") +
-            "-" +
-            date.getDate();
         fetch("/api/addNotification", {
             method: "POST",
             headers: {
@@ -137,7 +130,7 @@ class Notifications extends Component {
                     <button
                         disabled={
                             !(
-                                this.state.type != -1 &&
+                                this.state.type !== -1 &&
                                 this.state.expiryDate &&
                                 this.state.text
                             )

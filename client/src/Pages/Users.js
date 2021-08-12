@@ -16,6 +16,7 @@ class Users extends Component {
         removeFromTeam: "",
         removeUserFromTeam: "",
         usersInTeam: [],
+        allUsers: [],
         users: [],
         teamList: [],
     };
@@ -23,11 +24,20 @@ class Users extends Component {
     positionReference = createRef();
 
     componentDidMount() {
-        //this.getUsers();
+        this.submitGetUsersInTeam("All Users", "allUsers");
         this.getTeams();
         window.scrollTo(0, 0);
     }
 
+    validEmail = (email) => {
+        if (email.length === 0) return false;
+        return (
+            email.includes("@") &&
+            email.includes(".") &&
+            email.split(".")[email.split(".").length - 1].length > 1 &&
+            email.lastIndexOf(".") > email.lastIndexOf("@")
+        );
+    };
     submitAddUserToTeam = () => {
         if (this.state.addTeamName.length === 0 || this.state.addTeamUserName.length === 0)
             return;
@@ -42,17 +52,20 @@ class Users extends Component {
             }),
         })
             .then((res) => {
-                if (!res.ok) throw new Error(`Failed to add user to group (status:${res.status})`);
+                if (!res.ok)
+                    throw new Error(`Failed to add user to group (status:${res.status})`);
+                else {
+                    alert(
+                        `Added ${this.state.addTeamUserName} to team ${this.state.addTeamName}.`
+                    );
+                    this.setState({ addTeamUserName: "" });
+                    this.getTeams();
+                }
             })
-            .catch((err) => alert(err));
+            .catch(console.error);
     };
 
     submitRemoveUserFromTeam = () => {
-        if (
-            this.state.removeFromTeam.length === 0 ||
-            this.state.removeUserFromTeam.length === 0
-        )
-            return;
         fetch("/api/removeUserFromGroup", {
             method: "POST",
             headers: {
@@ -69,7 +82,7 @@ class Users extends Component {
                     alert("error removing user from team");
                 } else {
                     alert("Success");
-                    window.location.reload();
+                    this.setState({ removeUserFromTeam: "", removeFromTeam: "" });
                 }
             })
             .catch((err) => {});
@@ -94,7 +107,8 @@ class Users extends Component {
                     alert(res.message);
                 } else {
                     alert("Success");
-                    window.location.reload();
+                    this.setState({ deleteEmail: "" });
+                    this.submitGetUsersInTeam("All Users", "allUsers");
                 }
             })
             .catch((err) => {
@@ -103,27 +117,6 @@ class Users extends Component {
     };
 
     submitAddUser = (email) => {
-        /*if (email.length === 0 || !email.includes("@")) return;
-        let password = createUniqueID(2, false).replaceAll("-", "");
-        let emailTemplate = {
-            user_email: email,
-            tcd_pass: password,
-        };
-        emailjs
-            .send(
-                "service_r50ifu8",
-                "ttl_new_account",
-                emailTemplate,
-                "user_XvsnLDmMIB7ZBM1jhkEnR"
-            )
-            .then(
-                (result) => {
-                    console.log(result.text);
-                },
-                (error) => {
-                    console.log(error.text);
-                }
-            );*/
         fetch("/api/addUser", {
             method: "POST",
             headers: {
@@ -136,8 +129,11 @@ class Users extends Component {
             .then((res) => {
                 if (!res.ok) throw new Error(`Failed to add user (status:${res.status})`);
             })
-            .then(() =>  window.location.reload())
-            .catch((err) => alert(err));
+            .then(() => {
+                console.log("added");
+                this.setState({ addEmail: "" });
+            })
+            .catch(console.error);
     };
 
     getTeams = () => {
@@ -174,6 +170,7 @@ class Users extends Component {
                     this.setState({ users: res.users }, () =>
                         this.positionReference.current.scrollIntoView({ behavior: "smooth" })
                     );
+                    console.log(res.users);
                 }
             })
             .catch((err) => {
@@ -198,7 +195,7 @@ class Users extends Component {
                     if (res.error) {
                         alert("Could not get Users");
                     } else {
-                        this.setState({ [label]: res.users }, () => {
+                        this.setState({ [label]: res.users.filter(this.validEmail) }, () => {
                             if (label === "users")
                                 this.positionReference.current.scrollIntoView({
                                     behavior: "smooth",
@@ -251,7 +248,8 @@ class Users extends Component {
                                 type="email"
                                 className="text-input"
                                 placeholder="Email"
-                                onChange={this.addEmailF}></input>
+                                onChange={this.addEmailF}
+                                value={this.state.addEmail}></input>
                             <div className="space" style={{ marginBottom: "1%" }} />
                             <div
                                 className="space"
@@ -259,6 +257,7 @@ class Users extends Component {
                             />
                             <button
                                 className="button-style no-outline"
+                                disabled={!this.validEmail(this.state.addEmail)}
                                 onClick={() => {
                                     this.submitAddUser(this.state.addEmail);
                                 }}>
@@ -283,7 +282,30 @@ class Users extends Component {
                                 placeholder="Team name"
                                 type="text"
                                 name="addTeamName"
-                                onChange={this.handleEvent}></input>
+                                onChange={this.handleEvent}
+                                value={this.state.addTeamName}></input>
+                            <span> </span>
+                            <select
+                                className="text-input"
+                                name="addTeamName"
+                                style={{ padding: 0 }}
+                                onChange={this.handleEvent}
+                                value={this.state.addTeamName}>
+                                <option key="empty-option" value="">
+                                    Select team
+                                </option>
+                                {this.state.teamList
+                                    .filter((e) => {
+                                        if (e !== "All Users") return e;
+                                    })
+                                    .map((x) => {
+                                        return (
+                                            <option key={"team_" + x} value={x}>
+                                                {x}
+                                            </option>
+                                        );
+                                    })}
+                            </select>
                             <div className="space" style={{ marginBottom: "1%" }} />
                             <input
                                 key={"addUserToTeam"}
@@ -291,16 +313,40 @@ class Users extends Component {
                                 placeholder="User email"
                                 type="email"
                                 name="addTeamUserName"
-                                onChange={this.handleEvent}></input>
+                                onChange={this.handleEvent}
+                                value={this.state.addTeamUserName}></input>
+                            <span> </span>
+                            <select
+                                className="text-input"
+                                name="addTeamUserName"
+                                style={{ padding: 0 }}
+                                onChange={this.handleEvent}
+                                value={this.state.addTeamUserName}>
+                                <option key="empty-val" value="">
+                                    Select user
+                                </option>
+                                {this.state.allUsers.map((x) => {
+                                    return (
+                                        <option key={"user_" + x} value={x}>
+                                            {x}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+
                             <div
                                 className="space"
                                 style={{ marginTop: "5%", marginBottom: "5%" }}
                             />
                             <button
                                 className="button-style no-outline"
-                                onClick={() => {
-                                    this.submitAddUserToTeam();
-                                }}>
+                                disabled={
+                                    !(
+                                        this.state.addTeamName &&
+                                        this.validEmail(this.state.addTeamUserName)
+                                    )
+                                }
+                                onClick={this.submitAddUserToTeam}>
                                 Add to Teams
                             </button>
                         </div>
@@ -330,6 +376,9 @@ class Users extends Component {
                             />
                             <button
                                 className="button-style no-outline"
+                                disabled={
+                                    this.state.allUsers.indexOf(this.state.deleteEmail) === -1
+                                }
                                 onClick={() => {
                                     this.submitRemoveUser(this.state.deleteEmail);
                                 }}>
@@ -346,37 +395,28 @@ class Users extends Component {
                                 className="space"
                                 style={{ marginBottom: "10%", marginTop: "5%" }}
                             />
-                            {/* <input
-                className="text-input"
-                placeholder="User team"
-                type="text"
-                name="removeFromTeam"
-                onChange={this.handleEvent}
-              ></input> */}
+
                             <select
                                 className="text-input"
                                 style={{ padding: "0" }}
                                 name="removeFromTeam"
-                                onChange={(e) =>
-                                    this.submitGetUsersInTeam(e.target.value, "usersInTeam")
-                                }>
-                                <option value={-1}>Select Team</option>
+                                value={this.state.removeFromTeam}
+                                onChange={(e) => {
+                                    this.submitGetUsersInTeam(e.target.value, "usersInTeam");
+                                    this.handleEvent(e);
+                                }}>
+                                <option value={-1}>Select team</option>
                                 {this.state.teamList.map((x) => (
                                     <option value={x}>{x}</option>
                                 ))}
                             </select>
                             <div className="space" style={{ marginBottom: "1%" }} />
-                            {/* <input
-                className="text-input"
-                placeholder="User email"
-                type="email"
-                name="removeUserFromTeam"
-                onChange={this.handleEvent}
-              ></input> */}
+
                             <select
                                 className="text-input"
                                 style={{ padding: "0" }}
                                 name="removeUserFromTeam"
+                                value={this.state.removeUserFromTeam}
                                 onChange={this.handleEvent}>
                                 <option value={-1}>Select user</option>
                                 {this.state.usersInTeam.map((x) => (
@@ -389,6 +429,10 @@ class Users extends Component {
                             />
                             <button
                                 className="button-style no-outline"
+                                disabled={
+                                    !this.state.removeFromTeam ||
+                                    !this.state.removeUserFromTeam
+                                }
                                 onClick={() => {
                                     this.submitRemoveUserFromTeam();
                                 }}>
@@ -431,8 +475,6 @@ class Users extends Component {
                                     width: "80%",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    columnCount: "2",
-                                    columnGap: "10px",
                                 }}>
                                 {this.state.users.map((user) => (
                                     <li

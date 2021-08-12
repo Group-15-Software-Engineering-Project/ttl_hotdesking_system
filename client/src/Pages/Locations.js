@@ -4,23 +4,78 @@ import { createUniqueID, verify, parseNumberList } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Locations extends Component {
-    state = {
-        addRoom: "",
-        deleteRoom: "",
-        addDeskNum: "",
-        addDeskRoom: "",
-        deleteDeskNum: "",
-        deleteDeskRoom: "",
-        deleteDeskList: [],
-        desks: [],
-        roomDeskList: [],
-        key: "default",
-        customInput: false,
-        showTooltip: false,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            addRoom: "",
+            deleteRoom: "",
+            addDeskNum: "",
+            addDeskRoom: "",
+            deleteDeskNum: "",
+            deleteDeskRoom: "",
+            deleteDeskList: [],
+            desks: [],
+            roomDeskList: [],
+            key: "default",
+            customInput: false,
+            showTooltip: false,
+            addMeetingRoom: "",
+            removeMeetingRoom: "",
+            meetingRoomList: [],
+        };
+    }
 
     verifyInput = (input) => {
         return (input.match(/[^\s0-9,-]/giu) || []).length === 0;
+    };
+
+    submitMeetingRoom = () => {
+        fetch(`/api/meetingRooms/${this.state.addMeetingRoom}`, {
+            method: "PUT",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed adding ${this.state.addMeetingRoom}`);
+                } else {
+                    alert("Success");
+                    this.setState({ addMeetingRoom: "" });
+                    this.getMeetingRooms();
+                }
+            })
+            .catch(console.error);
+    };
+
+    getMeetingRooms = () => {
+        fetch("/api/meetingRooms")
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch Meeting Rooms`);
+                }
+                return res.json();
+            })
+            .then((rooms) => {
+                let data = [];
+                for (let room of rooms.data) {
+                    data.push(room.value);
+                }
+                this.setState({ meetingRoomList: data });
+            });
+    };
+
+    submitRemoveMeetingRoom = () => {
+        fetch(`/api/meetingRooms/${this.state.removeMeetingRoom}`, {
+            method: "DELETE",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Failed deleting ${this.state.removeMeetingRoom}`);
+                } else {
+                    alert("Success");
+                    this.setState({ removeMeetingRoom: "" });
+                    this.getMeetingRooms();
+                }
+            })
+            .catch(console.error);
     };
 
     getLocationData = () => {
@@ -40,6 +95,7 @@ class Locations extends Component {
     componentDidMount = () => {
         window.scrollTo(0, 0);
         this.getLocationData();
+        this.getMeetingRooms();
     };
 
     submitAddRoom = (room) => {
@@ -69,10 +125,9 @@ class Locations extends Component {
             });
     };
 
-    submitAddDesk = async (desk, room) => {
+    submitAddDesk = (desk, room) => {
         if (desk.length < 1 || room.length < 1) return;
         this.setState({ key: createUniqueID() });
-        console.log(desk);
         fetch("/api/addDesk", {
             method: "POST",
             headers: {
@@ -92,7 +147,7 @@ class Locations extends Component {
                 } else {
                     alert("Success");
                     this.getLocationData();
-                    this.setState({ customInput: false });
+                    this.setState({ customInput: false, addDeskNum: "", addDeskRoom: "" });
                 }
             })
             .catch((err) => {
@@ -122,6 +177,7 @@ class Locations extends Component {
                 } else {
                     alert("Success");
                     this.getLocationData();
+                    this.setState({ deleteDeskRoom: "", deleteDeskNum: "" });
                 }
             })
             .catch((err) => {
@@ -150,6 +206,7 @@ class Locations extends Component {
                 } else {
                     alert("Success");
                     this.getLocationData();
+                    this.setState({ deleteRoom: "" });
                 }
             })
             .catch((err) => {
@@ -200,7 +257,7 @@ class Locations extends Component {
                     key={`title_${room.name}`}
                     className="page-divider-header"
                     style={{ margin: "0px" }}>
-                    {room.name}
+                    {"Desks in " + room.name}
                 </span>
                 <div key={`space_div`} style={{ width: "100%", margin: "10px" }} />
                 {room.desks.length === 0 ? (
@@ -221,8 +278,15 @@ class Locations extends Component {
                                     key={`_desk_${x}`}
                                     style={{
                                         fontWeight: "bold",
-                                        width: "16%",
+                                        width: "fit-content",
+                                        marginLeft: "10px",
+                                        marginRight: " 10px",
                                         marginBottom: "10px",
+                                        borderRadius: "20px",
+                                        backgroundColor: "#ddd",
+                                        padding: "10px",
+                                        paddingLeft: "15px",
+                                        paddingRight: "15px",
                                     }}>
                                     {"Desk " + x}
                                 </span>
@@ -282,13 +346,15 @@ class Locations extends Component {
                                         name="addDeskRoom"
                                         placeholder="New Location"
                                         onChange={this.handleEvent}
+                                        value={this.state.addDeskRoom}
                                     />
                                 ) : (
                                     <select
                                         className="text-input"
                                         style={{ padding: "0" }}
                                         name="addDeskRoom"
-                                        onChange={this.handleEvent}>
+                                        onChange={this.handleEvent}
+                                        value={this.state.addDeskRoom}>
                                         <option key={"_empty_loc"} value="">
                                             Select location
                                         </option>
@@ -324,6 +390,7 @@ class Locations extends Component {
                                     placeholder="Desk Number"
                                     type="text"
                                     name="addDeskNum"
+                                    value={this.state.addDeskNum}
                                     onChange={this.handleEvent}
                                     onMouseEnter={() => this.setState({ showTooltip: true })}
                                     onMouseLeave={() =>
@@ -345,7 +412,7 @@ class Locations extends Component {
                                             borderRadius: "10px",
                                             backgroundColor: "#BBBBBBd7",
                                             color: "black",
-                                            border: "2px solid #555",
+                                            border: "1px solid #555",
                                             padding: "10px",
                                             width: "25%",
                                             wordWrap: "wrap",
@@ -428,7 +495,7 @@ class Locations extends Component {
                                     onClick={(e) =>
                                         this.submitRemoveRoom(this.state.deleteRoom)
                                     }>
-                                    Remove Location
+                                    Remove Desk Locations
                                 </button>
                             </div>
                             <div key={"quad_4"} className="quadrant">
@@ -529,7 +596,134 @@ class Locations extends Component {
                                     Remove Desk
                                 </button>
                             </div>
+                            <div className="quadrant">
+                                <h1
+                                    className="page-divider-header"
+                                    style={{ backgroundColor: "#4dc300", marginLeft: "2.5%" }}>
+                                    Add Meeting Rooms
+                                </h1>
+                                <div
+                                    key={"quad_4_space_2"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "10%",
+                                    }}
+                                />
+
+                                <input
+                                    className="text-input"
+                                    placeholder="Meeting Room Name"
+                                    type="text"
+                                    name="addMeetingRoom"
+                                    onChange={this.handleEvent}
+                                    value={this.state.addMeetingRoom}></input>
+                                <div
+                                    key={"quad_4_space_0"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "5%",
+                                    }}
+                                />
+                                <button
+                                    className="button-style no-outline"
+                                    disabled={this.state.addMeetingRoom.length === 0}
+                                    onClick={this.submitMeetingRoom}>
+                                    Add Meeting Room
+                                </button>
+                            </div>
+
+                            <div className="quadrant">
+                                <h1
+                                    className="page-divider-header"
+                                    style={{ backgroundColor: "#F32000", marginLeft: "2.5%" }}>
+                                    Remove Meeting Rooms
+                                </h1>
+                                <div
+                                    key={"quad_4_space_2"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "10%",
+                                    }}
+                                />
+
+                                <select
+                                    className="text-input"
+                                    name="removeMeetingRoom"
+                                    style={{ padding: "0" }}
+                                    onChange={this.handleEvent}>
+                                    <option key={"_empty_room"} value="">
+                                        Select meeting room
+                                    </option>
+                                    {this.state.meetingRoomList
+                                        ? this.state.meetingRoomList.map((x) => {
+                                              return (
+                                                  <option key={`_room_${x}`} value={x}>
+                                                      {x}
+                                                  </option>
+                                              );
+                                          })
+                                        : null}
+                                </select>
+                                <div
+                                    key={"quad_4_space_0"}
+                                    style={{
+                                        width: "100%",
+                                        marginTop: "5%",
+                                        marginBottom: "5%",
+                                    }}
+                                />
+                                <button
+                                    className="button-style no-outline"
+                                    disabled={this.state.removeMeetingRoom.length === 0}
+                                    onClick={this.submitRemoveMeetingRoom}>
+                                    Remove Meeting Room
+                                </button>
+                            </div>
                         </div>
+                        <h1
+                            className="page-divider-header"
+                            style={{ backgroundColor: "#fd9f12", marginLeft: "2.5%" }}>
+                            Meeting Rooms
+                        </h1>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+
+                                width: "100%",
+                                flexWrap: "wrap",
+                            }}
+                            key={"_meeting_room_list_"}>
+                            {this.state.meetingRoomList.map((x) => {
+                                return (
+                                    <div
+                                        key={`_meeting_room_${x}`}
+                                        id={`_meeting_room_listing_${x}`}
+                                        style={{
+                                            fontWeight: "bold",
+                                            backgroundColor: "#ddd",
+                                            borderRadius: "20px",
+                                            padding: "10px",
+                                            marginTop: "15px",
+                                            marginLeft: "15px",
+                                            marginRight: "15px",
+                                            flexBasis: "30%",
+                                            maxWidth: "30%",
+                                            textOverflow: "ellipsis",
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            minWidth: "fit-content",
+                                        }}>
+                                        {x}
+                                    </div>
+                                );
+                            })}
+                        </div>
+
                         <div
                             style={{
                                 display: "flex",

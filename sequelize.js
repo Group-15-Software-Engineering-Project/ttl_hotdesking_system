@@ -71,6 +71,14 @@ Room.hasMany(Appointment, {
     }
 });
 
+User.hasMany(Appointment, {
+    onDelete: "CASCADE",
+    hooks: true,
+    foreignKey: {
+        name: "bookedBy"
+    }
+});
+
 sequelize
     .sync()
     .then(() => {

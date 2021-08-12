@@ -2,7 +2,7 @@ import React from "react";
 import "../public/css/main.css";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { months, _GetUserBookings, verify, parseNumberList } from "../Components/Misc";
+import { months, _GetUserBookings, verify } from "../Components/Misc";
 
 class Home extends React.Component {
     constructor(props) {
@@ -233,14 +233,17 @@ class Home extends React.Component {
                                         : "45%"
                                 }`,
                                 borderTop: "2px solid #444",
-                                // marginLeft: "27.5%",
                                 marginTop: "1%",
                             }}
                         />
                     </div>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <Link to="/booking-page">
+                    <Link tabindex="-1" to="/booking-page">
                         <button className="button-style no-outline">{"Book a Desk"}</button>
+                    </Link>
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    <Link tabindex="-1" to="/book-meeting-room">
+                        <button className="button-style no-outline">{"Book a Meeting"}</button>
                     </Link>
                     <div
                         style={{

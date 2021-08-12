@@ -1,0 +1,375 @@
+:root {
+    --nav-bg: hsl(200 100% 41%);
+    --nav-text-clr: #fff;
+    --nav-highlight-bg: #fff;
+    --nav-highlight-text: #222;
+    --nav-sub-bg: hsl(200 70% 49%);
+    --nav-scroll-thumb-clr: hsl(200 80% 35%);
+    --nav-scroll-thumb-highlight: hsl(200 80% 25%);
+    --nav-accent-bg: hsl(200 90% 30%);
+    /* --nav-bg: #222;
+    --nav-text-clr: #fff;
+    --nav-highlight-bg: #fff;
+    --nav-highlight-text: #222;
+    --nav-sub-bg: #272727;
+    --nav-scroll-thumb-clr: #666;
+    --nav-scroll-thumb-highlight: #444;
+    --nav-accent-bg: #373737;
+ */
+}
+
+#navigation-sidebar {
+    position: fixed;
+    z-index: 1000;
+    left: -225px;
+    width: 225px;
+    height: 100vh;
+    transition: left 400ms cubic-bezier(0.36, 0.97, 0.78, 1);
+    box-shadow: 0 0 2px 2px hsl(0 0% 30% / 0.5);
+    padding-bottom: 50px;
+    background-color: var(--nav-bg);
+}
+#navigation-sidebar * {
+    font-family: "Lato", sans-serif;
+}
+
+#navigation-sidebar::before {
+    content: "";
+    width: 225px;
+    height: 300px;
+    position: absolute;
+    top: 100vh;
+    background-color: var(--nav-bg);
+    box-shadow: 0 3.5px 2px 2px hsl(0 0% 30% / 0.5);
+    z-index: 700;
+}
+#navigation-sidebar[class~="open"] {
+    left: 0px;
+}
+
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle {
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    right: -50px;
+    bottom: 150px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 2.5px 0 2px 0px hsl(0 0% 30% / 0.5);
+    background-color: var(--nav-bg);
+}
+
+@media (min-width: 480px) {
+    #navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle {
+        top: 20px;
+        bottom: 0;
+    }
+}
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle #hamburger {
+    inset: 0;
+    margin: auto;
+    position: absolute;
+}
+
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle::after {
+    position: absolute;
+    pointer-events: none;
+    top: -15px;
+    content: "";
+    width: 25px;
+    height: 15px;
+    z-index: -1;
+    border-bottom-left-radius: 15px;
+    box-shadow: -15.5px 15.5px 0 15px var(--nav-bg);
+}
+
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle::before {
+    position: absolute;
+    pointer-events: none;
+    bottom: -15px;
+    content: "";
+    width: 25px;
+    height: 15px;
+    z-index: -1;
+    border-top-left-radius: 15px;
+    box-shadow: -15.5px -15.5px 0 15px var(--nav-bg);
+}
+
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:focus-visible,
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:hover {
+    transition: background-color 150ms linear;
+    outline: none;
+    background-color: var(--nav-highlight-bg) !important;
+}
+
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:hover > *,
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:hover > *::before,
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:hover > *::after,
+#navigation-sidebar:not([class~="pinned"]) .navigation-sidebar-toggle:focus-visible > *,
+#navigation-sidebar:not([class~="pinned"])
+    .navigation-sidebar-toggle:focus-visible
+    > *::before,
+#navigation-sidebar:not([class~="pinned"])
+    .navigation-sidebar-toggle:focus-visible
+    > *::after {
+    background-color: var(--nav-highlight-text) !important;
+}
+
+.navigation-sidebar-header {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+}
+.navigation-sidebar-header > * {
+    padding-top: 10px;
+    width: 100%;
+    image-rendering: -webkit-optimize-contrast;
+}
+.navigation-sidebar-content {
+    width: 100%;
+    height: fit-content;
+    max-height: 70%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    direction: rtl;
+    scroll-behavior: smooth;
+    background-color: var(--nav-sub-bg);
+    border-radius: 9px;
+}
+
+.navigation-sidebar-content::-webkit-scrollbar-thumb {
+    background-color: var(--nav-scroll-thumb-clr);
+    border: 3px solid transparent;
+    border-radius: 9px;
+    background-clip: content-box;
+}
+.navigation-sidebar-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--nav-scroll-thumb-highlight);
+    border: 3px solid transparent;
+    border-radius: 9px;
+    background-clip: content-box;
+}
+.navigation-sidebar-content::-webkit-scrollbar {
+    background-color: transparent;
+    padding-top: 10%;
+    width: 15px;
+}
+
+.navigation-sidebar-content > ul {
+    direction: ltr;
+    padding: 0 0 0 10px;
+    margin: 0;
+    background-color: transparent;
+}
+
+.navigation-sidebar-content > ul > li {
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+    transition: left 20ms linear;
+    color: var(--nav-text-clr);
+    outline: none;
+    list-style-type: none;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    width: 100%;
+    text-anchor: middle;
+    z-index: 1;
+    transition: color 50ms cubic-bezier(1, 0, 0.53, 0.97);
+    background-color: transparent;
+}
+.navigation-sidebar-content > ul > li > a {
+    background-color: transparent;
+    text-decoration: none;
+    color: var(--nav-text-clr);
+    padding: 10px 0 10px 10px;
+    align-items: center;
+    justify-content: flex-start;
+    display: flex;
+}
+
+.navigation-sidebar-content > ul > li:hover *,
+.navigation-sidebar-content > ul > li:focus-visible * {
+    color: var(--nav-highlight-text) !important;
+    font-weight: bold;
+    transition: color 200ms cubic-bezier(1, 0, 0.53, 0.97);
+}
+
+.navigation-sidebar-content > ul > li::before {
+    content: "";
+    z-index: -1;
+    background-color: transparent;
+    position: absolute;
+    border-radius: 20px 0 0 20px;
+    width: 110%;
+    left: 100%;
+    top: 0;
+    bottom: 0;
+    transition: left 150ms ease-out, background-color 150ms ease-out;
+}
+.navigation-sidebar-content > ul > li:hover::before,
+.navigation-sidebar-content > ul > li:focus-visible::before {
+    background-color: var(--nav-text-clr);
+    left: -5%;
+}
+
+.navigation-sidebar-content > ul > li > a > svg {
+    background-color: transparent;
+    margin-right: 5px;
+}
+
+.navigation-sidebar-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    height: 15%;
+    justify-content: space-evenly;
+    margin: 15px 0 5px 0;
+}
+
+.navigation-sidebar-button {
+    outline: none;
+    background-color: var(--nav-accent-bg);
+    color: var(--nav-text-clr);
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+    appearance: none;
+    vertical-align: middle;
+    user-select: none;
+    transition: color 100ms linear, background-color 100ms linear;
+}
+
+.navigation-sidebar-button:hover,
+.navigation-sidebar-button:focus-visible {
+    cursor: pointer;
+    background-color: var(--nav-highlight-bg);
+    color: var(--nav-highlight-text);
+    font-weight: bold;
+}
+#hamburger {
+    pointer-events: none;
+    display: block;
+    position: relative;
+    width: 30px;
+    height: 28px;
+    border-top: 6px solid #ffab2c;
+    border-bottom: 6px solid #ffab2c;
+    border-radius: 6px;
+    transition: height 400ms cubic-bezier(0.35, -3, 0.65, 3),
+        transform 400ms cubic-bezier(0.35, -3, 0.65, 3);
+    transform-origin: center;
+    overflow: hidden;
+    background-color: transparent !important;
+}
+
+#hamburger[class~="squished"] {
+    height: 15px;
+    transform: rotate(45deg);
+}
+
+#hamburger::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 28px;
+    height: 14px;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(
+        rgb(255, 0, 0) 15%,
+        rgb(255, 255, 0) 15%,
+        rgb(255, 255, 0) 30%,
+        rgb(95, 45, 14) 30%,
+        rgb(95, 45, 14) 75%,
+        rgb(252, 211, 122) 75%,
+        rgb(252, 211, 122) 85%,
+        rgb(78, 161, 10) 85%
+    );
+    border-radius: 3px;
+    opacity: 1;
+}
+
+#hamburger::after {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    content: "";
+    top: -3px;
+    right: 15px;
+    width: 0px;
+    height: 0px;
+    border-top: 4px yellow solid;
+    border-left: 4px transparent solid;
+    border-right: 4px transparent solid;
+}
+
+#navigation-sidebar:not([class~="pinned"]) #navigation-sidebar-menu-button {
+    inset: 0;
+    margin: auto;
+    width: 35px;
+    height: 6px;
+    background-color: white;
+    border-radius: 3px;
+    position: relative;
+    transform: translateY(22px);
+}
+
+#navigation-sidebar:not([class~="pinned"]) #navigation-sidebar-menu-button::after,
+#navigation-sidebar:not([class~="pinned"]) #navigation-sidebar-menu-button::before {
+    position: absolute;
+    content: "";
+    width: 35px;
+    height: 6px;
+    background-color: white;
+    border-radius: 3px;
+    transition: transform 400ms ease-in-out;
+}
+
+#navigation-sidebar-menu-button::before {
+    transform: translateY(-12px);
+}
+
+#navigation-sidebar-menu-button::after {
+    transform: translateY(12px);
+}
+
+#navigation-sidebar[class~="open"] #navigation-sidebar-menu-button {
+    background-color: transparent !important;
+    transition: background-color 400ms ease-in-out;
+
+    width: 0px;
+    left: -35%;
+}
+
+#navigation-sidebar[class~="open"] #navigation-sidebar-menu-button::before {
+    transform: rotate(45deg);
+}
+
+#navigation-sidebar[class~="open"] #navigation-sidebar-menu-button::after {
+    transform: rotate(-45deg);
+}
+
+.navigation-pin {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: white;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+#navigation-sidebar[class~="pinned"] .navigation-pin {
+    color: #fdaf12;
+}

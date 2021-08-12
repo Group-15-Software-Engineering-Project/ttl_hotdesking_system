@@ -1,4 +1,13 @@
-const { sequelize, User, Desk, Booking, Group, Notification, Appointment, Room } = require("../sequelize");
+const {
+    sequelize,
+    User,
+    Desk,
+    Booking,
+    Group,
+    Notification,
+    Appointment,
+    Room,
+} = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
 const sha256 = require("js-sha256");
@@ -6,11 +15,11 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
         user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS
-    }
+        pass: process.env.EMAIL_PASS,
+    },
 });
 
 module.exports = {
@@ -58,7 +67,7 @@ module.exports = {
     },
     getRoomsList: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
             type: QueryTypes.SELECT,
         });
         for (let room in distinctRooms) {
@@ -83,7 +92,7 @@ module.exports = {
     },
     getRooms: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM desks;", {
+        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
             type: QueryTypes.SELECT,
         });
         for (let room in distinctRooms) {
@@ -98,17 +107,17 @@ module.exports = {
         let desks = [];
         let models = await Desk.findAll({
             where: {
-                room: room
-            }
+                room: room,
+            },
         });
         for (let model in models) {
-            desks.push(models[model].getDataValue('id'));
+            desks.push(models[model].getDataValue("id"));
         }
         return desks;
     },
     getGroups: async () => {
         let groups = [];
-        let distinctNames = await sequelize.query("SELECT DISTINCT name FROM groups;", {
+        let distinctNames = await sequelize.query("SELECT DISTINCT name FROM hotdesking.groups;", {
             type: QueryTypes.SELECT,
         });
         for (let group in distinctNames) {
@@ -146,9 +155,7 @@ module.exports = {
             where: {
                 userEmail: email,
             },
-            order: [
-                ['date', 'DESC']
-            ]
+            order: [["date", "DESC"]],
         });
         for (let model in models) {
             bookings.push(models[model]);
@@ -159,12 +166,12 @@ module.exports = {
         let bookings = await Booking.findAll({
             raw: true,
             where: {
-                date: date
+                date: date,
             },
             order: [
-                ['deskRoom', 'ASC'],
-                ['deskId', 'ASC']
-            ]
+                ["deskRoom", "ASC"],
+                ["deskId", "ASC"],
+            ],
         });
         return bookings;
     },
@@ -179,52 +186,70 @@ module.exports = {
         let bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
         let users = await module.exports.getUsersInGroup(team);
         let options = {
-            where: {}
+            where: {},
         };
-        if (room != 'overall') {
-            options.where['deskRoom'] = room;
+        if (room != "overall") {
+            options.where["deskRoom"] = room;
         }
         let today = new Date();
         switch (time) {
-            case 'next week':
-                options.where['date'] = {
-                    [Op.gte] : today,
-                    [Op.lt] : new Date(today.getFullYear(), today.getMonth(), today.getDate()+7)
+            case "next week":
+                options.where["date"] = {
+                    [Op.gte]: today,
+                    [Op.lt]: new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        today.getDate() + 7
+                    ),
                 };
                 break;
-            case 'last week':
-                options.where['date'] = {
-                    [Op.gte] : new Date(today.getFullYear(), today.getMonth(), today.getDate()-7),
-                    [Op.lt] : today
+            case "last week":
+                options.where["date"] = {
+                    [Op.gte]: new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        today.getDate() - 7
+                    ),
+                    [Op.lt]: today,
                 };
                 break;
-            case 'last month':
-                options.where['date'] = {
-                    [Op.gte] : new Date(today.getFullYear(), today.getMonth()-1, today.getDate()),
-                    [Op.lt] : today
+            case "last month":
+                options.where["date"] = {
+                    [Op.gte]: new Date(
+                        today.getFullYear(),
+                        today.getMonth() - 1,
+                        today.getDate()
+                    ),
+                    [Op.lt]: today,
                 };
                 break;
-            case 'last 3 months':
-                options.where['date'] = {
-                    [Op.gte] : new Date(today.getFullYear(), today.getMonth()-3, today.getDate()),
-                    [Op.lt] : today
+            case "last 3 months":
+                options.where["date"] = {
+                    [Op.gte]: new Date(
+                        today.getFullYear(),
+                        today.getMonth() - 3,
+                        today.getDate()
+                    ),
+                    [Op.lt]: today,
                 };
                 break;
-            case 'overall': 
+            case "overall":
                 break;
-            case 'default':
+            case "default":
                 break;
         }
         for (let user in users) {
-            options.where['userEmail'] = users[user];
+            options.where["userEmail"] = users[user];
             let userBookings = await module.exports.getBookingsWithOptions(options);
             userBookingsCount[user] = userBookings[0];
             allBookings = allBookings.concat(userBookings[1]);
         }
         for (let booking in allBookings) {
-            bookingDistribution[new Date(allBookings[booking].getDataValue('date')).getDay()]++;
-        };
-        return [users, userBookingsCount, [], [], bookingDistribution, 'Success'];
+            bookingDistribution[
+                new Date(allBookings[booking].getDataValue("date")).getDay()
+            ]++;
+        }
+        return [users, userBookingsCount, [], [], bookingDistribution, "Success"];
         //  Empty values are for deprecated desk report piechart
     },
     getBookingsInMonth: async (room, date, am, pm) => {
@@ -295,7 +320,7 @@ module.exports = {
         let rooms = [];
         let models = await Room.findAll();
         models.forEach((value) => {
-            rooms.push({value: value.getDataValue("name")});
+            rooms.push({ value: value.getDataValue("name") });
         });
         return rooms;
     },
@@ -303,10 +328,11 @@ module.exports = {
         let appointments = await Appointment.findAll({
             raw: true,
             where: {
-                date: {
-                    [Op.gte] : date
-                }
-            }
+                roomName: room,
+                start: {
+                    [Op.gte]: date,
+                },
+            },
         });
         return appointments;
     },
@@ -315,8 +341,8 @@ module.exports = {
         let options = {
             from: process.env.EMAIL,
             to: email,
-            subject: 'ttl_hotdesking Account',
-            text: `Email: ${email}\nPassword: ${password}`
+            subject: "ttl_hotdesking Account",
+            text: `Email: ${email}\nPassword: ${password}`,
         };
         transporter.sendMail(options);
         await User.create({ email: email, password: sha256(password) });
@@ -334,8 +360,8 @@ module.exports = {
         let options = {
             from: process.env.EMAIL,
             to: email,
-            subject: 'ttl_hotdesking Booking Confirmation',
-            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`
+            subject: "ttl_hotdesking Booking Confirmation",
+            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`,
         };
         await Booking.create({
             userEmail: email,
@@ -376,15 +402,16 @@ module.exports = {
     },
     addMeetingRoom: async (name) => {
         await Room.create({
-            name: name
+            name: name,
         });
     },
-    addAppointment: async (title, start, end, room) => {
+    addAppointment: async (email, title, start, end, room) => {
         await Appointment.create({
+            bookedBy: email,
             title: title,
             start: start,
             end: end,
-            room: room
+            roomName: room,
         });
     },
     removeUser: async (email) => {
@@ -440,5 +467,5 @@ module.exports = {
     removeAppointment: async (id) => {
         let model = await Appointment.findByPK(id);
         model.destroy();
-    }
+    },
 };

@@ -1,10 +1,6 @@
-body {
-    background-image: url("../media/tcd_bg.jpg");
-    background-size: cover;
-    background-attachment: fixed;
-    background-position-y: 80px;
+html {
+    overflow-y: scroll;
 }
-
 @media (min-width: 1000px) {
     .flex-container-1 {
         margin: 0px;
@@ -18,8 +14,6 @@ body {
         height: 110%;
         padding-top: 100px;
         margin-bottom: -100px;
-        /* position: sticky; */
-        /* border: black 3px solid; */
     }
 }
 
@@ -80,8 +74,6 @@ body {
 .main-body {
     background: white;
     box-shadow: 0 0 8px #555;
-    padding-top: 100px;
-    margin-bottom: -100px;
 }
 
 .page-divider-header {
@@ -112,7 +104,7 @@ body {
 
 .text-input {
     margin: 0px;
-    padding: 0px;
+    padding: 3px;
     width: 3rem;
     min-width: 200px;
     height: 35px;
@@ -121,7 +113,8 @@ body {
     border: 1px #bbb solid;
     margin-top: 3px;
     margin-bottom: 3px;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .text-input-bigger {
@@ -151,12 +144,14 @@ body {
     cursor: pointer;
     padding-left: 12px;
     padding-right: 12px;
+    outline: none;
 }
 
 .no-outline {
     outline: none;
 }
-.button-style:hover {
+.button-style:hover,
+.button-style:focus-visible {
     background-color: var(--hover-highlight, #00c5ff);
 }
 
@@ -238,9 +233,10 @@ body {
 @media (min-width: 720px) {
     .TCD-BG {
         background-image: url("../media/tcd_bg.jpg");
-        background-size: cover;
+        background-size: 115%;
         background-attachment: fixed;
-        background-position-y: 80px;
+        background-repeat: repeat;
+        background-position-y: -275px;
     }
 }
 
@@ -316,15 +312,15 @@ body {
     display: inline-block;
     width: 60px;
     height: 34px;
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
+}
+
+/* Hide default HTML checkbox */
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
-  
+}
+
 /* The slider */
 .slider {
     position: absolute;
@@ -334,11 +330,11 @@ body {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  .slider:before {
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: 26px;
@@ -346,29 +342,29 @@ body {
     left: 4px;
     bottom: 4px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #2196f3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
+}
+
+/* Rounded sliders */
+.slider.round {
     border-radius: 34px;
-  }
-  
-  .slider.round:before {
+}
+
+.slider.round:before {
     border-radius: 50%;
-  }
+}

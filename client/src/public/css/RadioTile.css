@@ -8,6 +8,7 @@
     border: #ddd solid 1px;
     background-color: white;
     cursor: pointer;
+    user-select: none;
 }
 
 h3,
@@ -49,8 +50,11 @@ span {
     background-color: #008dd3 !important;
 }
 
-.radioTile:hover {
-    background-color: #eeeeee;
+.radioTile:hover,
+.radioTile:focus-visible {
+    outline: none;
+    background-color: #ddd;
+    color: #008dd3;
 }
 
 .radioTile-disabled {

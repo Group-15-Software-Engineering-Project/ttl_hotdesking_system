@@ -129,7 +129,7 @@ function PastBookings() {
         return (
             <button
                 disabled={!isCancelling || isUpcoming > 0}
-                className="bookings-table no-outline"
+                className="bookings-table"
                 onClick={() => {
                     setTimeout(() => {
                         let displayTime =
@@ -210,6 +210,11 @@ function PastBookings() {
             <div className="flex-container-1"></div>
             <div className="flex-container-5 main-body">
                 <div className="space" />
+                <h1
+                    className="page-divider-header"
+                    style={{ marginLeft: "2.5%", marginBottom: "5%" }}>
+                    My Bookings
+                </h1>
                 {sessionStorage.bookings ? (
                     JSON.parse(sessionStorage.bookings).data.length > 0 ? (
                         <button

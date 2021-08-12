@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./public/css/App.css";
-import Navbar from "./Components/NavBar";
+// import Navbar from "./Components/NavBar";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Pages/Home";
 import Reports from "./Pages/Reports";
@@ -14,6 +14,9 @@ import PastBookings from "./Pages/PastBookings";
 import Notifications from "./Pages/Notifications";
 import AdminBookingView from "./Pages/AdminBookingView";
 import MeetingBookings from "./Pages/MeetingBookings";
+import NavigationSidebar from "./Components/NavigationSidebar";
+import Navbar from "./Components/NavBar";
+import { verify } from "./Components/Misc";
 
 class App extends Component {
     state = {
@@ -33,11 +36,10 @@ class App extends Component {
 
     render() {
         return (
-            <div key={sessionStorage.getItem("email")}>
-                <p>{this.state.response}</p>
-                <p>{this.state.responseToPost}</p>
+            <div>
                 <Router>
                     {!sessionStorage.email ? <Redirect to="/login"></Redirect> : null}
+                    {(verify(true) || verify(false)) && <NavigationSidebar />}
 
                     <Switch>
                         <Route exact path="/loading">
@@ -79,11 +81,6 @@ class App extends Component {
                             <Route path="/AdminBookingView" component={AdminBookingView} />
                         ) : null}
                     </Switch>
-                    <Navbar
-                        resetEmail={() => {
-                            this.setState({ email: "" });
-                        }}
-                    />
                 </Router>
 
                 {this.zoomOutMobile()}

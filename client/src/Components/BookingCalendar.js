@@ -88,7 +88,6 @@ export default class BookingCalendar extends React.Component {
     }
 
     checkAvailability = (dateInfo) => {
-        let month = months.indexOf(String(dateInfo.date).split(" ")[1]);
         let day = parseInt(String(dateInfo.date).split(" ")[2]) - 1;
         console.log(this.state.availableDesks, this.state.existingBookings);
         if (this.state.existingBookings) {
