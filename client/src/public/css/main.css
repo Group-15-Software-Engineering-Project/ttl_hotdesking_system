@@ -368,3 +368,34 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.calendar-green {
+    color: #00aa00 !important;
+}
+.calendar-red {
+    color: #dd0000 !important;
+}
+
+.calendar-green:hover {
+    background-color: #00dd0088 !important;
+    color: black !important;
+}
+.calendar-red:hover {
+    background-color: #ff000088 !important;
+    color: black !important;
+}
+
+.selected[class~="selected-calendar-cell"] {
+    box-shadow: inset 0 0 0 1px black;
+}
+
+.selected[class~="selected-calendar-cell"][class~="calendar-green"]:not(:hover) {
+    box-shadow: inset 0 0 0 1px black;
+    color: black !important;
+    background-color: #00dd00aa !important;
+}
+.selected[class~="selected-calendar-cell"][class~="calendar-red"]:not(:hover) {
+    box-shadow: inset 0 0 0 1px black;
+    color: black !important;
+    background-color: #dd0000aa !important;
+}

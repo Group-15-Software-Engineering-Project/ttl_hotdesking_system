@@ -1,6 +1,8 @@
-import { Calendar } from "react-calendar";
-import "../public/css/Calendar.css";
+// import { Calendar } from "react-calendar";
+// import "../public/css/Calendar.css";
+import "../public/css/main.css";
 import React from "react";
+import GlassCalendar from "./GlassCalendar";
 import { months, getDifferenceInDays } from "./Misc";
 
 export default class BookingCalendar extends React.Component {
@@ -51,7 +53,6 @@ export default class BookingCalendar extends React.Component {
                 return res.json();
             })
             .then((res) => {
-                console.log(res.desks);
                 this.setState(
                     {
                         availableDesks: res.desks,
@@ -88,21 +89,22 @@ export default class BookingCalendar extends React.Component {
     }
 
     checkAvailability = (dateInfo) => {
-        let day = parseInt(String(dateInfo.date).split(" ")[2]) - 1;
-        console.log(this.state.availableDesks, this.state.existingBookings);
+        let day = parseInt(String(dateInfo).split(" ")[2]) - 1;
+        let res = "";
         if (this.state.existingBookings) {
             if (this.state.existingBookings[day]) {
                 if (
                     this.state.existingBookings[day].length < this.state.availableDesks.length
                 ) {
-                    return "NONE-Booked";
+                    res = "calendar-green";
                 } else {
-                    return "ALL-Booked";
+                    res = "calendar-red";
                 }
             } else {
-                return "NONE-Booked";
+                res = "calendar-green";
             }
         }
+        return res;
     };
 
     getDate = (e) => {
@@ -112,7 +114,6 @@ export default class BookingCalendar extends React.Component {
 
     getDesks = (dateInfo) => {
         let desks = [];
-        console.log(this.state.availableDesks);
         let day = parseInt(String(dateInfo).split(" ")[2]) - 1;
         let month = months.indexOf(String(dateInfo).split(" ")[1]);
         if (this.state.currentMonth.substring(5) === String(month + 1).padStart(2, "0")) {
@@ -145,9 +146,8 @@ export default class BookingCalendar extends React.Component {
     };
 
     disabledTiles = (e) => {
-        if (e.date.getDay() === 0 || e.date.getDay() === 6) return true;
-
-        let date = String(e.date).split(" ");
+        if (e.getDay() === 0 || e.getDay() === 6) return true;
+        let date = String(e).split(" ");
         let year = parseInt(date[3]);
         let month = months.indexOf(date[1]) + 1;
         let day = parseInt(date[2]);
@@ -161,8 +161,41 @@ export default class BookingCalendar extends React.Component {
 
     render() {
         return (
-            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
-                <Calendar
+            <GlassCalendar
+                key={this.state.availableDesks}
+                highlight="none"
+                hideYearButtons
+                hideLanguageToggle
+                selectionClass="selected"
+                onDaySelect={(e) => {
+                    this.props.onSelect(
+                        this.getDesks(e),
+                        e,
+                        months[parseInt(this.state.currentMonth.substring(5)) - 1]
+                    );
+                }}
+                onMonthChange={(e) => {
+                    let date = String(e).split(" ");
+                    let month = months.indexOf(date[1]);
+                    let dateStr =
+                        date[3] +
+                        "-" +
+                        (String(month + 1).length === 1 ? "0" : "") +
+                        (month + 1);
+                    this.setState({ currentMonth: dateStr }, () => {
+                        this.fetchAvailableDesks();
+                    });
+                }}
+                disableTile={this.disabledTiles}
+                tileClass={this.checkAvailability}
+            />
+        );
+    }
+}
+
+// <div style={{ marginTop: "5%", marginBottom: "5%" }}>
+
+/* <Calendar
                     key={this.state.availableDesks}
                     activeStartDate={
                         new Date(
@@ -196,8 +229,5 @@ export default class BookingCalendar extends React.Component {
                         this.setState({ currentMonth: dateStr }, () => {
                             this.fetchAvailableDesks();
                         });
-                    }}></Calendar>
-            </div>
-        );
-    }
-}
+                    }}></Calendar> */
+// </div>
