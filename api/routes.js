@@ -237,11 +237,11 @@ router.post("/addUser", (req, res) => {
     services
         .addUser(req.body.email)
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(201).end();
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: true, message: err });
+            res.status(500).end();
         });
 });
 
@@ -399,6 +399,77 @@ router.post("/removeUserFromGroup", (req, res) => {
             console.log(err);
             res.status(500).send({ error: true });
         });
+});
+
+//  Returns a list of meeting rooms
+router.get("/meetingRooms", (req, res) => {
+    console.log("getMeetingRooms");
+    services.getMeetingRooms()
+    .then((rooms) => {
+        res.status(200).send({data: rooms});
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
+});
+
+//  Adds a meeting room
+router.put("/meetingRooms/:name", (req, res) => {
+    console.log("addMeetingRoom");
+    services.addMeetingRoom(req.params.name)
+    .then(() => {
+        res.status(201).end();
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
+});
+
+router.delete("/meetingRooms/:name", (req, res) => {
+    console.log("removeMeetingRoom");
+    services.removeMeetingRoom(req.params.name)
+    .then(() => res.status(204).end())
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
+});
+
+router.get("/getAppointments", (req, res) => {
+    console.log("getAppointments");
+    services.getAppointments(req.body.room, req.body.date)
+    .then((appointments) => res.status(200).send({appointments: appointments}))
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
+});
+
+router.put("/appointments", (req, res) => {
+    console.log("addAppointment");
+    services.addAppointment(
+        req.body.title,
+        req.body.start,
+        req.body.end,
+        req.body.room
+    )
+    .then(() => res.status(201).end())
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
+});
+
+router.delete("/appointments/:id", (req, res) => {
+    console.log("removeAppointment");
+    services.removeAppointment(req.params.id)
+    .then(() => res.status(204).end())
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
 });
 
 module.exports = router;
