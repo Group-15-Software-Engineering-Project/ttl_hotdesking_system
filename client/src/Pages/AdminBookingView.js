@@ -1,12 +1,11 @@
 import React, { usestate, Component, createRef } from "react";
 import "../public/css/booking.css";
 import "../public/css/main.css";
-import { months, verify } from "../Components/Misc";
+import { months, verify, getDifferenceInDays } from "../Components/Misc";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-
-import BookingCalendarNoLimit from "../Components/BookingCalendarNoLimit";
 import BookingCalendarAllTiles from "../Components/BookingCalendarAllTiles";
+import GlassCalendar from "../Components/GlassCalendar";
 
 export default class AdminBookingView extends React.Component {
     constructor(props) {
@@ -24,13 +23,18 @@ export default class AdminBookingView extends React.Component {
             chosen: "",
             date: new Date(),
             todayDate: "",
+            meetings: [],
+            RestrictWeek: 1,
+            dateRestricted: false,
+            AM: false,
+            PM: false,
+            email: sessionStorage.email,
         };
     }
 
-    getBookingsOnDate = async (date) => {
-        {
-            console.log("fetching Booking", date);
-        }
+    getBookingsOnDate = (date) => {
+        console.log("fetching Booking", this.state.email);
+
         fetch(`/api/getBookingsOnDate/${date}`)
             .then((res) => {
                 if (!res.ok)
@@ -45,55 +49,146 @@ export default class AdminBookingView extends React.Component {
             .catch((err) => console.error(err));
     };
 
+    getBookingsByLocation = async (deskRoom) => {
+        console.log("fetching Booking for location", deskRoom);
+
+        fetch(`/api/getBookingsByLocation/${deskRoom}`)
+            .then((res) => {
+                if (!res.ok)
+                    throw new Error(
+                        `Failed to fetch bookings for this location (status:${res.status})`
+                    );
+                return res.json();
+            })
+            .then((data) => {
+                this.setState({ filteredBookings: data.bookings });
+            })
+            .catch((err) => console.error(err));
+    };
+
     componentDidMount() {
         this.getBookingsOnDate();
     }
 
+    submitRoomRestriction = () => {
+        fetch("/api/addRoomRestriction", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+                room: this.state.chosenLocation,
+                date: this.state.chosenDate,
+                am: this.state.AM,
+                pm: this.state.PM,
+            }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to add restriction");
+                } else {
+                    alert("Success");
+                }
+            })
+            .catch(console.error);
+    };
+
     sortBookingsbyLocation = async () => {
-        {
-            this.setState({
-                filteredBookings: this.state.bookings.filter((booking) =>
-                    this.state.chosenLocation.includes(booking.deskRoom)
-                ),
-            });
+        this.setState({
+            filteredBookings: this.state.bookings.filter((booking) =>
+                this.state.chosenLocation.includes(booking.deskRoom)
+            ),
+        });
+    };
+
+    checkRestriction = (d) => {
+        console.log("Checking restriction for date", d);
+
+        // let date = String(d).split("T")[0].split(" ");
+        let currentdate = new Date(); //today
+        this.setState({
+            todayDate:
+                currentdate.getFullYear() * 10000 +
+                (currentdate.getMonth() + 1) * 100 +
+                currentdate.getDate(),
+        });
+
+        let gap = getDifferenceInDays(currentdate, d);
+        let days = -(this.state.RestrictWeek * 7) + 1;
+
+        this.setState({ dateRestricted: gap < days });
+
+        console.log("Date Restricted?", gap < days);
+
+        // console.log("Date Restricted?", this.state.dateRestricted);
+
+        console.log("Days", days);
+
+        console.log("gap", gap);
+
+        return gap < days;
+    };
+
+    filterBookings = () => {
+        if (this.state.chosenLocation !== "overall") {
+            this.getBookingsByLocation(this.state.chosenLocation);
+            // this. sortBookingsbyLocation();
+
+            console.log("fetching Booking", this.state.date);
+
+            fetch(`/api/getBookingsOnDate/${this.state.date}`)
+                .then((res) => {
+                    if (!res.ok)
+                        throw new Error(
+                            `Failed to fetch bookings on this date (status:${res.status})`
+                        );
+                    return res.json();
+                })
+                .then((data) => {
+                    this.setState({ bookings: data.bookings });
+                })
+                .catch((err) => console.error(err));
         }
-        {
-            console.log(this.state.bookings);
-        }
+    };
+
+    componentDidMount = () => {
+        this.getBookingsOnDate();
+    };
+
+    sortBookingsbyLocation = async () => {
+        this.setState({
+            filteredBookings: this.state.bookings.filter(
+                (booking) => this.state.chosenLocation === booking.deskRoom
+            ),
+        });
+
+        console.log(this.state.bookings);
+
         // {console.log(this.state.filteredBookings)}
     };
 
     filterBookings = () => {
         if (this.state.chosenLocation !== "overall") {
             this.sortBookingsbyLocation();
-            {
-                console.log(this.state.chosenDate);
-            }
-            {
-                console.log(this.state.chosenLocation);
-            }
-            {
-                console.log(this.state.bookings);
-            }
-            {
-                console.log(this.state.filteredBookings);
-            }
+
+            console.log(this.state.chosenDate);
+
+            console.log(this.state.chosenLocation);
+
+            console.log(this.state.bookings);
+
+            console.log(this.state.filteredBookings);
         } else {
-            {
-                this.setState({ filteredBookings: this.state.bookings });
-            }
-            {
-                console.log(this.state.chosenDate);
-            }
-            {
-                console.log(this.state.chosenLocation);
-            }
-            {
-                console.log(this.state.bookings);
-            }
-            {
-                console.log(this.state.filteredBookings);
-            }
+            this.setState({ filteredBookings: this.state.bookings });
+
+            console.log(this.state.chosenDate);
+
+            console.log(this.state.chosenLocation);
+
+            console.log(this.state.bookings);
+
+            console.log(this.state.filteredBookings);
         }
     };
 
@@ -121,6 +216,7 @@ export default class AdminBookingView extends React.Component {
     };
 
     submitCancelBooking = (bookingToCancel) => {
+        console.log(bookingToCancel);
         fetch("/api/removeBooking", {
             method: "POST",
             headers: {
@@ -170,55 +266,16 @@ export default class AdminBookingView extends React.Component {
                 ? "09:00 - 13:00"
                 : "09:00 - 17:30";
         let date = new Date();
-        this.state.todayDate =
-            date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+        // this.setState({
+        //     todayDate:
+        //         date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
+        // });
         date = data.date.split("T")[0].split("-");
-        {
-            console.log("Displaying Boking", this.state.bookings);
-        }
+
+        console.log("Displaying Boking", this.state.bookings);
+
         let isUpcoming = this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
-        // let isUpcoming = -1;
-        let status =
-            isUpcoming < 0 ? (
-                <span
-                    className="booking-history"
-                    style={{
-                        textAlign: "left",
-                        marginLeft: "5px",
-                        color: "#3ABF00",
-                        fontWeight: "bold",
-                        flex: "1.5",
-                        maxWidth: "16.5%",
-                    }}>
-                    Upcoming
-                </span>
-            ) : isUpcoming > 0 ? (
-                <span
-                    className="booking-history"
-                    style={{
-                        textAlign: "left",
-                        marginLeft: "5px",
-                        color: "#555",
-                        fontWeight: "bold",
-                        flex: "1.5",
-                        maxWidth: "16.5%",
-                    }}>
-                    Previous
-                </span>
-            ) : (
-                <span
-                    className="booking-history"
-                    style={{
-                        textAlign: "left",
-                        color: "red",
-                        marginLeft: "5px",
-                        fontWeight: "bold",
-                        maxWidth: "16.5%",
-                        flex: "1.5",
-                    }}>
-                    Today
-                </span>
-            );
+
         let bg =
             isUpcoming > 0
                 ? {
@@ -256,7 +313,10 @@ export default class AdminBookingView extends React.Component {
                                 sessionStorage.removeItem("bookings");
                                 sessionStorage.setItem(
                                     "bookings",
-                                    JSON.stringify({ isNull: false, data: currentData })
+                                    JSON.stringify({
+                                        isNull: false,
+                                        data: currentData,
+                                    })
                                 );
                                 sessionStorage.removeItem("upcomingBookings");
                                 this.submitCancelBooking(data);
@@ -328,7 +388,7 @@ export default class AdminBookingView extends React.Component {
         );
     };
 
-    render() {
+    render = () => {
         return verify(true) || verify(false) ? (
             <div className="wrapper TCD-BG">
                 <div className="flex-container-1" />
@@ -361,21 +421,56 @@ export default class AdminBookingView extends React.Component {
             </label>
             </h4>*/}
                     <div className="space" />
+
                     {this.state.slider ? (
                         <div>
-                            <BookingCalendarAllTiles
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    paddingBottom: "20px",
+                                }}>
+                                {/* <BookingCalendarAllTiles
                                 onSelect={(date) => {
                                     this.setState({ chosenDate: date });
                                     this.getBookingsOnDate(date);
                                     this.filterBookings();
+                                    this.checkRestriction(date);
                                     document.getElementById("selectlocation").value =
                                         "overall";
-                                }}></BookingCalendarAllTiles>
+                                    window.scroll(0, 300);
+                                }}></BookingCalendarAllTiles> */}
+                                <GlassCalendar
+                                    highlight="none"
+                                    disableTile={(e) => {
+                                        return e.getDay() === 0 || e.getDay() === 6;
+                                    }}
+                                    tileClass={(e) => {
+                                        let today = new Date();
+
+                                        let diff = getDifferenceInDays(e, today);
+                                        return diff <= this.state.RestrictWeek * 7 && diff > 0
+                                            ? "calendar-green"
+                                            : "";
+                                    }}
+                                    onDaySelect={(date) => {
+                                        this.setState({ chosenDate: date }, () => {
+                                            this.filterBookings();
+                                        });
+                                        this.getBookingsOnDate(date);
+
+                                        this.checkRestriction(date);
+                                        document.getElementById("selectlocation").value =
+                                            "overall";
+                                    }}
+                                />
+                            </div>
                             {this.state.chosenDate ? (
                                 <h3
                                     style={{
                                         height: "2rem",
-                                    }}>{`Chosen Date: ${this.state.chosenDate}`}</h3>
+                                    }}>{`Chosen Date: ${this.state.chosenDate.toDateString()}`}</h3>
                             ) : (
                                 <div style={{ height: "2rem" }} />
                             )}
@@ -383,33 +478,94 @@ export default class AdminBookingView extends React.Component {
                     ) : null}
 
                     <div
-                        key={"quad_4_space_2"}
                         style={{
-                            width: "100%",
-                            marginTop: "5%",
-                            marginBottom: "1%",
-                        }}
-                    />
-                    <select
-                        id="selectlocation"
-                        name="chosenLocation"
-                        className="text-input"
-                        style={{ padding: "0" }}
-                        onClick={this.handleEvent}>
-                        <option key={"_empty_loc"} value="" id="myDefault">
-                            Select location
-                        </option>
-                        <option value="overall">All</option>
-                        {this.state.location
-                            ? this.state.location.map((x) => {
-                                  return (
-                                      <option key={x.name} value={x.name}>
-                                          {x.name}
-                                      </option>
-                                  );
-                              })
-                            : null}
-                    </select>
+                            display: "flex",
+                            height: "15%",
+                            flexFlow: "row wrap",
+                            justifyContent: "flex-start",
+                        }}>
+                        <div style={{ flex: "1", height: "100%" }}>
+                            <h1
+                                className="page-divider-header"
+                                style={{ marginLeft: "2.5%", flex: "1" }}>
+                                Locations
+                            </h1>
+                            <div className="space" />
+                            <select
+                                id="selectlocation"
+                                name="chosenLocation"
+                                className="text-input"
+                                style={{ padding: "0" }}
+                                onClick={this.handleEvent}>
+                                <option key={"_empty_loc"} value="" id="myDefault">
+                                    Select location
+                                </option>
+                                <option value="overall">All</option>
+                                {this.state.location
+                                    ? this.state.location.map((x) => {
+                                          return (
+                                              <option key={x.name} value={x.name}>
+                                                  {x.name}
+                                              </option>
+                                          );
+                                      })
+                                    : null}
+                            </select>
+                        </div>
+                        {!this.state.dateRestricted ? null : (
+                            <div style={{ flex: "1", height: "100%" }}>
+                                <h1
+                                    className="page-divider-header"
+                                    style={{
+                                        marginLeft: "2.5%",
+                                        flex: "1",
+                                        marginBottom: "7%",
+                                    }}>
+                                    Time
+                                </h1>
+                                <div className="space" />
+
+                                <h8>
+                                    <h9
+                                        style={{
+                                            position: "absolute",
+                                            marginLeft: "3.5%",
+                                        }}>
+                                        AM
+                                    </h9>
+
+                                    <input
+                                        type="checkbox"
+                                        style={{
+                                            position: "relative",
+                                            marginRight: "20%",
+                                        }}
+                                        onChange={() =>
+                                            this.setState({
+                                                AM: !this.state.AM,
+                                            })
+                                        }></input>
+                                </h8>
+                                <h8>
+                                    <h9
+                                        style={{
+                                            position: "absolute",
+                                            marginLeft: "3.5%",
+                                        }}>
+                                        PM
+                                    </h9>
+
+                                    <input
+                                        type="checkbox"
+                                        onChange={() =>
+                                            this.setState({
+                                                PM: !this.state.PM,
+                                            })
+                                        }></input>
+                                </h8>
+                            </div>
+                        )}
+                    </div>
 
                     <div className="space" />
                     <div>
@@ -423,7 +579,7 @@ export default class AdminBookingView extends React.Component {
                         )}
                     </div>
 
-                    {this.state.bookings ? (
+                    {this.state.bookings && !this.state.dateRestricted ? (
                         this.state.bookings.length > 0 ? (
                             <button
                                 className="button-style no-outline"
@@ -446,54 +602,6 @@ export default class AdminBookingView extends React.Component {
                             </button>
                         ) : null
                     ) : null}
-
-                    {/*{this.state.bookings && this.state.isCancelling ? (
-            this.state.bookings.length > 0 ? (
-              <button
-                className="button-style no-outline"
-                style={{
-                  position: "relative",
-                  "--bg-color": "#f32000",
-                  "--hover-highlight": "#ff5000",
-                  // left:"27%",
-                  top: "0%",
-                }}
-                onClick={() => {
-                  setTimeout(() => {
-                    let room = this.state.chosenLocation;
-                    let dat = this.state.chosenDate;
-                    let res = window.confirm(
-                      `Are you sure you want to cancel all the booking?\n\nLocation: ${room}\nnDate: ${dat}\n`
-                    );
-                    if (res) {
-                      let currentData = JSON.parse(
-                        sessionStorage.bookings
-                      ).data;
-                      for (
-                        let index = 0;
-                        index < this.state.filteredBookings;
-                        index++
-                      ) {
-                        if (index !== -1) {
-                          currentData.splice(index, 1);
-                          sessionStorage.removeItem("bookings");
-                          sessionStorage.setItem(
-                            "bookings",
-                            JSON.stringify({ isNull: false, data: currentData })
-                          );
-                          sessionStorage.removeItem("upcomingBookings");
-                          //   this.submitCancelBooking(sessionStorage.data);
-                        }
-                      }
-                    }
-                  }, 50);
-                }}
-              >
-                Cancel all Bookings
-              </button>
-            ) : null
-            ) : null}*/}
-
                     <div
                         style={{
                             display: "flex",
@@ -501,12 +609,15 @@ export default class AdminBookingView extends React.Component {
                             justifyContent: "flex-start",
                         }}>
                         <div style={{ width: "100%", marginBottom: "2%" }} />
-                        {this.state.bookings ? (
+                        {this.state.bookings && !this.state.dateRestricted ? (
                             this.state.bookings.length > 0 ? (
                                 <>
                                     <div
                                         className="bookings-table"
-                                        style={{ border: "none", pointerEvents: "none" }}>
+                                        style={{
+                                            border: "none",
+                                            pointerEvents: "none",
+                                        }}>
                                         <span
                                             className="booking-history"
                                             style={{
@@ -567,9 +678,9 @@ export default class AdminBookingView extends React.Component {
                                         }}
                                     />
 
-                                    {document.getElementById("selectlocation").value !=
+                                    {document.getElementById("selectlocation").value !==
                                         "overall" &&
-                                    document.getElementById("selectlocation").value != ""
+                                    document.getElementById("selectlocation").value !== ""
                                         ? this.state.filteredBookings.map((booking, index) => {
                                               return this.displayBooking(booking);
                                           })
@@ -586,8 +697,8 @@ export default class AdminBookingView extends React.Component {
                                         flexDirection: "column",
                                     }}>
                                     {console.log("No Boookings")}
-                                    {this.state.chosenLocation != "" &&
-                                    this.state.chosenDate != "" ? (
+                                    {this.state.chosenLocation !== "" &&
+                                    this.state.chosenDate !== "" ? (
                                         <h2>No Bookings Found.</h2>
                                     ) : (
                                         <h3>Please select a date.</h3>
@@ -595,12 +706,26 @@ export default class AdminBookingView extends React.Component {
                                 </div>
                             )
                         ) : (
-                            "Booking history not found. Try re-logging in if booking history should be present."
+                            <button
+                                className="button-style no-outline"
+                                style={{
+                                    position: "relative",
+                                    "--bg-color": "#f32000",
+                                    "--hover-highlight": "#ff5000",
+                                    marginTop: "-5%",
+                                    marginLeft: "40%",
+                                    marginBottom: "20%",
+                                }}
+                                onClick={() => {
+                                    this.submitRoomRestriction();
+                                }}>
+                                Restrict
+                            </button>
                         )}
                     </div>
                     <div
                         style={{
-                            marginTop: "2%",
+                            marginTop: "20%",
                             width: "96%",
                             marginLeft: "2%",
                         }}
@@ -611,5 +736,5 @@ export default class AdminBookingView extends React.Component {
         ) : (
             <Redirect to="/login" />
         );
-    }
+    };
 }

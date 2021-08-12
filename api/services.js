@@ -175,6 +175,18 @@ module.exports = {
         });
         return bookings;
     },
+    getBookingsByLocation: async (deskRoom) => {
+        let bookings = await Booking.findAll({
+            raw: true,
+            where: {
+                deskRoom: deskRoom,
+            },
+            order: [
+                ["deskId", "ASC"],
+            ],
+        });
+        return bookings;
+    },
     getBookingsWithOptions: async (options) => {
         let bookings = await Booking.findAll(options);
         return [bookings.length, bookings];
