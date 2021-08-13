@@ -131,6 +131,29 @@ export default class AdminBookingView extends React.Component {
         return gap < days;
     };
 
+    checkExistingRestrictions=()=>{
+        for (let index = 0; index < this.state.bookings.length; index++) {
+            let currentBooking = this.state.bookings[index];
+            console.log(" in check existing restrictions")
+            let morning=0;
+            { this.state.AM ?  morning=1 :  morning=0}
+            let  evening=0;
+            { this.state.PM ?  evening=1 :  evening=0}
+            console.log("dates",  currentBooking.date, this.state.chosenDate)
+                console.log("room",  currentBooking.deskRoom, this.state.chosenLocation)
+                console.log("morning?",  currentBooking.am, morning)
+                console.log("evening?",  currentBooking.pm, evening)
+            if (
+                currentBooking.deskRoom === this.state.chosenLocation &&
+                (currentBooking.am === morning ||
+                currentBooking.pm === evening)
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     filterBookings = () => {
         if (this.state.chosenLocation !== "overall") {
             this.getBookingsByLocation(this.state.chosenLocation);
@@ -239,6 +262,7 @@ export default class AdminBookingView extends React.Component {
                 if (res.error) {
                 } else {
                     window.location.reload();
+                   // this.componentDidMount();
                 }
             })
             .catch((err) => {});
@@ -458,6 +482,7 @@ export default class AdminBookingView extends React.Component {
                                     onDaySelect={(date) => {
                                         this.setState({ chosenDate: date }, () => {
                                             this.filterBookings();
+                                            console.log(this.state.chosenDate)
                                         });
                                         this.getBookingsOnDate(date);
 
@@ -576,7 +601,7 @@ export default class AdminBookingView extends React.Component {
                                  //  marginBottom: "0%",
                                 }}
                                 onClick={() => {
-                                    this.submitRoomRestriction();
+                                    {this.checkExistingRestrictions() ? this.submitRoomRestriction():alert("Booking already exists.")}
                                 }}>
                                 Restrict
                             </button>
