@@ -1,0 +1,51 @@
+.pill-slider-button {
+    position: relative;
+    min-width: 3em;
+    min-height: 1.5em;
+    border-radius: 0.75em;
+    background-color: #008dd3;
+    margin-left: 5px;
+    margin-right: 5px;
+    box-shadow: inset 0px 0px 1px 2px #2225;
+}
+
+.pill-slider-button:hover {
+    cursor: pointer;
+}
+
+.pill-slider-button::before {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background-color: white;
+    box-shadow: inset -0.05em -0.05em 0.1em 0.1em #7777;
+    height: 1.2em;
+    width: 1.2em;
+    border-radius: 50%;
+    transition: transform 150ms ease-out;
+}
+.pill-slider-button[class~="pill-slider-off"]::before {
+    transform: translateX(-0.7em);
+}
+.pill-slider-button[class~="pill-slider-on"]::before {
+    transform: translateX(0.7em);
+}
+.pill-slider-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.pill-left-text {
+    position: relative;
+    text-align: right;
+    font-weight: bold;
+}
+
+.pill-right-text {
+    position: relative;
+    text-align: left;
+    font-weight: bold;
+}

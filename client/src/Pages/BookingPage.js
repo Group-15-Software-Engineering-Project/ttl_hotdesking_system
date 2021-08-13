@@ -227,56 +227,62 @@ export default class BookingPage extends React.Component {
                             }
                         />
                     ) : null}
-                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
-                        Select a Booking Date
-                    </h1>
+
                     {this.state.chosenTime !== "default" ? (
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                flexDirection: "row",
-                                padding: "0",
-                                paddingTop: "20px",
-                                paddingBottom: "20px",
-                            }}>
-                            <BookingCalendar
-                                key={this.state.chosenTime}
-                                chosenArea={this.state.chosenArea}
-                                bookingTime={(() => {
-                                    for (let i in this.state.times) {
-                                        if (
-                                            this.state.chosenTime === this.state.times[i].value
-                                        ) {
-                                            return this.state.times[i].label;
+                        <div>
+                            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                                Select a Booking Date
+                            </h1>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    padding: "0",
+                                    paddingTop: "20px",
+                                    paddingBottom: "20px",
+                                }}>
+                                <BookingCalendar
+                                    key={this.state.chosenTime}
+                                    chosenArea={this.state.chosenArea}
+                                    bookingTime={(() => {
+                                        for (let i in this.state.times) {
+                                            if (
+                                                this.state.chosenTime ===
+                                                this.state.times[i].value
+                                            ) {
+                                                return this.state.times[i].label;
+                                            }
                                         }
-                                    }
-                                })()}
-                                onSelect={(desks, date, m) => {
-                                    let newDate;
-                                    this.setState({ chosenDesk: "default" });
-                                    if (
-                                        String(this.state.chosenDate) === "default" &&
-                                        String(date).split(" ")[1] !== m
-                                    ) {
-                                        newDate = "default";
-                                    } else if (String(this.state.chosenDate) === "default") {
-                                        newDate = date;
-                                    } else if (
-                                        String(this.state.chosenDate).split(" ")[1] !==
-                                        String(date).split(" ")[1]
-                                    ) {
-                                        newDate = "default";
-                                    } else {
-                                        newDate = date;
-                                    }
-                                    this.setState({
-                                        bookableDesks: desks,
-                                        chosenDate: newDate,
-                                        chosenDesk: "default",
-                                    });
-                                }}></BookingCalendar>
+                                    })()}
+                                    onSelect={(desks, date, m) => {
+                                        let newDate;
+                                        this.setState({ chosenDesk: "default" });
+                                        if (
+                                            String(this.state.chosenDate) === "default" &&
+                                            String(date).split(" ")[1] !== m
+                                        ) {
+                                            newDate = "default";
+                                        } else if (
+                                            String(this.state.chosenDate) === "default"
+                                        ) {
+                                            newDate = date;
+                                        } else if (
+                                            String(this.state.chosenDate).split(" ")[1] !==
+                                            String(date).split(" ")[1]
+                                        ) {
+                                            newDate = "default";
+                                        } else {
+                                            newDate = date;
+                                        }
+                                        this.setState({
+                                            bookableDesks: desks,
+                                            chosenDate: newDate,
+                                            chosenDesk: "default",
+                                        });
+                                    }}></BookingCalendar>
+                            </div>
                             {/* <br />
                             {this.state.bookableDesks.length === 0 ? (
                                 <div className="space" style={{ marginBottom: "20%" }} />

@@ -33,7 +33,9 @@ export const verify = (e) => {
 };
 
 export const getDifferenceInDays = (date1, date2) => {
-    let diff = date1.getTime() - date2.getTime();
+    let d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate(), 12, 0);
+    let d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate(), 12, 0);
+    let diff = d1.getTime() - d2.getTime();
     diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
     return diff;
 };

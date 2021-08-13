@@ -67,9 +67,12 @@ module.exports = {
     },
     getRoomsList: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
-            type: QueryTypes.SELECT,
-        });
+        let distinctRooms = await sequelize.query(
+            "SELECT DISTINCT room FROM hotdesking.desks;",
+            {
+                type: QueryTypes.SELECT,
+            }
+        );
         for (let room in distinctRooms) {
             rooms.push(distinctRooms[room].room);
         }
@@ -92,9 +95,12 @@ module.exports = {
     },
     getRooms: async () => {
         let rooms = [];
-        let distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
-            type: QueryTypes.SELECT,
-        });
+        let distinctRooms = await sequelize.query(
+            "SELECT DISTINCT room FROM hotdesking.desks;",
+            {
+                type: QueryTypes.SELECT,
+            }
+        );
         for (let room in distinctRooms) {
             rooms.push({
                 value: distinctRooms[room].room,
@@ -117,9 +123,12 @@ module.exports = {
     },
     getGroups: async () => {
         let groups = [];
-        let distinctNames = await sequelize.query("SELECT DISTINCT name FROM hotdesking.groups;", {
-            type: QueryTypes.SELECT,
-        });
+        let distinctNames = await sequelize.query(
+            "SELECT DISTINCT name FROM hotdesking.groups;",
+            {
+                type: QueryTypes.SELECT,
+            }
+        );
         for (let group in distinctNames) {
             groups.push(distinctNames[group].name);
         }
@@ -181,9 +190,7 @@ module.exports = {
             where: {
                 deskRoom: deskRoom,
             },
-            order: [
-                ["deskId", "ASC"],
-            ],
+            order: [["deskId", "ASC"]],
         });
         return bookings;
     },
@@ -477,7 +484,25 @@ module.exports = {
         model.destroy();
     },
     removeAppointment: async (id) => {
-        let model = await Appointment.findByPK(id);
+        let model = await Appointment.findByPk(id);
         model.destroy();
+    },
+    getAppointmentsByEmail: async (email) => {
+        let appointments = await Appointment.findAll({
+            where: {
+                bookedBy: email,
+            },
+        });
+        let today = appointments.filter((appointment) => {
+            if (
+                new Date(appointment.start).getFullYear() === new Date().getFullYear() &&
+                new Date(appointment.start).getMonth() === new Date().getMonth() &&
+                new Date(appointment.start).getDate() === new Date().getDate()
+            )
+                return appointment;
+        });
+        appointments = appointments.filter((appointment) => !today.includes(appointment));
+        appointments.unshift(...today);
+        return appointments;
     },
 };
