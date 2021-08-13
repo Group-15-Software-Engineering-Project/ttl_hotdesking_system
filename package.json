@@ -12,12 +12,16 @@
         "@devexpress/dx-react-core": "^2.7.6",
         "@devexpress/dx-react-scheduler": "^2.7.6",
         "@devexpress/dx-react-scheduler-material-ui": "^2.7.6",
+        "@material-ui/core": "^4.12.3",
+        "@material-ui/icons": "^4.11.2",
+        "babel-jest": "^26.6.0",
         "body-parser": "^1.18.3",
         "chart.js": "^2.9.4",
         "create-react-app": "^1.2.1",
         "dotenv": "^8.2.0",
         "emailjs-com": "^2.6.4",
         "express": "^4.17.1",
+        "express-openid-connect": "^2.5.0",
         "js-cookie": "^2.2.1",
         "js-sha256": "^0.9.0",
         "mysql2": "^2.2.5",
@@ -31,20 +35,18 @@
         "react-dom": "^17.0.2",
         "react-icons": "^4.2.0",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "^1.1.5",
+        "react-scripts": "^0.0.0",
         "react-select": "^4.3.0",
         "reactjs": "^1.0.0",
         "sequelize": "^6.6.4",
+        "supports-color": "^9.0.2",
         "ttl_hotdesking_system": "file:client",
         "web-vitals": "^1.1.0",
+        "yargs": "^17.1.0",
         "yarn": "^1.22.10"
     },
     "devDependencies": {
         "concurrently": "^6.0.2",
         "nodemon": "^2.0.7"
-    },
-    "engines": {
-        "node": ">=14.x",
-        "npm": ">=7.x"
     }
 }

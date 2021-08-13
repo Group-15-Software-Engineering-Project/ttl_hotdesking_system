@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const services = require("./services");
+const { requiresAuth } = require('express-openid-connect');
 
 //  Validates credentials and determines if user is an admin
 router.post("/login", (req, res) => {
@@ -22,6 +23,15 @@ router.post("/login", (req, res) => {
             console.log(err);
             res.status(500).send({ error: true, admin: false, message: err });
         });
+});
+
+router.get('/profile', requiresAuth(), (req, res) => {
+  res.send(JSON.stringify(req.oidc.user));
+});
+
+router.get("/test", (req, res) => {
+    console.log("entered test");
+    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
 //  Changes the password of the given user
