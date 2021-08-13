@@ -1,8 +1,8 @@
 .pill-slider-button {
     position: relative;
-    min-width: 3em;
-    min-height: 1.5em;
-    border-radius: 0.75em;
+    min-width: 48px;
+    min-height: 24px;
+    border-radius: 12px;
     background-color: #008dd3;
     margin-left: 5px;
     margin-right: 5px;
