@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { BiGlobe } from "react-icons/bi";
 import { AiFillPushpin } from "react-icons/ai";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
+import { verify } from "./Misc";
 
 function NavigationSidebar() {
     const history = useHistory();
@@ -73,7 +74,7 @@ function NavigationSidebar() {
                 <div className="navigation-sidebar-content">
                     <ul>
                         {SidebarData.map((data) => {
-                            if (data.adminRequired) {
+                            if (data.adminRequired && verify(true)) {
                                 return (
                                     <li
                                         className="nav-content-item"
@@ -101,6 +102,7 @@ function NavigationSidebar() {
                                         </Link>
                                     </li>
                                 );
+                            else return null;
                         })}
 
                         <li

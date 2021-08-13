@@ -1,0 +1,232 @@
+@import url("https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap");
+*::after,
+*::before {
+    content: "";
+}
+
+.center-content {
+    position: relative;
+}
+
+.center-content > * {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+}
+
+.calendar-wrapper {
+    display: table;
+    padding: 1em;
+    position: relative;
+    min-height: 21.725em;
+    min-width: 19.25em;
+    border-radius: 2em;
+    box-shadow: 1px 1px 0px 0px hsl(0 0% 80% / 0.5), 1px 1px 2px 2px hsl(0 0% 30% / 0.5);
+    background-color: hsl(20 0% 50% / 0.2);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+}
+
+.calendar-row {
+    display: table-row;
+    table-layout: fixed;
+    empty-cells: show;
+    font-family: "Roboto", "Sawarabi Mincho", sans-serif, "Noto Serif KR", serif;
+}
+
+.calendar-cell {
+    display: table-cell;
+    resize: none;
+    overflow: visible;
+    width: 2.75em;
+    height: 2.75em;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    outline: 0;
+}
+
+.current-month-day {
+    transition: transform 150ms linear, background-color 150ms linear, box-shadow 150ms linear;
+    color: black;
+    border-radius: 50%;
+    font-weight: bold;
+}
+.calendar-day-highlight {
+    color: #e00;
+}
+.current-month-day:hover,
+.current-month-day:focus-visible {
+    background-color: hsl(0 0% 80% / 0.3);
+    transform: scale(1.3);
+    box-shadow: 0 0 0 1px black;
+    cursor: pointer;
+}
+.today {
+    background-color: hsl(50 100% 50% / 0.35);
+    color: hsl(35 100% 50%);
+}
+
+.other-month-day {
+    color: gray;
+    font-weight: 100;
+}
+.calendar-nav-month {
+    font-size: 0.9em;
+}
+.calendar-nav {
+    box-shadow: 1px 1px 1px 0px hsl(0 0% 20% / 0.7);
+    border-radius: 2.75em;
+    font-weight: bold;
+    background-color: hsl(20 0% 100% / 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.calendar-nav > .calendar-cell {
+    transition: background-color 150ms linear;
+}
+
+.calendar-weekdays {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.prev-month,
+.next-month {
+    position: relative;
+    transition: background-color 100ms linear;
+}
+
+.prev-month {
+    border-radius: 2.75em 0 0 2.75em;
+}
+
+.next-month {
+    border-radius: 0 2.75em 2.75em 0;
+}
+
+.prev-year:hover,
+.next-year:hover,
+.prev-month:hover,
+.next-month:hover,
+.flag-toggle:hover,
+.next-year:focus-visible,
+.prev-year:focus-visible,
+.prev-month:focus-visible,
+.next-month:focus-visible,
+.flag-toggle:focus-visible {
+    background-color: hsl(0 0% 100% / 0.5);
+    cursor: pointer;
+}
+
+.flag-toggle > *:nth-child(1) {
+    transition: transform 150ms linear;
+}
+.flag-toggle:hover > *:first-child,
+.flag-toggle:focus-visible > *:first-child {
+    transform: scale(1.25);
+}
+.prev-month::after,
+.next-month::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 0;
+    height: 0;
+    border-top: 0.5em transparent solid;
+    border-bottom: 0.5em transparent solid;
+    transition: transform 150ms linear;
+}
+
+.prev-month::after {
+    left: -0.125em;
+    border-right: 0.5em #555 solid;
+}
+
+.prev-month:hover::after,
+.prev-month:focus-visible::after {
+    border-right: 0.5em black solid;
+    transform: scale(1.5);
+}
+
+.next-month::after {
+    left: 0.125em;
+    border-left: 0.5em #555 solid;
+}
+
+.next-month:hover::after,
+.next-month:focus-visible::after {
+    border-left: 0.5em black solid;
+    transform: scale(1.5);
+}
+
+.calendar-cell[class~="selected-calendar-cell"] {
+    background-color: hsl(190 100% 50% / 0.5);
+}
+
+.selected-calendar-cell:hover,
+.selected-calendar-cell:focus-visible {
+    background-color: hsl(190 100% 50% / 0.3);
+}
+
+.next-year,
+.prev-year {
+    position: relative;
+}
+
+.next-year::before,
+.prev-year::before,
+.next-year::after,
+.prev-year::after {
+    position: absolute;
+    margin: auto;
+    height: 0;
+    width: 0;
+    top: 0;
+    bottom: 0;
+    border-top: 0.35em transparent solid;
+    border-bottom: 0.35em transparent solid;
+    transition: transform 150ms linear;
+}
+
+.next-year::before {
+    border-left: 0.35em #555 solid;
+    left: -0.35em;
+    right: 0;
+}
+.next-year::after {
+    border-left: 0.35em #555 solid;
+    left: 0;
+    right: -0.35em;
+}
+
+.prev-year::before {
+    border-right: 0.35em #555 solid;
+    left: -0.35em;
+    right: 0;
+}
+.prev-year::after {
+    border-right: 0.35em #555 solid;
+    right: -0.35em;
+    left: 0;
+}
+
+.next-year:hover::before,
+.next-year:hover::after,
+.next-year:focus-visible::before,
+.next-year:focus-visible::after {
+    border-left: 0.35em black solid;
+    transform: scale(1.5);
+}
+.prev-year:hover::before,
+.prev-year:hover::after,
+.prev-year:focus-visible::before,
+.prev-year:focus-visible::after {
+    border-right: 0.35em black solid;
+    transform: scale(1.5);
+}
