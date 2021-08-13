@@ -45,6 +45,7 @@ export default class AdminBookingView extends React.Component {
             })
             .then((data) => {
                 this.setState({ bookings: data.bookings });
+                this.setState({ filteredBookings: data.bookings });
             })
             .catch((err) => console.error(err));
     };
@@ -306,7 +307,7 @@ export default class AdminBookingView extends React.Component {
                             `Are you sure you want to cancel the booking?\n\nLocation: ${data.deskRoom}\nDesk: ${data.deskId}\nDate: ${data.date}\nTime: ${displayTime}`
                         );
                         if (res) {
-                            let currentData = JSON.parse(sessionStorage.bookings).data;
+                            let currentData = this.state.bookings;
                             let index = this.getBookingIndex(currentData, data);
                             if (index !== -1) {
                                 currentData.splice(index, 1);
@@ -422,7 +423,7 @@ export default class AdminBookingView extends React.Component {
             </h4>*/}
                     <div className="space" />
 
-                    {this.state.slider ? (
+                    
                         <div>
                             <div
                                 style={{
@@ -475,12 +476,12 @@ export default class AdminBookingView extends React.Component {
                                 <div style={{ height: "2rem" }} />
                             )}
                         </div>
-                    ) : null}
+                    
 
                     <div
                         style={{
                             display: "flex",
-                            height: "15%",
+                            height: "11%",
                             flexFlow: "row wrap",
                             justifyContent: "flex-start",
                         }}>
@@ -513,7 +514,7 @@ export default class AdminBookingView extends React.Component {
                             </select>
                         </div>
                         {!this.state.dateRestricted ? null : (
-                            <div style={{ flex: "1", height: "100%" }}>
+                            <div style={{ flex: "1", height: "100%" , marginBottom:"20%"}}>
                                 <h1
                                     className="page-divider-header"
                                     style={{
@@ -563,24 +564,36 @@ export default class AdminBookingView extends React.Component {
                                             })
                                         }></input>
                                 </h8>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="space" />
-                    <div>
-                        {this.state.chosenDate && !this.state.slider ? (
-                            <h3
+                                <div className="space" style={{marginTop:"7%"}}/>
+                                <button
+                                className="button-style no-outline"
                                 style={{
-                                    height: "2rem",
-                                }}>{`Chosen Date: ${this.state.chosenDate}`}</h3>
-                        ) : (
-                            <div style={{ height: "2rem" }} />
+                                    position: "absolute",
+                                    "--bg-color": "#f32000",
+                                    "--hover-highlight": "#ff5000",
+                                   // marginTop: "-5%",
+                                    right: "42.7%",
+                                 //  marginBottom: "0%",
+                                }}
+                                onClick={() => {
+                                    this.submitRoomRestriction();
+                                }}>
+                                Restrict
+                            </button>
+                            
+                            </div>
+                            
                         )}
                     </div>
 
-                    {this.state.bookings && !this.state.dateRestricted ? (
-                        this.state.bookings.length > 0 ? (
+                    {this.state.dateRestricted ?(<h1 className="page-divider-header" style={{ marginLeft: "2.5%" , marginTop:"5%"}}>
+                        Restricted Bookings
+                    </h1>):null}
+
+                    <div className="space"/>
+
+                    {this.state.bookings ? (
+                        this.state.bookings.length > 0 &&   this.state.filteredBookings.length > 0  ? (
                             <button
                                 className="button-style no-outline"
                                 style={{
@@ -592,6 +605,7 @@ export default class AdminBookingView extends React.Component {
                                         ? "#5dE300"
                                         : "#ff5000",
                                     bottom: "2%",
+                                    marginTop:"2%"
                                 }}
                                 onClick={() => {
                                     this.setState({
@@ -608,9 +622,9 @@ export default class AdminBookingView extends React.Component {
                             flexFlow: "row wrap",
                             justifyContent: "flex-start",
                         }}>
-                        <div style={{ width: "100%", marginBottom: "2%" }} />
-                        {this.state.bookings && !this.state.dateRestricted ? (
-                            this.state.bookings.length > 0 ? (
+                        <div style={{ width: "100%", marginBottom: "2%"}} />
+                        {this.state.bookings  ? (
+                            this.state.bookings.length > 0 &&   this.state.filteredBookings.length > 0 ? (
                                 <>
                                     <div
                                         className="bookings-table"
@@ -699,28 +713,14 @@ export default class AdminBookingView extends React.Component {
                                     {console.log("No Boookings")}
                                     {this.state.chosenLocation !== "" &&
                                     this.state.chosenDate !== "" ? (
-                                        <h2>No Bookings Found.</h2>
+                                        <h2 style={{marginTop:"0%"}}>No Bookings Found.</h2>
                                     ) : (
                                         <h3>Please select a date.</h3>
                                     )}
                                 </div>
                             )
                         ) : (
-                            <button
-                                className="button-style no-outline"
-                                style={{
-                                    position: "relative",
-                                    "--bg-color": "#f32000",
-                                    "--hover-highlight": "#ff5000",
-                                    marginTop: "-5%",
-                                    marginLeft: "40%",
-                                    marginBottom: "20%",
-                                }}
-                                onClick={() => {
-                                    this.submitRoomRestriction();
-                                }}>
-                                Restrict
-                            </button>
+                            "Failed to get your bookings.Please try logging back in."
                         )}
                     </div>
                     <div
