@@ -186,6 +186,20 @@ router.get("/getBookingsOnDate/:date", (req, res) => {
         });
 });
 
+//  Returns a list of bookings at a location
+router.get("/getBookingsByLocation/:deskRoom", (req, res) => {
+    console.log("getBookingsByLocation");
+    services
+        .getBookingsByLocation(req.params.deskRoom)
+        .then((result) => {
+            res.status(200).send({ bookings: result });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).end();
+        });
+});
+
 //  Returns usage reports
 router.post("/getReports", (req, res) => {
     console.log("getReports");

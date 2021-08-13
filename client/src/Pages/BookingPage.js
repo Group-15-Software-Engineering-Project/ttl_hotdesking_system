@@ -227,11 +227,20 @@ export default class BookingPage extends React.Component {
                             }
                         />
                     ) : null}
+                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                        Select a Booking Date
+                    </h1>
                     {this.state.chosenTime !== "default" ? (
-                        <>
-                            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
-                                Select a Booking Date
-                            </h1>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                padding: "0",
+                                paddingTop: "20px",
+                                paddingBottom: "20px",
+                            }}>
                             <BookingCalendar
                                 key={this.state.chosenTime}
                                 chosenArea={this.state.chosenArea}
@@ -245,8 +254,8 @@ export default class BookingPage extends React.Component {
                                     }
                                 })()}
                                 onSelect={(desks, date, m) => {
-                                    console.log(date);
                                     let newDate;
+                                    this.setState({ chosenDesk: "default" });
                                     if (
                                         String(this.state.chosenDate) === "default" &&
                                         String(date).split(" ")[1] !== m
@@ -268,20 +277,21 @@ export default class BookingPage extends React.Component {
                                         chosenDesk: "default",
                                     });
                                 }}></BookingCalendar>
-                            <br />
+                            {/* <br />
                             {this.state.bookableDesks.length === 0 ? (
                                 <div className="space" style={{ marginBottom: "20%" }} />
-                            ) : null}
-                        </>
+                            ) : null} */}
+                        </div>
                     ) : null}
 
                     {this.state.bookableDesks.length !== 0 ? (
-                        <>
+                        <div>
                             <TileSelection
+                                key={this.state.chosenDate}
                                 elementID="Booking_desk_selection"
                                 showLabel={true}
                                 title={
-                                    <>
+                                    <div>
                                         <h1
                                             className="page-divider-header"
                                             style={{ marginLeft: "2.5%" }}>
@@ -304,7 +314,7 @@ export default class BookingPage extends React.Component {
                                                 this.state.chosenDate
                                             )}.`}</span>
                                         </div>
-                                    </>
+                                    </div>
                                 }
                                 options={this.transformDeskData()}
                                 size={["180px", "90px"]}
@@ -314,7 +324,7 @@ export default class BookingPage extends React.Component {
                                     });
                                 }}
                             />
-                        </>
+                        </div>
                     ) : null}
                     {this.state.chosenDesk !== "default" ? (
                         <div style={{ alignItems: "center", textAlign: "center" }}>
