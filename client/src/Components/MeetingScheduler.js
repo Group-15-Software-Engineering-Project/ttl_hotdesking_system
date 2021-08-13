@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ViewState } from "@devexpress/dx-react-scheduler";
-import { getDifferenceInDays } from "./Misc";
+import { ViewState, EditingState, IntegratedEditing } from "@devexpress/dx-react-scheduler";
+import { getDifferenceInDays, verify } from "./Misc";
 import {
     Scheduler,
     WeekView,
@@ -8,6 +8,7 @@ import {
     DateNavigator,
     Appointments,
     AppointmentTooltip,
+    ConfirmationDialog,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import "../public/css/main.css";
 
@@ -96,6 +97,8 @@ export default class MeetingScheduler extends React.PureComponent {
                 data: {},
             },
         };
+        this.commitChanges = this.commitChanges.bind(this);
+
         this.toggleVisibility = () => {
             const { visible: tooltipVisibility } = this.state;
             this.setState({ visible: !tooltipVisibility });
@@ -118,6 +121,25 @@ export default class MeetingScheduler extends React.PureComponent {
                 this.props.weekChange(currentDate);
             }
         };
+    }
+
+    commitChanges({ added, changed, deleted }) {
+        this.setState((state) => {
+            let { data } = state;
+
+            if (deleted !== undefined) {
+                data = data.filter((appointment) => appointment.id !== deleted);
+                fetch(`/api/appointments/${deleted}`, {
+                    method: "DELETE",
+                })
+                    .then((res) => {
+                        if (!res.ok) throw new Error("Failed to delete appointment.");
+                        else alert("Successfully deleted.");
+                    })
+                    .catch(alert);
+            }
+            return { data };
+        });
     }
     abs = (num) => {
         return num < 0 ? -num : num;
@@ -142,11 +164,15 @@ export default class MeetingScheduler extends React.PureComponent {
                     timeScaleLabelComponent={TimeLabel}
                     timeScaleTickCellComponent={TickCell}
                 />
+                <EditingState onCommitChanges={this.commitChanges} />
+                <IntegratedEditing />
+                <ConfirmationDialog />
 
                 <Toolbar />
                 <DateNavigator />
                 <Appointments appointmentComponent={Appointment} />
                 <AppointmentTooltip
+                    showDeleteButton={verify(true)}
                     showCloseButton
                     visible={this.state.visible}
                     onVisibilityChange={this.toggleVisibility}

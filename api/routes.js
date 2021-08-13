@@ -470,10 +470,27 @@ router.get("/getAppointments/:room/:date", (req, res) => {
         });
 });
 
+router.get("/getAppointments/:email", (req, res) => {
+    console.log("getAppointments");
+    services
+        .getAppointmentsByEmail(req.params.email)
+        .then((appointments) => res.status(200).send({ appointments: appointments }))
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
+});
+
 router.put("/appointments", (req, res) => {
     console.log("addAppointment");
     services
-        .addAppointment(req.body.email, req.body.title, req.body.start, req.body.end, req.body.room)
+        .addAppointment(
+            req.body.email,
+            req.body.title,
+            req.body.start,
+            req.body.end,
+            req.body.room
+        )
         .then(() => res.status(201).end())
         .catch((err) => {
             console.log(err);

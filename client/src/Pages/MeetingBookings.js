@@ -289,6 +289,7 @@ function MeetingBookings() {
                             <MeetingScheduler
                                 key={bookings}
                                 appointments={bookings}
+                                deleteAppointment={bookings}
                                 weekChange={(e) => {
                                     setCurrentWeek(e);
                                     setStartTime("");
