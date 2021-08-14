@@ -434,6 +434,26 @@ module.exports = {
             roomName: room,
         });
     },
+    addAdminOptions: async (key, value) => {
+        await AdminOptions.create({
+            key: key,
+            value: value,
+        });
+    },
+    updateAdminOptions: async (key, value) => {
+        let model = await AdminOptions.findByPk(key);
+        model.value = value;
+        model.save();
+    },
+    removeAdminOptions: async (key, value) => {
+        let model = await AdminOptions.findOne({
+            where: {
+                key: key,
+                value: value,
+            },
+        });
+        model.destroy();
+    },
     removeUser: async (email) => {
         let model = await User.findByPk(email);
         model.destroy();
