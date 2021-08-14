@@ -591,6 +591,9 @@ export default class AdminBookingView extends React.Component {
                                 </h8>
                                 <div className="space" style={{marginTop:"7%"}}/>
                                 <button
+                                disabled={document.getElementById("selectlocation").value ===
+                                "overall" ||
+                            document.getElementById("selectlocation").value === ""}
                                 className="button-style no-outline"
                                 style={{
                                     position: "absolute",
