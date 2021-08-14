@@ -7,6 +7,7 @@ const {
     Notification,
     Appointment,
     Room,
+    AdminOptions,
 } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
