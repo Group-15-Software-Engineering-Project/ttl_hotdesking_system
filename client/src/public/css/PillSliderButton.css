@@ -6,11 +6,19 @@
     background-color: #008dd3;
     margin-left: 5px;
     margin-right: 5px;
-    box-shadow: inset 0px 0px 1px 2px #2225;
+    box-shadow: inset 0px 0px 1px 2px #2225, 0 0 0.5px 0.5px #888;
+    transition: background-color 150ms linear;
 }
 
-.pill-slider-button:hover {
+.pill-slider-button:hover,
+.pill-slider-button:focus-visible {
     cursor: pointer;
+    background-color: #00adf3;
+}
+.pill-slider-button:focus-visible {
+    outline: none;
+    box-shadow: inset 0px 0px 1px 2px #2225, 0 0 0 2px #000;
+    background-color: #fdaf12;
 }
 
 .pill-slider-button::before {

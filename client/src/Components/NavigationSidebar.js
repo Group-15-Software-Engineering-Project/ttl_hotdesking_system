@@ -79,7 +79,8 @@ function NavigationSidebar() {
                                     <li
                                         className="nav-content-item"
                                         onClick={ToggleSidebar}
-                                        onKeyPress={ToggleSidebar}>
+                                        onKeyPress={ToggleSidebar}
+                                        path={data.path}>
                                         <Link
                                             tabIndex="-1"
                                             to={data.path}

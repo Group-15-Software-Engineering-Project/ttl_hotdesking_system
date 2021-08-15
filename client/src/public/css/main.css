@@ -145,6 +145,7 @@ html {
     padding-left: 12px;
     padding-right: 12px;
     outline: none;
+    transition: background-color 100ms linear;
 }
 
 .no-outline {
@@ -376,11 +377,13 @@ input:checked + .slider:before {
     color: #dd0000 !important;
 }
 
-.calendar-green:hover {
+.calendar-green:hover,
+.calendar-green:focus-visible {
     background-color: #00dd0088 !important;
     color: black !important;
 }
-.calendar-red:hover {
+.calendar-red:hover,
+.calendar-red:focus-visible {
     background-color: #ff000088 !important;
     color: black !important;
 }

@@ -46,7 +46,7 @@ export default function TileSelection(props) {
                                     : 0
                             }
                             onKeyPress={(e) => {
-                                e.target.click();
+                                if (e.key === "Enter") e.target.click();
                             }}
                             className={
                                 options[i].disabled

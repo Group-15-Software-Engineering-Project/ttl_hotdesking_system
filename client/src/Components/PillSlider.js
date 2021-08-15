@@ -30,7 +30,11 @@ function PillSlider(props) {
                 </div>
             )}
             <div
+                tabIndex="0"
                 className={`pill-slider-button ${state}`}
+                onKeyPress={(e) => {
+                    if (e.key === "Enter") e.target.click();
+                }}
                 onClick={(e) => {
                     if (props.onClick) props.onClick(state.includes("off") ? "on" : "off");
                     if (state === "pill-slider-off") setState("pill-slider-on");

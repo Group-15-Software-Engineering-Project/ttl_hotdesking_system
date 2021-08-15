@@ -514,14 +514,12 @@ module.exports = {
                 bookedBy: email,
             },
         });
-        let today = appointments.filter((appointment) => {
-            if (
+        let today = appointments.filter(
+            (appointment) =>
                 new Date(appointment.start).getFullYear() === new Date().getFullYear() &&
                 new Date(appointment.start).getMonth() === new Date().getMonth() &&
                 new Date(appointment.start).getDate() === new Date().getDate()
-            )
-                return appointment;
-        });
+        );
         appointments = appointments.filter((appointment) => !today.includes(appointment));
         appointments.unshift(...today);
         return appointments;
