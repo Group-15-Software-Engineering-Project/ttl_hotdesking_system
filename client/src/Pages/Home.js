@@ -223,7 +223,9 @@ class Home extends React.Component {
                         // sessionStorage.username !== "null"
                         //     ? sessionStorage.username
                         //     : sessionStorage.email
-                        JSON.parse(sessionStorage.user).given_name
+                        sessionStorage.user
+                            ? JSON.parse(sessionStorage.user).given_name
+                            : "user"
                     }!`}</h1>
                     <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
                         <div
