@@ -209,7 +209,7 @@ class Home extends React.Component {
     };
 
     render() {
-        return verify(true) || verify(false) ? (
+        return (
             <div key={this.state.key} className="wrapper TCD-BG">
                 <div className="flex-container-1" />
                 <div className="flex-container-5 main-body">
@@ -220,9 +220,10 @@ class Home extends React.Component {
                             display: "inline-block",
                             fontSize: "clamp(1.25rem, 3vw, 2rem)",
                         }}>{`${this.getGreeting()}, ${
-                        sessionStorage.username !== "null"
-                            ? sessionStorage.username
-                            : sessionStorage.email
+                        // sessionStorage.username !== "null"
+                        //     ? sessionStorage.username
+                        //     : sessionStorage.email
+                        JSON.parse(sessionStorage.user).given_name
                     }!`}</h1>
                     <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
                         <div
@@ -348,8 +349,6 @@ class Home extends React.Component {
                 </div>
                 <div className="flex-container-1" />
             </div>
-        ) : (
-            <Redirect to="/login" />
         );
     }
 }

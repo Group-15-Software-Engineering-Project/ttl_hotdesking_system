@@ -175,7 +175,7 @@ class Account extends Component {
     };
 
     render() {
-        return verify(true) || verify(false) ? (
+        return (
             <div className="wrapper TCD-BG">
                 <div className="flex-container-1" />
                 <div className="flex-container-5 main-body">
@@ -380,8 +380,6 @@ class Account extends Component {
                 </div>
                 <div className="flex-container-1" />
             </div>
-        ) : (
-            <Redirect to="/login" />
         );
     }
 }

@@ -6,6 +6,8 @@ import "../public/css/main.css";
 import { _GetUserBookings, setSessionToken, verify } from "../Components/Misc";
 import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
+import LogInButton from "../Components/LogInButton";
+import LogOutButton from "../Components/LogOutButton";
 
 class Login extends Component {
     constructor(props) {
@@ -56,9 +58,9 @@ class Login extends Component {
                 this.submitLogin();
             }
         });
-        if (!(verify(true) || verify(false))) {
-            sessionStorage.clear();
-        }
+        // if (!(verify(true) || verify(false))) {
+        //     sessionStorage.clear();
+        // }
     };
 
     getUserName = () => {
@@ -145,7 +147,9 @@ class Login extends Component {
                             boxShadow: "0 0 5px #333",
                             backgroundColor: "white",
                         }}>
-                        <Form>
+                        <LogInButton />
+                        <LogOutButton />
+                        {/* <Form>
                             <Form.Group size="lg" controlId="email">
                                 <Form.Control
                                     className="text-field"
@@ -179,7 +183,7 @@ class Login extends Component {
                                     </span>
                                 </>
                             ) : null}
-                        </Form>
+                        </Form> */}
                     </div>
                     <div className="flex-container-1" />
                 </div>

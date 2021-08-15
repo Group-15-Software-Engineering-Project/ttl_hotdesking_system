@@ -6,6 +6,7 @@ import { BiGlobe } from "react-icons/bi";
 import { AiFillPushpin } from "react-icons/ai";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 import { verify } from "./Misc";
+import LogOutButton from './LogOutButton.js';
 
 function NavigationSidebar() {
     const history = useHistory();
@@ -128,7 +129,8 @@ function NavigationSidebar() {
                     </ul>
                 </div>
                 <div className="navigation-sidebar-buttons">
-                    <div
+                    <LogOutButton />
+                    {/* <div
                         className="navigation-sidebar-button"
                         onClick={() => {
                             sessionStorage.clear();
@@ -139,7 +141,7 @@ function NavigationSidebar() {
                             window.location = "/login";
                         }}>
                         Log Out
-                    </div>
+                    </div> */}
                 </div>
                 {window.innerWidth < 768 ? null : (
                     <div

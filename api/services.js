@@ -10,7 +10,6 @@ const {
     AdminOptions,
 } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
-const user = require("../models/user");
 const sha256 = require("js-sha256");
 const nodemailer = require("nodemailer");
 require("dotenv").config();

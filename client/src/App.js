@@ -18,15 +18,10 @@ import NavigationSidebar from "./Components/NavigationSidebar";
 import Restrictions from "./Pages/Restrictions";
 import Navbar from "./Components/NavBar";
 import { verify } from "./Components/Misc";
+import { useAuth0 } from "@auth0/auth0-react";
 
-class App extends Component {
-    state = {
-        email: "",
-        visible: true,
-        isLoggedIn: false,
-    };
-
-    zoomOutMobile = () => {
+function App() {
+    const zoomOutMobile = () => {
         const viewport = document.querySelector('meta[name="viewport"]');
 
         if (viewport) {
@@ -35,60 +30,54 @@ class App extends Component {
         }
     };
 
-    render() {
-        return (
-            <div>
-                <Router>
-                    {!sessionStorage.email ? <Redirect to="/login"></Redirect> : null}
-                    {(verify(true) || verify(false)) && <NavigationSidebar />}
+    const { isAuthenticated, isLoading, user } = useAuth0();
+    if (user) sessionStorage.setItem("user", JSON.stringify(user));
+    console.log(user);
+    return (
+        <div>
+            <Router>
+                {!isAuthenticated && !isLoading ? <Redirect to="/login"></Redirect> : null}
+                {/* {(verify(true) || verify(false)) && <NavigationSidebar />} */}
+                <NavigationSidebar />
+                <Switch>
+                    <Route exact path="/loading">
+                        <Redirect to="/home"></Redirect>
+                    </Route>
+                    <Route exact path="/">
+                        <Redirect to="/login"></Redirect>
+                    </Route>
 
-                    <Switch>
-                        <Route exact path="/loading">
-                            <Redirect to="/home"></Redirect>
-                        </Route>
-                        <Route exact path="/">
-                            <Redirect to="/login"></Redirect>
-                        </Route>
+                    <Route path="/login">
+                        <Login />
+                    </Route>
 
-                        <Route path="/login">
-                            <Login
-                                setEmail={(email) => {
-                                    this.setState({ email: email, isLoggedIn: true });
-                                }}
-                            />
-                        </Route>
+                    <Route path="/booking-page">
+                        <BookingPage email={sessionStorage.email} />
+                    </Route>
+                    <Route path="/locations" component={Locations} />
+                    <Route path="/users" component={Users} />
+                    <Route path="/notifications" component={Notifications} />
+                    <Route path="/home">
+                        <Home email={sessionStorage.email}></Home>
+                    </Route>
+                    <Route path="/book-meeting-room">
+                        <MeetingBookings></MeetingBookings>
+                    </Route>
+                    <Route path="/account">
+                        <Account email={sessionStorage.email} />
+                    </Route>
+                    <Route path="/reports" component={Reports} />
+                    <Route path="/past-bookings">
+                        <PastBookings email={sessionStorage.email} />
+                    </Route>
+                    <Route path="/Admin" component={Admin} />
+                    <Route path="/AdminBookingView" component={AdminBookingView} />
+                </Switch>
+            </Router>
 
-                        <Route path="/booking-page">
-                            <BookingPage email={sessionStorage.email} />
-                        </Route>
-                        <Route path="/locations" component={Locations} />
-                        <Route path="/users" component={Users} />
-                        <Route path="/notifications" component={Notifications} />
-                        <Route path="/home">
-                            <Home email={sessionStorage.email}></Home>
-                        </Route>
-                        <Route path="/book-meeting-room">
-                            <MeetingBookings></MeetingBookings>
-                        </Route>
-                        <Route path="/account">
-                            <Account email={sessionStorage.email} />
-                        </Route>
-                        <Route path="/reports" component={Reports} />
-                        <Route path="/past-bookings">
-                            <PastBookings email={sessionStorage.email} />
-                        </Route>
-                        <Route path="/restrictions" component={Restrictions} />
-                        {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
-                        {this.state.visible ? (
-                            <Route path="/AdminBookingView" component={AdminBookingView} />
-                        ) : null}
-                    </Switch>
-                </Router>
-
-                {this.zoomOutMobile()}
-            </div>
-        );
-    }
+            {zoomOutMobile()}
+        </div>
+    );
 }
 
 export default App;
