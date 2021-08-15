@@ -1,7 +1,6 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const path = require("path");
-const { auth } = require('express-openid-connect');
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 require("dotenv").config();
 
 const routes = require("./api/routes");
@@ -11,14 +10,6 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", routes);
-app.use(auth({
-    authRequired: false,
-    auth0Logout: true,
-    secret: process.env.SECRET_KEY,
-    baseURL: `localhost:${port}`,
-    clientID: '0wblDoSMnNM9SvRBkZJITz7mYMwidNwx',
-    issuerBaseURL: process.env.AUTH
-}));
 
 if (process.env.NODE_ENV === "production") {
     // Serve any static files

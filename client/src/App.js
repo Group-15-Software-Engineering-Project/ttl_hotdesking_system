@@ -17,15 +17,11 @@ import MeetingBookings from "./Pages/MeetingBookings";
 import NavigationSidebar from "./Components/NavigationSidebar";
 import Navbar from "./Components/NavBar";
 import { verify } from "./Components/Misc";
+import { useAuth0 } from '@auth0/auth0-react';
 
-class App extends Component {
-    state = {
-        email: "",
-        visible: true,
-        isLoggedIn: false,
-    };
+function App() {
 
-    zoomOutMobile = () => {
+    const zoomOutMobile = () => {
         const viewport = document.querySelector('meta[name="viewport"]');
 
         if (viewport) {
@@ -34,11 +30,12 @@ class App extends Component {
         }
     };
 
-    render() {
+    const { isAuthenticated } = useAuth0();
+
         return (
             <div>
                 <Router>
-                    {!sessionStorage.email ? <Redirect to="/login"></Redirect> : null}
+                    {!isAuthenticated ? <Redirect to="/login"></Redirect> : null}
                     {(verify(true) || verify(false)) && <NavigationSidebar />}
 
                     <Switch>
@@ -50,11 +47,7 @@ class App extends Component {
                         </Route>
 
                         <Route path="/login">
-                            <Login
-                                setEmail={(email) => {
-                                    this.setState({ email: email, isLoggedIn: true });
-                                }}
-                            />
+                            <Login/>
                         </Route>
 
                         <Route path="/booking-page">
@@ -76,17 +69,14 @@ class App extends Component {
                         <Route path="/past-bookings">
                             <PastBookings email={sessionStorage.email} />
                         </Route>
-                        {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
-                        {this.state.visible ? (
-                            <Route path="/AdminBookingView" component={AdminBookingView} />
-                        ) : null}
+                        <Route path="/Admin" component={Admin} />
+                        <Route path="/AdminBookingView" component={AdminBookingView} />
                     </Switch>
                 </Router>
 
-                {this.zoomOutMobile()}
+                {zoomOutMobile()}
             </div>
         );
-    }
 }
 
 export default App;

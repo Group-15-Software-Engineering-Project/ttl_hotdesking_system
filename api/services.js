@@ -9,7 +9,6 @@ const {
     Room,
 } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
-const user = require("../models/user");
 const sha256 = require("js-sha256");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
@@ -477,7 +476,7 @@ module.exports = {
         model.destroy();
     },
     removeAppointment: async (id) => {
-        let model = await Appointment.findByPK(id);
+        let model = await Appointment.findByPk(id);
         model.destroy();
     },
 };
