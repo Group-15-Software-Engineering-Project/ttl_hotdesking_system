@@ -163,6 +163,19 @@ router.post("/getBookings", (req, res) => {
         });
 });
 
+router.get("/getBookings/:email", (req, res) => {
+    console.log("getBookings");
+    services
+        .getBookings(req.params.email)
+        .then((result) => {
+            console.log("getBookings RESULT:", result);
+            res.status(200).send({ error: false, data: result });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, data: [] });
+        });
+});
 //  Returns a list of bookings on a date
 router.get("/getBookingsOnDate/:date", (req, res) => {
     console.log("getBookingsOnDate");
@@ -513,10 +526,7 @@ router.delete("/appointments/:id", (req, res) => {
 router.post("/addAdminOptions/:key/:value", (req, res) => {
     console.log("addAdminOptions");
     services
-        .addAdminOptions(
-            req.body.key,
-            req.body.value
-        )
+        .addAdminOptions(req.body.key, req.body.value)
         .then(() => {
             res.status(200).send({ error: false, message: "Success" });
         })
@@ -529,10 +539,7 @@ router.post("/addAdminOptions/:key/:value", (req, res) => {
 router.post("/updateAdminOptions/:key/:value", (req, res) => {
     console.log("updateAdminOptions");
     services
-        .updateAdminOptions(
-            req.body.key,
-            req.body.value
-        )
+        .updateAdminOptions(req.body.key, req.body.value)
         .then(() => {
             res.status(200).send({ error: false, message: "Success" });
         })
@@ -545,16 +552,38 @@ router.post("/updateAdminOptions/:key/:value", (req, res) => {
 router.post("/removeAdminOptions/:key/:value", (req, res) => {
     console.log("removeAdminOptions");
     services
-        .removeAdminOptions(
-            req.body.key,
-            req.body.value
-        )
+        .removeAdminOptions(req.body.key, req.body.value)
         .then(() => {
             res.status(200).send({ error: false, message: "Success" });
         })
         .catch((err) => {
             console.log(err);
             res.status(500).send({ error: true, message: err });
+        });
+});
+
+router.get("/getUserBookingCount/:email", (req, res) => {
+    console.log("getUserBookingCount");
+    services
+        .getUserBookingCount(req.params.email)
+        .then((count) => {
+            res.status(200).send({ error: false, count: count });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, count: -1 });
+        });
+});
+router.get("/getUserAppointmentCount/:email", (req, res) => {
+    console.log("getUserAppointmentCount");
+    services
+        .getUserAppointmentCount(req.params.email)
+        .then((count) => {
+            res.status(200).send({ error: false, count: count });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, count: -1 });
         });
 });
 

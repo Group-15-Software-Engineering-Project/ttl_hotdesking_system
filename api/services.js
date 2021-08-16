@@ -13,6 +13,7 @@ const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
 const sha256 = require("js-sha256");
 const nodemailer = require("nodemailer");
+const { Notifications } = require("@material-ui/icons");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
@@ -159,18 +160,33 @@ module.exports = {
         return users;
     },
     getBookings: async (email) => {
-        let bookings = [];
         let models = await Booking.findAll({
             raw: true,
             where: {
                 userEmail: email,
             },
-            order: [["date", "DESC"]],
+            order: [["date", "ASC"]],
         });
-        for (let model in models) {
-            bookings.push(models[model]);
-        }
-        return bookings;
+
+        let todayDate = new Date();
+        let today = models.filter(
+            (booking) =>
+                new Date(booking.date).getFullYear() === todayDate.getFullYear() &&
+                new Date(booking.date).getMonth() === todayDate.getMonth() &&
+                new Date(booking.date).getDate() === todayDate.getDate()
+        );
+        models = models.filter((booking) => !today.includes(booking));
+        let past = models.filter(
+            (booking) =>
+                new Date(booking.date).getFullYear() <= todayDate.getFullYear() &&
+                new Date(booking.date).getMonth() <= todayDate.getMonth() &&
+                new Date(booking.date).getDate() < todayDate.getDate()
+        );
+        models = models.filter((booking) => !past.includes(booking));
+
+        models.unshift(...today);
+        models.push(...past);
+        return models;
     },
     getBookingsOnDate: async (date) => {
         let bookings = await Booking.findAll({
@@ -331,8 +347,23 @@ module.exports = {
                 },
             },
         });
-        for (let model in models) {
-            notifications.push(models[model]);
+
+        Notification.destroy({
+            raw: true,
+            where: {
+                end: {
+                    [Op.lt]: new Date(),
+                },
+            },
+        });
+
+        for (let model of models) {
+            notifications.push({
+                type: model.type,
+                date: model.start,
+                body: model.body,
+                title: model.title,
+            });
         }
         return notifications;
     },
@@ -513,6 +544,7 @@ module.exports = {
             where: {
                 bookedBy: email,
             },
+            order: [["start", "ASC"]],
         });
         let today = appointments.filter(
             (appointment) =>
@@ -521,7 +553,31 @@ module.exports = {
                 new Date(appointment.start).getDate() === new Date().getDate()
         );
         appointments = appointments.filter((appointment) => !today.includes(appointment));
+        let past = appointments.filter(
+            (booking) =>
+                new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
+                new Date(booking.start).getMonth() <= new Date().getMonth() &&
+                new Date(booking.start).getDate() < new Date().getDate()
+        );
+        appointments = appointments.filter((booking) => !past.includes(booking));
         appointments.unshift(...today);
+        appointments.push(...past);
         return appointments;
+    },
+    getUserBookingCount: async (email) => {
+        let count = await Booking.count({
+            where: {
+                userEmail: email,
+            },
+        });
+        return count;
+    },
+    getUserAppointmentCount: async (email) => {
+        let count = await Appointment.count({
+            where: {
+                bookedBy: email,
+            },
+        });
+        return count;
     },
 };

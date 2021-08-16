@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../public/css/booking.css";
 import "../public/css/main.css";
-import { getDifferenceInDays, months, verify, _GetUserBookings } from "../Components/Misc";
+import { getDifferenceInDays, months, verify } from "../Components/Misc";
 import { Redirect, Link } from "react-router-dom";
 import PillSlider from "../Components/PillSlider";
-import { BiStreetView } from "react-icons/bi";
 
 function Restrictions() {
     const [todayDate, setDate] = useState(null);
@@ -18,8 +17,6 @@ function Restrictions() {
         let date = new Date();
         setDate(date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate());
         getAppointments();
-
-        if (!sessionStorage.bookings) _GetUserBookings();
     }, []);
 
     const getBookingIndex = (source, booking) => {
@@ -528,7 +525,9 @@ function Restrictions() {
                 <h1
                     className="page-divider-header"
                     style={{ marginLeft: "2.5%", marginBottom: "2%" }}>
-                    {view === "off" ? "Restrictions for Desk Bookings" : "Restrictions for Meeting Room Bookings"}
+                    {view === "off"
+                        ? "Restrictions for Desk Bookings"
+                        : "Restrictions for Meeting Room Bookings"}
                 </h1>
                 <div
                     style={{
@@ -551,8 +550,7 @@ function Restrictions() {
                         "--bg-color": "#4dc300",
                         "--hover-highlight": "#5dE300",
                         marginBottom: "20px",
-                    }}
-                    >
+                    }}>
                     {"Add a Restriction"}
                 </button>
                 <button
