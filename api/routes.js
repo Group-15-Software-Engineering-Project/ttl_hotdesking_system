@@ -2,8 +2,24 @@ const { RouterRounded } = require("@material-ui/icons");
 const express = require("express");
 const router = express.Router();
 const services = require("./services");
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
 
 //  Validates credentials and determines if user is an admin
+var jwtCheck = jwt({
+      secret: jwks.expressJwtSecret({
+          cache: true,
+          rateLimit: true,
+          jwksRequestsPerMinute: 5,
+          jwksUri: 'https://dev-nb-c6re4.eu.auth0.com/.well-known/jwks.json'
+    }),
+    audience: 'https://localhost/api',
+    issuer: 'https://dev-nb-c6re4.eu.auth0.com/',
+    algorithms: ['RS256']
+});
+
+router.use(jwtCheck);
+
 router.post("/login", (req, res) => {
     console.log("login");
     services
