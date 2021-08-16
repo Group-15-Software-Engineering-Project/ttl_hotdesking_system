@@ -6,7 +6,7 @@ import { BiGlobe } from "react-icons/bi";
 import { AiFillPushpin } from "react-icons/ai";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 import { verify } from "./Misc";
-import LogOutButton from './LogOutButton.js';
+import LogOutButton from "./LogOutButton.js";
 
 function NavigationSidebar() {
     const history = useHistory();
@@ -129,7 +129,7 @@ function NavigationSidebar() {
                     </ul>
                 </div>
                 <div className="navigation-sidebar-buttons">
-                    <LogOutButton />
+                    <LogOutButton className="navigation-sidebar-button" />
                     {/* <div
                         className="navigation-sidebar-button"
                         onClick={() => {
