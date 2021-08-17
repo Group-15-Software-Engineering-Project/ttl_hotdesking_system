@@ -82,13 +82,12 @@ const Appointment = ({ children, style, ...restProps }) => {
     );
 };
 
-const dayLimit = 14;
-
 export default class MeetingScheduler extends React.PureComponent {
     constructor(props) {
         super(props);
 
         this.state = {
+            dayLimit: 14,
             data: this.props.appointments,
             currentDate: this.props.currentWeek,
             visible: false,
@@ -116,7 +115,7 @@ export default class MeetingScheduler extends React.PureComponent {
                 );
             }
             let diff = getDifferenceInDays(currentDate, thisWeek);
-            if (diff <= dayLimit && diff >= 0) {
+            if (diff <= this.state.dayLimit && diff >= 0) {
                 this.setState({ currentDate });
                 this.props.weekChange(currentDate);
             }
@@ -143,6 +142,16 @@ export default class MeetingScheduler extends React.PureComponent {
     }
     abs = (num) => {
         return num < 0 ? -num : num;
+    };
+
+    componentDidMount = () => {
+        fetch(`/api/adminOptions/${"Meeting_Room_Booking_Range"}`)
+            .then((res) => {
+                if (!res.ok) throw new Error(`Failed to retrieve option`);
+                return res.json();
+            })
+            .then((res) => this.setState({ dayLimit: res.option.value * 7 }))
+            .catch(console.error);
     };
 
     render() {

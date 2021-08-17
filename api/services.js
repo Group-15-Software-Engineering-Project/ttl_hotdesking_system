@@ -467,9 +467,19 @@ module.exports = {
     },
     getAdminOptions: async () => {
         let options = await AdminOption.findAll({
-            raw: true
+            raw: true,
         });
+        console.log("OPTIONS", options);
         return options;
+    },
+    getAdminOption: async (key) => {
+        let option = await AdminOption.findOne({
+            raw: true,
+            where: {
+                key: key,
+            },
+        });
+        return option;
     },
     updateAdminOptions: async (key, value) => {
         let model = await AdminOption.findByPk(key);

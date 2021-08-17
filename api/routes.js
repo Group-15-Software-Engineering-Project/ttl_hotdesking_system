@@ -550,19 +550,30 @@ router.get("/getUserAppointmentCount/:email", (req, res) => {
 
 router.get("/adminOptions", (req, res) => {
     console.log("getAdminOptions");
-    services.getAdminOptions()
-    .then((options) => res.status(200).send({options: options}))
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
+    services
+        .getAdminOptions()
+        .then((options) => res.status(200).send({ options: options }))
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 });
 
 router.patch("/adminOptions/:key", (req, res) => {
     console.log("updateAdminOptions");
     services
-        .updateAdminOptions(req.param.key, req.body.value)
+        .updateAdminOptions(req.params.key, req.body.value)
         .then(res.status(204).end())
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, message: err });
+        });
+});
+
+router.get("/adminOptions/:key", (req, res) => {
+    services
+        .getAdminOption(req.params.key)
+        .then((option) => res.status(200).send({ option: option }))
         .catch((err) => {
             console.log(err);
             res.status(500).send({ error: true, message: err });

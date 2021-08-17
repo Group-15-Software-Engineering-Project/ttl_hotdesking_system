@@ -86,6 +86,17 @@ export default class BookingCalendar extends React.Component {
                 this.fetchAvailableDesks();
             }
         );
+        fetch(`/api/adminOptions/Desk_Booking_Range`)
+            .then((res) => {
+                if (!res.ok) throw new Error(`Failed to retrieve option`);
+                return res.json();
+            })
+            .then((res) =>
+                this.setState({ dayLimit: res.option.value * 7 }, () =>
+                    console.log(this.state.dayLimit)
+                )
+            )
+            .catch(console.error);
     }
 
     checkAvailability = (dateInfo) => {

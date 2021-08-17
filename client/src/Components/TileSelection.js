@@ -40,7 +40,7 @@ export default function TileSelection(props) {
                     />
                     <label htmlFor={options[i].value + props.elementID}>
                         <div
-                            tabindex={
+                            tabIndex={
                                 options[i].disabled || options[i].value === chosenOption
                                     ? "-1"
                                     : 0
