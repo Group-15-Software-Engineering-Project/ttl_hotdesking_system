@@ -6,7 +6,7 @@ const GroupModel = require("./models/group");
 const NotificationModel = require("./models/notification");
 const AppointmentModel = require("./models/appointment");
 const RoomModel = require("./models/room");
-const AdminOptionsModel = require("./models/adminOptions");
+const AdminOptionModel = require("./models/adminOption");
 
 //const sequelize = new Sequelize('sqlite::memory:');
 const sequelize = new Sequelize(
@@ -25,7 +25,7 @@ const Group = GroupModel(sequelize, Sequelize);
 const Notification = NotificationModel(sequelize, Sequelize);
 const Appointment = AppointmentModel(sequelize, Sequelize);
 const Room = RoomModel(sequelize, Sequelize);
-const AdminOptions = AdminOptionsModel(sequelize, Sequelize);
+const AdminOption = AdminOptionModel(sequelize, Sequelize);
 
 User.hasMany(Booking, {
     onDelete: "CASCADE",
@@ -99,5 +99,5 @@ module.exports = {
     Notification,
     Appointment,
     Room,
-    AdminOptions
+    AdminOption
 };

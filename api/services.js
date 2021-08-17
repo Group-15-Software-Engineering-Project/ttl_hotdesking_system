@@ -7,7 +7,7 @@ const {
     Notification,
     Appointment,
     Room,
-    AdminOptions,
+    AdminOption,
 } = require("../sequelize");
 const { QueryTypes, Op } = require("sequelize");
 const user = require("../models/user");
@@ -466,13 +466,13 @@ module.exports = {
         });
     },
     getAdminOptions: async () => {
-        let options = await AdminOptions.findAll({
+        let options = await AdminOption.findAll({
             raw: true
         });
         return options;
     },
     updateAdminOptions: async (key, value) => {
-        let model = await AdminOptions.findByPk(key);
+        let model = await AdminOption.findByPk(key);
         model.value = value;
         model.save();
     },

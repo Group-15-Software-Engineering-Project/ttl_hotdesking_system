@@ -551,7 +551,7 @@ router.get("/getUserAppointmentCount/:email", (req, res) => {
 router.get("/adminOptions", (req, res) => {
     console.log("getAdminOptions");
     services.getAdminOptions()
-    .then((options) => res.status(200).send({options: options}));
+    .then((options) => res.status(200).send({options: options}))
     .catch((err) => {
         console.log(err);
         res.status(500).end();
