@@ -15,7 +15,7 @@ import Notifications from "./Pages/Notifications";
 import AdminBookingView from "./Pages/AdminBookingView";
 import MeetingBookings from "./Pages/MeetingBookings";
 import NavigationSidebar from "./Components/NavigationSidebar";
-import Restrictions from "./Pages/Restrictions";
+import AdminOptions from "./Pages/AdminOptions";
 import Navbar from "./Components/NavBar";
 import { verify } from "./Components/Misc";
 
@@ -77,7 +77,7 @@ class App extends Component {
                         <Route path="/past-bookings">
                             <PastBookings email={sessionStorage.email} />
                         </Route>
-                        <Route path="/restrictions" component={Restrictions} />
+                        <Route path="/adminOptions" component={AdminOptions} />
                         {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
                         {this.state.visible ? (
                             <Route path="/AdminBookingView" component={AdminBookingView} />

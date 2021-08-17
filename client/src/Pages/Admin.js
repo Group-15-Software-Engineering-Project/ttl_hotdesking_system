@@ -12,14 +12,14 @@ const adminPages = {
         { value: "View Bookings" },
         { value: "Manage Desks & Locations" },
         { value: "Post Notification" },
-        { value: "Manage Restrictions" },
+        { value: "Manage adminOptions" },
     ],
     "Manage Users": "/users",
     "Usage Reports": "/reports",
     "View Bookings": "/AdminBookingView",
     "Manage Desks & Locations": "/locations",
     "Post Notification": "/notifications",
-    "Manage Restrictions": "/restrictions",
+    "Manage adminOptions": "/adminOptions",
 };
 class Admin extends Component {
     constructor(props) {
