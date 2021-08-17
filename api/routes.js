@@ -523,45 +523,6 @@ router.delete("/appointments/:id", (req, res) => {
         });
 });
 
-router.post("/addAdminOptions/:key/:value", (req, res) => {
-    console.log("addAdminOptions");
-    services
-        .addAdminOptions(req.body.key, req.body.value)
-        .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: true, message: err });
-        });
-});
-
-router.post("/updateAdminOptions/:key/:value", (req, res) => {
-    console.log("updateAdminOptions");
-    services
-        .updateAdminOptions(req.body.key, req.body.value)
-        .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: true, message: err });
-        });
-});
-
-router.post("/removeAdminOptions/:key/:value", (req, res) => {
-    console.log("removeAdminOptions");
-    services
-        .removeAdminOptions(req.body.key, req.body.value)
-        .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: true, message: err });
-        });
-});
-
 router.get("/getUserBookingCount/:email", (req, res) => {
     console.log("getUserBookingCount");
     services
@@ -584,6 +545,27 @@ router.get("/getUserAppointmentCount/:email", (req, res) => {
         .catch((err) => {
             console.log(err);
             res.status(500).send({ error: true, count: -1 });
+        });
+});
+
+router.get("/adminOptions", (req, res) => {
+    console.log("getAdminOptions");
+    services.getAdminOptions()
+    .then((options) => res.status(200).send({options: options}));
+    .catch((err) => {
+        console.log(err);
+        res.status(500).end();
+    });
+});
+
+router.patch("/adminOptions/:key", (req, res) => {
+    console.log("updateAdminOptions");
+    services
+        .updateAdminOptions(req.param.key, req.body.value)
+        .then(res.status(204).end())
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, message: err });
         });
 });
 
