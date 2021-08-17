@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "../public/css/Login.css";
 import "../public/css/main.css";
-import { _GetUserBookings, setSessionToken, verify } from "../Components/Misc";
+import { setSessionToken, verify } from "../Components/Misc";
 import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 import LogInButton from "../Components/LogInButton";
@@ -108,10 +108,9 @@ class Login extends Component {
                 if (res.error) {
                     this.setState({ validLogin: false, errorText: true });
                 } else {
-                    if (!sessionStorage.notifications) this.getNotifications();
+                    // if (!sessionStorage.notifications) this.getNotifications();
                     this.setState({ validLogin: true, admin: res.admin }, () => {
                         this.getUserName();
-                        _GetUserBookings(null, this.state.email);
                     });
                     this.props.setEmail(this.state.email);
                 }

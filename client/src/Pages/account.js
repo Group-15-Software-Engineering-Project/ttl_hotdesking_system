@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
-import { _GetUserBookings, verify, setSessionToken } from "../Components/Misc";
+import { verify, setSessionToken } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Account extends Component {
@@ -12,7 +12,6 @@ class Account extends Component {
                 sessionStorage.username !== sessionStorage.email
                     ? sessionStorage.username
                     : "N/A",
-            bookingsMade: JSON.parse(sessionStorage.bookings).data.length,
             oldPassword: "",
             newPassword: "",
             confirmNewPassword: "",
@@ -20,6 +19,8 @@ class Account extends Component {
             confirmDelPassword: "",
             setUserName: "",
             deleteAccountConfirmation: false,
+            bookingCount: 0,
+            appointmentCount: 0,
         };
     }
 
@@ -68,8 +69,6 @@ class Account extends Component {
                     if (res.error) {
                         alert("Failed to change password");
                     } else {
-                        if (sessionStorage.passwordWarning)
-                            sessionStorage.removeItem("passwordWarning");
                         alert("Success");
                     }
                 })
@@ -165,9 +164,26 @@ class Account extends Component {
     };
 
     componentDidMount = () => {
-        //this.getUserName();
         window.scrollTo(0, 0);
-        if (!sessionStorage.bookings) _GetUserBookings();
+        fetch(`/api/getUserBookingCount/${sessionStorage.email}`)
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to get desk booking count");
+                return res.json();
+            })
+            .then((res) => {
+                this.setState({ bookingCount: res.count });
+            })
+            .catch(console.error);
+
+        fetch(`/api/getUserAppointmentCount/${sessionStorage.email}`)
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to get meeting room booking count");
+                return res.json();
+            })
+            .then((res) => {
+                this.setState({ appointmentCount: res.count });
+            })
+            .catch(console.error);
     };
 
     handleEvent = (event) => {
@@ -206,7 +222,15 @@ class Account extends Component {
                             textAlign: "left",
                             marginLeft: "5%",
                         }}>
-                        {"Bookings made: " + this.state.bookingsMade}
+                        {"Desk bookings made: " + this.state.bookingCount}
+                    </h4>
+                    <div className="space" style={{ marginBottom: "1%" }} />
+                    <h4
+                        style={{
+                            textAlign: "left",
+                            marginLeft: "5%",
+                        }}>
+                        {"Meeting room bookings made: " + this.state.appointmentCount}
                     </h4>
                     <div className="space" />
                     <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>

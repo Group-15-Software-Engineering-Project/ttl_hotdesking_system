@@ -1,4 +1,3 @@
-import { Calendar } from "react-calendar";
 import "../public/css/Calendar.css";
 import React from "react";
 import GlassCalendar from "./GlassCalendar";
@@ -84,6 +83,7 @@ export default class BookingCalendarNoLimit extends React.Component {
                 }}>
                 <GlassCalendar
                     hideLanguageToggle
+                    highlight="sat sun"
                     tileClassName={this.checkAvailability}
                     disableTile={this.disabledTiles}
                     onDaySelect={(e) => {

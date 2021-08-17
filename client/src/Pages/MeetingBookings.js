@@ -157,9 +157,8 @@ function MeetingBookings() {
                 }
                 return res.json();
             })
-            .then((rooms) => {
-                setMeetingRooms(rooms.data);
-            });
+            .then((rooms) => setMeetingRooms(rooms.data))
+            .catch(alert);
     };
 
     const submitAppointmentBooking = () => {
