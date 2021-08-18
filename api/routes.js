@@ -12,10 +12,10 @@ const jwtCheck = jwt({
           cache: true,
           rateLimit: true,
           jwksRequestsPerMinute: 5,
-          jwksUri: 'https://dev-nb-c6re4.eu.auth0.com/.well-known/jwks.json'
+          jwksUri: process.env.JWKSURI
     }),
-    audience: 'https://localhost/api',
-    issuer: 'https://dev-nb-c6re4.eu.auth0.com/',
+    audience: process.env.AUDIENCE,
+    issuer: [process.env.ISSUER],
     algorithms: ['RS256']
 });
 

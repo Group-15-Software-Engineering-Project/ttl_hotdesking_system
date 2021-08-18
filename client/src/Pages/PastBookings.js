@@ -19,7 +19,7 @@ function PastBookings() {
         window.scrollTo(0, 0);
         const accessToken = await getAccessTokenSilently({
             audience: process.env.audience,
-        }).then(console.log);
+        }).then((e) => console.log(`accesstok: ${e}`));
         getAppointments(accessToken);
         getBookings(accessToken);
     }, []);
