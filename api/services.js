@@ -134,6 +134,7 @@ module.exports = {
         for (let group in distinctNames) {
             groups.push(distinctNames[group].name);
         }
+        groups.unshift(groups.splice(groups.indexOf("All Users"), 1));
         return groups;
     },
     getUsers: async () => {
