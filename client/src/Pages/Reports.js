@@ -20,6 +20,7 @@ class Reports extends Component {
       chosenTeam: "",
       roomlist: [],
       teamlist: [],
+      week: [],
       error: "",
       isError: false,
       barData: {
@@ -123,7 +124,21 @@ class Reports extends Component {
     })
     .catch((err) => {});
 
-   
+    fetch("/api/adminOptions/Desk_Booking_Range")
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      if (res.error) {
+        alert("Could not get Users");
+      } else {
+        this.setState({ week: res.option });
+        console.log("NUmber of weeks", res.option);
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
 
     fetch("/api/getGroups")
       .then((res) => {
@@ -164,6 +179,7 @@ class Reports extends Component {
         time: this.state.chosenTimeRange.toLowerCase(),
         room: this.state.chosenLocation,
         team: this.state.chosenTeam,
+        week: this.state.week,
       }),
     })
       .then((res) => {
@@ -279,6 +295,8 @@ class Reports extends Component {
                 >
                   <option value="">Select time range</option>
                   <option value="overall">All time</option>
+                  {this.state.week.value > 1?(<option value="upcomingWeek">Next {this.state.week.value} weeks</option>):null} 
+                  {console.log("This is weeks", this.state.week)}
                   {this.state.timeRanges.map((x) => {
                     return <option value={x}>{x}</option>;
                   })}

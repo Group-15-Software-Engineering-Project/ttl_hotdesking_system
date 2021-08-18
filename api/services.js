@@ -215,12 +215,13 @@ module.exports = {
         let bookings = await Booking.findAll(options);
         return [bookings.length, bookings];
     },
-    getReports: async (time, room, team) => {
+    getReports: async (time, room, team, week) => {
         let userBookingsCount = [];
         let bookings = [[], []];
         let allBookings = [];
         let bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
         let users = await module.exports.getUsersInGroup(team);
+        let days= week*7;
         let options = {
             where: {},
         };
@@ -269,6 +270,15 @@ module.exports = {
                     [Op.lt]: today,
                 };
                 break;
+            case "upcomingWeek":
+                options.where["date"] = {
+                    [Op.gte]: new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        today.getDate()+days
+                    ),
+                    [Op.lt]: today,
+                };
             case "overall":
                 break;
             case "default":

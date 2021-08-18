@@ -208,7 +208,7 @@ router.get("/getBookingsByLocation/:deskRoom", (req, res) => {
 router.post("/getReports", (req, res) => {
     console.log("getReports");
     services
-        .getReports(req.body.time, req.body.room, req.body.team)
+        .getReports(req.body.time, req.body.room, req.body.team, req.body.week)
         .then((result) => {
             res.status(200).send({
                 labels: result[0],
