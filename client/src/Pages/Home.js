@@ -97,7 +97,7 @@ class Home extends React.Component {
     };
     displayBooking = (data) => {
         let time =
-            data.am && !data.pm
+            data.pm && !data.am
                 ? "13:30 - 17:30"
                 : data.am && !data.pm
                 ? "09:00 - 13:00"
