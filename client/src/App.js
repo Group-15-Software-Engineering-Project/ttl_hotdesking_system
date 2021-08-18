@@ -15,7 +15,7 @@ import Notifications from "./Pages/Notifications";
 import AdminBookingView from "./Pages/AdminBookingView";
 import MeetingBookings from "./Pages/MeetingBookings";
 import NavigationSidebar from "./Components/NavigationSidebar";
-import Restrictions from "./Pages/Restrictions";
+import AdminOptions from "./Pages/AdminOptions";
 import Navbar from "./Components/NavBar";
 import { verify } from "./Components/Misc";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -50,7 +50,6 @@ function App() {
                     <Route path="/login">
                         <Login />
                     </Route>
-
                     <Route path="/booking-page">
                         <BookingPage email={sessionStorage.email} />
                     </Route>

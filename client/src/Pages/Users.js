@@ -1,7 +1,6 @@
 import React, { Component, createRef } from "react";
 import { Redirect } from "react-router-dom";
-import { verify, createUniqueID } from "../Components/Misc";
-import emailjs from "emailjs-com";
+import { verify } from "../Components/Misc";
 
 import "../public/css/main.css";
 

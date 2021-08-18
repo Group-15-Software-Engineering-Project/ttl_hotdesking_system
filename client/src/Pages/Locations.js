@@ -156,7 +156,6 @@ class Locations extends Component {
     };
 
     submitRemoveDesk = (desk, room) => {
-        //if (desk.length < 1 || room.length < 1) return;
         this.setState({ key: createUniqueID() });
         fetch("/api/removeDesk", {
             method: "POST",

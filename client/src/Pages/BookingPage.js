@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
-import { createUniqueID, months, verify, _GetUserBookings } from "../Components/Misc";
+import { createUniqueID, months, verify } from "../Components/Misc";
 import ConfirmationEmail from "../Components/ConfirmationEmail.js";
 import "../public/css/main.css";
 import { Redirect } from "react-router";
@@ -96,7 +96,6 @@ export default class BookingPage extends React.Component {
                     pm,
                     this.state.chosenTime
                 );
-                alert(res.message);
                 this.setState({
                     chosenArea: "default",
                     chosenDate: "default",
@@ -105,9 +104,6 @@ export default class BookingPage extends React.Component {
                     areaKey: createUniqueID(),
                     bookableDesks: [],
                 });
-                sessionStorage.removeItem("bookings");
-                sessionStorage.removeItem("upcomingBookings");
-                _GetUserBookings();
             })
             .catch((err) => {
                 console.log(err);

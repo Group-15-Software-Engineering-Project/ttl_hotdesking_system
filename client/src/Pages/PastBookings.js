@@ -1,29 +1,46 @@
 import React, { useState, useEffect } from "react";
 import "../public/css/booking.css";
 import "../public/css/main.css";
-import { getDifferenceInDays, months, verify, _GetUserBookings } from "../Components/Misc";
+import { getDifferenceInDays, months, verify } from "../Components/Misc";
 import { Redirect, Link } from "react-router-dom";
 import PillSlider from "../Components/PillSlider";
-import { BiStreetView } from "react-icons/bi";
+import { useAuth0 } from '@auth0/auth0-react';
+// import { BiStreetView } from "react-icons/bi";
 
 function PastBookings() {
-    const [todayDate, setDate] = useState(null);
     const [isCancelling, toggleCancelMode] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [view, setView] = useState("off");
     const verified = verify(true) || verify(false);
+    const [bookings, setBookings] = useState([]);
+    const { getAccessTokenSilently } = useAuth0();
 
-    useEffect(() => {
+    useEffect(async () => {
         window.scrollTo(0, 0);
-        let date = new Date();
-        setDate(date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate());
-        getAppointments();
-
-        if (!sessionStorage.bookings) _GetUserBookings();
+        const accessToken = await getAccessTokenSilently({
+            audience: process.env.audience,
+        }).then((e) => console.log(`accesstok: ${e}`));
+        getAppointments(accessToken);
+        getBookings(accessToken);
     }, []);
 
+    const getBookings = (accessToken) => {
+        fetch(`/api/getBookings/foo@bar.com`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed fetching user bookings");
+                return res.json();
+            })
+            .then((res) => {
+                setBookings(res.data);
+            })
+            .catch(console.error);
+    };
+
     const getBookingIndex = (source, booking) => {
-        console.log(source);
         for (let index = 0; index < source.length; index++) {
             let currentBooking = source[index];
             if (
@@ -38,6 +55,19 @@ function PastBookings() {
             }
         }
         return -1;
+    };
+
+    const submitDeleteAppointment = (id) => {
+        fetch(`/api/appointments/${id}`, {
+            method: "DELETE",
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to delete appointment.");
+                else {
+                    getAppointments();
+                }
+            })
+            .catch(alert);
     };
 
     //bookingToCancel is an exact copy of a booking returned from the backend.
@@ -62,7 +92,7 @@ function PastBookings() {
             .then((res) => {
                 if (res.error) {
                 } else {
-                    window.location.reload();
+                    getBookings();
                 }
             })
             .catch((err) => {});
@@ -76,7 +106,7 @@ function PastBookings() {
                 ? "09:00 - 13:00"
                 : "09:00 - 17:30";
         let date = data.date.split("T")[0].split("-");
-        let isUpcoming = todayDate - parseInt(date[0] + date[1] + date[2]);
+        let isUpcoming = getDifferenceInDays(new Date(), new Date(data.date));
         let status =
             isUpcoming < 0 ? (
                 <span
@@ -147,17 +177,8 @@ function PastBookings() {
                             `Are you sure you want to cancel the booking?\n\nLocation: ${data.deskRoom}\nDesk: ${data.deskId}\nDate: ${data.date}\nTime: ${displayTime}`
                         );
                         if (res) {
-                            let currentData = JSON.parse(sessionStorage.bookings).data;
-
-                            let index = getBookingIndex(currentData, data);
+                            let index = getBookingIndex(bookings, data);
                             if (index !== -1) {
-                                currentData.splice(index, 1);
-                                sessionStorage.removeItem("bookings");
-                                sessionStorage.setItem(
-                                    "bookings",
-                                    JSON.stringify({ isNull: false, data: currentData })
-                                );
-                                sessionStorage.removeItem("upcomingBookings");
                                 submitCancelBooking(data);
                             }
                         }
@@ -211,89 +232,85 @@ function PastBookings() {
     };
 
     const displayDeskBookings = () => {
-        return sessionStorage.bookings ? (
-            JSON.parse(sessionStorage.bookings).data.length > 0 ? (
-                <>
-                    <div
-                        className="bookings-table"
-                        style={{ border: "none", pointerEvents: "none" }}>
-                        <span
-                            className="booking-history"
-                            style={{
-                                textAlign: "left",
-                                marginLeft: "5px",
-                                fontWeight: "bold",
-                                maxWidth: "16.5%",
-                                flex: "1.25",
-                            }}>
-                            Status
-                        </span>
-                        <span
-                            className="booking-history"
-                            style={{
-                                textAlign: "left",
-                                fontWeight: "bold",
-                                flex: "1.25",
-                            }}>
-                            Desk No.
-                        </span>
-                        <span
-                            className="booking-history"
-                            style={{
-                                textAlign: "left",
-                                fontWeight: "bold",
-                                flex: "3",
-                            }}>
-                            Location
-                        </span>
-                        <span
-                            className="booking-history"
-                            style={{
-                                textAlign: "left",
-                                fontWeight: "bold",
-                                flex: "2",
-                            }}>
-                            Date
-                        </span>
-                        <span
-                            className="booking-history"
-                            style={{
-                                textAlign: "left",
-                                fontWeight: "bold",
-                                flex: "2",
-                            }}>
-                            Time
-                        </span>
-                        <div style={{ width: "100%", marginTop: "2%" }} />
-                    </div>
-                    <div
+        return bookings.length > 0 ? (
+            <>
+                <div
+                    className="bookings-table"
+                    style={{ border: "none", pointerEvents: "none" }}>
+                    <span
+                        className="booking-history"
                         style={{
-                            borderBottom: "1px solid #ccc",
-                            width: "96%",
-                            marginLeft: "2%",
-                        }}
-                    />
-                    {JSON.parse(sessionStorage.bookings).data.map((data) => {
-                        return displayBooking(data);
-                    })}
-                </>
-            ) : (
+                            textAlign: "left",
+                            marginLeft: "5px",
+                            fontWeight: "bold",
+                            maxWidth: "16.5%",
+                            flex: "1.25",
+                        }}>
+                        Status
+                    </span>
+                    <span
+                        className="booking-history"
+                        style={{
+                            textAlign: "left",
+                            fontWeight: "bold",
+                            flex: "1.25",
+                        }}>
+                        Desk No.
+                    </span>
+                    <span
+                        className="booking-history"
+                        style={{
+                            textAlign: "left",
+                            fontWeight: "bold",
+                            flex: "3",
+                        }}>
+                        Location
+                    </span>
+                    <span
+                        className="booking-history"
+                        style={{
+                            textAlign: "left",
+                            fontWeight: "bold",
+                            flex: "2",
+                        }}>
+                        Date
+                    </span>
+                    <span
+                        className="booking-history"
+                        style={{
+                            textAlign: "left",
+                            fontWeight: "bold",
+                            flex: "2",
+                        }}>
+                        Time
+                    </span>
+                    <div style={{ width: "100%", marginTop: "2%" }} />
+                </div>
                 <div
                     style={{
-                        display: "flex",
-                        width: "100%",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                    }}>
-                    <h2>You have made no bookings yet.</h2>
-                    <div className="space" />
-                    <Link to="/booking-page">
-                        <button className="button-style no-outline">{"Book a Desk"}</button>
-                    </Link>
-                </div>
-            )
+                        borderBottom: "1px solid #ccc",
+                        width: "96%",
+                        marginLeft: "2%",
+                    }}
+                />
+                {bookings.map((data) => {
+                    return displayBooking(data);
+                })}
+            </>
         ) : (
-            "Booking history not found. Try re-logging in if booking history should be present."
+            <div
+                style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                }}>
+                <h2>You have made no bookings yet.</h2>
+                <div className="space" />
+                <Link to="/booking-page">
+                    <button className="button-style no-outline">{"Book a Desk"}</button>
+                </Link>
+            </div>
         );
     };
 
@@ -366,22 +383,25 @@ function PastBookings() {
                 }}>
                 <h2>You have made no bookings yet.</h2>
                 <div className="space" />
-                <Link to="/booking-page">
-                    <button className="button-style no-outline">{"Book a Desk"}</button>
+                <Link to="/book-meeting-room">
+                    <button className="button-style no-outline">{"Book a Meeting"}</button>
                 </Link>
             </div>
         );
     };
 
-    const getAppointments = () => {
-        fetch(`/api/getAppointments/${sessionStorage.email}`)
+    const getAppointments = (accessToken) => {
+        fetch(`/api/getAppointments/foo@bar.com`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed getting appointments");
                 else return res.json();
             })
             .then((data) => {
                 setAppointments(data.appointments);
-                displayAppointment(data.appointments[0]);
             })
             .catch(console.error);
     };
@@ -465,18 +485,7 @@ function PastBookings() {
                             `Are you sure you want to cancel the booking?\n\nMeeting Room: ${data.roomName}\nDate: ${date}\nTime: ${displayTime}`
                         );
                         if (res) {
-                            fetch(`/api/appointments/${data.id}`, {
-                                method: "DELETE",
-                            })
-                                .then((res) => {
-                                    if (!res.ok)
-                                        throw new Error("Failed to delete appointment.");
-                                    else {
-                                        alert("Successfully deleted.");
-                                        getAppointments();
-                                    }
-                                })
-                                .catch(alert);
+                            submitDeleteAppointment(data.id);
                         }
                     }, 50);
                 }}

@@ -1,10 +1,8 @@
-import React, { usestate, Component, createRef } from "react";
+import React from "react";
 import "../public/css/booking.css";
 import "../public/css/main.css";
 import { months, verify, getDifferenceInDays } from "../Components/Misc";
 import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
-import BookingCalendarAllTiles from "../Components/BookingCalendarAllTiles";
 import GlassCalendar from "../Components/GlassCalendar";
 
 export default class AdminBookingView extends React.Component {
@@ -136,13 +134,13 @@ export default class AdminBookingView extends React.Component {
             let currentBooking = this.state.bookings[index];
             console.log(" in check existing restrictions");
             let morning = 0;
-            {
-                this.state.AM ? (morning = 1) : (morning = 0);
-            }
+
+            this.state.AM ? (morning = 1) : (morning = 0);
+
             let evening = 0;
-            {
-                this.state.PM ? (evening = 1) : (evening = 0);
-            }
+
+            this.state.PM ? (evening = 1) : (evening = 0);
+
             console.log("dates", currentBooking.date, this.state.chosenDate);
             console.log("room", currentBooking.deskRoom, this.state.chosenLocation);
             console.log("morning?", currentBooking.am, morning);
@@ -265,7 +263,6 @@ export default class AdminBookingView extends React.Component {
                 if (res.error) {
                 } else {
                     window.location.reload();
-                    // this.componentDidMount();
                 }
             })
             .catch((err) => {});
@@ -294,13 +291,7 @@ export default class AdminBookingView extends React.Component {
                 ? "09:00 - 13:00"
                 : "09:00 - 17:30";
         let date = new Date();
-        // this.setState({
-        //     todayDate:
-        //         date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
-        // });
         date = data.date.split("T")[0].split("-");
-
-        console.log("Displaying Boking", this.state.bookings);
 
         let isUpcoming = this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
 
@@ -425,30 +416,6 @@ export default class AdminBookingView extends React.Component {
                         View Bookings by Date
                     </h1>
                     <div className="space" />
-                    {/*<h4>
-            <h2
-              style={{
-                position: "absolute",
-                marginTop: "0.1%",
-                marginBottom: "0.5%",
-                marginLeft: "26.5%",
-              }}
-            >
-              Show Calendar
-            </h2>
-            <label class="switch" style={{ marginLeft: "18%" }}>
-              <input
-                type="checkbox"
-                onChange={() =>
-                  this.setState({
-                    slider: !this.state.slider,
-                  })
-                }
-              ></input>
-              <span class="slider round"></span>
-            </label>
-            </h4>*/}
-                    <div className="space" />
 
                     <div>
                         <div
@@ -458,16 +425,6 @@ export default class AdminBookingView extends React.Component {
                                 alignItems: "center",
                                 paddingBottom: "20px",
                             }}>
-                            {/* <BookingCalendarAllTiles
-                                onSelect={(date) => {
-                                    this.setState({ chosenDate: date });
-                                    this.getBookingsOnDate(date);
-                                    this.filterBookings();
-                                    this.checkRestriction(date);
-                                    document.getElementById("selectlocation").value =
-                                        "overall";
-                                    window.scroll(0, 300);
-                                }}></BookingCalendarAllTiles> */}
                             <GlassCalendar
                                 highlight="none"
                                 hideLanguageToggle
@@ -608,11 +565,9 @@ export default class AdminBookingView extends React.Component {
                                         //  marginBottom: "0%",
                                     }}
                                     onClick={() => {
-                                        {
-                                            this.checkExistingRestrictions()
-                                                ? this.submitRoomRestriction()
-                                                : alert("Booking already exists.");
-                                        }
+                                        this.checkExistingRestrictions()
+                                            ? this.submitRoomRestriction()
+                                            : alert("Booking already exists.");
                                     }}>
                                     Restrict
                                 </button>

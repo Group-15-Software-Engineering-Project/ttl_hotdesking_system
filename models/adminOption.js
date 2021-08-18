@@ -1,13 +1,12 @@
 module.exports = (sequelize, type) => {
     return sequelize.define(
-        "adminOptions", {
+        "adminOption", {
             key: {
                 type: type.STRING,
                 primaryKey: true,
             },
             value: {
-                type: type.STRING,
-                primaryKey: true,
+                type: type.INTEGER,
             },
         }, {
             timestamps: false,
