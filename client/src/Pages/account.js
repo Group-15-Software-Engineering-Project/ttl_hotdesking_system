@@ -81,7 +81,6 @@ class Account extends Component {
     };
 
     submitDeleteAccount = () => {
-        alert(this.state.delPassword);
         if (
             this.state.delPassword === this.state.confirmDelPassword &&
             this.state.deleteAccountConfirmation

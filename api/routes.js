@@ -579,5 +579,14 @@ router.get("/adminOptions/:key", (req, res) => {
             res.status(500).send({ error: true, message: err });
         });
 });
+router.get("/allBookings/:date", (req, res) => {
+    services
+        .getAllBookingsOnDate(req.params.date)
+        .then((returnValue) => res.status(200).send(returnValue))
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, message: err });
+        });
+});
 
 module.exports = router;

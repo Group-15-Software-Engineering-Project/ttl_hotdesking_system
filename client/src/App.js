@@ -16,6 +16,7 @@ import AdminBookingView from "./Pages/AdminBookingView";
 import MeetingBookings from "./Pages/MeetingBookings";
 import NavigationSidebar from "./Components/NavigationSidebar";
 import AdminOptions from "./Pages/AdminOptions";
+import CurrentBookings from "./Pages/CurrentBookings";
 import Navbar from "./Components/NavBar";
 import { verify } from "./Components/Misc";
 
@@ -74,6 +75,7 @@ class App extends Component {
                             <Account email={sessionStorage.email} />
                         </Route>
                         <Route path="/reports" component={Reports} />
+                        <Route path="/current-bookings" component={CurrentBookings} />
                         <Route path="/past-bookings">
                             <PastBookings email={sessionStorage.email} />
                         </Route>

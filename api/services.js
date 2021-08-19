@@ -581,4 +581,69 @@ module.exports = {
         });
         return count;
     },
+    getAllBookingsOnDate: async (date) => {
+        let deskBookings = [];
+        let appointments = [];
+        let deskRooms = await Desk.aggregate("room", "DISTINCT", { plain: false });
+        for (let i = 0; i < deskRooms.length; i++) {
+            deskRooms[i] = deskRooms[i].DISTINCT;
+        }
+        for (let room of deskRooms) {
+            let bookings = await Booking.findAll({
+                raw: true,
+                where: {
+                    deskRoom: room,
+                    date: date,
+                },
+                order: [
+                    ["deskId", "ASC"],
+                    ["am", "DESC"],
+                ],
+            });
+            deskBookings.push({
+                location: room,
+                bookings: bookings,
+            });
+        }
+
+        let meetingRooms = await Room.findAll({ raw: true });
+        for (let i = 0; i < meetingRooms.length; i++) {
+            meetingRooms[i] = meetingRooms[i].name;
+        }
+
+        for (let room of meetingRooms) {
+            let bookings = await Appointment.findAll({
+                raw: true,
+                where: {
+                    roomName: room,
+                    start: {
+                        [Op.and]: {
+                            [Op.gte]: new Date(
+                                new Date(date).getFullYear(),
+                                new Date(date).getMonth(),
+                                new Date(date).getDate(),
+                                0,
+                                0
+                            ),
+                            [Op.lt]: new Date(
+                                new Date(date).getFullYear(),
+                                new Date(date).getMonth(),
+                                new Date(date).getDate() + 1,
+                                0,
+                                0
+                            ),
+                        },
+                    },
+                },
+                order: [["start", "ASC"]],
+            });
+            appointments.push({
+                location: room,
+                bookings: bookings,
+            });
+        }
+        deskBookings = deskBookings.filter((obj) => obj.bookings.length !== 0);
+        appointments = appointments.filter((obj) => obj.bookings.length !== 0);
+        return { bookings: deskBookings, appointments: appointments };
+    },
 };

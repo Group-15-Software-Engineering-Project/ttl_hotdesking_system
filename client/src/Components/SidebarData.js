@@ -14,6 +14,7 @@ export const SidebarData = [
         cName: "nav-text",
         adminRequired: false,
     },
+
     {
         title: "Book a Desk",
         path: "/booking-page",
@@ -32,6 +33,13 @@ export const SidebarData = [
         title: "My Bookings",
         path: "/past-bookings",
         icon: <AiIcons.AiOutlineHistory />,
+        cName: "nav-text",
+        adminRequired: false,
+    },
+    {
+        title: "View All Bookings",
+        path: "/current-bookings",
+        icon: <IoIcons.IoIosCalendar style={{ backgroundColor: "transparent" }} />,
         cName: "nav-text",
         adminRequired: false,
     },

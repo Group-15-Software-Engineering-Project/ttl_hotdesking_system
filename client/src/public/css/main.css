@@ -475,3 +475,23 @@ input:checked + .slider:before {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.current-booking-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 96%;
+    flex-wrap: wrap;
+    margin-left: 2%;
+}
+
+.current-booking-card {
+    flex-basis: 30%;
+    margin: 5px;
+    height: fit-content;
+    background-color: #def;
+    text-align: left;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 2px 1px #6668, inset 0 0 0 1px black, inset -6px -6px 10px 5px #8af7;
+}
