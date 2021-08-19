@@ -213,13 +213,15 @@ module.exports = {
         const bookings = await Booking.findAll(options);
         return [bookings.length, bookings];
     },
-    getBookingsByDesks: async (deskOptions) => {
-        const models = await Desk.findAll(deskOptions);
-        console.log(models[0].getDataValue('bookings'));
+    getBookingsByDesks: async (deskOptions, bookingOptions) => {
         const report = [[], []];
-        for (const model in models) {
-            report[0].push(models[model].getDataValue('room') + ' Desk ' + models[model].getDataValue('id'));
-            report[1].push(models[model].getDataValue('bookings').length);
+        const desks = await Desk.findAll(deskOptions);
+        for (const desk in desks) {
+          bookingOptions.where.deskId = desks[desk].getDataValue('id');
+          bookingOptions.where.deskRoom = desks[desk].getDataValue('room');
+          const deskBookingsCount = await Booking.count(bookingOptions);
+          report[0].push(`${desks[desk].getDataValue('room')} Desk ${desks[desk].getDataValue('id')}`);
+          report[1].push(deskBookingsCount);
         }
         return report;
     },
@@ -233,23 +235,23 @@ module.exports = {
             where: {}
         };
         const deskOptions = {
-            include: {
-                model: Booking,
-                required: true,
-                where: {
-                }
-            },
+            where: {}
+        };
+        const bookingOptions = {
             where: {
+                userEmail: {
+                    [Op.in] : users
+                }
             }
         };
         if (room !== 'overall') {
             options.where.deskRoom = room;
-            deskOptions.where.deskRoom = room;
+            deskOptions.where.room = room;
         }
         const today = new Date();
         switch (time) {
         case 'next week':
-            deskOptions.include.where = options.where.date = {
+            bookingOptions.where.date = options.where.date = {
                 [Op.gte]: today,
                 [Op.lt]: new Date(
                     today.getFullYear(),
@@ -259,7 +261,7 @@ module.exports = {
             };
             break;
         case 'last week':
-            deskOptions.include.where = options.where.date = {
+            bookingOptions.where.date = options.where.date = {
                 [Op.gte]: new Date(
                     today.getFullYear(),
                     today.getMonth(),
@@ -269,7 +271,7 @@ module.exports = {
             };
             break;
         case 'last month':
-            deskOptions.include.where = options.where.date = {
+            bookingOptions.where.date = options.where.date = {
                 [Op.gte]: new Date(
                     today.getFullYear(),
                     today.getMonth() - 1,
@@ -279,7 +281,7 @@ module.exports = {
             };
             break;
         case 'last 3 months':
-            deskOptions.include.where = options.where.date = {
+            bookingOptions.where.date = options.where.date = {
                 [Op.gte]: new Date(
                     today.getFullYear(),
                     today.getMonth() - 3,
@@ -289,7 +291,7 @@ module.exports = {
             };
             break;
         case 'upcomingWeek':
-            deskOptions.include.where = options.where.date = {
+            bookingOptions.where.date = options.where.date = {
                 [Op.gte]: new Date(
                     today.getFullYear(),
                     today.getMonth(),
@@ -312,8 +314,8 @@ module.exports = {
                 new Date(allBookings[booking].getDataValue('date')).getDay()
             ]++;
         }
-        const x = await module.exports.getBookingsByDesks(deskOptions);
-        return [users, userBookingsCount, x[0], x[1], bookingDistribution, 'Success'];
+        const deskReports = await module.exports.getBookingsByDesks(deskOptions, bookingOptions);
+        return [users, userBookingsCount, deskReports[0], deskReports[1], bookingDistribution, 'Success'];
         //  Empty values are for deprecated desk report piechart
     },
     getBookingsInMonth: async (room, date, am, pm) => {
