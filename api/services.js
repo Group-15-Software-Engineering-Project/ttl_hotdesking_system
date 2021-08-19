@@ -7,155 +7,153 @@ const {
     Notification,
     Appointment,
     Room,
-    AdminOption,
-} = require("../sequelize");
-const { QueryTypes, Op } = require("sequelize");
-const user = require("../models/user");
-const sha256 = require("js-sha256");
-const nodemailer = require("nodemailer");
-const { Notifications } = require("@material-ui/icons");
-require("dotenv").config();
+    AdminOption
+} = require('../sequelize');
+const { QueryTypes, Op } = require('sequelize');
+const sha256 = require('js-sha256');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS,
-    },
+        pass: process.env.EMAIL_PASS
+    }
 });
 
 module.exports = {
     login: async (email, password) => {
-        let model = await User.findAll({
+        const model = await User.findAll({
             where: {
                 email: email,
-                password: sha256(password),
-            },
+                password: sha256(password)
+            }
         });
-        let groupModel = await Group.findAll({
+        const groupModel = await Group.findAll({
             where: {
                 userEmail: email,
-                name: "admin",
-            },
+                name: 'admin'
+            }
         });
-        let admin = groupModel.length > 0 ? true : false;
+        const admin = groupModel.length > 0;
         return model.length > 0 ? [true, admin] : [false, false];
     },
     adminCheck: async (email) => {
-        let model = await Group.findAll({
+        const model = await Group.findAll({
             where: {
                 userEmail: email,
-                name: "admin",
-            },
+                name: 'admin'
+            }
         });
-        return model.length > 0 ? true : false;
+        return model.length > 0;
     },
     getLocationData: async () => {
-        let data = [];
-        let rooms = await module.exports.getRoomsList();
-        for (let room in rooms) {
-            let deskModels = await Desk.findAll({
+        const data = [];
+        const rooms = await module.exports.getRoomsList();
+        for (const room in rooms) {
+            const deskModels = await Desk.findAll({
                 where: {
-                    room: rooms[room],
-                },
+                    room: rooms[room]
+                }
             });
-            let desks = [];
-            for (let desk of deskModels) {
-                desks.push(desk.getDataValue("id"));
+            const desks = [];
+            for (const desk of deskModels) {
+                desks.push(desk.getDataValue('id'));
             }
             data[room] = { name: rooms[room], desks: desks };
         }
         return data;
     },
     getRoomsList: async () => {
-        let rooms = [];
-        let distinctRooms = await sequelize.query(
-            "SELECT DISTINCT room FROM hotdesking.desks;",
+        const rooms = [];
+        const distinctRooms = await sequelize.query(
+            'SELECT DISTINCT room FROM hotdesking.desks;',
             {
-                type: QueryTypes.SELECT,
+                type: QueryTypes.SELECT
             }
         );
-        for (let room in distinctRooms) {
+        for (const room in distinctRooms) {
             rooms.push(distinctRooms[room].room);
         }
         return rooms;
     },
     getUserName: async (email) => {
-        let model = await User.findByPk(email);
-        let username = model.getDataValue("username");
-        return username ? username : email;
+        const model = await User.findByPk(email);
+        const username = model.getDataValue('username');
+        return username || email;
     },
     setUserName: async (email, username) => {
-        let model = await User.findByPk(email);
+        const model = await User.findByPk(email);
         model.username = username;
         model.save();
     },
     changePassword: async (email, password) => {
-        let model = await User.findByPk(email);
+        const model = await User.findByPk(email);
         model.password = sha256(password);
         model.save();
     },
     getRooms: async () => {
-        let rooms = [];
-        let distinctRooms = await sequelize.query(
-            "SELECT DISTINCT room FROM hotdesking.desks;",
-            {
-                type: QueryTypes.SELECT,
+        const rooms = [];
+        const distinctRooms = await sequelize.query(
+            'SELECT DISTINCT room FROM hotdesking.desks;', {
+                type: QueryTypes.SELECT
             }
         );
-        for (let room in distinctRooms) {
+        for (const room in distinctRooms) {
             rooms.push({
                 value: distinctRooms[room].room,
-                label: "",
+                label: ''
             });
         }
         return rooms;
     },
     getDesks: async (room) => {
-        let desks = [];
-        let models = await Desk.findAll({
+        const desks = [];
+        const models = await Desk.findAll({
             where: {
-                room: room,
-            },
+                room: room
+            }
         });
-        for (let model in models) {
-            desks.push(models[model].getDataValue("id"));
+        for (const model in models) {
+            desks.push(models[model].getDataValue('id'));
         }
         return desks;
     },
     getGroups: async () => {
-        let groups = [];
-        let distinctNames = await sequelize.query(
-            "SELECT DISTINCT name FROM hotdesking.groups;",
+        const groups = [];
+        const distinctNames = await sequelize.query(
+            'SELECT DISTINCT name FROM hotdesking.groups;',
             {
-                type: QueryTypes.SELECT,
+                type: QueryTypes.SELECT
             }
         );
-        for (let group in distinctNames) {
+        for (const group in distinctNames) {
             groups.push(distinctNames[group].name);
         }
+        groups.unshift(groups.splice(groups.indexOf('All Users'), 1));
         return groups;
     },
     getUsers: async () => {
-        let users = [];
-        let models = await User.findAll({
-            attributes: ["email"],
+        const users = [];
+        const models = await User.findAll({
+            attributes: ['email']
         });
-        for (let model in models) {
-            users.push(models[model].getDataValue("email"));
+        for (const model in models) {
+            users.push(models[model].getDataValue('email'));
         }
         return users;
     },
     getUsersInGroup: async (group) => {
-        let users = [];
-        let models = await Group.findAll({
+        const users = [];
+        const models = await Group.findAll({
             where: {
-                name: group,
+                name: group
             },
-            attributes: ["userEmail"],
+            attributes: ['userEmail']
         });
-        for (let model in models) {
-            users.push(models[model].getDataValue("userEmail"));
+        for (const model in models) {
+            users.push(models[model].getDataValue('userEmail'));
         }
         return users;
     },
@@ -163,20 +161,20 @@ module.exports = {
         let models = await Booking.findAll({
             raw: true,
             where: {
-                userEmail: email,
+                userEmail: email
             },
-            order: [["date", "ASC"]],
+            order: [['date', 'ASC']]
         });
 
-        let todayDate = new Date();
-        let today = models.filter(
+        const todayDate = new Date();
+        const today = models.filter(
             (booking) =>
                 new Date(booking.date).getFullYear() === todayDate.getFullYear() &&
                 new Date(booking.date).getMonth() === todayDate.getMonth() &&
                 new Date(booking.date).getDate() === todayDate.getDate()
         );
         models = models.filter((booking) => !today.includes(booking));
-        let past = models.filter(
+        const past = models.filter(
             (booking) =>
                 new Date(booking.date).getFullYear() <= todayDate.getFullYear() &&
                 new Date(booking.date).getMonth() <= todayDate.getMonth() &&
@@ -189,230 +187,260 @@ module.exports = {
         return models;
     },
     getBookingsOnDate: async (date) => {
-        let bookings = await Booking.findAll({
+        const bookings = await Booking.findAll({
             raw: true,
             where: {
-                date: date,
+                date: date
             },
             order: [
-                ["deskRoom", "ASC"],
-                ["deskId", "ASC"],
-            ],
+                ['deskRoom', 'ASC'],
+                ['deskId', 'ASC']
+            ]
         });
         return bookings;
     },
     getBookingsByLocation: async (deskRoom) => {
-        let bookings = await Booking.findAll({
+        const bookings = await Booking.findAll({
             raw: true,
             where: {
-                deskRoom: deskRoom,
+                deskRoom: deskRoom
             },
-            order: [["deskId", "ASC"]],
+            order: [['deskId', 'ASC']]
         });
         return bookings;
     },
     getBookingsWithOptions: async (options) => {
-        let bookings = await Booking.findAll(options);
+        const bookings = await Booking.findAll(options);
         return [bookings.length, bookings];
     },
-    getReports: async (time, room, team) => {
-        let userBookingsCount = [];
-        let bookings = [[], []];
+    getBookingsByDesks: async (deskOptions) => {
+        const models = await Desk.findAll(deskOptions);
+        console.log(models[0].getDataValue('bookings'));
+        const report = [[], []];
+        for (const model in models) {
+            report[0].push(models[model].getDataValue('room') + ' Desk ' + models[model].getDataValue('id'));
+            report[1].push(models[model].getDataValue('bookings').length);
+        }
+        return report;
+    },
+    getReports: async (time, room, team, week) => {
+        const userBookingsCount = [];
         let allBookings = [];
-        let bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
-        let users = await module.exports.getUsersInGroup(team);
-        let options = {
-            where: {},
+        const bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
+        const users = await module.exports.getUsersInGroup(team);
+        const days = week * 7;
+        const options = {
+            where: {}
         };
-        if (room != "overall") {
-            options.where["deskRoom"] = room;
+        const deskOptions = {
+            include: {
+                model: Booking,
+                required: true,
+                where: {
+                }
+            },
+            where: {
+            }
+        };
+        if (room !== 'overall') {
+            options.where.deskRoom = room;
+            deskOptions.where.deskRoom = room;
         }
-        let today = new Date();
+        const today = new Date();
         switch (time) {
-            case "next week":
-                options.where["date"] = {
-                    [Op.gte]: today,
-                    [Op.lt]: new Date(
-                        today.getFullYear(),
-                        today.getMonth(),
-                        today.getDate() + 7
-                    ),
-                };
-                break;
-            case "last week":
-                options.where["date"] = {
-                    [Op.gte]: new Date(
-                        today.getFullYear(),
-                        today.getMonth(),
-                        today.getDate() - 7
-                    ),
-                    [Op.lt]: today,
-                };
-                break;
-            case "last month":
-                options.where["date"] = {
-                    [Op.gte]: new Date(
-                        today.getFullYear(),
-                        today.getMonth() - 1,
-                        today.getDate()
-                    ),
-                    [Op.lt]: today,
-                };
-                break;
-            case "last 3 months":
-                options.where["date"] = {
-                    [Op.gte]: new Date(
-                        today.getFullYear(),
-                        today.getMonth() - 3,
-                        today.getDate()
-                    ),
-                    [Op.lt]: today,
-                };
-                break;
-            case "overall":
-                break;
-            case "default":
-                break;
+        case 'next week':
+            deskOptions.include.where = options.where.date = {
+                [Op.gte]: today,
+                [Op.lt]: new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate() + 7
+                )
+            };
+            break;
+        case 'last week':
+            deskOptions.include.where = options.where.date = {
+                [Op.gte]: new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate() - 7
+                ),
+                [Op.lt]: today
+            };
+            break;
+        case 'last month':
+            deskOptions.include.where = options.where.date = {
+                [Op.gte]: new Date(
+                    today.getFullYear(),
+                    today.getMonth() - 1,
+                    today.getDate()
+                ),
+                [Op.lt]: today
+            };
+            break;
+        case 'last 3 months':
+            deskOptions.include.where = options.where.date = {
+                [Op.gte]: new Date(
+                    today.getFullYear(),
+                    today.getMonth() - 3,
+                    today.getDate()
+                ),
+                [Op.lt]: today
+            };
+            break;
+        case 'upcomingWeek':
+            deskOptions.include.where = options.where.date = {
+                [Op.gte]: new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate() + days
+                ),
+                [Op.lt]: today
+            };
+            break;
+        case 'default':
+            break;
         }
-        for (let user in users) {
-            options.where["userEmail"] = users[user];
-            let userBookings = await module.exports.getBookingsWithOptions(options);
+        for (const user in users) {
+            options.where.userEmail = users[user];
+            const userBookings = await module.exports.getBookingsWithOptions(options);
             userBookingsCount[user] = userBookings[0];
             allBookings = allBookings.concat(userBookings[1]);
         }
-        for (let booking in allBookings) {
+        for (const booking in allBookings) {
             bookingDistribution[
-                new Date(allBookings[booking].getDataValue("date")).getDay()
+                new Date(allBookings[booking].getDataValue('date')).getDay()
             ]++;
         }
-        return [users, userBookingsCount, [], [], bookingDistribution, "Success"];
+        const x = await module.exports.getBookingsByDesks(deskOptions);
+        return [users, userBookingsCount, x[0], x[1], bookingDistribution, 'Success'];
         //  Empty values are for deprecated desk report piechart
     },
     getBookingsInMonth: async (room, date, am, pm) => {
-        let dateComp = date.split("-");
-        let desks = [];
-        let existingBookings = [];
-        let daysInMonth = new Date(
+        const dateComp = date.split('-');
+        const desks = [];
+        const existingBookings = [];
+        const daysInMonth = new Date(
             parseInt(dateComp[0]),
             parseInt(dateComp[1]) - 1,
             0
         ).getDate();
 
-        let deskModel = await Desk.findAll({
+        const deskModel = await Desk.findAll({
             where: {
-                room: room,
-            },
+                room: room
+            }
         });
-        for (let desk of deskModel) {
-            desks.push(desk.getDataValue("id"));
+        for (const desk of deskModel) {
+            desks.push(desk.getDataValue('id'));
         }
         for (let day = 0; day <= daysInMonth; day++) {
             existingBookings[day] = [];
             let whereClause;
-            //If full day requested, check for either am or pm being booked.
+            // If full day requested, check for either am or pm being booked.
             if (am && pm) {
                 whereClause = {
                     deskRoom: room,
                     date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1),
-                    [Op.or]: [{ am: true }, { pm: true }],
+                    [Op.or]: [{ am: true }, { pm: true }]
                 };
             } else {
-                //Else if am or pm requested, add them accordingly, with the other being absent since we don't care.
+                // Else if am or pm requested, add them accordingly, with the other being absent since we don't care.
                 whereClause = {
                     deskRoom: room,
-                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1),
+                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1)
                 };
-                if (am) whereClause["am"] = true;
-                if (pm) whereClause["pm"] = true;
+                if (am) whereClause.am = true;
+                if (pm) whereClause.pm = true;
             }
-            let bookings = await Booking.findAll({
-                where: whereClause,
+            const bookings = await Booking.findAll({
+                where: whereClause
             });
-            for (let booking in bookings) {
+            for (const booking in bookings) {
                 existingBookings[day].push({
-                    user: bookings[booking].getDataValue("userEmail"),
-                    desk: bookings[booking].getDataValue("deskId"),
+                    user: bookings[booking].getDataValue('userEmail'),
+                    desk: bookings[booking].getDataValue('deskId')
                 });
             }
         }
         return [desks, existingBookings];
     },
     getNotifications: async () => {
-        let notifications = [];
-        let models = await Notification.findAll({
+        const notifications = [];
+        const models = await Notification.findAll({
             raw: true,
             where: {
                 end: {
-                    [Op.gt]: new Date(),
-                },
-            },
+                    [Op.gt]: new Date()
+                }
+            }
         });
 
         Notification.destroy({
             raw: true,
             where: {
                 end: {
-                    [Op.lt]: new Date(),
-                },
-            },
+                    [Op.lt]: new Date()
+                }
+            }
         });
 
-        for (let model of models) {
+        for (const model of models) {
             notifications.push({
                 type: model.type,
                 date: model.start,
                 body: model.body,
-                title: model.title,
+                title: model.title
             });
         }
         return notifications;
     },
     getMeetingRooms: async () => {
-        let rooms = [];
-        let models = await Room.findAll();
+        const rooms = [];
+        const models = await Room.findAll();
         models.forEach((value) => {
-            rooms.push({ value: value.getDataValue("name") });
+            rooms.push({ value: value.getDataValue('name') });
         });
         return rooms;
     },
     getAppointments: async (room, date) => {
-        let appointments = await Appointment.findAll({
+        const appointments = await Appointment.findAll({
             raw: true,
             where: {
                 roomName: room,
                 start: {
-                    [Op.gte]: date,
-                },
-            },
+                    [Op.gte]: date
+                }
+            }
         });
         return appointments;
     },
     addUser: async (email) => {
-        let password = email;
-        let options = {
+        const password = email;
+        const options = {
             from: process.env.EMAIL,
             to: email,
-            subject: "ttl_hotdesking Account",
-            text: `Email: ${email}\nPassword: ${password}`,
+            subject: 'ttl_hotdesking Account',
+            text: `Email: ${email}\nPassword: ${password}`
         };
         transporter.sendMail(options);
         await User.create({ email: email, password: sha256(password) });
-        await Group.create({ userEmail: email, name: "All Users" });
+        await Group.create({ userEmail: email, name: 'All Users' });
     },
     addDesk: async (id, room) => {
-        let arr = [];
-        for (let desk of id) {
+        const arr = [];
+        for (const desk of id) {
             arr.push({ id: desk, room: room });
         }
         console.log(id, arr);
         await Desk.bulkCreate(arr);
     },
     addBooking: async (email, id, room, date, am, pm) => {
-        let options = {
+        const options = {
             from: process.env.EMAIL,
             to: email,
-            subject: "ttl_hotdesking Booking Confirmation",
-            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`,
+            subject: 'ttl_hotdesking Booking Confirmation',
+            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`
         };
         await Booking.create({
             userEmail: email,
@@ -420,21 +448,21 @@ module.exports = {
             deskRoom: room,
             date: date,
             am: am,
-            pm: pm,
+            pm: pm
         });
         transporter.sendMail(options);
     },
     addRoomRestriction: async (email, room, date, am, pm) => {
-        let bookings = [];
-        let desks = await module.exports.getDesks(room);
-        for (desk in desks) {
+        const bookings = [];
+        const desks = await module.exports.getDesks(room);
+        for (const desk in desks) {
             bookings.push({
                 userEmail: email,
                 deskId: desks[desk],
                 deskRoom: room,
                 date: date,
                 am: am,
-                pm: pm,
+                pm: pm
             });
         }
         await Booking.bulkCreate(bookings);
@@ -448,12 +476,12 @@ module.exports = {
             end: end,
             type: type,
             title: title,
-            body: body,
+            body: body
         });
     },
     addMeetingRoom: async (name) => {
         await Room.create({
-            name: name,
+            name: name
         });
     },
     addAppointment: async (email, title, start, end, room) => {
@@ -462,99 +490,99 @@ module.exports = {
             title: title,
             start: start,
             end: end,
-            roomName: room,
+            roomName: room
         });
     },
     getAdminOptions: async () => {
-        let options = await AdminOption.findAll({
-            raw: true,
+        const options = await AdminOption.findAll({
+            raw: true
         });
-        console.log("OPTIONS", options);
+        console.log('OPTIONS', options);
         return options;
     },
     getAdminOption: async (key) => {
-        let option = await AdminOption.findOne({
+        const option = await AdminOption.findOne({
             raw: true,
             where: {
-                key: key,
-            },
+                key: key
+            }
         });
         return option;
     },
     updateAdminOptions: async (key, value) => {
-        let model = await AdminOption.findByPk(key);
+        const model = await AdminOption.findByPk(key);
         model.value = value;
         model.save();
     },
     removeUser: async (email) => {
-        let model = await User.findByPk(email);
+        const model = await User.findByPk(email);
         model.destroy();
     },
     removeDesk: async (id, room) => {
-        let model = await Desk.findOne({
+        const model = await Desk.findOne({
             where: {
                 id: id,
-                room: room,
-            },
+                room: room
+            }
         });
         model.destroy();
     },
     removeRoom: async (room) => {
-        let models = await Desk.findAll({
+        const models = await Desk.findAll({
             where: {
-                room: room,
-            },
+                room: room
+            }
         });
-        for (let model in models) {
+        for (const model in models) {
             models[model].destroy();
         }
     },
     removeBooking: async (email, id, room, date, am, pm) => {
         console.log(email, id, room, date, am, pm);
-        let model = await Booking.findOne({
+        const model = await Booking.findOne({
             where: {
                 userEmail: email,
                 deskId: id,
                 deskRoom: room,
                 date: date,
                 am: am,
-                pm: pm,
-            },
+                pm: pm
+            }
         });
         model.destroy();
     },
     removeUserFromGroup: async (email, group) => {
-        let model = await Group.findOne({
+        const model = await Group.findOne({
             where: {
                 name: group,
-                userEmail: email,
-            },
+                userEmail: email
+            }
         });
         model.destroy();
     },
     removeMeetingRoom: async (name) => {
-        let model = await Room.findByPk(name);
+        const model = await Room.findByPk(name);
         model.destroy();
     },
     removeAppointment: async (id) => {
-        let model = await Appointment.findByPk(id);
+        const model = await Appointment.findByPk(id);
         model.destroy();
     },
     getAppointmentsByEmail: async (email) => {
         let appointments = await Appointment.findAll({
             where: {
-                bookedBy: email,
+                bookedBy: email
             },
-            order: [["start", "ASC"]],
+            order: [['start', 'ASC']]
         });
-        let today = appointments.filter(
+        const today = appointments.filter(
             (appointment) =>
                 new Date(appointment.start).getFullYear() === new Date().getFullYear() &&
                 new Date(appointment.start).getMonth() === new Date().getMonth() &&
                 new Date(appointment.start).getDate() === new Date().getDate()
         );
         appointments = appointments.filter((appointment) => !today.includes(appointment));
-        let past = appointments.filter(
+        const past = appointments.filter(
             (booking) =>
                 new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
                 new Date(booking.start).getMonth() <= new Date().getMonth() &&
@@ -566,53 +594,53 @@ module.exports = {
         return appointments;
     },
     getUserBookingCount: async (email) => {
-        let count = await Booking.count({
+        const count = await Booking.count({
             where: {
-                userEmail: email,
-            },
+                userEmail: email
+            }
         });
         return count;
     },
     getUserAppointmentCount: async (email) => {
-        let count = await Appointment.count({
+        const count = await Appointment.count({
             where: {
-                bookedBy: email,
-            },
+                bookedBy: email
+            }
         });
         return count;
     },
     getAllBookingsOnDate: async (date) => {
         let deskBookings = [];
         let appointments = [];
-        let deskRooms = await Desk.aggregate("room", "DISTINCT", { plain: false });
+        const deskRooms = await Desk.aggregate('room', 'DISTINCT', { plain: false });
         for (let i = 0; i < deskRooms.length; i++) {
             deskRooms[i] = deskRooms[i].DISTINCT;
         }
-        for (let room of deskRooms) {
-            let bookings = await Booking.findAll({
+        for (const room of deskRooms) {
+            const bookings = await Booking.findAll({
                 raw: true,
                 where: {
                     deskRoom: room,
-                    date: date,
+                    date: date
                 },
                 order: [
-                    ["deskId", "ASC"],
-                    ["am", "DESC"],
-                ],
+                    ['deskId', 'ASC'],
+                    ['am', 'DESC']
+                ]
             });
             deskBookings.push({
                 location: room,
-                bookings: bookings,
+                bookings: bookings
             });
         }
 
-        let meetingRooms = await Room.findAll({ raw: true });
+        const meetingRooms = await Room.findAll({ raw: true });
         for (let i = 0; i < meetingRooms.length; i++) {
             meetingRooms[i] = meetingRooms[i].name;
         }
 
-        for (let room of meetingRooms) {
-            let bookings = await Appointment.findAll({
+        for (const room of meetingRooms) {
+            const bookings = await Appointment.findAll({
                 raw: true,
                 where: {
                     roomName: room,
@@ -631,19 +659,19 @@ module.exports = {
                                 new Date(date).getDate() + 1,
                                 0,
                                 0
-                            ),
-                        },
-                    },
+                            )
+                        }
+                    }
                 },
-                order: [["start", "ASC"]],
+                order: [['start', 'ASC']]
             });
             appointments.push({
                 location: room,
-                bookings: bookings,
+                bookings: bookings
             });
         }
         deskBookings = deskBookings.filter((obj) => obj.bookings.length !== 0);
         appointments = appointments.filter((obj) => obj.bookings.length !== 0);
         return { bookings: deskBookings, appointments: appointments };
-    },
+    }
 };

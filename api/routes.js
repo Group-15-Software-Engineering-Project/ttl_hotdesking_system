@@ -1,21 +1,20 @@
-const { RouterRounded } = require("@material-ui/icons");
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const services = require("./services");
+const services = require('./services');
 
 //  Validates credentials and determines if user is an admin
-router.post("/login", (req, res) => {
-    console.log("login");
+router.post('/login', (req, res) => {
+    console.log('login');
     services
         .login(req.body.email, req.body.password)
         .then((result) => {
             if (result[0]) {
-                res.status(200).send({ error: false, admin: result[1], message: "Success" });
+                res.status(200).send({ error: false, admin: result[1], message: 'Success' });
             } else {
                 res.status(200).send({
                     error: true,
                     admin: false,
-                    message: "No email with that password",
+                    message: 'No email with that password'
                 });
             }
         })
@@ -26,34 +25,21 @@ router.post("/login", (req, res) => {
 });
 
 //  Changes the password of the given user
-router.post("/changePassword", (req, res) => {
+router.post('/changePassword', (req, res) => {
     services
         .changePassword(req.body.email, req.body.password)
         .then(() => {
             res.status(200).send({ error: false });
         })
         .catch((err) => {
+            console.log(err);
             res.status(500).send({ error: true });
         });
 });
 
-//  Checks if the given user is an admin
-router.post("/adminCheck", (req, res) => {
-    console.log("adminCheck");
-    services
-        .adminCheck(email)
-        .then((result) => {
-            res.status(200).send({ error: false, admin: result });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: true, admin: false });
-        });
-});
-
 //  Returns lists of desks, sorted by their rooms
-router.get("/getLocationData", (req, res) => {
-    console.log("getLocationData");
+router.get('/getLocationData', (req, res) => {
+    console.log('getLocationData');
     services
         .getLocationData()
         .then((result) => {
@@ -66,8 +52,8 @@ router.get("/getLocationData", (req, res) => {
 });
 
 //  Returns the username of the given user
-router.post("/getUserName", (req, res) => {
-    console.log("getUserName");
+router.post('/getUserName', (req, res) => {
+    console.log('getUserName');
     services
         .getUserName(req.body.email)
         .then((result) => {
@@ -80,8 +66,8 @@ router.post("/getUserName", (req, res) => {
 });
 
 //  Changes the username of the given user
-router.post("/setUserName", (req, res) => {
-    console.log("setUserName");
+router.post('/setUserName', (req, res) => {
+    console.log('setUserName');
     services
         .setUserName(req.body.email, req.body.username)
         .then(() => {
@@ -94,8 +80,8 @@ router.post("/setUserName", (req, res) => {
 });
 
 //  Returns a list of all of the rooms
-router.get("/getRooms", (req, res) => {
-    console.log("getRooms");
+router.get('/getRooms', (req, res) => {
+    console.log('getRooms');
     services
         .getRooms()
         .then((result) => {
@@ -108,8 +94,8 @@ router.get("/getRooms", (req, res) => {
 });
 
 //  Returns a list of all groups
-router.get("/getGroups", (req, res) => {
-    console.log("getGroups");
+router.get('/getGroups', (req, res) => {
+    console.log('getGroups');
     services
         .getGroups()
         .then((result) => {
@@ -122,8 +108,8 @@ router.get("/getGroups", (req, res) => {
 });
 
 //  Returns a list of all users
-router.get("/getUsers", (req, res) => {
-    console.log("getUsers");
+router.get('/getUsers', (req, res) => {
+    console.log('getUsers');
     services
         .getUsers()
         .then((result) => {
@@ -136,8 +122,8 @@ router.get("/getUsers", (req, res) => {
 });
 
 //  Returns a list of all users in a given group
-router.post("/getUsersInGroup", (req, res) => {
-    console.log("getUsersInGroup");
+router.post('/getUsersInGroup', (req, res) => {
+    console.log('getUsersInGroup');
     services
         .getUsersInGroup(req.body.team)
         .then((result) => {
@@ -150,8 +136,8 @@ router.post("/getUsersInGroup", (req, res) => {
 });
 
 //  Returns a list of the users bookings
-router.post("/getBookings", (req, res) => {
-    console.log("getBookings");
+router.post('/getBookings', (req, res) => {
+    console.log('getBookings');
     services
         .getBookings(req.body.email)
         .then((result) => {
@@ -163,12 +149,12 @@ router.post("/getBookings", (req, res) => {
         });
 });
 
-router.get("/getBookings/:email", (req, res) => {
-    console.log("getBookings");
+router.get('/getBookings/:email', (req, res) => {
+    console.log('getBookings');
     services
         .getBookings(req.params.email)
         .then((result) => {
-            console.log("getBookings RESULT:", result);
+            console.log('getBookings RESULT:', result);
             res.status(200).send({ error: false, data: result });
         })
         .catch((err) => {
@@ -177,8 +163,8 @@ router.get("/getBookings/:email", (req, res) => {
         });
 });
 //  Returns a list of bookings on a date
-router.get("/getBookingsOnDate/:date", (req, res) => {
-    console.log("getBookingsOnDate");
+router.get('/getBookingsOnDate/:date', (req, res) => {
+    console.log('getBookingsOnDate');
     services
         .getBookingsOnDate(req.params.date)
         .then((result) => {
@@ -191,8 +177,8 @@ router.get("/getBookingsOnDate/:date", (req, res) => {
 });
 
 //  Returns a list of bookings at a location
-router.get("/getBookingsByLocation/:deskRoom", (req, res) => {
-    console.log("getBookingsByLocation");
+router.get('/getBookingsByLocation/:deskRoom', (req, res) => {
+    console.log('getBookingsByLocation');
     services
         .getBookingsByLocation(req.params.deskRoom)
         .then((result) => {
@@ -205,10 +191,10 @@ router.get("/getBookingsByLocation/:deskRoom", (req, res) => {
 });
 
 //  Returns usage reports
-router.post("/getReports", (req, res) => {
-    console.log("getReports");
+router.post('/getReports', (req, res) => {
+    console.log('getReports');
     services
-        .getReports(req.body.time, req.body.room, req.body.team)
+        .getReports(req.body.time, req.body.room, req.body.team, req.body.week)
         .then((result) => {
             res.status(200).send({
                 labels: result[0],
@@ -217,28 +203,28 @@ router.post("/getReports", (req, res) => {
                 deskBookings: result[3],
                 activeDays: result[4],
                 message: result[5],
-                isError: false,
+                isError: false
             });
         })
         .catch((err) => {
             console.log(err);
             res.status(500).send({
                 error: true,
-                message: err.toString(),
+                message: err.toString()
             });
         });
 });
 
 //  Returns all the bookings in the specified month for a room
-router.post("/getBookingsInMonth", (req, res) => {
-    console.log("getBookingsInMonth");
+router.post('/getBookingsInMonth', (req, res) => {
+    console.log('getBookingsInMonth');
     services
         .getBookingsInMonth(req.body.room, req.body.date, req.body.am, req.body.pm)
         .then((result) => {
             res.status(200).send({
                 error: false,
                 existingBookings: result[1],
-                desks: result[0],
+                desks: result[0]
             });
         })
         .catch((err) => {
@@ -248,8 +234,8 @@ router.post("/getBookingsInMonth", (req, res) => {
 });
 
 //  Return active notifications
-router.get("/getNotifications", (req, res) => {
-    console.log("getNotifications");
+router.get('/getNotifications', (req, res) => {
+    console.log('getNotifications');
     services
         .getNotifications()
         .then((result) => {
@@ -262,8 +248,8 @@ router.get("/getNotifications", (req, res) => {
 });
 
 //  Adds a user with the given email and password to the database
-router.post("/addUser", (req, res) => {
-    console.log("addUser");
+router.post('/addUser', (req, res) => {
+    console.log('addUser');
     services
         .addUser(req.body.email)
         .then(() => {
@@ -276,12 +262,12 @@ router.post("/addUser", (req, res) => {
 });
 
 //  Adds a desk with a given ID and room
-router.post("/addDesk", (req, res) => {
-    console.log("addDesk");
+router.post('/addDesk', (req, res) => {
+    console.log('addDesk');
     services
         .addDesk(req.body.id, req.body.room)
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(200).send({ error: false, message: 'Success' });
         })
         .catch((err) => {
             console.log(err);
@@ -290,9 +276,9 @@ router.post("/addDesk", (req, res) => {
 });
 
 //  Adds a booking with a given email, desk, date, AM, and PM (booleans)
-router.post("/addBooking", (req, res) => {
-    console.log("addBooking");
-    console.log("date: ", req.body.date);
+router.post('/addBooking', (req, res) => {
+    console.log('addBooking');
+    console.log('date: ', req.body.date);
     services
         .addBooking(
             req.body.email,
@@ -303,7 +289,7 @@ router.post("/addBooking", (req, res) => {
             req.body.pm
         )
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(200).send({ error: false, message: 'Success' });
         })
         .catch((err) => {
             console.log(err);
@@ -312,8 +298,8 @@ router.post("/addBooking", (req, res) => {
 });
 
 //  Books all desks in a room on a date for a specific time
-router.post("/addRoomRestriction", (req, res) => {
-    console.log("addRoomRestriction");
+router.post('/addRoomRestriction', (req, res) => {
+    console.log('addRoomRestriction');
     services
         .addRoomRestriction(
             req.body.email,
@@ -332,8 +318,8 @@ router.post("/addRoomRestriction", (req, res) => {
 });
 
 //  Adds a users to a group
-router.post("/addUserToGroup", (req, res) => {
-    console.log("addUserToGroup");
+router.post('/addUserToGroup', (req, res) => {
+    console.log('addUserToGroup');
     services
         .addUserToGroup(req.body.email, req.body.group)
         .then(() => {
@@ -346,24 +332,25 @@ router.post("/addUserToGroup", (req, res) => {
 });
 
 //  Adds a notification
-router.post("/addNotification", (req, res) => {
+router.post('/addNotification', (req, res) => {
     services
         .addNotification(req.body.end, req.body.type, req.body.title, req.body.body)
         .then(() => {
             res.status(200).send({ error: false });
         })
         .catch((err) => {
+            console.log(err);
             res.status(500).send({ error: true });
         });
 });
 
 //  Removes the specified user
-router.post("/removeUser", (req, res) => {
-    console.log("removeUser");
+router.post('/removeUser', (req, res) => {
+    console.log('removeUser');
     services
         .removeUser(req.body.email)
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(200).send({ error: false, message: 'Success' });
         })
         .catch((err) => {
             console.log(err);
@@ -372,12 +359,12 @@ router.post("/removeUser", (req, res) => {
 });
 
 //  Removes the specifed desk
-router.post("/removeDesk", (req, res) => {
-    console.log("removeDesk");
+router.post('/removeDesk', (req, res) => {
+    console.log('removeDesk');
     services
         .removeDesk(req.body.id, req.body.room)
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(200).send({ error: false, message: 'Success' });
         })
         .catch((err) => {
             console.log(err);
@@ -386,12 +373,12 @@ router.post("/removeDesk", (req, res) => {
 });
 
 //  Removes all desks in the specified room
-router.post("/removeRoom", (req, res) => {
-    console.log("removeRoom");
+router.post('/removeRoom', (req, res) => {
+    console.log('removeRoom');
     services
         .removeRoom(req.body.room)
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(200).send({ error: false, message: 'Success' });
         })
         .catch((err) => {
             console.log(err);
@@ -400,8 +387,8 @@ router.post("/removeRoom", (req, res) => {
 });
 
 //  Removes the specified booking
-router.post("/removeBooking", (req, res) => {
-    console.log("removeBooking");
+router.post('/removeBooking', (req, res) => {
+    console.log('removeBooking');
     services
         .removeBooking(
             req.body.userEmail,
@@ -412,7 +399,7 @@ router.post("/removeBooking", (req, res) => {
             req.body.pm
         )
         .then(() => {
-            res.status(200).send({ error: false, message: "Success" });
+            res.status(200).send({ error: false, message: 'Success' });
         })
         .catch((err) => {
             console.log(err);
@@ -421,8 +408,8 @@ router.post("/removeBooking", (req, res) => {
 });
 
 //  Removes the user from the group
-router.post("/removeUserFromGroup", (req, res) => {
-    console.log("removeUserFromGroup");
+router.post('/removeUserFromGroup', (req, res) => {
+    console.log('removeUserFromGroup');
     services
         .removeUserFromGroup(req.body.email, req.body.group)
         .then((result) => {
@@ -435,8 +422,8 @@ router.post("/removeUserFromGroup", (req, res) => {
 });
 
 //  Returns a list of meeting rooms
-router.get("/meetingRooms", (req, res) => {
-    console.log("getMeetingRooms");
+router.get('/meetingRooms', (req, res) => {
+    console.log('getMeetingRooms');
     services
         .getMeetingRooms()
         .then((rooms) => {
@@ -449,8 +436,8 @@ router.get("/meetingRooms", (req, res) => {
 });
 
 //  Adds a meeting room
-router.put("/meetingRooms/:name", (req, res) => {
-    console.log("addMeetingRoom");
+router.put('/meetingRooms/:name', (req, res) => {
+    console.log('addMeetingRoom');
     services
         .addMeetingRoom(req.params.name)
         .then(() => {
@@ -462,8 +449,8 @@ router.put("/meetingRooms/:name", (req, res) => {
         });
 });
 
-router.delete("/meetingRooms/:name", (req, res) => {
-    console.log("removeMeetingRoom");
+router.delete('/meetingRooms/:name', (req, res) => {
+    console.log('removeMeetingRoom');
     services
         .removeMeetingRoom(req.params.name)
         .then(() => res.status(204).end())
@@ -473,8 +460,8 @@ router.delete("/meetingRooms/:name", (req, res) => {
         });
 });
 
-router.get("/getAppointments/:room/:date", (req, res) => {
-    console.log("getAppointments");
+router.get('/getAppointments/:room/:date', (req, res) => {
+    console.log('getAppointments');
     services
         .getAppointments(req.params.room, req.params.date)
         .then((appointments) => res.status(200).send({ appointments: appointments }))
@@ -484,8 +471,8 @@ router.get("/getAppointments/:room/:date", (req, res) => {
         });
 });
 
-router.get("/getAppointments/:email", (req, res) => {
-    console.log("getAppointments");
+router.get('/getAppointments/:email', (req, res) => {
+    console.log('getAppointments');
     services
         .getAppointmentsByEmail(req.params.email)
         .then((appointments) => res.status(200).send({ appointments: appointments }))
@@ -495,8 +482,8 @@ router.get("/getAppointments/:email", (req, res) => {
         });
 });
 
-router.put("/appointments", (req, res) => {
-    console.log("addAppointment");
+router.put('/appointments', (req, res) => {
+    console.log('addAppointment');
     services
         .addAppointment(
             req.body.email,
@@ -512,8 +499,8 @@ router.put("/appointments", (req, res) => {
         });
 });
 
-router.delete("/appointments/:id", (req, res) => {
-    console.log("removeAppointment");
+router.delete('/appointments/:id', (req, res) => {
+    console.log('removeAppointment');
     services
         .removeAppointment(req.params.id)
         .then(() => res.status(204).end())
@@ -523,8 +510,8 @@ router.delete("/appointments/:id", (req, res) => {
         });
 });
 
-router.get("/getUserBookingCount/:email", (req, res) => {
-    console.log("getUserBookingCount");
+router.get('/getUserBookingCount/:email', (req, res) => {
+    console.log('getUserBookingCount');
     services
         .getUserBookingCount(req.params.email)
         .then((count) => {
@@ -535,8 +522,8 @@ router.get("/getUserBookingCount/:email", (req, res) => {
             res.status(500).send({ error: true, count: -1 });
         });
 });
-router.get("/getUserAppointmentCount/:email", (req, res) => {
-    console.log("getUserAppointmentCount");
+router.get('/getUserAppointmentCount/:email', (req, res) => {
+    console.log('getUserAppointmentCount');
     services
         .getUserAppointmentCount(req.params.email)
         .then((count) => {
@@ -548,8 +535,8 @@ router.get("/getUserAppointmentCount/:email", (req, res) => {
         });
 });
 
-router.get("/adminOptions", (req, res) => {
-    console.log("getAdminOptions");
+router.get('/adminOptions', (req, res) => {
+    console.log('getAdminOptions');
     services
         .getAdminOptions()
         .then((options) => res.status(200).send({ options: options }))
@@ -559,8 +546,8 @@ router.get("/adminOptions", (req, res) => {
         });
 });
 
-router.patch("/adminOptions/:key", (req, res) => {
-    console.log("updateAdminOptions");
+router.patch('/adminOptions/:key', (req, res) => {
+    console.log('updateAdminOptions');
     services
         .updateAdminOptions(req.params.key, req.body.value)
         .then(res.status(204).end())
@@ -570,7 +557,7 @@ router.patch("/adminOptions/:key", (req, res) => {
         });
 });
 
-router.get("/adminOptions/:key", (req, res) => {
+router.get('/adminOptions/:key', (req, res) => {
     services
         .getAdminOption(req.params.key)
         .then((option) => res.status(200).send({ option: option }))
@@ -579,7 +566,7 @@ router.get("/adminOptions/:key", (req, res) => {
             res.status(500).send({ error: true, message: err });
         });
 });
-router.get("/allBookings/:date", (req, res) => {
+router.get('/allBookings/:date', (req, res) => {
     services
         .getAllBookingsOnDate(req.params.date)
         .then((returnValue) => res.status(200).send(returnValue))

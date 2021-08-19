@@ -54,7 +54,7 @@ function CurrentBookings() {
 
     const showBookingsWithLocation = (booking) => {
         return (
-            <div>
+            <div> 
                 <h1
                     className="page-divider-header"
                     style={{ marginLeft: "15%", backgroundColor: "#fdaf12", width: "70%" }}>
@@ -182,9 +182,8 @@ function CurrentBookings() {
                     </h1>
                 )}
                 <div className="space" />
-
-                {state.selectedDate && state.view === "off" && showBookings()}
-                {state.selectedDate && state.view === "on" && showAppointments()}
+                {(state.selectedDate && state.view === "off") && showBookings()}
+                {(state.selectedDate && state.view === "on") && showAppointments()}
             </div>
             <div className="flex-container-1" />
         </div>
