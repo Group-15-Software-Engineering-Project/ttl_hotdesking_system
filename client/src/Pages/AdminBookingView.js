@@ -114,7 +114,7 @@ export default class AdminBookingView extends React.Component {
         });
 
         let gap = getDifferenceInDays(currentdate, d);
-        let days = -(this.state.RestrictWeek * 7) + 1;
+        let days = -(this.state.RestrictWeek * 7) ;
 
         this.setState({ dateRestricted: gap < days });
 
