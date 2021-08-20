@@ -465,7 +465,7 @@ export default class AdminBookingView extends React.Component {
                     <div
                         style={{
                             display: "flex",
-                            height: "11%",
+                            height: "70px",
                             flexFlow: "row wrap",
                             justifyContent: "flex-start",
                         }}>
@@ -548,7 +548,13 @@ export default class AdminBookingView extends React.Component {
                                             })
                                         }></input>
                                 </h8>
-                                <div className="space" style={{ marginTop: "7%" }} />
+                                
+                            </div>
+                        )}
+                    </div>
+
+                    {this.state.dateRestricted ? ( <div>
+                    <div className="space" style={{ marginTop: "7%" }} />
                                 <button
                                     disabled={
                                         document.getElementById("selectlocation").value ===
@@ -557,11 +563,11 @@ export default class AdminBookingView extends React.Component {
                                     }
                                     className="button-style no-outline"
                                     style={{
-                                        position: "absolute",
+                                        position: "relative",
                                         "--bg-color": "#f32000",
                                         "--hover-highlight": "#ff5000",
                                         // marginTop: "-5%",
-                                        right: "42.7%",
+                                       top:"20px",
                                         //  marginBottom: "0%",
                                     }}
                                     onClick={() => {
@@ -571,14 +577,12 @@ export default class AdminBookingView extends React.Component {
                                     }}>
                                     Restrict
                                 </button>
-                            </div>
-                        )}
-                    </div>
+                    </div>):null}
 
                     {this.state.dateRestricted ? (
                         <h1
                             className="page-divider-header"
-                            style={{ marginLeft: "2.5%", marginTop: "5%" }}>
+                            style={{position:"relative", marginLeft: "2.5%", top:"30px" }}>
                             Restricted Bookings
                         </h1>
                     ) : null}
@@ -591,15 +595,17 @@ export default class AdminBookingView extends React.Component {
                             <button
                                 className="button-style no-outline"
                                 style={{
-                                    position: "relative",
+                                   position: "relative",
+                                    height:"40px",
                                     "--bg-color": this.state.isCancelling
                                         ? "#4dc300"
                                         : "#f32000",
                                     "--hover-highlight": this.state.isCancelling
                                         ? "#5dE300"
                                         : "#ff5000",
-                                    bottom: "2%",
-                                    marginTop: "2%",
+                                    marginBottom: "40px",
+                                    
+                                    top: "20px",
                                 }}
                                 onClick={() => {
                                     this.setState({
