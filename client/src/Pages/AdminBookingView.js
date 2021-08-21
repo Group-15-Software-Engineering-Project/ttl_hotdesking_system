@@ -270,20 +270,7 @@ export default class AdminBookingView extends React.Component {
             .catch((err) => {});
     };
 
-    componentDidMount = () => {
-        window.scrollTo(0, 0);
-        fetch("/api/getLocationData")
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                if (res.error) {
-                } else {
-                    this.setState({ location: res.data });
-                }
-            })
-            .catch((err) => {});
-    };
+   
 
 
     componentDidMount=()=> {  
@@ -298,6 +285,18 @@ export default class AdminBookingView extends React.Component {
             )
         )
         .catch(console.error);
+
+        fetch("/api/getLocationData")
+            .then((res) => {
+                return res.json();
+            })
+            .then((res) => {
+                if (res.error) {
+                } else {
+                    this.setState({ location: res.data });
+                }
+            })
+            .catch((err) => {});
     };
 
     displayBooking = (data) => {
