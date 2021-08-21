@@ -30,6 +30,8 @@ export default class AdminBookingView extends React.Component {
         };
     }
 
+
+
     getBookingsOnDate = (date) => {
         console.log("fetching Booking", this.state.email);
 
@@ -61,12 +63,14 @@ export default class AdminBookingView extends React.Component {
             })
             .then((data) => {
                 this.setState({ filteredBookings: data.bookings });
+             
             })
             .catch((err) => console.error(err));
     };
 
     componentDidMount() {
         this.getBookingsOnDate();
+       
     }
 
     submitRoomRestriction = () => {
@@ -177,9 +181,7 @@ export default class AdminBookingView extends React.Component {
         }
     };
 
-    componentDidMount = () => {
-        this.getBookingsOnDate();
-    };
+
 
     sortBookingsbyLocation = async () => {
         this.setState({
@@ -283,6 +285,21 @@ export default class AdminBookingView extends React.Component {
             .catch((err) => {});
     };
 
+
+    componentDidMount=()=> {  
+        fetch(`/api/adminOptions/Desk_Booking_Range`)
+        .then((res) => {
+            if (!res.ok) throw new Error(`Failed to retrieve option`);
+            return res.json();
+        })
+        .then((res) =>
+            this.setState({ RestrictWeek: res.option.value }, () =>
+                console.log(this.state.RestrictWeek)
+            )
+        )
+        .catch(console.error);
+    };
+
     displayBooking = (data) => {
         let time =
             data.pm && !data.am
@@ -308,7 +325,7 @@ export default class AdminBookingView extends React.Component {
                       backgroundColor: "white",
                   };
         let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
-
+       
         return (
             <button
                 disabled={!this.state.isCancelling || isUpcoming > 0}
@@ -433,8 +450,9 @@ export default class AdminBookingView extends React.Component {
                                 }}
                                 tileClass={(e) => {
                                     let today = new Date();
-
+                                    
                                     let diff = getDifferenceInDays(e, today);
+                                   
                                     return diff <= this.state.RestrictWeek * 7 && diff > 0
                                         ? "calendar-green"
                                         : "";
@@ -442,6 +460,7 @@ export default class AdminBookingView extends React.Component {
                                 onDaySelect={(date) => {
                                     this.setState({ chosenDate: date }, () => {
                                         this.filterBookings();
+                                        
                                         console.log(this.state.chosenDate);
                                     });
                                     this.getBookingsOnDate(date);
