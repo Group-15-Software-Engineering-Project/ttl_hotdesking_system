@@ -570,4 +570,13 @@ module.exports = {
         });
         return count;
     },
+    isUser: async (email) => {
+        let isUser = await User.count({
+            where: {
+                email: email
+            }
+        })
+
+        return isUser === 1;
+    },
 };

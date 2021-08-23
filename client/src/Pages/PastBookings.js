@@ -21,9 +21,7 @@ function PastBookings() {
     }, []);
 
     const authorize = () => {
-        getAccessTokenSilently({
-            admin: true,
-        }).then((e) => {
+        getAccessTokenSilently().then((e) => {
             getAppointments(e);
             getBookings(e);
             console.log(e);
@@ -33,7 +31,7 @@ function PastBookings() {
     const getBookings = (accessToken) => {
         fetch(`/api/getBookings/foo@bar.com`, {
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`
             }
         })
             .then((res) => {

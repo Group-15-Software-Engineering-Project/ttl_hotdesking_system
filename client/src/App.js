@@ -29,9 +29,14 @@ function App() {
             viewport.content = "width=device-width";
         }
     };
-    const { isAuthenticated, isLoading, user } = useAuth0();
-    if (user) sessionStorage.setItem("user", JSON.stringify(user));
-    console.log(user);
+    const { isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
+    if (user) {
+        sessionStorage.setItem("user", JSON.stringify(user));
+        getAccessTokenSilently().then((token) => {
+            sessionStorage.setItem("a0.jwt.at", token);
+        })
+    }
+
     return (
         <div>
             <Router>

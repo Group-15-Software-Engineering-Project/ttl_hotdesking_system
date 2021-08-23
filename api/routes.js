@@ -588,4 +588,14 @@ router.patch("/adminOptions/:key", (req, res) => {
         });
 });
 
+router.get("/isUser/:email", (req,res) => {
+    services
+        .isUser(req.param.email)
+        .then(() => res.status(200).send({isUser: true}))
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: true, message: err });
+        });
+})
+
 module.exports = router;
