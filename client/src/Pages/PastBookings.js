@@ -6,23 +6,29 @@ import { Redirect, Link } from "react-router-dom";
 import PillSlider from "../Components/PillSlider";
 import { useAuth0 } from '@auth0/auth0-react';
 // import { BiStreetView } from "react-icons/bi";
-
+ 
 function PastBookings() {
     const [isCancelling, toggleCancelMode] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [view, setView] = useState("off");
-    const verified = verify(true) || verify(false);
+    const verified = true || verify(true) || verify(false);
     const [bookings, setBookings] = useState([]);
     const { getAccessTokenSilently } = useAuth0();
 
-    useEffect(async () => {
+    useEffect(() => {
         window.scrollTo(0, 0);
-        const accessToken = await getAccessTokenSilently({
-            audience: process.env.audience,
-        }).then((e) => console.log(`accesstok: ${e}`));
-        getAppointments(accessToken);
-        getBookings(accessToken);
+        authorize();
     }, []);
+
+    const authorize = () => {
+        getAccessTokenSilently({
+            admin: true,
+        }).then((e) => {
+            getAppointments(e);
+            getBookings(e);
+            console.log(e);
+        });
+    }
 
     const getBookings = (accessToken) => {
         fetch(`/api/getBookings/foo@bar.com`, {

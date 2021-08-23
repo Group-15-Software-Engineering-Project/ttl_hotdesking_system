@@ -14,7 +14,7 @@ const jwtCheck = jwt({
           jwksRequestsPerMinute: 5,
           jwksUri: process.env.JWKSURI
     }),
-    audience: process.env.AUDIENCE,
+    aud: process.env.REACT_APP_AUDIENCE,
     issuer: [process.env.ISSUER],
     algorithms: ['RS256']
 });

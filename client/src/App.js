@@ -29,7 +29,6 @@ function App() {
             viewport.content = "width=device-width";
         }
     };
-
     const { isAuthenticated, isLoading, user } = useAuth0();
     if (user) sessionStorage.setItem("user", JSON.stringify(user));
     console.log(user);
