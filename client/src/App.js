@@ -34,13 +34,15 @@ function App() {
         sessionStorage.setItem("user", JSON.stringify(user));
         getAccessTokenSilently().then((token) => {
             sessionStorage.setItem("a0.jwt.at", token);
+            sessionStorage.setItem("email", user.email);
+            sessionStorage.setItem("username", user.name);
         })
     }
 
     return (
         <div>
             <Router>
-                {!isAuthenticated && !isLoading ? <Redirect to="/login"></Redirect> : null}
+                {/* {!isAuthenticated && !isLoading ? <Redirect to="/login"></Redirect> : null} */}
                 {/* {(verify(true) || verify(false)) && <NavigationSidebar />} */}
                 <NavigationSidebar />
                 <Switch>

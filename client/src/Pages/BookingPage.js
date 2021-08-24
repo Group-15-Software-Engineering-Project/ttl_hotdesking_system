@@ -179,7 +179,7 @@ export default class BookingPage extends React.Component {
         return parseInt(d[2]) + " " + d[1] + " " + d[3];
     };
     render() {
-        return verify(true) || verify(false) ? (
+        return true ? (
             <div className="wrapper TCD-BG">
                 <div className="flex-container-1"></div>
                 <div className="flex-container-5 main-body">
