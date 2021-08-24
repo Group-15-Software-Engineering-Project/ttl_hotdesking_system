@@ -12,7 +12,6 @@ const {
 const { QueryTypes, Op } = require("sequelize");
 const sha256 = require("js-sha256");
 const nodemailer = require("nodemailer");
-const { Notifications } = require("@material-ui/icons");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({

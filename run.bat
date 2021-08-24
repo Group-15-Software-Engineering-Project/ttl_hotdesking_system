@@ -1,1 +1,0 @@
-docker run --rm --name hotdesking -it -p 5000:5000 -p 3000:3000 mkelly32/hotdesking
