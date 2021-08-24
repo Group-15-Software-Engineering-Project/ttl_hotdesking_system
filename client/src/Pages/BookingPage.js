@@ -68,6 +68,7 @@ export default class BookingPage extends React.Component {
         fetch("/api/addBooking", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -113,7 +114,11 @@ export default class BookingPage extends React.Component {
     positionReference = createRef();
 
     componentDidMount() {
-        fetch("/api/getRooms")
+        fetch("/api/getRooms", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 return res.json();
             })

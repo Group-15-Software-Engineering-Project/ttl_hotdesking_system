@@ -34,7 +34,11 @@ class Home extends React.Component {
     };
 
     getBookings = () => {
-        fetch(`/api/getBookings/${sessionStorage.email}`)
+        fetch(`/api/getBookings/${sessionStorage.email}`, {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed fetching user bookings");
                 return res.json();
@@ -53,7 +57,11 @@ class Home extends React.Component {
             .catch(console.error);
     };
     getAppointments = () => {
-        fetch(`/api/getAppointments/${sessionStorage.email}`)
+        fetch(`/api/getAppointments/${sessionStorage.email}`, {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed fetching user meeting room bookings");
                 return res.json();
@@ -74,7 +82,11 @@ class Home extends React.Component {
     };
 
     getNotifications = () => {
-        fetch("/api/getNotifications")
+        fetch("/api/getNotifications", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 return res.json();
             })

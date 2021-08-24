@@ -33,7 +33,11 @@ export default class AdminBookingView extends React.Component {
     getBookingsOnDate = (date) => {
         console.log("fetching Booking", this.state.email);
 
-        fetch(`/api/getBookingsOnDate/${date}`)
+        fetch(`/api/getBookingsOnDate/${date}`, {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok)
                     throw new Error(
@@ -51,7 +55,11 @@ export default class AdminBookingView extends React.Component {
     getBookingsByLocation = async (deskRoom) => {
         console.log("fetching Booking for location", deskRoom);
 
-        fetch(`/api/getBookingsByLocation/${deskRoom}`)
+        fetch(`/api/getBookingsByLocation/${deskRoom}`, {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok)
                     throw new Error(
@@ -73,6 +81,7 @@ export default class AdminBookingView extends React.Component {
         fetch("/api/addRoomRestriction", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -162,7 +171,11 @@ export default class AdminBookingView extends React.Component {
 
             console.log("fetching Booking", this.state.date);
 
-            fetch(`/api/getBookingsOnDate/${this.state.date}`)
+            fetch(`/api/getBookingsOnDate/${this.state.date}`, {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+                }
+            })
                 .then((res) => {
                     if (!res.ok)
                         throw new Error(
@@ -245,6 +258,7 @@ export default class AdminBookingView extends React.Component {
         fetch("/api/removeBooking", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -270,7 +284,11 @@ export default class AdminBookingView extends React.Component {
 
     componentDidMount = () => {
         window.scrollTo(0, 0);
-        fetch("/api/getLocationData")
+        fetch("/api/getLocationData", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 return res.json();
             })

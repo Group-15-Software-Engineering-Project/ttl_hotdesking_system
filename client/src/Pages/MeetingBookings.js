@@ -150,7 +150,11 @@ function MeetingBookings() {
     };
 
     const getMeetingRooms = () => {
-        fetch("/api/meetingRooms")
+        fetch("/api/meetingRooms", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(`Failed to fetch Meeting Rooms`);
@@ -179,6 +183,7 @@ function MeetingBookings() {
         fetch(`/api/appointments/`, {
             method: "PUT",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -207,7 +212,9 @@ function MeetingBookings() {
     };
 
     const getCurrentBookings = (location) => {
-        fetch(`/api/getAppointments/${location}/${currentSelectedWeek.toISOString()}`)
+        fetch(`/api/getAppointments/${location}/${currentSelectedWeek.toISOString()}`, {
+            Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+        })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(`Failed to fetch appointments for ${location}`);

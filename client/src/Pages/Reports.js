@@ -110,7 +110,11 @@ class Reports extends Component {
   }
   componentDidMount = () => {
     window.scrollTo(0, 0);
-    fetch("/api/getLocationData")
+    fetch("/api/getLocationData", {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+      }
+    })
     .then((res) => {
         return res.json();
     })
@@ -125,7 +129,11 @@ class Reports extends Component {
 
    
 
-    fetch("/api/getGroups")
+    fetch("/api/getGroups", {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+      }
+    })
       .then((res) => {
         return res.json();
       })
@@ -158,6 +166,7 @@ class Reports extends Component {
     fetch("/api/getReports", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

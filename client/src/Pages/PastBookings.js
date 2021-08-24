@@ -64,6 +64,9 @@ function PastBookings() {
     const submitDeleteAppointment = (id) => {
         fetch(`/api/appointments/${id}`, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`
+            }
         })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to delete appointment.");
@@ -80,6 +83,7 @@ function PastBookings() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`
             },
             body: JSON.stringify({
                 userEmail: bookingToCancel.userEmail,

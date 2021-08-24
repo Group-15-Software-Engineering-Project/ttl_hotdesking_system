@@ -32,6 +32,9 @@ class Locations extends Component {
     submitMeetingRoom = () => {
         fetch(`/api/meetingRooms/${this.state.addMeetingRoom}`, {
             method: "PUT",
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
         })
             .then((res) => {
                 if (!res.ok) {
@@ -46,7 +49,11 @@ class Locations extends Component {
     };
 
     getMeetingRooms = () => {
-        fetch("/api/meetingRooms")
+        fetch("/api/meetingRooms", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(`Failed to fetch Meeting Rooms`);
@@ -65,6 +72,9 @@ class Locations extends Component {
     submitRemoveMeetingRoom = () => {
         fetch(`/api/meetingRooms/${this.state.removeMeetingRoom}`, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
         })
             .then((res) => {
                 if (!res.ok) {
@@ -79,7 +89,11 @@ class Locations extends Component {
     };
 
     getLocationData = () => {
-        fetch("/api/getLocationData")
+        fetch("/api/getLocationData", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 return res.json();
             })
@@ -104,6 +118,7 @@ class Locations extends Component {
         fetch("/api/addRoom", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -131,6 +146,7 @@ class Locations extends Component {
         fetch("/api/addDesk", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -160,6 +176,7 @@ class Locations extends Component {
         fetch("/api/removeDesk", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -190,6 +207,7 @@ class Locations extends Component {
         fetch("/api/removeRoom", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({

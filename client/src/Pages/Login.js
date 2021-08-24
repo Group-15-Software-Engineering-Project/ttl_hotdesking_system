@@ -35,7 +35,11 @@ class Login extends Component {
     };
 
     getNotifications = () => {
-        fetch("/api/getNotifications")
+        fetch("/api/getNotifications", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 return res.json();
             })
@@ -67,6 +71,7 @@ class Login extends Component {
         fetch("/api/getUserName", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -94,6 +99,7 @@ class Login extends Component {
         fetch("/api/login", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({

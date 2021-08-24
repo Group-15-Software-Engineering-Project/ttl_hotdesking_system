@@ -43,6 +43,7 @@ class Users extends Component {
         fetch("/api/addUserToGroup", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -68,6 +69,7 @@ class Users extends Component {
         fetch("/api/removeUserFromGroup", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -92,6 +94,7 @@ class Users extends Component {
         fetch("/api/removeUser", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -119,6 +122,7 @@ class Users extends Component {
         fetch("/api/addUser", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -136,7 +140,11 @@ class Users extends Component {
     };
 
     getTeams = () => {
-        fetch("/api/getGroups")
+        fetch("/api/getGroups", {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 return res.json();
             })
@@ -155,6 +163,7 @@ class Users extends Component {
         fetch("/api/getUsers", {
             method: "Post",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: "",
@@ -183,6 +192,7 @@ class Users extends Component {
             fetch("/api/getUsersInGroup", {
                 method: "Post",
                 headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ team: team }),

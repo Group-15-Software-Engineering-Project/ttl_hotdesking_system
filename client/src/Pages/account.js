@@ -28,6 +28,7 @@ class Account extends Component {
         fetch("/api/setUserName", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -55,6 +56,7 @@ class Account extends Component {
             fetch("/api/changePassword", {
                 method: "POST",
                 headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
@@ -89,6 +91,7 @@ class Account extends Component {
             fetch("/api/login", {
                 method: "POST",
                 headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
@@ -106,6 +109,7 @@ class Account extends Component {
                         fetch("/api/removeUser", {
                             method: "POST",
                             headers: {
+                                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                                 "Content-Type": "application/json",
                             },
                             body: JSON.stringify({
@@ -139,6 +143,7 @@ class Account extends Component {
         fetch("/api/getUserName", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -165,7 +170,11 @@ class Account extends Component {
 
     componentDidMount = () => {
         window.scrollTo(0, 0);
-        fetch(`/api/getUserBookingCount/${sessionStorage.email}`)
+        fetch(`/api/getUserBookingCount/${sessionStorage.email}`, {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to get desk booking count");
                 return res.json();
@@ -175,7 +184,11 @@ class Account extends Component {
             })
             .catch(console.error);
 
-        fetch(`/api/getUserAppointmentCount/${sessionStorage.email}`)
+        fetch(`/api/getUserAppointmentCount/${sessionStorage.email}`, {
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+            }
+        })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to get meeting room booking count");
                 return res.json();

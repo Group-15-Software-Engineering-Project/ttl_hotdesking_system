@@ -26,6 +26,7 @@ class Notifications extends Component {
         fetch("/api/addNotification", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({

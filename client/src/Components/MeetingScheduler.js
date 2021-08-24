@@ -131,6 +131,9 @@ export default class MeetingScheduler extends React.PureComponent {
                 data = data.filter((appointment) => appointment.id !== deleted);
                 fetch(`/api/appointments/${deleted}`, {
                     method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem("a0.jwt.at")}`,
+                    }
                 })
                     .then((res) => {
                         if (!res.ok) throw new Error("Failed to delete appointment.");
