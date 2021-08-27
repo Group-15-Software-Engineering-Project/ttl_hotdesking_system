@@ -82,7 +82,7 @@ User.hasMany(Appointment, {
 });
 
 sequelize
-    .sync({alter: true})
+    .sync()
     .then(() => {
         console.log('Database & tables created');
     })
