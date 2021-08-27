@@ -734,7 +734,7 @@ export default class AdminBookingView extends React.Component {
                                     this.state.chosenDate !== "" ? (
                                         <h2 style={{ marginTop: "0%" }}>No Bookings Found.</h2>
                                     ) : (
-                                        <h3>Please select a date.</h3>
+                                        <h3>Please select a date and location.</h3>
                                     )}
                                 </div>
                             )
