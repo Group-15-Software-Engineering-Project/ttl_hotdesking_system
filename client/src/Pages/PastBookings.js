@@ -12,6 +12,9 @@ function PastBookings() {
     const [view, setView] = useState("off");
     const verified = verify(true) || verify(false);
     const [bookings, setBookings] = useState([]);
+    const [bookingsPos, updateBookingsPos] = useState(0);
+    const [appointmentsPos, updateAppointmentsPos] = useState(0);
+
     useEffect(() => {
         window.scrollTo(0, 0);
         getAppointments();
@@ -283,7 +286,7 @@ function PastBookings() {
                         marginLeft: "2%",
                     }}
                 />
-                {bookings.map((data) => {
+                {bookings.slice(bookingsPos, bookingsPos + 10).map((data) => {
                     return displayBooking(data);
                 })}
             </>
@@ -359,7 +362,7 @@ function PastBookings() {
                         marginLeft: "2%",
                     }}
                 />
-                {appointments.map((data) => {
+                {appointments.slice(appointmentsPos, appointmentsPos + 10).map((data) => {
                     return displayAppointment(data);
                 })}
             </>
@@ -519,7 +522,6 @@ function PastBookings() {
             <div className="flex-container-1"></div>
             <div className="flex-container-5 main-body">
                 <div className="space" />
-
                 <h1
                     className="page-divider-header"
                     style={{ marginLeft: "2.5%", marginBottom: "2%" }}>
@@ -551,24 +553,37 @@ function PastBookings() {
                     {isCancelling ? "Finish Cancelling" : "Cancel a Booking"}
                 </button>
                 {view === "off" ? (
-                    <div
-                        style={{
-                            display: "flex",
-                            flexFlow: "row wrap",
-                            justifyContent: "flex-start",
-                        }}>
-                        <div style={{ width: "100%", marginBottom: "2%" }} />
-                        {displayDeskBookings()}
+                    <div>
+                        <div style={{display:"flex", justifyContent:"center", alignItems:"center", alignText: "center"}}>
+                            <button style={{marginRight:"3px"}} className="button-style" disabled={bookingsPos === 0} onClick={() => updateBookingsPos(bookingsPos - 10)}>Previous</button>
+                            <button style={{marginLeft:"3px"}} className="button-style" disabled={bookings.slice(bookingsPos, bookings.length - 1).length < 10} onClick={() => updateBookingsPos(bookingsPos + 10)}>Next</button>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexFlow: "row wrap",
+                                justifyContent: "flex-start",
+                            }}>
+                            <div style={{ width: "100%", marginBottom: "2%" }} />
+                            {displayDeskBookings()}
+                        </div>
                     </div>
+                
                 ) : (
-                    <div
-                        style={{
-                            display: "flex",
-                            flexFlow: "row wrap",
-                            justifyContent: "flex-start",
-                        }}>
-                        <div style={{ width: "100%", marginBottom: "2%" }} />
-                        {displayAppointmentBookings()}
+                    <div>
+                        <div style={{display:"flex", justifyContent:"center", alignItems:"center", alignText: "center"}}>
+                            <button style={{marginRight:"3px"}} className="button-style" disabled={appointmentsPos === 0} onClick={() => updateAppointmentsPos(appointmentsPos - 10)}>Previous</button>
+                            <button style={{marginLeft:"3px"}} className="button-style" disabled={appointments.slice(appointmentsPos, appointments.length - 1).length < 10} onClick={() => updateAppointmentsPos(appointmentsPos + 10)}>Next</button>
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexFlow: "row wrap",
+                                justifyContent: "flex-start",
+                            }}>
+                            <div style={{ width: "100%", marginBottom: "2%" }} />
+                            {displayAppointmentBookings()}
+                        </div>
                     </div>
                 )}
                 <div className="space" />

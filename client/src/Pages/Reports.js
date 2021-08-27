@@ -354,37 +354,6 @@ class Reports extends Component {
                                             }}
                                         />
                                     </div>
-                                    <div
-                                        className="space"
-                                        style={{ marginBottom: "5%" }}
-                                    />
-                                    <div
-                                        style={{
-                                            width: "70%",
-                                            marginLeft: "15%",
-                                            marginBottom: "5%",
-                                        }}
-                                    >
-                                        <Bar
-                                            data={this.state.deskData}
-                                            options={{
-                                                title: {
-                                                    display:
-                                                        this.props.displayTitle,
-                                                    text: "Most used desk",
-                                                    fontSize: 25,
-                                                },
-                                                legend: {
-                                                    display:
-                                                        this.props
-                                                            .displayLegend,
-                                                    position:
-                                                        this.props
-                                                            .legendPosition,
-                                                },
-                                            }}
-                                        />
-                                    </div>
                                 </div>
                             ) : (
                                 <h1>{this.state.error}</h1>

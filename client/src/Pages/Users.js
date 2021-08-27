@@ -26,6 +26,7 @@ class Users extends Component {
 
     componentDidMount() {
         this.submitGetUsersInTeam("All Users", "allUsers");
+        this.submitGetUsersInTeam("All Users", "users");
         this.getTeams();
         window.scrollTo(0, 0);
     }
@@ -116,7 +117,6 @@ class Users extends Component {
                     this.setState({ deleteEmail: "" });
                     this.submitGetUsersInTeam("All Users", "allUsers");
                     this.submitGetUsersInTeam(this.state.listedTeam, "users");
-
                 }
             })
             .catch((err) => {
@@ -182,12 +182,7 @@ class Users extends Component {
                     if (res.error) {
                         alert("Could not get Users");
                     } else {
-                        this.setState({ [label]: res.users.filter(this.validEmail) }, () => {
-                            if (label === "users")
-                                this.positionReference.current.scrollIntoView({
-                                    behavior: "smooth",
-                                });
-                        });
+                        this.setState({ [label]: res.users.filter(this.validEmail) });
                     }
                 })
                 .catch((err) => {
@@ -451,7 +446,7 @@ class Users extends Component {
                                     this.setState({listedTeam: e.target.value});
                                     this.submitGetUsersInTeam(e.target.value, "users")
                                 }}>
-                                <option value={-1}>Select team</option>
+                                {/* <option value={-1}>Select team</option> */}
                                 {this.state.teamList
                                     ? this.state.teamList.map((x) => {
                                           return <option value={x}>{x}</option>;
@@ -478,7 +473,6 @@ class Users extends Component {
                                 ))}
                             </ol>
                         </div>
-                        <div ref={this.positionReference} />
                         <div className="space" style={{ marginBottom: "10%" }} />
                     </div>
                 </div>
