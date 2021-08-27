@@ -140,7 +140,6 @@ class Users extends Component {
             .then(() => {
                 console.log("added");
                 this.setState({ addEmail: "" });
-                this.getUsers();
                 this.submitGetUsersInTeam("All Users", "allUsers");
                 this.submitGetUsersInTeam(this.state.listedTeam, "users");
 
@@ -164,31 +163,7 @@ class Users extends Component {
                 alert(err);
             });
     };
-    getUsers = () => {
-        fetch("/api/getUsers", {
-            method: "Post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: "",
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                if (res.error) {
-                    alert("Could not get Users");
-                } else {
-                    this.setState({ users: res.users }, () =>
-                        this.positionReference.current.scrollIntoView({ behavior: "smooth" })
-                    );
-                    console.log(res.users);
-                }
-            })
-            .catch((err) => {
-                alert(err);
-            });
-    };
+   
 
     submitGetUsersInTeam = (team, label) => {
         if (team === -1) return;

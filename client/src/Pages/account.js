@@ -358,7 +358,7 @@ class Account extends Component {
                             </div>
                             <div className="space" style={{ marginBottom: "0" }} />
 
-                            <input
+                            {/* <input
                                 type="password"
                                 name="delPassword"
                                 className="text-input"
@@ -396,7 +396,7 @@ class Account extends Component {
                                 className="button-style-warning no-outline"
                                 onClick={() => this.submitDeleteAccount()}>
                                 Delete my Account
-                            </button>
+                            </button> */}
                         </>
                     ) : null}
                     <div className="space" style={{ marginBottom: "20%" }} />
