@@ -18,6 +18,8 @@ class Users extends Component {
         allUsers: [],
         users: [],
         teamList: [],
+        listedTeam: "",
+
     };
 
     positionReference = createRef();
@@ -58,7 +60,10 @@ class Users extends Component {
                         `Added ${this.state.addTeamUserName} to team ${this.state.addTeamName}.`
                     );
                     this.setState({ addTeamUserName: "" });
+                    this.submitGetUsersInTeam(this.state.listedTeam, "users");
+
                     this.getTeams();
+                    
                 }
             })
             .catch(console.error);
@@ -82,6 +87,8 @@ class Users extends Component {
                 } else {
                     alert("Success");
                     this.setState({ removeUserFromTeam: "", removeFromTeam: "" });
+                    this.submitGetUsersInTeam(this.state.listedTeam, "users");
+
                 }
             })
             .catch((err) => {});
@@ -108,6 +115,8 @@ class Users extends Component {
                     alert("Success");
                     this.setState({ deleteEmail: "" });
                     this.submitGetUsersInTeam("All Users", "allUsers");
+                    this.submitGetUsersInTeam(this.state.listedTeam, "users");
+
                 }
             })
             .catch((err) => {
@@ -131,6 +140,10 @@ class Users extends Component {
             .then(() => {
                 console.log("added");
                 this.setState({ addEmail: "" });
+                this.getUsers();
+                this.submitGetUsersInTeam("All Users", "allUsers");
+                this.submitGetUsersInTeam(this.state.listedTeam, "users");
+
             })
             .catch(console.error);
     };
@@ -458,9 +471,11 @@ class Users extends Component {
                                 className="text-input"
                                 style={{ padding: "0", width: "25%" }}
                                 name="usersInTeam"
-                                onChange={(e) =>
+                                value={this.state.listedTeam}
+                                onChange={(e) => {
+                                    this.setState({listedTeam: e.target.value});
                                     this.submitGetUsersInTeam(e.target.value, "users")
-                                }>
+                                }}>
                                 <option value={-1}>Select team</option>
                                 {this.state.teamList
                                     ? this.state.teamList.map((x) => {

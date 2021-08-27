@@ -66,9 +66,8 @@ html {
     background-color: #eeeeee;
     justify-content: flex-start;
     flex-flow: row wrap;
-    min-height: 100vh;
-    height: 100%;
-    padding: none;
+    min-height: 110vh;
+    height: 110%;
 }
 
 .main-body {
@@ -231,13 +230,32 @@ html {
     overflow: hidden;
     text-overflow: ellipsis !important;
 }
-@media (min-width: 720px) {
+
+.TCD-BG {
+    background-image: url("../media/tcd_bg.jpg");
+    background-size: 115%;
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-position-y: -275px;
+}
+@media (max-width: 1320px) {
     .TCD-BG {
         background-image: url("../media/tcd_bg.jpg");
-        background-size: 115%;
+        background-size: cover;
         background-attachment: fixed;
-        background-repeat: repeat;
-        background-position-y: -275px;
+        background-repeat: no-repeat;
+        background-position-y: 0;
+        /* background-position-x: -700px; */
+    }
+}
+@media (max-width: 720px) {
+    .TCD-BG {
+        background-image: url("../media/tcd_bg.jpg");
+        background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-position-y: 0;
+        /* background-position-x: -700px; */
     }
 }
 
@@ -494,4 +512,38 @@ input:checked + .slider:before {
     padding: 20px;
     border-radius: 20px;
     box-shadow: 1px 1px 2px 1px #6668, inset 0 0 0 1px black, inset -6px -6px 10px 5px #8af7;
+}
+
+.login-box {
+    position: absolute;
+    margin: auto 0;
+    inset: 0;
+    left: 10em;
+    bottom: -2em;
+    background-color: hsl(0 0% 30% / 0.5);
+    backdrop-filter: blur(2px);
+    border-radius: 20px;
+    width: 40%;
+    height: fit-content;
+    min-width: fit-content;
+    overflow: hidden;
+    box-shadow: 1px 3px 2px 2px #2226, inset 0 0 15px 15px hsl(0 0% 70% / 0.3);
+}
+
+.login-title {
+    margin:0 0 1em 0; 
+    color:white;
+    padding-right: 1em;
+}
+
+@media (max-width: 720px) {
+    .login-box {
+        inset:0;
+        top: 2em;
+        width: 100%;
+    }
+    
+    .login-title {
+        font-size: 1.5em;
+    }
 }
