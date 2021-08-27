@@ -135,14 +135,14 @@ html {
     border-radius: 100px;
     background-color: var(--bg-color, #008dd3);
     color: white;
-    min-width: 180px;
+    min-width: 150px;
     height: 40px;
     font-weight: bold;
     font-size: 16px;
     box-shadow: 0 3px 3px #555;
     cursor: pointer;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 2rem;
+    padding-right: 2rem;
     outline: none;
     transition: background-color 100ms linear;
 }
@@ -196,11 +196,14 @@ html {
     }
 }
 
-@media (min-width: 720) {
+@media (max-width: 720px) {
     .button-style {
-        max-width: 200px;
+        max-width: 120px;
+        min-width: 100px;
+        font-size: 0.7em;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-
 }
 .double-quadrant {
     width: 100%;
