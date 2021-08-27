@@ -19,7 +19,7 @@ export const setSessionToken = (e) => {
     let b = sessionStorage.username;
     let date = new Date();
     let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
-    let token = sha256(a + c + "@$;;:!" + (e ? "@|]|\\/|!|\\|$$" : "*^*") + b);
+    let token = sha256(a + c + process.env.REACT_APP_SECRET + (e ? process.env.REACT_APP_ADMIN_SECRET : "") + b);
     sessionStorage.setItem("sessionToken", token);
 };
 
@@ -28,7 +28,7 @@ export const verify = (e) => {
     let b = sessionStorage.username;
     let date = new Date();
     let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
-    let token = sha256(a + c + "@$;;:!" + (e ? "@|]|\\/|!|\\|$$" : "*^*") + b);
+    let token = sha256(a + c + process.env.REACT_APP_SECRET + (e ? process.env.REACT_APP_ADMIN_SECRET : "") + b);
     return token === sessionStorage.sessionToken;
 };
 
@@ -39,53 +39,6 @@ export const getDifferenceInDays = (date1, date2) => {
     diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
     return diff;
 };
-
-// export const _GetUserBookings = async (ref, email) => {
-//     let date = new Date();
-//     fetch("/api/getBookings", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//             email: email ? email : sessionStorage.email,
-//         }),
-//     })
-//         .then((response) => response.json())
-//         .then((res) => {
-//             let data = res.data;
-//             let today =
-//                 date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
-//             let index = 0;
-//             for (let key in data) {
-//                 let bookingDateComponents = data[key].date.split("T")[0].split("-");
-//                 let bookingDate =
-//                     parseInt(bookingDateComponents[0]) * 10000 +
-//                     parseInt(bookingDateComponents[1]) * 100 +
-//                     parseInt(bookingDateComponents[2]);
-//                 if (today - bookingDate > 0) break;
-//                 index++;
-//             }
-//             for (let i = 0; i < Math.floor(index / 2); i++) {
-//                 let temp = data[i];
-//                 data[i] = data[index - 1 - i];
-//                 data[index - 1 - i] = temp;
-//             }
-//             console.log(data, index);
-//             let upB = [];
-//             for (let i = 0; i < 3 && i < index; i++) {
-//                 console.log(data[i]);
-//                 upB.push(data[i]);
-//             }
-//             console.log(upB);
-//             sessionStorage.setItem("bookings", JSON.stringify({ isNull: false, data: data }));
-//             sessionStorage.setItem("upcomingBookings", JSON.stringify({ data: upB }));
-//             if (ref) {
-//                 ref.setState({ bookings: upB });
-//             }
-//         });
-//     return 1;
-// };
 
 export const parseNumberList = (inputString) => {
     let list = inputString.replaceAll(" ", "");

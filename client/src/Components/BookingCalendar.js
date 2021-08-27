@@ -196,6 +196,7 @@ export default class BookingCalendar extends React.Component {
                     this.setState({ currentMonth: dateStr }, () => {
                         this.fetchAvailableDesks();
                     });
+                    if(this.props.onMonthChange) this.props.onMonthChange();
                 }}
                 disableTile={this.disabledTiles}
                 tileClass={this.checkAvailability}

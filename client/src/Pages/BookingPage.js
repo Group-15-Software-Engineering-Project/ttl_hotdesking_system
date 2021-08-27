@@ -252,6 +252,9 @@ export default class BookingPage extends React.Component {
                                             }
                                         }
                                     })()}
+                                    onMonthChange={() => {
+                                        this.setState({chosenDate: "default"})
+                                    }}
                                     onSelect={(desks, date, m) => {
                                         let newDate;
                                         this.setState({ chosenDesk: "default" });
@@ -286,7 +289,7 @@ export default class BookingPage extends React.Component {
                         </div>
                     ) : null}
 
-                    {this.state.bookableDesks.length !== 0 ? (
+                    {this.state.bookableDesks.length !== 0 && this.state.chosenDate !== "default" ? (
                         <div>
                             <TileSelection
                                 key={this.state.chosenDate}

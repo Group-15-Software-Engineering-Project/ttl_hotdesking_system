@@ -196,6 +196,12 @@ html {
     }
 }
 
+@media (min-width: 720) {
+    .button-style {
+        max-width: 200px;
+    }
+
+}
 .double-quadrant {
     width: 100%;
     height: 50vh;
