@@ -676,5 +676,11 @@ module.exports = {
         deskBookings = deskBookings.filter((obj) => obj.bookings.length !== 0);
         appointments = appointments.filter((obj) => obj.bookings.length !== 0);
         return { bookings: deskBookings, appointments: appointments };
+    },
+    genToken = (email, username, admin) => {
+
+    },
+    verify = (email, username, admin) => {
+
     }
 };
