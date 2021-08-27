@@ -249,6 +249,7 @@ module.exports = {
             deskOptions.where.room = room;
         }
         const today = new Date();
+
         switch (time) {
         case 'next week':
             bookingOptions.where.date = options.where.date = {
@@ -290,14 +291,14 @@ module.exports = {
                 [Op.lt]: today
             };
             break;
-        case 'upcomingWeek':
+        case 'upcomingweek':
             bookingOptions.where.date = options.where.date = {
-                [Op.gte]: new Date(
+                [Op.lt]: new Date(
                     today.getFullYear(),
                     today.getMonth(),
                     today.getDate() + days
                 ),
-                [Op.lt]: today
+                [Op.gte]: today
             };
             break;
         case 'default':
