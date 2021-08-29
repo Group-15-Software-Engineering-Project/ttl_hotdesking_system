@@ -72,10 +72,7 @@ class Login extends Component {
     };
 
     render() {
-        return (verify(true) || verify(false)) && sessionStorage.notifications ? (
-            <Redirect to="/loading"></Redirect>
-        ) : (
-            <div className="wrapper TCD-BG" style={{posistion:"relative"}}>
+        return (<div className="wrapper TCD-BG" style={{posistion:"relative"}}>
                 <div className="login-box">
                     <div style={{display:"block", backgroundColor:"#008dd3dd", textAlign:"left", padding:"0.25em 2em"}}>
                         <img src={TCDLogo} alt="TCD Logo" style={{width:"20rem"}}/>
@@ -115,7 +112,8 @@ class Login extends Component {
                                                         height:"2em",
                                                         width:"fit-content", 
                                                         padding:"0.4em 0.5em 0.6em 0.5em",
-                                                        borderRadius:"20px"}}>
+                                                        borderRadius:"20px",
+                                                        maxWidth:"fit-content"}}>
                                         {"Email and password did not match."}
                                     </p>
                                     </div>
