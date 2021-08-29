@@ -17,12 +17,10 @@ import MeetingBookings from "./Pages/MeetingBookings";
 import NavigationSidebar from "./Components/NavigationSidebar";
 import AdminOptions from "./Pages/AdminOptions";
 import CurrentBookings from "./Pages/CurrentBookings";
-import Navbar from "./Components/NavBar";
 import { verify } from "./Components/Misc";
 
 class App extends Component {
     state = {
-        email: "",
         visible: true,
         isLoggedIn: false,
     };
@@ -52,11 +50,7 @@ class App extends Component {
                         </Route>
 
                         <Route path="/login">
-                            <Login
-                                setEmail={(email) => {
-                                    this.setState({ email: email, isLoggedIn: true });
-                                }}
-                            />
+                            <Login/>
                         </Route>
 
                         <Route path="/booking-page">
@@ -80,10 +74,8 @@ class App extends Component {
                             <PastBookings email={sessionStorage.email} />
                         </Route>
                         <Route path="/adminOptions" component={AdminOptions} />
-                        {this.state.visible ? <Route path="/Admin" component={Admin} /> : null}
-                        {this.state.visible ? (
-                            <Route path="/AdminBookingView" component={AdminBookingView} />
-                        ) : null}
+                        <Route path="/Admin" component={Admin} />
+                        <Route path="/AdminBookingView" component={AdminBookingView} />
                     </Switch>
                 </Router>
 

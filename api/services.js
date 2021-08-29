@@ -37,7 +37,13 @@ module.exports = {
             }
         });
         const admin = groupModel.length > 0;
-        return model.length > 0 ? [true, admin] : [false, false];
+        let a = email;
+        let b = model[0].username;
+        let date = new Date();
+        let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
+        let token = sha256(a + c + process.env.REACT_APP_SECRET + (admin ? process.env.REACT_APP_ADMIN_SECRET : "") + b);
+        
+        return model.length > 0 ? [true, admin, {email: a, username: b, token: token}] : [false, false, {}];
     },
     adminCheck: async (email) => {
         const model = await Group.findAll({
