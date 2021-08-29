@@ -9,18 +9,19 @@ router.post('/login', (req, res) => {
         .login(req.body.email, req.body.password)
         .then((result) => {
             if (result[0]) {
-                res.status(200).send({ error: false, admin: result[1], message: 'Success' });
+                res.status(200).send({ error: false, admin: result[1], user: result[2], message: 'Success' });
             } else {
                 res.status(200).send({
                     error: true,
                     admin: false,
+                    user:{},
                     message: 'No email with that password'
                 });
             }
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: true, admin: false, message: err });
+            res.status(500).send({ error: true, admin: false, user: {}, message: err });
         });
 });
 

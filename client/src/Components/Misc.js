@@ -14,21 +14,13 @@ export const months = [
     "Nov",
     "Dec",
 ];
-export const setSessionToken = (e) => {
-    let a = sessionStorage.email;
-    let b = sessionStorage.username;
-    let date = new Date();
-    let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
-    let token = sha256(a + c + process.env.REACT_APP_SECRET + (e ? process.env.REACT_APP_ADMIN_SECRET : "") + b);
-    sessionStorage.setItem("sessionToken", token);
-};
 
 export const verify = (e) => {
     let a = sessionStorage.email;
     let b = sessionStorage.username;
     let date = new Date();
     let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
-    let token = sha256(a + c + process.env.REACT_APP_SECRET + (e ? process.env.REACT_APP_ADMIN_SECRET : "") + b);
+    let token = sha256(a + c + process.env.REACT_APP_A + (e ? process.env.REACT_APP_B : "") + b);
     return token === sessionStorage.sessionToken;
 };
 
