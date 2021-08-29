@@ -38,8 +38,7 @@ class App extends Component {
         return (
             <div>
                 <Router>
-                    {!sessionStorage.email ? <Redirect to="/login"></Redirect> : null}
-                    {(verify(true) || verify(false)) && <NavigationSidebar />}
+                    {(verify(true) || verify(false)) && !String(window.location).includes("/login") && <NavigationSidebar />}
 
                     <Switch>
                         <Route exact path="/loading">
