@@ -115,7 +115,8 @@ class Login extends Component {
                                                         height:"2em",
                                                         width:"fit-content", 
                                                         padding:"0.4em 0.5em 0.6em 0.5em",
-                                                        borderRadius:"20px"}}>
+                                                        borderRadius:"20px",
+                                                        maxWidth:"fit-content"}}>
                                         {"Email and password did not match."}
                                     </p>
                                     </div>
