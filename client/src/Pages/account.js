@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
-import { verify, setSessionToken } from "../Components/Misc";
+import { verify } from "../Components/Misc";
 import "../public/css/main.css";
 
 class Account extends Component {
@@ -42,7 +42,9 @@ class Account extends Component {
                 if (res.error) {
                     alert("error setting username");
                 } else {
-                    this.getUserName();
+                    sessionStorage.clear();
+                    alert("Username changed successfully. Please re-login.");
+                    window.location = "/login";
                 }
             })
             .catch((err) => {
@@ -80,88 +82,59 @@ class Account extends Component {
         }
     };
 
-    submitDeleteAccount = () => {
-        if (
-            this.state.delPassword === this.state.confirmDelPassword &&
-            this.state.deleteAccountConfirmation
-        ) {
-            fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.delPassword,
-                }),
-            })
-                .then((res) => {
-                    return res.json();
-                })
-                .then((res) => {
-                    if (res.error) {
-                        alert("Incorrect Password");
-                    } else {
-                        fetch("/api/removeUser", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                email: this.state.email,
-                            }),
-                        })
-                            .then((res1) => {
-                                return res1.json();
-                            })
-                            .then((res1) => {
-                                if (res1.error) {
-                                    alert("Error deleting account");
-                                } else {
-                                    alert("success");
-                                    sessionStorage.clear();
-                                    window.location = "/login";
-                                }
-                            })
-                            .catch((err) => {
-                                alert("Error deleting account (API)");
-                            });
-                    }
-                })
-                .catch((err) => {
-                    alert("Error deleting account (API)");
-                });
-        }
-    };
-
-    getUserName = () => {
-        fetch("/api/getUserName", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: this.state.email,
-            }),
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                if (res.err) {
-                    console.log(res.err);
-                }
-                this.setState({ username: res.username });
-                let admin = verify(true);
-                sessionStorage.setItem("username", res.username);
-                setSessionToken(admin);
-            })
-            .catch((err) => {
-                console.log(err);
-                this.setState({ username: this.state.email });
-            });
-    };
-
+    // submitDeleteAccount = () => {
+    //     if (
+    //         this.state.delPassword === this.state.confirmDelPassword &&
+    //         this.state.deleteAccountConfirmation
+    //     ) {
+    //         fetch("/api/login", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 email: this.state.email,
+    //                 password: this.state.delPassword,
+    //             }),
+    //         })
+    //             .then((res) => {
+    //                 return res.json();
+    //             })
+    //             .then((res) => {
+    //                 if (res.error) {
+    //                     alert("Incorrect Password");
+    //                 } else {
+    //                     fetch("/api/removeUser", {
+    //                         method: "POST",
+    //                         headers: {
+    //                             "Content-Type": "application/json",
+    //                         },
+    //                         body: JSON.stringify({
+    //                             email: this.state.email,
+    //                         }),
+    //                     })
+    //                         .then((res1) => {
+    //                             return res1.json();
+    //                         })
+    //                         .then((res1) => {
+    //                             if (res1.error) {
+    //                                 alert("Error deleting account");
+    //                             } else {
+    //                                 alert("success");
+    //                                 sessionStorage.clear();
+    //                                 window.location = "/login";
+    //                             }
+    //                         })
+    //                         .catch((err) => {
+    //                             alert("Error deleting account (API)");
+    //                         });
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 alert("Error deleting account (API)");
+    //             });
+    //     }
+    // };
     componentDidMount = () => {
         window.scrollTo(0, 0);
         fetch(`/api/getUserBookingCount/${sessionStorage.email}`)
@@ -297,6 +270,7 @@ class Account extends Component {
                                 name="setUserName"
                                 className="text-input"
                                 autoComplete="off"
+                                autoSave="off"
                                 onChange={this.handleEvent}
                                 placeholder="User name"
                             />
@@ -312,7 +286,7 @@ class Account extends Component {
                             </button>
                         </div>
                     </div>
-                    {!verify(true) ? (
+                    {/* {!verify(true) ? (
                         <>
                             <div
                                 style={{
@@ -360,7 +334,7 @@ class Account extends Component {
                                     added again by an admin.
                                 </span>
                             </div>
-                            <div className="space" style={{ marginBottom: "0" }} />
+                            <div className="space" style={{ marginBottom: "0" }} /> */}
 
                             {/* <input
                                 type="password"
@@ -401,8 +375,8 @@ class Account extends Component {
                                 onClick={() => this.submitDeleteAccount()}>
                                 Delete my Account
                             </button> */}
-                        </>
-                    ) : null}
+                        {/* </>
+                    ) : null} */}
                     <div className="space" style={{ marginBottom: "20%" }} />
                 </div>
                 <div className="flex-container-1" />
