@@ -132,9 +132,11 @@ class Login extends Component {
                         <h1 className="login-title">Trinity Desk Booking System</h1>
                         <div className="space"/>
                         <input 
-                            type="email" 
+                            type="text" 
                             className="text-input" 
-                            placeholder="Email" 
+                            placeholder="Email"
+                            autoComplete="off"
+                            autoSave="off"
                             style={{minWidth:"20em"}}
                             value={this.state.email}
                             onChange={(e) =>
@@ -144,14 +146,29 @@ class Login extends Component {
                         <input 
                             type="password" 
                             className="text-input" 
-                            placeholder="Password" 
+                            placeholder="Password"
+                            autoComplete="off" 
                             style={{minWidth:"20em"}} 
                             value={this.state.password}
                             onChange={(e) =>
                                 this.setState({ password: e.target.value })
                             }
                         ></input>
-                        <div className="space"/>
+                        {this.state.errorText ? 
+                        <div>
+                        <p className="space" style={{ backgroundColor:"#faaa",
+                                                        color: "#e00", 
+                                                        fontWeight:"bold", 
+                                                        margin:"0.1em 0 0.4em 0.3em", 
+                                                        height:"2em",
+                                                        width:"fit-content", 
+                                                        padding:"0.4em 0.5em 0.6em 0.5em",
+                                                        borderRadius:"20px"}}>
+                                        {"Email and password did not match."}
+                                    </p>
+                                    </div>
+                           : <div className="space" style={{margin:"0 0 0.5em 0", height:"2em"}}/>}
+                        
                         <button                             
                             style={{minWidth:"16.5em"}}
                             className="button-style" 

@@ -277,9 +277,7 @@ class Users extends Component {
                                     Select team
                                 </option>
                                 {this.state.teamList
-                                    .filter((e) => {
-                                        if (e !== "All Users") return e;
-                                    })
+                                    .filter((e) => !e.includes("All Users"))
                                     .map((x) => {
                                         return (
                                             <option key={"team_" + x} value={x}>
@@ -388,9 +386,9 @@ class Users extends Component {
                                     this.handleEvent(e);
                                 }}>
                                 <option value={-1}>Select team</option>
-                                {this.state.teamList.map((x) => (
+                                {this.state.teamList.filter(e => !e.includes("All Users")).map((x) =>
                                     <option value={x}>{x}</option>
-                                ))}
+                                )}
                             </select>
                             <div className="space" style={{ marginBottom: "1%" }} />
 
@@ -401,9 +399,9 @@ class Users extends Component {
                                 value={this.state.removeUserFromTeam}
                                 onChange={this.handleEvent}>
                                 <option value={-1}>Select user</option>
-                                {this.state.usersInTeam.map((x) => (
+                                {this.state.usersInTeam.map((x) => 
                                     <option value={x}>{x}</option>
-                                ))}
+                                )}
                             </select>
                             <div
                                 className="space"

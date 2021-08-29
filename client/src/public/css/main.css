@@ -63,11 +63,9 @@ html {
 }
 .wrapper {
     display: flex;
-    background-color: #eeeeee;
     justify-content: flex-start;
     flex-flow: row wrap;
-    min-height: 110vh;
-    height: 110%;
+    min-height: 100vh;
 }
 
 .main-body {
@@ -246,6 +244,13 @@ html {
     background-attachment: fixed;
     background-repeat: repeat;
     background-position-y: -275px;
+}
+html {
+    background-image: url("../media/tcd_bg.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position-y: 0;
 }
 @media (max-width: 1320px) {
     .TCD-BG {
@@ -525,18 +530,19 @@ input:checked + .slider:before {
 
 .login-box {
     position: absolute;
-    margin: auto 0;
+    margin: 0em 0 2em 0;
     inset: 0;
     left: 10em;
-    bottom: -2em;
-    background-color: hsl(0 0% 30% / 0.5);
+    top:18vh;
+    background-color: hsl(0 0% 30% / 0.6);
     backdrop-filter: blur(2px);
     border-radius: 20px;
     width: 40%;
+    max-width:700px;
     height: fit-content;
     min-width: fit-content;
     overflow: hidden;
-    box-shadow: 1px 3px 2px 2px #2226, inset 0 0 15px 15px hsl(0 0% 70% / 0.3);
+    box-shadow: 1px 3px 2px 2px #2226, inset -5px -5px 5px 1px hsl(0 0% 80% / 0.3);
 }
 
 .login-title {
@@ -555,4 +561,35 @@ input:checked + .slider:before {
     .login-title {
         font-size: 1.5em;
     }
+}
+
+.arrow-button-left {
+    margin-right: 3px;
+    border-radius: 50%;
+    font-size: 24px;
+    min-height: fit-content;
+    min-width: fit-content;
+    width: fit-content;
+    height: fit-content;
+    padding: 20px;
+    position: relative;
+}
+.arrow-button-right {
+    margin-left: 3px;
+    border-radius: 50%;
+    font-size: 24px;
+    min-height: fit-content;
+    min-width: fit-content;
+    padding: 20px;
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+}
+
+.arrow-button-left > *,
+.arrow-button-right > * {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+
 }

@@ -249,6 +249,7 @@ class Account extends Component {
                                 type="password"
                                 placeholder="Old password"
                                 name="oldPassword"
+                                autoComplete="off"
                                 onChange={this.handleEvent}
                             />
                             <div className="space" style={{ marginBottom: "1%" }} />
@@ -257,12 +258,14 @@ class Account extends Component {
                                 type="password"
                                 placeholder="New password"
                                 name="newPassword"
+                                autoComplete="off"
                                 onChange={this.handleEvent}
                             />
                             <div className="space" style={{ marginBottom: "1%" }} />
                             <input
                                 className="text-input"
                                 type="password"
+                                autoComplete="off"
                                 placeholder="Confirm new password"
                                 name="confirmNewPassword"
                                 onChange={this.handleEvent}
@@ -293,6 +296,7 @@ class Account extends Component {
                                 type="text"
                                 name="setUserName"
                                 className="text-input"
+                                autoComplete="off"
                                 onChange={this.handleEvent}
                                 placeholder="User name"
                             />

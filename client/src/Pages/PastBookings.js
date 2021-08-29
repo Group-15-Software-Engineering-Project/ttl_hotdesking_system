@@ -5,6 +5,7 @@ import { getDifferenceInDays, months, verify } from "../Components/Misc";
 import { Redirect, Link } from "react-router-dom";
 import PillSlider from "../Components/PillSlider";
 // import { BiStreetView } from "react-icons/bi";
+import {FaArrowAltCircleRight, FaArrowAltCircleLeft} from "react-icons/fa"
 
 function PastBookings() {
     const [isCancelling, toggleCancelMode] = useState(false);
@@ -555,8 +556,8 @@ function PastBookings() {
                 {view === "off" ? (
                     <div>
                         <div style={{display:"flex", justifyContent:"center", alignItems:"center", alignText: "center"}}>
-                            <button style={{marginRight:"3px"}} className="button-style" disabled={bookingsPos === 0} onClick={() => updateBookingsPos(bookingsPos - 10)}>Previous</button>
-                            <button style={{marginLeft:"3px"}} className="button-style" disabled={bookings.slice(bookingsPos, bookings.length - 1).length < 10} onClick={() => updateBookingsPos(bookingsPos + 10)}>Next</button>
+                            <button className="button-style arrow-button-left" disabled={bookingsPos === 0} onClick={() => updateBookingsPos(bookingsPos - 10)}><FaArrowAltCircleLeft/></button>
+                            <button className="button-style arrow-button-right" disabled={bookings.slice(bookingsPos, bookings.length - 1).length < 10} onClick={() => updateBookingsPos(bookingsPos + 10)}><FaArrowAltCircleRight/></button>
                         </div>
                         <div
                             style={{
@@ -572,8 +573,8 @@ function PastBookings() {
                 ) : (
                     <div>
                         <div style={{display:"flex", justifyContent:"center", alignItems:"center", alignText: "center"}}>
-                            <button style={{marginRight:"3px"}} className="button-style" disabled={appointmentsPos === 0} onClick={() => updateAppointmentsPos(appointmentsPos - 10)}>Previous</button>
-                            <button style={{marginLeft:"3px"}} className="button-style" disabled={appointments.slice(appointmentsPos, appointments.length - 1).length < 10} onClick={() => updateAppointmentsPos(appointmentsPos + 10)}>Next</button>
+                            <button className="button-style arrow-button-left" disabled={appointmentsPos === 0} onClick={() => updateAppointmentsPos(appointmentsPos - 10)}><FaArrowAltCircleLeft/></button>
+                            <button className="button-style arrow-button-right" disabled={appointments.slice(appointmentsPos, appointments.length - 1).length < 10} onClick={() => updateAppointmentsPos(appointmentsPos + 10)}><FaArrowAltCircleRight/></button>
                         </div>
                         <div
                             style={{
