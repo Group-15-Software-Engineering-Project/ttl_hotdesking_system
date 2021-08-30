@@ -500,7 +500,7 @@ export default class AdminBookingView extends React.Component {
                                 className="text-input"
                                 style={{ padding: "0" }}
                                 onClick={this.handleEvent}>
-                                <option key={"_empty_loc"} value="" id="myDefault">
+                                <option  value="" id="myDefault">
                                     Select location
                                 </option>
                                 <option value="overall">All</option>
