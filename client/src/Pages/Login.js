@@ -78,7 +78,7 @@ class Login extends Component {
                         <img src={TCDLogo} alt="TCD Logo" style={{width:"20rem"}}/>
                     </div>
                     <div style={{display:"block", textAlign:"left", padding:"2em 0 3em 3em"}}>
-                        <h1 className="login-title">Trinity Desk Booking System</h1>
+                        <h1 className="login-title">Trinity T&L Hot-Desking App</h1>
                         <div className="space"/>
                         <input 
                             type="text" 

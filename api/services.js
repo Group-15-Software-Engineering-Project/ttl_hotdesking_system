@@ -683,7 +683,7 @@ module.exports = {
         appointments = appointments.filter((obj) => obj.bookings.length !== 0);
         return { bookings: deskBookings, appointments: appointments };
     },
-    resetPassword = (email) => {
+    resetPassword: async (email) => {
         const password = email;
         const options = {
             from: process.env.EMAIL,
@@ -692,8 +692,8 @@ module.exports = {
             text: `Email: ${email}\nPassword: ${password}`
         };
         transporter.sendMail(options);
-        const user = Users.findByPk(email);
-        user.password(sha256(password));
+        const user = await User.findByPk(email);
+        user.password = sha256(password);
         user.save();
     },
 };
