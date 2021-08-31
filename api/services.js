@@ -232,6 +232,7 @@ module.exports = {
         return report;
     },
     getReports: async (time, room, team, week) => {
+        console.log(`time: ${time} !!!!`);
         const userBookingsCount = [];
         let allBookings = [];
         const bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
