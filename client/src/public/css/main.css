@@ -533,10 +533,10 @@ input:checked + .slider:before {
     margin: 0em 0 2em 0;
     inset: 0;
     left: 10em;
-    top:18vh;
-    background-color: hsl(0 0% 30% / 0.6);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    top: 18vh;
+    background-color: hsl(0 0% 25% / 0.7);
+    backdrop-filter: blur(0.5px);
+    -webkit-backdrop-filter: blur(0.5px);
     border-radius: 20px;
     width: 40%;
     max-width:700px;
