@@ -24,7 +24,7 @@ class Reports extends Component {
             chosenTeam: "",
             roomlist: [],
             teamlist: [],
-            week: [],
+            week: 0,
             error: "",
             isError: false,
             userData: {},
@@ -110,7 +110,7 @@ class Reports extends Component {
                 time: this.state.chosenTimeRange.toLowerCase(),
                 room: this.state.chosenLocation,
                 team: this.state.chosenTeam,
-                week: this.state.week,
+                week: this.state.week.value,
             }),
         })
             .then((res) => {

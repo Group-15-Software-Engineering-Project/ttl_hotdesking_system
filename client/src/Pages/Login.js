@@ -104,19 +104,9 @@ class Login extends Component {
                             }
                         ></input>
                         {this.state.errorText ? 
-                        <div>
-                        <p className="space" style={{ backgroundColor:"#faaa",
-                                                        color: "#e00", 
-                                                        fontWeight:"bold", 
-                                                        margin:"0.1em 0 0.4em 0.3em", 
-                                                        height:"2em",
-                                                        width:"fit-content", 
-                                                        padding:"0.4em 0.5em 0.6em 0.5em",
-                                                        borderRadius:"20px",
-                                                        maxWidth:"fit-content"}}>
-                                        {"Email and password did not match."}
-                                    </p>
-                                    </div>
+                            <p className="space login-error">
+                                {"Email and password did not match."}
+                            </p>
                            : <div className="space" style={{margin:"0 0 0.5em 0", height:"2em"}}/>}
                         
                         <button                             
