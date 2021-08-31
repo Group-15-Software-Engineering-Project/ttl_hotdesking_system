@@ -68,11 +68,6 @@ export default class AdminBookingView extends React.Component {
             .catch((err) => console.error(err));
     };
 
-    componentDidMount() {
-        this.getBookingsOnDate();
-       
-    }
-
     submitRoomRestriction = () => {
         fetch("/api/addRoomRestriction", {
             method: "POST",
@@ -528,45 +523,31 @@ export default class AdminBookingView extends React.Component {
                                 </h1>
                                 <div className="space" />
 
-                                <h8>
-                                    <h9
-                                        style={{
-                                            position: "absolute",
-                                            marginLeft: "3.5%",
-                                        }}>
-                                        AM
-                                    </h9>
-
-                                    <input
-                                        type="checkbox"
-                                        style={{
-                                            position: "relative",
-                                            marginRight: "20%",
-                                        }}
-                                        onChange={() =>
-                                            this.setState({
-                                                AM: !this.state.AM,
-                                            })
-                                        }></input>
-                                </h8>
-                                <h8>
-                                    <h9
-                                        style={{
-                                            position: "absolute",
-                                            marginLeft: "3.5%",
-                                        }}>
-                                        PM
-                                    </h9>
-
-                                    <input
-                                        type="checkbox"
-                                        onChange={() =>
-                                            this.setState({
-                                                PM: !this.state.PM,
-                                            })
-                                        }></input>
-                                </h8>
                                 
+                                <label for="AM_Chackbox" style={{verticalAlign:"top", textAnchor:"middle", marginRight:"4px"}}>
+                                    AM
+                                </label>
+
+                                <input
+                                    type="checkbox"
+                                    id={"AM_Checkbox"}
+                                    style={{marginRight:"10%"}}
+                                    onChange={() =>
+                                        this.setState({
+                                            AM: !this.state.AM,
+                                        })
+                                    }></input>
+                                    <label for="PM_Chackbox" style={{verticalAlign:"top", textAnchor:"middle", marginRight:"4px"}}>
+                                    PM
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    id={"PM_Checkbox"}
+                                    onChange={() =>
+                                        this.setState({
+                                            PM: !this.state.PM,
+                                        })
+                                    }></input>                               
                             </div>
                         )}
                     </div>
@@ -605,7 +586,7 @@ export default class AdminBookingView extends React.Component {
                         </h1>
                     ) : null}
 
-                    <div className="space" />
+                    <div className="space" style={{marginBottom:"25px"}}/>
 
                     {this.state.bookings ? (
                         this.state.bookings.length > 0 &&
@@ -622,7 +603,7 @@ export default class AdminBookingView extends React.Component {
                                         ? "#5dE300"
                                         : "#ff5000",
                                     marginBottom: "40px",
-                                    
+                                    marginTop:"20px",
                                     top: "20px",
                                 }}
                                 onClick={() => {
@@ -739,7 +720,7 @@ export default class AdminBookingView extends React.Component {
                                 </div>
                             )
                         ) : (
-                            "Failed to get your bookings.Please try logging back in."
+                            "Failed to get your bookings. Please try logging back in."
                         )}
                     </div>
                     <div
