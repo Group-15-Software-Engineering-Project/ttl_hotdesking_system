@@ -430,7 +430,7 @@ class Users extends Component {
                                 Remove from Team
                             </button>
                         </div>
-                        <div className="double-quadrant">
+                        <div className="double-quadrant" style={{height:"220px"}}>
                             <h1 className="page-divider-header" style={{ marginLeft: "2.5%", backgroundColor:"#fdaf12" }}>
                                 Reset User Password
                             </h1>
