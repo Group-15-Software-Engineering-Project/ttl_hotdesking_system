@@ -19,7 +19,7 @@ class Users extends Component {
         users: [],
         teamList: [],
         listedTeam: "",
-
+        emailPasswordToChange: "",
     };
 
     positionReference = createRef();
@@ -163,7 +163,18 @@ class Users extends Component {
                 alert(err);
             });
     };
-   
+    
+    resetPassword = () => {
+        fetch(`/api/resetPassword/${this.state.emailPasswordToChange}`, {
+            method:"PATCH",
+        }).then(res => {
+            if(!res.ok) throw new Error(`Failed to reset password for the user: ${this.state.emailPasswordToChange}`)
+            else {
+                alert(`Password for the user ${this.state.emailPasswordToChange} has been reset succesfully.`);
+                this.setState({emailPasswordToChange:""})
+            }
+        }).catch(alert);
+    }
 
     submitGetUsersInTeam = (team, label) => {
         if (team === -1) return;
@@ -417,6 +428,27 @@ class Users extends Component {
                                     this.submitRemoveUserFromTeam();
                                 }}>
                                 Remove from Team
+                            </button>
+                        </div>
+                        <div className="double-quadrant">
+                            <h1 className="page-divider-header" style={{ marginLeft: "2.5%", backgroundColor:"#fdaf12" }}>
+                                Reset User Password
+                            </h1>
+                            <div className="space"/>
+                            <input type="text" 
+                                   className="text-input"
+                                   autoComplete="off" 
+                                   placeholder="User email"
+                                   name="emailPasswordToChange"
+                                   value={this.state.emailPasswordToChange}
+                                   onChange={this.handleEvent}>
+                            </input>
+                            <div className="space"/>
+                            <button className="button-style"
+                                    onClick={this.resetPassword}
+                                    disabled={!this.state.allUsers.includes(this.state.emailPasswordToChange)}
+                                    >
+                                        Reset User Password
                             </button>
                         </div>
                         <div className="space" />

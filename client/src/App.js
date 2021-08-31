@@ -39,7 +39,6 @@ class App extends Component {
             <div>
                 <Router>
                     {(verify(true) || verify(false)) && !String(window.location).includes("/login") && <NavigationSidebar />}
-
                     <Switch>
                         <Route exact path="/loading">
                             <Redirect to="/home"></Redirect>

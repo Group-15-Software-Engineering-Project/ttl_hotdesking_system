@@ -232,6 +232,7 @@ module.exports = {
         return report;
     },
     getReports: async (time, room, team, week) => {
+        console.log(`time: ${time} !!!!`);
         const userBookingsCount = [];
         let allBookings = [];
         const bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
@@ -682,5 +683,18 @@ module.exports = {
         deskBookings = deskBookings.filter((obj) => obj.bookings.length !== 0);
         appointments = appointments.filter((obj) => obj.bookings.length !== 0);
         return { bookings: deskBookings, appointments: appointments };
+    },
+    resetPassword: async (email) => {
+        const password = email;
+        const options = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: 'ttl_hotdesking Account Password Reset',
+            text: `Email: ${email}\nPassword: ${password}`
+        };
+        transporter.sendMail(options);
+        const user = await User.findByPk(email);
+        user.password = sha256(password);
+        user.save();
     },
 };

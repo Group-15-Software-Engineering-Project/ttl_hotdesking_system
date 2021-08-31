@@ -577,27 +577,13 @@ router.get('/allBookings/:date', (req, res) => {
         });
 });
 
-router.get('/token/:email/:username/:admin', (req, res) => {
-    services.getToken(email, username, admin)
-    .then((token) => {
-        res.status(200).send({token: token});
-    })
+router.patch('/resetPassword/:email', (req, res) => {
+    services.resetPassword(req.params.email)
+    .then(() => res.status(204).end())
     .catch((err) => {
         console.log(err);
         res.status(500).end();
     });
 });
-
-router.get('/verify:email/:username/:admin', (req, res) => {
-    services.verify(email, username, admin)
-    .then((verified) => {
-        res.status(200).send({verified: verified});
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).end();
-    });
-});
-
 
 module.exports = router;
