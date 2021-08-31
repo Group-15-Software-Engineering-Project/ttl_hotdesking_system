@@ -536,6 +536,7 @@ input:checked + .slider:before {
     top:18vh;
     background-color: hsl(0 0% 30% / 0.6);
     backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     border-radius: 20px;
     width: 40%;
     max-width:700px;
@@ -592,4 +593,17 @@ input:checked + .slider:before {
     inset: 0;
     margin: auto;
 
+}
+
+.login-error {
+    background-color:#faaa;
+    color: #e00;
+    font-weight:bold;
+    margin:0.1em 0 0.4em 0em;
+    height:2em;
+    width:fit-content;
+    padding:0.4em 0.5em 0.6em 0.5em;
+    border-radius:20px;
+    max-width:fit-content;
+    min-width:0px;
 }
