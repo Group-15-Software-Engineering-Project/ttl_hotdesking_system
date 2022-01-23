@@ -387,7 +387,7 @@ module.exports = {
         const options = {
             from: process.env.EMAIL,
             to: email,
-            subject: "ttl_hotdesking Account",
+            subject: "Trinity T&L Hot-Desking: New Account",
             text: `Email: ${email}\nPassword: ${password}`,
         };
         transporter.sendMail(options);
@@ -406,7 +406,7 @@ module.exports = {
         const options = {
             from: process.env.EMAIL,
             to: email,
-            subject: "ttl_hotdesking Booking Confirmation",
+            subject: "Trinity T&L Hot-Desking: Desk Booking Confirmation",
             text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`,
         };
         await Booking.create({
