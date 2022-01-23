@@ -5,7 +5,7 @@ import { getDifferenceInDays, months, verify } from "../Components/Misc";
 import { Redirect, Link } from "react-router-dom";
 import PillSlider from "../Components/PillSlider";
 // import { BiStreetView } from "react-icons/bi";
-import {FaArrowAltCircleRight, FaArrowAltCircleLeft} from "react-icons/fa"
+import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from "react-icons/fa";
 
 function PastBookings() {
     const [isCancelling, toggleCancelMode] = useState(false);
@@ -29,7 +29,12 @@ function PastBookings() {
                 return res.json();
             })
             .then((res) => {
-                setBookings(res.data);
+                const previous = res.data.filter((x) => getDifferenceInDays(new Date(), new Date(x.date)) > 0);
+                const today = res.data.filter((x) => getDifferenceInDays(new Date(), new Date(x.date)) === 0);
+                const future = res.data.filter((x) => getDifferenceInDays(new Date(), new Date(x.date)) < 0);
+                previous.sort((a, b) => getDifferenceInDays(new Date(b.date), new Date(a.date)));
+                future.sort((a, b) => getDifferenceInDays(new Date(a.date), new Date(b.date)));
+                setBookings([...today, ...future, ...previous]);
             })
             .catch(console.error);
     };
@@ -93,18 +98,13 @@ function PastBookings() {
     };
 
     const displayBooking = (data) => {
-        let time =
-            data.pm && !data.am
-                ? "13:30 - 17:30"
-                : data.am && !data.pm
-                ? "09:00 - 13:00"
-                : "09:00 - 17:30";
+        let time = data.pm && !data.am ? "13:30 - 17:30" : data.am && !data.pm ? "09:00 - 13:00" : "09:00 - 17:30";
         let date = data.date.split("T")[0].split("-");
         let isUpcoming = getDifferenceInDays(new Date(), new Date(data.date));
         let status =
             isUpcoming < 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -117,7 +117,7 @@ function PastBookings() {
                 </span>
             ) : isUpcoming > 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -130,7 +130,7 @@ function PastBookings() {
                 </span>
             ) : (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         color: "red",
@@ -157,8 +157,9 @@ function PastBookings() {
         let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
         return (
             <button
+                key={displayDate + "_" + time + "_" + data.deskRoom + "_" + data.deskId}
                 disabled={!isCancelling || isUpcoming > 0}
-                className="bookings-table"
+                className='bookings-table'
                 onClick={() => {
                     setTimeout(() => {
                         let displayTime =
@@ -180,14 +181,13 @@ function PastBookings() {
                 }}
                 style={{
                     backgroundColor: bg.backgroundColor,
-                    "--hover-background":
-                        isUpcoming > 0 ? "#eee" : isCancelling ? "#ff6655" : "#ddf8ff",
+                    "--hover-background": isUpcoming > 0 ? "#eee" : isCancelling ? "#ff6655" : "#ddf8ff",
                     "--cursor": isUpcoming < 1 && isCancelling ? "pointer" : "normal",
                 }}>
                 <div style={{ width: "100%", marginBottom: "1%" }} />
                 {status}
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -196,14 +196,14 @@ function PastBookings() {
                     {"" + data.deskId}
                 </span>
                 <span
-                    className="ellipsis booking-history"
+                    className='ellipsis booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
                         flex: "3",
                     }}>{`${data.deskRoom}`}</span>
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -212,7 +212,7 @@ function PastBookings() {
                     {displayDate}
                 </span>
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -228,11 +228,9 @@ function PastBookings() {
     const displayDeskBookings = () => {
         return bookings.length > 0 ? (
             <>
-                <div
-                    className="bookings-table"
-                    style={{ border: "none", pointerEvents: "none" }}>
+                <div className='bookings-table' style={{ border: "none", pointerEvents: "none" }}>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             marginLeft: "5px",
@@ -243,7 +241,7 @@ function PastBookings() {
                         Status
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -252,7 +250,7 @@ function PastBookings() {
                         Desk No.
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -261,7 +259,7 @@ function PastBookings() {
                         Location
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -270,7 +268,7 @@ function PastBookings() {
                         Date
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -300,9 +298,9 @@ function PastBookings() {
                     flexDirection: "column",
                 }}>
                 <h2>You have made no bookings yet.</h2>
-                <div className="space" />
-                <Link to="/booking-page">
-                    <button className="button-style no-outline">{"Book a Desk"}</button>
+                <div className='space' />
+                <Link to='/booking-page'>
+                    <button className='button-style no-outline'>{"Book a Desk"}</button>
                 </Link>
             </div>
         );
@@ -311,11 +309,9 @@ function PastBookings() {
     const displayAppointmentBookings = () => {
         return appointments.length > 0 ? (
             <>
-                <div
-                    className="bookings-table"
-                    style={{ border: "none", pointerEvents: "none" }}>
+                <div className='bookings-table' style={{ border: "none", pointerEvents: "none" }}>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             marginLeft: "5px",
@@ -328,7 +324,7 @@ function PastBookings() {
                     </span>
 
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -337,7 +333,7 @@ function PastBookings() {
                         Meeting Room
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -346,7 +342,7 @@ function PastBookings() {
                         Date
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -376,9 +372,9 @@ function PastBookings() {
                     flexDirection: "column",
                 }}>
                 <h2>You have made no bookings yet.</h2>
-                <div className="space" />
-                <Link to="/book-meeting-room">
-                    <button className="button-style no-outline">{"Book a Meeting"}</button>
+                <div className='space' />
+                <Link to='/book-meeting-room'>
+                    <button className='button-style no-outline'>{"Book a Meeting"}</button>
                 </Link>
             </div>
         );
@@ -391,7 +387,14 @@ function PastBookings() {
                 else return res.json();
             })
             .then((data) => {
-                setAppointments(data.appointments);
+                const previous = data.appointments.filter(
+                    (x) => getDifferenceInDays(new Date(), new Date(x.start)) > 0
+                );
+                const today = data.appointments.filter((x) => getDifferenceInDays(new Date(), new Date(x.start)) === 0);
+                const future = data.appointments.filter((x) => getDifferenceInDays(new Date(), new Date(x.start)) < 0);
+                previous.sort((a, b) => getDifferenceInDays(new Date(b.start), new Date(a.start)));
+                future.sort((a, b) => getDifferenceInDays(new Date(a.start), new Date(b.start)));
+                setAppointments([...today, ...future, ...previous]);
             })
             .catch(console.error);
     };
@@ -411,7 +414,7 @@ function PastBookings() {
         let status =
             isUpcoming < 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -424,7 +427,7 @@ function PastBookings() {
                 </span>
             ) : isUpcoming > 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -437,7 +440,7 @@ function PastBookings() {
                 </span>
             ) : (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         color: "red",
@@ -461,12 +464,12 @@ function PastBookings() {
                 : {
                       backgroundColor: "white",
                   };
-        let displayDate =
-            date.split(" ")[2] + " " + date.split(" ")[1] + " " + date.split(" ")[3];
+        let displayDate = date.split(" ")[2] + " " + date.split(" ")[1] + " " + date.split(" ")[3];
         return (
             <button
+                key={displayDate + "_" + time + "_" + data.roomName}
                 disabled={!isCancelling || isUpcoming > 0}
-                className="bookings-table"
+                className='bookings-table'
                 onClick={() => {
                     setTimeout(() => {
                         let displayTime = time;
@@ -481,22 +484,21 @@ function PastBookings() {
                 }}
                 style={{
                     backgroundColor: bg.backgroundColor,
-                    "--hover-background":
-                        isUpcoming > 0 ? "#eee" : isCancelling ? "#ff6655" : "#ddf8ff",
+                    "--hover-background": isUpcoming > 0 ? "#eee" : isCancelling ? "#ff6655" : "#ddf8ff",
                     "--cursor": isUpcoming < 1 && isCancelling ? "pointer" : "normal",
                 }}>
                 <div style={{ width: "100%", marginBottom: "1%" }} />
                 {status}
 
                 <span
-                    className="ellipsis booking-history"
+                    className='ellipsis booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
                         flex: "3",
                     }}>{`${data.roomName}`}</span>
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -505,7 +507,7 @@ function PastBookings() {
                     {displayDate}
                 </span>
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -519,13 +521,11 @@ function PastBookings() {
     };
 
     return verified ? (
-        <div className="wrapper TCD-BG ">
-            <div className="flex-container-1"></div>
-            <div className="flex-container-5 main-body">
-                <div className="space" />
-                <h1
-                    className="page-divider-header"
-                    style={{ marginLeft: "2.5%", marginBottom: "2%" }}>
+        <div className='wrapper TCD-BG '>
+            <div className='flex-container-1'></div>
+            <div className='flex-container-5 main-body'>
+                <div className='space' />
+                <h1 className='page-divider-header' style={{ marginLeft: "2.5%", marginBottom: "2%" }}>
                     {view === "off" ? "My Desk Bookings" : "My Meeting Room Bookings"}
                 </h1>
                 <div
@@ -535,16 +535,12 @@ function PastBookings() {
                         justifyContent: "center",
                         alignItems: "center",
                     }}>
-                    <PillSlider
-                        off="Desk Bookings"
-                        on="Meeting Room Bookings"
-                        onClick={(e) => setView(e)}
-                    />
+                    <PillSlider off='Desk Bookings' on='Meeting Room Bookings' onClick={(e) => setView(e)} />
                 </div>
-                <div className="space" />
+                <div className='space' />
 
                 <button
-                    className="button-style no-outline"
+                    className='button-style no-outline'
                     style={{
                         "--bg-color": isCancelling ? "#4dc300" : "#f32000",
                         "--hover-highlight": isCancelling ? "#5dE300" : "#ff5000",
@@ -555,9 +551,25 @@ function PastBookings() {
                 </button>
                 {view === "off" ? (
                     <div>
-                        <div style={{display:"flex", justifyContent:"center", alignItems:"center", alignText: "center"}}>
-                            <button className="button-style arrow-button-left" disabled={bookingsPos === 0} onClick={() => updateBookingsPos(bookingsPos - 10)}><FaArrowAltCircleLeft/></button>
-                            <button className="button-style arrow-button-right" disabled={bookings.slice(bookingsPos, bookings.length - 1).length < 10} onClick={() => updateBookingsPos(bookingsPos + 10)}><FaArrowAltCircleRight/></button>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignText: "center",
+                            }}>
+                            <button
+                                className='button-style arrow-button-left'
+                                disabled={bookingsPos === 0}
+                                onClick={() => updateBookingsPos(bookingsPos - 10)}>
+                                <FaArrowAltCircleLeft />
+                            </button>
+                            <button
+                                className='button-style arrow-button-right'
+                                disabled={bookings.slice(bookingsPos, bookings.length - 1).length < 10}
+                                onClick={() => updateBookingsPos(bookingsPos + 10)}>
+                                <FaArrowAltCircleRight />
+                            </button>
                         </div>
                         <div
                             style={{
@@ -569,12 +581,27 @@ function PastBookings() {
                             {displayDeskBookings()}
                         </div>
                     </div>
-                
                 ) : (
                     <div>
-                        <div style={{display:"flex", justifyContent:"center", alignItems:"center", alignText: "center"}}>
-                            <button className="button-style arrow-button-left" disabled={appointmentsPos === 0} onClick={() => updateAppointmentsPos(appointmentsPos - 10)}><FaArrowAltCircleLeft/></button>
-                            <button className="button-style arrow-button-right" disabled={appointments.slice(appointmentsPos, appointments.length - 1).length < 10} onClick={() => updateAppointmentsPos(appointmentsPos + 10)}><FaArrowAltCircleRight/></button>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignText: "center",
+                            }}>
+                            <button
+                                className='button-style arrow-button-left'
+                                disabled={appointmentsPos === 0}
+                                onClick={() => updateAppointmentsPos(appointmentsPos - 10)}>
+                                <FaArrowAltCircleLeft />
+                            </button>
+                            <button
+                                className='button-style arrow-button-right'
+                                disabled={appointments.slice(appointmentsPos, appointments.length - 1).length < 10}
+                                onClick={() => updateAppointmentsPos(appointmentsPos + 10)}>
+                                <FaArrowAltCircleRight />
+                            </button>
                         </div>
                         <div
                             style={{
@@ -587,7 +614,7 @@ function PastBookings() {
                         </div>
                     </div>
                 )}
-                <div className="space" />
+                <div className='space' />
 
                 <div
                     style={{
@@ -597,10 +624,10 @@ function PastBookings() {
                     }}
                 />
             </div>
-            <div className="flex-container-1"></div>
+            <div className='flex-container-1'></div>
         </div>
     ) : (
-        <Redirect to="/login" />
+        <Redirect to='/login' />
     );
 }
 

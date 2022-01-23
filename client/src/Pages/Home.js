@@ -3,6 +3,8 @@ import "../public/css/main.css";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { months, verify, getDifferenceInDays } from "../Components/Misc";
+import { DeskBookingsTable } from "../Components/DeskBookingsTable";
+import { AppointmentBookingsTable } from "../Components/AppointmentBookingsTable";
 
 class Home extends React.Component {
     constructor(props) {
@@ -21,16 +23,15 @@ class Home extends React.Component {
             window.scrollTo(0, 0);
             let date = new Date();
             this.setState({
-                todayDate:
-                    date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
+                todayDate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
             });
             this.getNotifications();
             this.getBookings();
             this.getAppointments();
         }
-        window.addEventListener("resize", () => {
-            this.forceUpdate();
-        });
+        // window.addEventListener("resize", () => {
+        //     this.forceUpdate();
+        // });
     };
 
     getBookings = () => {
@@ -59,16 +60,19 @@ class Home extends React.Component {
                 return res.json();
             })
             .then((res) => {
-                let bookings = res.appointments.filter(
-                    (booking) =>
-                        !(
-                            new Date(booking.start).getFullYear() <=
-                                new Date().getFullYear() &&
-                            new Date(booking.start).getMonth() <= new Date().getMonth() &&
-                            new Date(booking.start).getDate() < new Date().getDate()
-                        )
-                );
-                this.setState({ appointments: bookings });
+                console.log(res);
+                const today = res.appointments.filter((x) => getDifferenceInDays(new Date(), new Date(x.start)) === 0);
+                const future = res.appointments.filter((x) => getDifferenceInDays(new Date(), new Date(x.start)) < 0);
+                future.sort((a, b) => getDifferenceInDays(new Date(a.start), new Date(b.start)));
+                // let bookings = res.appointments.filter(
+                //     (booking) =>
+                //         !(
+                //             new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
+                //             new Date(booking.start).getMonth() <= new Date().getMonth() &&
+                //             new Date(booking.start).getDate() < new Date().getDate()
+                //         )
+                // );
+                this.setState({ appointments: [...today, ...future] });
             })
             .catch(console.error);
     };
@@ -96,12 +100,7 @@ class Home extends React.Component {
         else return "Welcome";
     };
     displayBooking = (data) => {
-        let time =
-            data.pm && !data.am
-                ? "13:30 - 17:30"
-                : data.am && !data.pm
-                ? "09:00 - 13:00"
-                : "09:00 - 17:30";
+        let time = data.pm && !data.am ? "13:30 - 17:30" : data.am && !data.pm ? "09:00 - 13:00" : "09:00 - 17:30";
         let date = data.date.split("T")[0].split("-");
         let isUpcoming = this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
         if (isUpcoming > 0) return null;
@@ -109,7 +108,7 @@ class Home extends React.Component {
         let status =
             isUpcoming < 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -122,7 +121,7 @@ class Home extends React.Component {
                 </span>
             ) : (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         color: "red",
@@ -148,9 +147,9 @@ class Home extends React.Component {
                   };
 
         return (
-            <Link to="/past-bookings" style={{ textDecoration: "none", color: "black" }}>
+            <Link to='/past-bookings' style={{ textDecoration: "none", color: "black" }}>
                 <div
-                    className="bookings-table"
+                    className='bookings-table'
                     style={{
                         backgroundColor: bg.backgroundColor,
                         "--hover-background": "#ddf8ff",
@@ -158,7 +157,7 @@ class Home extends React.Component {
                     <div style={{ width: "100%", marginBottom: "1%" }} />
                     {status}
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -167,14 +166,14 @@ class Home extends React.Component {
                         {"" + data.deskId}
                     </span>
                     <span
-                        className="ellipsis booking-history"
+                        className='ellipsis booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
                             flex: "3",
                         }}>{`${data.deskRoom}`}</span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -183,7 +182,7 @@ class Home extends React.Component {
                         {displayDate}
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -211,7 +210,7 @@ class Home extends React.Component {
                 : "#eee";
 
         return (
-            <div className="notif-box" style={{ "--grad-color": `${color}` }}>
+            <div className='notif-box' style={{ "--grad-color": `${color}` }}>
                 <div
                     style={{
                         display: "block",
@@ -220,7 +219,7 @@ class Home extends React.Component {
                         width: "100%",
                     }}>
                     <div
-                        className="ellipsis"
+                        className='ellipsis'
                         style={{
                             display: "inline",
                             fontSize: "clamp(0.6rem, 2vw, 1rem)",
@@ -235,11 +234,7 @@ class Home extends React.Component {
                                 wordWrap: "break-word",
                                 //borderRight: "1px dotted #555",
                             }}>
-                            {parseInt(date[2]) +
-                                " " +
-                                months[parseInt(date[1]) - 1] +
-                                " " +
-                                date[0]}
+                            {parseInt(date[2]) + " " + months[parseInt(date[1]) - 1] + " " + date[0]}
                         </span>
                         <span
                             style={{
@@ -267,11 +262,9 @@ class Home extends React.Component {
     displayDeskBookings = () => {
         return (
             <div style={{ marginRight: "2.5%" }}>
-                <div
-                    className="bookings-table"
-                    style={{ border: "none", pointerEvents: "none" }}>
+                <div className='bookings-table' style={{ border: "none", pointerEvents: "none" }}>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             marginLeft: "5px",
@@ -282,7 +275,7 @@ class Home extends React.Component {
                         Status
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -291,7 +284,7 @@ class Home extends React.Component {
                         Desk No.
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -300,7 +293,7 @@ class Home extends React.Component {
                         Location
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -309,7 +302,7 @@ class Home extends React.Component {
                         Date
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -349,7 +342,7 @@ class Home extends React.Component {
         let status =
             isUpcoming < 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -362,7 +355,7 @@ class Home extends React.Component {
                 </span>
             ) : isUpcoming > 0 ? (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -375,7 +368,7 @@ class Home extends React.Component {
                 </span>
             ) : (
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         color: "red",
@@ -399,12 +392,11 @@ class Home extends React.Component {
                 : {
                       backgroundColor: "white",
                   };
-        let displayDate =
-            date.split(" ")[2] + " " + date.split(" ")[1] + " " + date.split(" ")[3];
+        let displayDate = date.split(" ")[2] + " " + date.split(" ")[1] + " " + date.split(" ")[3];
         return (
-            <Link to="/past-bookings" style={{ textDecoration: "none", color: "black" }}>
+            <Link to='/past-bookings' style={{ textDecoration: "none", color: "black" }}>
                 <button
-                    className="bookings-table"
+                    className='bookings-table'
                     onClick={() => {}}
                     style={{
                         backgroundColor: bg.backgroundColor,
@@ -415,14 +407,14 @@ class Home extends React.Component {
                     {status}
 
                     <span
-                        className="ellipsis booking-history"
+                        className='ellipsis booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
                             flex: "3",
                         }}>{`${data.roomName}`}</span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -431,7 +423,7 @@ class Home extends React.Component {
                         {displayDate}
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -448,11 +440,9 @@ class Home extends React.Component {
     displayAppointmentBookings = () => {
         return this.state.appointments.length > 0 ? (
             <div style={{ marginRight: "2.5%" }}>
-                <div
-                    className="bookings-table"
-                    style={{ border: "none", pointerEvents: "none" }}>
+                <div className='bookings-table' style={{ border: "none", pointerEvents: "none" }}>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             marginLeft: "5px",
@@ -465,7 +455,7 @@ class Home extends React.Component {
                     </span>
 
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -474,7 +464,7 @@ class Home extends React.Component {
                         Meeting Room
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -483,7 +473,7 @@ class Home extends React.Component {
                         Date
                     </span>
                     <span
-                        className="booking-history"
+                        className='booking-history'
                         style={{
                             textAlign: "left",
                             fontWeight: "bold",
@@ -513,9 +503,9 @@ class Home extends React.Component {
                     flexDirection: "column",
                 }}>
                 <h2>You have made no bookings yet.</h2>
-                <div className="space" />
-                <Link to="/book-meeting-room">
-                    <button className="button-style no-outline">{"Book a Meeting"}</button>
+                <div className='space' />
+                <Link to='/book-meeting-room'>
+                    <button className='button-style no-outline'>{"Book a Meeting"}</button>
                 </Link>
             </div>
         );
@@ -523,9 +513,9 @@ class Home extends React.Component {
 
     render() {
         return verify(true) || verify(false) ? (
-            <div key={this.state.key} className="wrapper TCD-BG">
-                <div className="flex-container-1" />
-                <div className="flex-container-5 main-body">
+            <div key={this.state.key} className='wrapper TCD-BG'>
+                <div className='flex-container-1' />
+                <div className='flex-container-5 main-body'>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
                     <h1
                         ref={this.headingRef}
@@ -533,17 +523,13 @@ class Home extends React.Component {
                             display: "inline-block",
                             fontSize: "clamp(1.25rem, 3vw, 2rem)",
                         }}>{`${this.getGreeting()}, ${
-                        sessionStorage.username !== "null"
-                            ? sessionStorage.username
-                            : sessionStorage.email
+                        sessionStorage.username !== "null" ? sessionStorage.username : sessionStorage.email
                     }!`}</h1>
                     <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
                         <div
                             style={{
                                 width: ` ${
-                                    this.headingRef.current
-                                        ? this.headingRef.current.offsetWidth * 1.1 + "px"
-                                        : "45%"
+                                    this.headingRef.current ? this.headingRef.current.offsetWidth * 1.1 + "px" : "45%"
                                 }`,
                                 borderTop: "2px solid #444",
                                 marginTop: "1%",
@@ -551,12 +537,12 @@ class Home extends React.Component {
                         />
                     </div>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <Link tabindex="-1" to="/booking-page">
-                        <button className="button-style no-outline">{"Book a Desk"}</button>
+                    <Link tabIndex='-1' to='/booking-page'>
+                        <button className='button-style no-outline'>{"Book a Desk"}</button>
                     </Link>
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <Link tabindex="-1" to="/book-meeting-room">
-                        <button className="button-style no-outline">{"Book a Meeting"}</button>
+                    <Link tabIndex='-1' to='/book-meeting-room'>
+                        <button className='button-style no-outline'>{"Book a Meeting"}</button>
                     </Link>
                     <div
                         style={{
@@ -566,34 +552,28 @@ class Home extends React.Component {
                     />
                     <div style={{ borderTop: "1px #ccc solid" }} />
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                    <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                         Current Desk Bookings
                     </h1>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    {this.state.bookings.length !== 0 ? (
-                        <div>{this.displayDeskBookings()}</div>
-                    ) : (
-                        <h2>You have no upcoming bookings.</h2>
-                    )}
+                    <DeskBookingsTable bookings={this.state.bookings} />
+
                     <div style={{ width: "100%", marginBottom: "3%" }} />
                     <div style={{ borderTop: "1px #ccc solid" }} />
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                    <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                         Current Meeting Room Bookings
                     </h1>
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    {this.state.appointments.length !== 0 ? (
-                        <div>{this.displayAppointmentBookings()}</div>
-                    ) : (
-                        <h2>You have no upcoming bookings.</h2>
-                    )}
+                    <AppointmentBookingsTable appointments={this.state.appointments} />
+
                     <div style={{ width: "100%", marginBottom: "3%" }} />
                     <div style={{ borderTop: "1px #ccc solid" }} />
                     <div style={{ width: "100%", marginBottom: "3%" }} />
-                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                    <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                         Notifications
                     </h1>
-                    <div className="space" />
+                    <div className='space' />
                     {this.state.notifs.length > 0 ? (
                         this.state.notifs.map((n) => {
                             return this.displayNotifications(n);
@@ -601,12 +581,12 @@ class Home extends React.Component {
                     ) : (
                         <h2>*cricket noises*</h2>
                     )}
-                    <div className="space" />
+                    <div className='space' />
                 </div>
-                <div className="flex-container-1" />
+                <div className='flex-container-1' />
             </div>
         ) : (
-            <Redirect to="/login" />
+            <Redirect to='/login' />
         );
     }
 }

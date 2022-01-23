@@ -26,8 +26,8 @@ export default function TileSelection(props) {
             tiles.push(
                 <div key={options[i].value + props.elementID}>
                     <input
-                        type="radio"
-                        tabindex="-1"
+                        type='radio'
+                        tabIndex='-1'
                         checked={chosenOption === options[i].value}
                         id={options[i].value + props.elementID}
                         disabled={options[i].disabled}
@@ -36,15 +36,11 @@ export default function TileSelection(props) {
                             setChosenOption(e.target.value);
                             if (props.onSelect) props.onSelect(e.target.value);
                         }}
-                        className="hide-input"
+                        className='hide-input'
                     />
                     <label htmlFor={options[i].value + props.elementID}>
                         <div
-                            tabIndex={
-                                options[i].disabled || options[i].value === chosenOption
-                                    ? "-1"
-                                    : 0
-                            }
+                            tabIndex={options[i].disabled || options[i].value === chosenOption ? "-1" : 0}
                             onKeyPress={(e) => {
                                 if (e.key === "Enter") e.target.click();
                             }}
@@ -63,12 +59,8 @@ export default function TileSelection(props) {
                                 overflow: "hidden",
                                 textOverflow: " ellipsis !important",
                             }}>
-                            <h1 style={{ fontSize: "18px", width: props.size[0] }}>
-                                {options[i].value}
-                            </h1>
-                            {props.showLabel &&
-                            options[i].label &&
-                            options[i].label.length !== 0 ? (
+                            <h1 style={{ fontSize: "18px", width: props.size[0] }}>{options[i].value}</h1>
+                            {props.showLabel && options[i].label && options[i].label.length !== 0 ? (
                                 <span
                                     style={{
                                         fontSize: "12px",
@@ -89,7 +81,7 @@ export default function TileSelection(props) {
     return (
         <>
             {props.title}
-            <div className="tile-container-row">{getAllTiles().map((x) => x)}</div>
+            <div className='tile-container-row'>{getAllTiles().map((x) => x)}</div>
         </>
     );
 }

@@ -1,25 +1,15 @@
-const {
-    sequelize,
-    User,
-    Desk,
-    Booking,
-    Group,
-    Notification,
-    Appointment,
-    Room,
-    AdminOption
-} = require('../sequelize');
-const { QueryTypes, Op } = require('sequelize');
-const sha256 = require('js-sha256');
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+const { sequelize, User, Desk, Booking, Group, Notification, Appointment, Room, AdminOption } = require("../sequelize");
+const { QueryTypes, Op } = require("sequelize");
+const sha256 = require("js-sha256");
+const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
         user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS
-    }
+        pass: process.env.EMAIL_PASS,
+    },
 });
 
 module.exports = {
@@ -27,30 +17,30 @@ module.exports = {
         const model = await User.findAll({
             where: {
                 email: email,
-                password: sha256(password)
-            }
+                password: sha256(password),
+            },
         });
         const groupModel = await Group.findAll({
             where: {
                 userEmail: email,
-                name: 'admin'
-            }
+                name: "admin",
+            },
         });
         const admin = groupModel.length > 0;
         let a = email;
         let b = model[0].username;
         let date = new Date();
         let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
-        let token = sha256(a + c + process.env.REACT_APP_SECRET + (admin ? process.env.REACT_APP_ADMIN_SECRET : "") + b);
-        
-        return model.length > 0 ? [true, admin, {email: a, username: b, token: token}] : [false, false, {}];
+        let token = sha256(a + c + process.env.REACT_APP_A + (admin ? process.env.REACT_APP_B : "") + b);
+        console.log(token);
+        return model.length > 0 ? [true, admin, { email: a, username: b, token: token }] : [false, false, {}];
     },
     adminCheck: async (email) => {
         const model = await Group.findAll({
             where: {
                 userEmail: email,
-                name: 'admin'
-            }
+                name: "admin",
+            },
         });
         return model.length > 0;
     },
@@ -60,12 +50,12 @@ module.exports = {
         for (const room in rooms) {
             const deskModels = await Desk.findAll({
                 where: {
-                    room: rooms[room]
-                }
+                    room: rooms[room],
+                },
             });
             const desks = [];
             for (const desk of deskModels) {
-                desks.push(desk.getDataValue('id'));
+                desks.push(desk.getDataValue("id"));
             }
             data[room] = { name: rooms[room], desks: desks };
         }
@@ -73,12 +63,9 @@ module.exports = {
     },
     getRoomsList: async () => {
         const rooms = [];
-        const distinctRooms = await sequelize.query(
-            'SELECT DISTINCT room FROM hotdesking.desks;',
-            {
-                type: QueryTypes.SELECT
-            }
-        );
+        const distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
+            type: QueryTypes.SELECT,
+        });
         for (const room in distinctRooms) {
             rooms.push(distinctRooms[room].room);
         }
@@ -86,7 +73,7 @@ module.exports = {
     },
     getUserName: async (email) => {
         const model = await User.findByPk(email);
-        const username = model.getDataValue('username');
+        const username = model.getDataValue("username");
         return username || email;
     },
     setUserName: async (email, username) => {
@@ -101,15 +88,13 @@ module.exports = {
     },
     getRooms: async () => {
         const rooms = [];
-        const distinctRooms = await sequelize.query(
-            'SELECT DISTINCT room FROM hotdesking.desks;', {
-                type: QueryTypes.SELECT
-            }
-        );
+        const distinctRooms = await sequelize.query("SELECT DISTINCT room FROM hotdesking.desks;", {
+            type: QueryTypes.SELECT,
+        });
         for (const room in distinctRooms) {
             rooms.push({
                 value: distinctRooms[room].room,
-                label: ''
+                label: "",
             });
         }
         return rooms;
@@ -118,35 +103,32 @@ module.exports = {
         const desks = [];
         const models = await Desk.findAll({
             where: {
-                room: room
-            }
+                room: room,
+            },
         });
         for (const model in models) {
-            desks.push(models[model].getDataValue('id'));
+            desks.push(models[model].getDataValue("id"));
         }
         return desks;
     },
     getGroups: async () => {
         const groups = [];
-        const distinctNames = await sequelize.query(
-            'SELECT DISTINCT name FROM hotdesking.groups;',
-            {
-                type: QueryTypes.SELECT
-            }
-        );
+        const distinctNames = await sequelize.query("SELECT DISTINCT name FROM hotdesking.groups;", {
+            type: QueryTypes.SELECT,
+        });
         for (const group in distinctNames) {
             groups.push(distinctNames[group].name);
         }
-        groups.unshift(groups.splice(groups.indexOf('All Users'), 1));
+        groups.unshift(groups.splice(groups.indexOf("All Users"), 1));
         return groups;
     },
     getUsers: async () => {
         const users = [];
         const models = await User.findAll({
-            attributes: ['email']
+            attributes: ["email"],
         });
         for (const model in models) {
-            users.push(models[model].getDataValue('email'));
+            users.push(models[model].getDataValue("email"));
         }
         return users;
     },
@@ -154,12 +136,12 @@ module.exports = {
         const users = [];
         const models = await Group.findAll({
             where: {
-                name: group
+                name: group,
             },
-            attributes: ['userEmail']
+            attributes: ["userEmail"],
         });
         for (const model in models) {
-            users.push(models[model].getDataValue('userEmail'));
+            users.push(models[model].getDataValue("userEmail"));
         }
         return users;
     },
@@ -167,9 +149,9 @@ module.exports = {
         let models = await Booking.findAll({
             raw: true,
             where: {
-                userEmail: email
+                userEmail: email,
             },
-            order: [['date', 'ASC']]
+            order: [["date", "ASC"]],
         });
 
         const todayDate = new Date();
@@ -196,12 +178,12 @@ module.exports = {
         const bookings = await Booking.findAll({
             raw: true,
             where: {
-                date: date
+                date: date,
             },
             order: [
-                ['deskRoom', 'ASC'],
-                ['deskId', 'ASC']
-            ]
+                ["deskRoom", "ASC"],
+                ["deskId", "ASC"],
+            ],
         });
         return bookings;
     },
@@ -209,9 +191,9 @@ module.exports = {
         const bookings = await Booking.findAll({
             raw: true,
             where: {
-                deskRoom: deskRoom
+                deskRoom: deskRoom,
             },
-            order: [['deskId', 'ASC']]
+            order: [["deskId", "ASC"]],
         });
         return bookings;
     },
@@ -223,11 +205,11 @@ module.exports = {
         const report = [[], []];
         const desks = await Desk.findAll(deskOptions);
         for (const desk in desks) {
-          bookingOptions.where.deskId = desks[desk].getDataValue('id');
-          bookingOptions.where.deskRoom = desks[desk].getDataValue('room');
-          const deskBookingsCount = await Booking.count(bookingOptions);
-          report[0].push(`${desks[desk].getDataValue('room')} Desk ${desks[desk].getDataValue('id')}`);
-          report[1].push(deskBookingsCount);
+            bookingOptions.where.deskId = desks[desk].getDataValue("id");
+            bookingOptions.where.deskRoom = desks[desk].getDataValue("room");
+            const deskBookingsCount = await Booking.count(bookingOptions);
+            report[0].push(`${desks[desk].getDataValue("room")} Desk ${desks[desk].getDataValue("id")}`);
+            report[1].push(deskBookingsCount);
         }
         return report;
     },
@@ -238,77 +220,57 @@ module.exports = {
         const users = await module.exports.getUsersInGroup(team);
         const days = week * 7;
         const options = {
-            where: {}
+            where: {},
         };
         const deskOptions = {
-            where: {}
+            where: {},
         };
         const bookingOptions = {
             where: {
                 userEmail: {
-                    [Op.in] : users
-                }
-            }
+                    [Op.in]: users,
+                },
+            },
         };
-        if (room !== 'overall') {
+        if (room !== "overall") {
             options.where.deskRoom = room;
             deskOptions.where.room = room;
         }
         const today = new Date();
 
         switch (time) {
-        case 'next week':
-            bookingOptions.where.date = options.where.date = {
-                [Op.gte]: today,
-                [Op.lt]: new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate() + 7
-                )
-            };
-            break;
-        case 'last week':
-            bookingOptions.where.date = options.where.date = {
-                [Op.gte]: new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate() - 7
-                ),
-                [Op.lt]: today
-            };
-            break;
-        case 'last month':
-            bookingOptions.where.date = options.where.date = {
-                [Op.gte]: new Date(
-                    today.getFullYear(),
-                    today.getMonth() - 1,
-                    today.getDate()
-                ),
-                [Op.lt]: today
-            };
-            break;
-        case 'last 3 months':
-            bookingOptions.where.date = options.where.date = {
-                [Op.gte]: new Date(
-                    today.getFullYear(),
-                    today.getMonth() - 3,
-                    today.getDate()
-                ),
-                [Op.lt]: today
-            };
-            break;
-        case 'upcomingweek':
-            bookingOptions.where.date = options.where.date = {
-                [Op.lt]: new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate() + days
-                ),
-                [Op.gte]: today
-            };
-            break;
-        case 'default':
-            break;
+            case "next week":
+                bookingOptions.where.date = options.where.date = {
+                    [Op.gte]: today,
+                    [Op.lt]: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7),
+                };
+                break;
+            case "last week":
+                bookingOptions.where.date = options.where.date = {
+                    [Op.gte]: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7),
+                    [Op.lt]: today,
+                };
+                break;
+            case "last month":
+                bookingOptions.where.date = options.where.date = {
+                    [Op.gte]: new Date(today.getFullYear(), today.getMonth() - 1, today.getDate()),
+                    [Op.lt]: today,
+                };
+                break;
+            case "last 3 months":
+                bookingOptions.where.date = options.where.date = {
+                    [Op.gte]: new Date(today.getFullYear(), today.getMonth() - 3, today.getDate()),
+                    [Op.lt]: today,
+                };
+                break;
+            case "upcomingweek":
+                bookingOptions.where.date = options.where.date = {
+                    [Op.lt]: new Date(today.getFullYear(), today.getMonth(), today.getDate() + days),
+                    [Op.gte]: today,
+                };
+                break;
+            case "default":
+                break;
         }
         for (const user in users) {
             options.where.userEmail = users[user];
@@ -317,31 +279,25 @@ module.exports = {
             allBookings = allBookings.concat(userBookings[1]);
         }
         for (const booking in allBookings) {
-            bookingDistribution[
-                new Date(allBookings[booking].getDataValue('date')).getDay()
-            ]++;
+            bookingDistribution[new Date(allBookings[booking].getDataValue("date")).getDay()]++;
         }
         const deskReports = await module.exports.getBookingsByDesks(deskOptions, bookingOptions);
-        return [users, userBookingsCount, deskReports[0], deskReports[1], bookingDistribution, 'Success'];
+        return [users, userBookingsCount, deskReports[0], deskReports[1], bookingDistribution, "Success"];
         //  Empty values are for deprecated desk report piechart
     },
     getBookingsInMonth: async (room, date, am, pm) => {
-        const dateComp = date.split('-');
+        const dateComp = date.split("-");
         const desks = [];
         const existingBookings = [];
-        const daysInMonth = new Date(
-            parseInt(dateComp[0]),
-            parseInt(dateComp[1]) - 1,
-            0
-        ).getDate();
+        const daysInMonth = new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, 0).getDate();
 
         const deskModel = await Desk.findAll({
             where: {
-                room: room
-            }
+                room: room,
+            },
         });
         for (const desk of deskModel) {
-            desks.push(desk.getDataValue('id'));
+            desks.push(desk.getDataValue("id"));
         }
         for (let day = 0; day <= daysInMonth; day++) {
             existingBookings[day] = [];
@@ -351,24 +307,24 @@ module.exports = {
                 whereClause = {
                     deskRoom: room,
                     date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1),
-                    [Op.or]: [{ am: true }, { pm: true }]
+                    [Op.or]: [{ am: true }, { pm: true }],
                 };
             } else {
                 // Else if am or pm requested, add them accordingly, with the other being absent since we don't care.
                 whereClause = {
                     deskRoom: room,
-                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1)
+                    date: new Date(parseInt(dateComp[0]), parseInt(dateComp[1]) - 1, day + 1),
                 };
                 if (am) whereClause.am = true;
                 if (pm) whereClause.pm = true;
             }
             const bookings = await Booking.findAll({
-                where: whereClause
+                where: whereClause,
             });
             for (const booking in bookings) {
                 existingBookings[day].push({
-                    user: bookings[booking].getDataValue('userEmail'),
-                    desk: bookings[booking].getDataValue('deskId')
+                    user: bookings[booking].getDataValue("userEmail"),
+                    desk: bookings[booking].getDataValue("deskId"),
                 });
             }
         }
@@ -380,18 +336,18 @@ module.exports = {
             raw: true,
             where: {
                 end: {
-                    [Op.gt]: new Date()
-                }
-            }
+                    [Op.gt]: new Date(),
+                },
+            },
         });
 
         Notification.destroy({
             raw: true,
             where: {
                 end: {
-                    [Op.lt]: new Date()
-                }
-            }
+                    [Op.lt]: new Date(),
+                },
+            },
         });
 
         for (const model of models) {
@@ -399,7 +355,7 @@ module.exports = {
                 type: model.type,
                 date: model.start,
                 body: model.body,
-                title: model.title
+                title: model.title,
             });
         }
         return notifications;
@@ -408,7 +364,7 @@ module.exports = {
         const rooms = [];
         const models = await Room.findAll();
         models.forEach((value) => {
-            rooms.push({ value: value.getDataValue('name') });
+            rooms.push({ value: value.getDataValue("name") });
         });
         return rooms;
     },
@@ -418,9 +374,9 @@ module.exports = {
             where: {
                 roomName: room,
                 start: {
-                    [Op.gte]: date
-                }
-            }
+                    [Op.gte]: date,
+                },
+            },
         });
         return appointments;
     },
@@ -429,12 +385,12 @@ module.exports = {
         const options = {
             from: process.env.EMAIL,
             to: email,
-            subject: 'ttl_hotdesking Account',
-            text: `Email: ${email}\nPassword: ${password}`
+            subject: "ttl_hotdesking Account",
+            text: `Email: ${email}\nPassword: ${password}`,
         };
         transporter.sendMail(options);
         await User.create({ email: email, password: sha256(password) });
-        await Group.create({ userEmail: email, name: 'All Users' });
+        await Group.create({ userEmail: email, name: "All Users" });
     },
     addDesk: async (id, room) => {
         const arr = [];
@@ -448,8 +404,8 @@ module.exports = {
         const options = {
             from: process.env.EMAIL,
             to: email,
-            subject: 'ttl_hotdesking Booking Confirmation',
-            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`
+            subject: "ttl_hotdesking Booking Confirmation",
+            text: `Your booking for ${room} desk ${id} on ${date} has been confirmed`,
         };
         await Booking.create({
             userEmail: email,
@@ -457,7 +413,7 @@ module.exports = {
             deskRoom: room,
             date: date,
             am: am,
-            pm: pm
+            pm: pm,
         });
         transporter.sendMail(options);
     },
@@ -471,7 +427,7 @@ module.exports = {
                 deskRoom: room,
                 date: date,
                 am: am,
-                pm: pm
+                pm: pm,
             });
         }
         await Booking.bulkCreate(bookings);
@@ -485,12 +441,12 @@ module.exports = {
             end: end,
             type: type,
             title: title,
-            body: body
+            body: body,
         });
     },
     addMeetingRoom: async (name) => {
         await Room.create({
-            name: name
+            name: name,
         });
     },
     addAppointment: async (email, title, start, end, room) => {
@@ -499,22 +455,22 @@ module.exports = {
             title: title,
             start: start,
             end: end,
-            roomName: room
+            roomName: room,
         });
     },
     getAdminOptions: async () => {
         const options = await AdminOption.findAll({
-            raw: true
+            raw: true,
         });
-        console.log('OPTIONS', options);
+        console.log("OPTIONS", options);
         return options;
     },
     getAdminOption: async (key) => {
         const option = await AdminOption.findOne({
             raw: true,
             where: {
-                key: key
-            }
+                key: key,
+            },
         });
         return option;
     },
@@ -531,16 +487,16 @@ module.exports = {
         const model = await Desk.findOne({
             where: {
                 id: id,
-                room: room
-            }
+                room: room,
+            },
         });
         model.destroy();
     },
     removeRoom: async (room) => {
         const models = await Desk.findAll({
             where: {
-                room: room
-            }
+                room: room,
+            },
         });
         for (const model in models) {
             models[model].destroy();
@@ -555,8 +511,8 @@ module.exports = {
                 deskRoom: room,
                 date: date,
                 am: am,
-                pm: pm
-            }
+                pm: pm,
+            },
         });
         model.destroy();
     },
@@ -564,8 +520,8 @@ module.exports = {
         const model = await Group.findOne({
             where: {
                 name: group,
-                userEmail: email
-            }
+                userEmail: email,
+            },
         });
         model.destroy();
     },
@@ -580,48 +536,51 @@ module.exports = {
     getAppointmentsByEmail: async (email) => {
         let appointments = await Appointment.findAll({
             where: {
-                bookedBy: email
+                bookedBy: email,
             },
-            order: [['start', 'ASC']]
+            order: [["start", "ASC"]],
         });
-        const today = appointments.filter(
-            (appointment) =>
-                new Date(appointment.start).getFullYear() === new Date().getFullYear() &&
-                new Date(appointment.start).getMonth() === new Date().getMonth() &&
-                new Date(appointment.start).getDate() === new Date().getDate()
-        );
-        appointments = appointments.filter((appointment) => !today.includes(appointment));
-        const past = appointments.filter(
-            (booking) =>
-                new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
-                new Date(booking.start).getMonth() <= new Date().getMonth() &&
-                new Date(booking.start).getDate() < new Date().getDate()
-        );
-        appointments = appointments.filter((booking) => !past.includes(booking));
-        appointments.unshift(...today);
-        appointments.push(...past);
+        appointments = appointments.map(({ dataValues }) => dataValues);
+        console.log("\x1b[1;31m" + JSON.stringify(appointments, null, 4) + "\x1b[0m");
+        // const today = appointments.filter(
+        //     (appointment) =>
+        //         new Date(appointment.start).getFullYear() === new Date().getFullYear() &&
+        //         new Date(appointment.start).getMonth() === new Date().getMonth() &&
+        //         new Date(appointment.start).getDate() === new Date().getDate()
+        // );
+        // appointments = appointments.filter((appointment) => !today.includes(appointment));
+        // const past = appointments.filter(
+        //     (booking) =>
+        //         new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
+        //         new Date(booking.start).getMonth() <= new Date().getMonth() &&
+        //         new Date(booking.start).getDate() < new Date().getDate()
+        // );
+        // appointments = appointments.filter((booking) => !past.includes(booking));
+        // appointments.unshift(...today);
+        // appointments.push(...past);
+        // console.log(appointments);
         return appointments;
     },
     getUserBookingCount: async (email) => {
         const count = await Booking.count({
             where: {
-                userEmail: email
-            }
+                userEmail: email,
+            },
         });
         return count;
     },
     getUserAppointmentCount: async (email) => {
         const count = await Appointment.count({
             where: {
-                bookedBy: email
-            }
+                bookedBy: email,
+            },
         });
         return count;
     },
     getAllBookingsOnDate: async (date) => {
         let deskBookings = [];
         let appointments = [];
-        const deskRooms = await Desk.aggregate('room', 'DISTINCT', { plain: false });
+        const deskRooms = await Desk.aggregate("room", "DISTINCT", { plain: false });
         for (let i = 0; i < deskRooms.length; i++) {
             deskRooms[i] = deskRooms[i].DISTINCT;
         }
@@ -630,16 +589,16 @@ module.exports = {
                 raw: true,
                 where: {
                     deskRoom: room,
-                    date: date
+                    date: date,
                 },
                 order: [
-                    ['deskId', 'ASC'],
-                    ['am', 'DESC']
-                ]
+                    ["deskId", "ASC"],
+                    ["am", "DESC"],
+                ],
             });
             deskBookings.push({
                 location: room,
-                bookings: bookings
+                bookings: bookings,
             });
         }
 
@@ -668,15 +627,15 @@ module.exports = {
                                 new Date(date).getDate() + 1,
                                 0,
                                 0
-                            )
-                        }
-                    }
+                            ),
+                        },
+                    },
                 },
-                order: [['start', 'ASC']]
+                order: [["start", "ASC"]],
             });
             appointments.push({
                 location: room,
-                bookings: bookings
+                bookings: bookings,
             });
         }
         deskBookings = deskBookings.filter((obj) => obj.bookings.length !== 0);

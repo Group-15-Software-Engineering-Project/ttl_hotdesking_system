@@ -60,29 +60,30 @@ function NavigationSidebar() {
     };
     return (
         <div>
-            <div id="navigation-sidebar">
+            <div id='navigation-sidebar'>
                 <div
-                    tabIndex="0"
-                    className="navigation-sidebar-toggle"
+                    tabIndex='0'
+                    className='navigation-sidebar-toggle'
                     onKeyPress={ToggleSidebar}
                     onClick={ToggleSidebar}>
-                    <div id="navigation-sidebar-menu-button" />
+                    <div id='navigation-sidebar-menu-button' />
                 </div>
-                <div className="navigation-sidebar-header">
-                    <img src={TCDLogo} alt="TCD logo"></img>
+                <div className='navigation-sidebar-header'>
+                    <img src={TCDLogo} alt='TCD logo'></img>
                 </div>
-                <div className="navigation-sidebar-content">
+                <div className='navigation-sidebar-content'>
                     <ul>
-                        {SidebarData.map((data) => {
+                        {SidebarData.map((data, i) => {
                             if (data.adminRequired && verify(true)) {
                                 return (
                                     <li
-                                        className="nav-content-item"
+                                        key={i}
+                                        className='nav-content-item'
                                         onClick={ToggleSidebar}
                                         onKeyPress={ToggleSidebar}
                                         path={data.path}>
                                         <Link
-                                            tabIndex="-1"
+                                            tabIndex='-1'
                                             to={data.path}
                                             style={{ color: "#fdaf12", fontWeight: "bold" }}>
                                             {data.icon}
@@ -93,11 +94,12 @@ function NavigationSidebar() {
                             } else if (!data.adminRequired)
                                 return (
                                     <li
-                                        className="nav-content-item"
+                                        key={i}
+                                        className='nav-content-item'
                                         onClick={ToggleSidebar}
                                         onKeyPress={ToggleSidebar}
                                         path={data.path}>
-                                        <Link tabIndex="-1" to={data.path}>
+                                        <Link tabIndex='-1' to={data.path}>
                                             {data.icon}
                                             {data.title}
                                         </Link>
@@ -107,29 +109,26 @@ function NavigationSidebar() {
                         })}
 
                         <li
-                            className="nav-content-item"
+                            className='nav-content-item'
                             onClick={ToggleSidebar}
                             onKeyPress={(e) => {
                                 ToggleSidebar(e);
-                                window.open(
-                                    "https://www.tcd.ie/teaching-learning/hotdesk/info.php",
-                                    "_blank"
-                                );
+                                window.open("https://www.tcd.ie/teaching-learning/hotdesk/info.php", "_blank");
                             }}>
                             <a
-                                target="_blank"
-                                tabIndex="-1"
-                                href="https://www.tcd.ie/teaching-learning/hotdesk/info.php"
-                                rel="noreferrer">
+                                target='_blank'
+                                tabIndex='-1'
+                                href='https://www.tcd.ie/teaching-learning/hotdesk/info.php'
+                                rel='noreferrer'>
                                 <BiGlobe />
                                 TT & L Website
                             </a>
                         </li>
                     </ul>
                 </div>
-                <div className="navigation-sidebar-buttons">
+                <div className='navigation-sidebar-buttons'>
                     <div
-                        className="navigation-sidebar-button"
+                        className='navigation-sidebar-button'
                         onClick={() => {
                             sessionStorage.clear();
                             window.location = "/login";
@@ -143,12 +142,10 @@ function NavigationSidebar() {
                 </div>
                 {window.innerWidth < 768 ? null : (
                     <div
-                        className="navigation-pin"
+                        className='navigation-pin'
                         onKeyPress={(e) => e.target.click()}
                         onClick={() => {
-                            document
-                                .getElementById("navigation-sidebar")
-                                .classList.toggle("pinned");
+                            document.getElementById("navigation-sidebar").classList.toggle("pinned");
 
                             if (sessionStorage.pinnedNavbar) {
                                 sessionStorage.removeItem("pinnedNavbar");

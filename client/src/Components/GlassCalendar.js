@@ -5,76 +5,11 @@ import "../public/css/GlassCalendarStyles.css";
 
 const months = {
     gb: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    pl: [
-        "Sty.",
-        "Lut.",
-        "Mar.",
-        "Kwi.",
-        "Maj",
-        "Cze.",
-        "Lip.",
-        "Sie.",
-        "Wrz.",
-        "Paź.",
-        "Lis.",
-        "Gru.",
-    ],
-    jp: [
-        "一月",
-        "二月",
-        "三月",
-        "四月",
-        "五月",
-        "六月",
-        "七月",
-        "八月",
-        "九月",
-        "十月",
-        "十一月",
-        "十二月",
-    ],
-    cn: [
-        "一月",
-        "二月",
-        "三月",
-        "四月",
-        "五月",
-        "六月",
-        "七月",
-        "八月",
-        "九月",
-        "十月",
-        "十一月",
-        "十二月",
-    ],
-    sa: [
-        "يناير",
-        "فبراير",
-        "مارس",
-        "إبريل",
-        "مايو",
-        "يونيه",
-        "يوليه",
-        "أغسطس",
-        "سبتمبر",
-        "أكتوبر",
-        "نوفمبر",
-        "ديسمبر",
-    ],
-    kr: [
-        "일월",
-        "이월",
-        "삼월",
-        "사월",
-        "오월",
-        "유월",
-        "칠월",
-        "팔월",
-        "구월",
-        "시월",
-        "십일월",
-        "십이월",
-    ],
+    pl: ["Sty.", "Lut.", "Mar.", "Kwi.", "Maj", "Cze.", "Lip.", "Sie.", "Wrz.", "Paź.", "Lis.", "Gru."],
+    jp: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    cn: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    sa: ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيه", "يوليه", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],
+    kr: ["일월", "이월", "삼월", "사월", "오월", "유월", "칠월", "팔월", "구월", "시월", "십일월", "십이월"],
     ie: ["Ean", "Fea", "Mar", "Abr", "Bea", "Mei", "Iúl", "Lún", "Mnf", "Drf", "Sam", "Nol"],
 };
 const weekdays = {
@@ -166,11 +101,7 @@ function GlassCalendar(props) {
                     output = output * 10;
                     break;
                 default:
-                    console.error(
-                        "Illegal argument:",
-                        "'" + day + "'",
-                        "passed into BigCalendar"
-                    );
+                    console.error("Illegal argument:", "'" + day + "'", "passed into BigCalendar");
                     return 7;
             }
         return output;
@@ -206,7 +137,7 @@ function GlassCalendar(props) {
     const previousMonth = () => {
         let month = currentMonth;
         let year = currentYear;
-        if (month === 11) {
+        if (month === 0) {
             year = currentYear - 1 < 1970 ? 1970 : currentYear - 1;
         }
         if (!(currentMonth === 0 && currentYear === 1970)) {
@@ -276,12 +207,10 @@ function GlassCalendar(props) {
                 days[days.length - 1][currentDayIndex] = (
                     <div
                         key={String(currentDate)}
-                        title={`${
-                            weekdays[language][currentDayIndex]
-                        } ${currentDate.getDate()} ${
+                        title={`${weekdays[language][currentDayIndex]} ${currentDate.getDate()} ${
                             months[language][currentDate.getMonth()]
                         } ${currentDate.getFullYear()}`}
-                        tabIndex="0"
+                        tabIndex='0'
                         date={new Date(currentYear, currentMonth, d.day, 12, 0)}
                         className={`calendar-cell current-month-day${
                             isSameDay(today, new Date(year, month, d.day))
@@ -290,16 +219,11 @@ function GlassCalendar(props) {
                                 ? " calendar-day-highlight"
                                 : ""
                         } ${
-                            props.tileClass
-                                ? props.tileClass(
-                                      new Date(currentYear, currentMonth, d.day, 12, 0)
-                                  )
-                                : ""
+                            props.tileClass ? props.tileClass(new Date(currentYear, currentMonth, d.day, 12, 0)) : ""
                         } ${props.selectionClass ? props.selectionClass : ""}`}
                         onClick={(e) => {
                             selectCell(e.target);
-                            if (props.onDaySelect)
-                                props.onDaySelect(new Date(e.target.getAttribute("date")));
+                            if (props.onDaySelect) props.onDaySelect(new Date(e.target.getAttribute("date")));
                         }}
                         onKeyPress={(e) => {
                             if (e.key === "Enter") e.target.click();
@@ -312,7 +236,7 @@ function GlassCalendar(props) {
                 days[days.length - 1][currentDayIndex] = (
                     <div
                         key={String(new Date(year, month, d.day))}
-                        tabIndex="0"
+                        tabIndex='0'
                         date={new Date(currentYear, currentMonth, d.day, 12, 0)}
                         className={`calendar-cell current-month-day${
                             isSameDay(today, new Date(year, month, d.day))
@@ -321,16 +245,11 @@ function GlassCalendar(props) {
                                 ? " calendar-day-highlight"
                                 : ""
                         } ${
-                            props.tileClass
-                                ? props.tileClass(
-                                      new Date(currentYear, currentMonth, d.day, 12, 0)
-                                  )
-                                : ""
+                            props.tileClass ? props.tileClass(new Date(currentYear, currentMonth, d.day, 12, 0)) : ""
                         } ${props.selectionClass ? props.selectionClass : ""}`}
                         onClick={(e) => {
                             selectCell(e.target);
-                            if (props.onDaySelect)
-                                props.onDaySelect(new Date(e.target.getAttribute("date")));
+                            if (props.onDaySelect) props.onDaySelect(new Date(e.target.getAttribute("date")));
                         }}
                         onKeyPress={(e) => {
                             if (e.key === "Enter") e.target.click();
@@ -407,11 +326,11 @@ function GlassCalendar(props) {
 
     const calendarNav = () => {
         return (
-            <div key="calendar-navigation-bar" className="calendar-row calendar-nav">
+            <div key='calendar-navigation-bar' className='calendar-row calendar-nav'>
                 <div
-                    key="calendar-nav-prev-month"
-                    className="calendar-cell prev-month"
-                    tabIndex="0"
+                    key='calendar-nav-prev-month'
+                    className='calendar-cell prev-month'
+                    tabIndex='0'
                     onClick={() => {
                         previousMonth();
                         deselectCell();
@@ -424,30 +343,26 @@ function GlassCalendar(props) {
                     }}></div>
                 {!props.hideYearButtons ? (
                     <div
-                        key="calendar-nav-prev-year"
-                        className="calendar-cell prev-year "
-                        tabIndex="0"
+                        key='calendar-nav-prev-year'
+                        className='calendar-cell prev-year '
+                        tabIndex='0'
                         onKeyPress={(e) => {
                             if (e.key === " " || e.key === "Enter") {
                                 updateYear(currentYear - 1 < 1970 ? 1970 : currentYear - 1);
                             }
                         }}
-                        onClick={() =>
-                            updateYear(currentYear - 1 < 1970 ? 1970 : currentYear - 1)
-                        }></div>
+                        onClick={() => updateYear(currentYear - 1 < 1970 ? 1970 : currentYear - 1)}></div>
                 ) : (
-                    <div className="calendar-cell" />
+                    <div className='calendar-cell' />
                 )}
-                <div
-                    key="calendar-nav-month-display"
-                    className="calendar-cell calendar-nav-month">
+                <div key='calendar-nav-month-display' className='calendar-cell calendar-nav-month'>
                     {months[language][currentMonth]}
                 </div>
                 {!props.hideLanguageToggle ? (
                     <div
-                        key="calendar-nav-flag-toggle"
-                        className="calendar-cell center-content flag-toggle"
-                        tabIndex="0"
+                        key='calendar-nav-flag-toggle'
+                        className='calendar-cell center-content flag-toggle'
+                        tabIndex='0'
                         onKeyPress={(e) => {
                             if (e.key === " " || e.key === "Enter") {
                                 changeLanguage(countries[(langIndex + 1) % countries.length]);
@@ -466,16 +381,16 @@ function GlassCalendar(props) {
                             countryCode={language}></CircleFlag> */}
                     </div>
                 ) : (
-                    <div className="calendar-cell" />
+                    <div className='calendar-cell' />
                 )}
-                <div key="calendar-nav-year-display" className="calendar-cell">
+                <div key='calendar-nav-year-display' className='calendar-cell'>
                     {currentYear}
                 </div>
                 {!props.hideYearButtons ? (
                     <div
-                        key="calendar-nav-next-year"
-                        className="calendar-cell next-year"
-                        tabIndex="0"
+                        key='calendar-nav-next-year'
+                        className='calendar-cell next-year'
+                        tabIndex='0'
                         onKeyPress={(e) => {
                             if (e.key === " " || e.key === "Enter") {
                                 updateYear(currentYear + 1);
@@ -483,12 +398,12 @@ function GlassCalendar(props) {
                         }}
                         onClick={() => updateYear(currentYear + 1)}></div>
                 ) : (
-                    <div className="calendar-cell" />
+                    <div className='calendar-cell' />
                 )}
                 <div
-                    key="calendar-nav-next-month"
-                    className="calendar-cell next-month"
-                    tabIndex="0"
+                    key='calendar-nav-next-month'
+                    className='calendar-cell next-month'
+                    tabIndex='0'
                     onClick={() => {
                         nextMonth();
                         deselectCell();
@@ -505,15 +420,13 @@ function GlassCalendar(props) {
     const calendarWeekdays = (weekStart) => {
         let highlight = String(dayHighlight);
         return (
-            <div key="calendar-weekday-names" className="calendar-row calendar-weekdays">
+            <div key='calendar-weekday-names' className='calendar-row calendar-weekdays'>
                 {arrayRotate(weekdays[language], -weekStart + 1).map((x, i) => {
                     return (
                         <div
                             key={`calendar-weekday-${x}`}
                             className={`calendar-cell${
-                                highlight.includes(
-                                    dayIndex(arrayRotate(weekdays["gb"], 1 - weekStart)[i])
-                                )
+                                highlight.includes(dayIndex(arrayRotate(weekdays["gb"], 1 - weekStart)[i]))
                                     ? " calendar-day-highlight"
                                     : ""
                             }`}>
@@ -527,7 +440,7 @@ function GlassCalendar(props) {
     const fillCalendarDaysInMonth = (weeks, calendar) => {
         for (let week of weeks) {
             calendar.push(
-                <div key={`calendar-week-${weeks.indexOf(week)}`} className="calendar-row">
+                <div key={`calendar-week-${weeks.indexOf(week)}`} className='calendar-row'>
                     {week.map((day) => {
                         return day;
                     })}
@@ -542,7 +455,7 @@ function GlassCalendar(props) {
         calendar.push(calendarWeekdays(weekStart));
         fillCalendarDaysInMonth(getDaysInMonth(month, year, weekStart), calendar);
         return (
-            <div key="calendar-wrapper" className={`calendar-wrapper`}>
+            <div key='calendar-wrapper' className={`calendar-wrapper`}>
                 {calendar}
             </div>
         );

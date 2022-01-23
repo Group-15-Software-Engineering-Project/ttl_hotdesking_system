@@ -1,19 +1,6 @@
 import { sha256 } from "js-sha256";
 
-export const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-];
+export const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export const verify = (e) => {
     let a = sessionStorage.email;
@@ -21,6 +8,7 @@ export const verify = (e) => {
     let date = new Date();
     let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
     let token = sha256(a + c + process.env.REACT_APP_A + (e ? process.env.REACT_APP_B : "") + b);
+    // console.log(token, sessionStorage.sessionToken, e);
     return token === sessionStorage.sessionToken;
 };
 
