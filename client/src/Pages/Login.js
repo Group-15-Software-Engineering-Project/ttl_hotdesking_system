@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import "../public/css/Login.css";
 import "../public/css/main.css";
-import { verify } from "../Components/Misc";
-import { Redirect } from "react-router-dom";
 import TCDLogo from "../public/media/TCD-logo-home-transparent.png";
 
 class Login extends Component {
@@ -111,6 +109,7 @@ class Login extends Component {
                             value={this.state.password}
                             onChange={(e) => this.setState({ password: e.target.value })}></input>
 
+                        <div className='space' />
                         <button style={{ minWidth: "16.5em" }} className='button-style' type='submit'>
                             Login
                         </button>
@@ -118,9 +117,8 @@ class Login extends Component {
                         {this.state.errorText ? (
                             <p className='space login-error'>{"Email and password did not match."}</p>
                         ) : (
-                            <div className='space' style={{ margin: "0 0 0.5em 0", height: "2em" }} />
+                            <div className='space login-error' style={{ backgroundColor: "transparent" }} />
                         )}
-                        <div className='space' style={{ margin: "2em 0" }} />
                     </div>
                 </form>
             </div>
