@@ -73,13 +73,8 @@ export const DeskBookingsTable = ({ bookings: data = [] }) => {
 
 const DisplayBooking = ({ booking: data }) => {
     let time = data.pm && !data.am ? "13:30 - 17:30" : data.am && !data.pm ? "09:00 - 13:00" : "09:00 - 17:30";
-    // let date = data.date.split("T")[0].split("-");
-    // let isUpcoming = this.state.todayDate - parseInt(date[0] + date[1] + date[2]);
     let isUpcoming = getDifferenceInDays(new Date(), new Date(data.date));
-    // if (isUpcoming > 0) {
-    //     console.log(data);
-    //     return null;
-    // }
+
     let displayDate = new Date(data.date).toDateString();
     let status =
         isUpcoming < 0 ? (

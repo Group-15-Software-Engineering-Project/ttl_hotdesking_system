@@ -62,23 +62,18 @@ export default class BookingCalendar extends React.Component {
                 );
             })
             .catch((err) => {
-                console.log(err);
+                console.error(err);
             });
     };
     componentDidMount() {
         let date = new Date();
         let curMonth =
-            date.getFullYear() +
-            "-" +
-            (String(date.getMonth() + 1).length === 1 ? "0" : "") +
-            (date.getMonth() + 1);
+            date.getFullYear() + "-" + (String(date.getMonth() + 1).length === 1 ? "0" : "") + (date.getMonth() + 1);
 
         this.setState(
             {
-                todayDate:
-                    date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
-                selectedDate:
-                    date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear(),
+                todayDate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
+                selectedDate: date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear(),
                 chosenArea: this.props.chosenArea,
                 currentMonth: curMonth,
             },
@@ -91,11 +86,7 @@ export default class BookingCalendar extends React.Component {
                 if (!res.ok) throw new Error(`Failed to retrieve option`);
                 return res.json();
             })
-            .then((res) =>
-                this.setState({ dayLimit: res.option.value * 7 }, () =>
-                    console.log(this.state.dayLimit)
-                )
-            )
+            .then((res) => this.setState({ dayLimit: res.option.value * 7 }))
             .catch(console.error);
     }
 
@@ -104,9 +95,7 @@ export default class BookingCalendar extends React.Component {
         let res = "";
         if (this.state.existingBookings) {
             if (this.state.existingBookings[day]) {
-                if (
-                    this.state.existingBookings[day].length < this.state.availableDesks.length
-                ) {
+                if (this.state.existingBookings[day].length < this.state.availableDesks.length) {
                     res = "calendar-green";
                 } else {
                     res = "calendar-red";
@@ -131,10 +120,7 @@ export default class BookingCalendar extends React.Component {
             for (let desk in this.state.availableDesks) {
                 let bookedDesk;
                 for (let booking in this.state.existingBookings[day]) {
-                    if (
-                        this.state.existingBookings[day][booking].desk ===
-                        this.state.availableDesks[desk]
-                    ) {
+                    if (this.state.existingBookings[day][booking].desk === this.state.availableDesks[desk]) {
                         bookedDesk = {
                             desk: "Desk " + this.state.availableDesks[desk],
                             user: this.state.existingBookings[day][booking].user,
@@ -174,10 +160,10 @@ export default class BookingCalendar extends React.Component {
         return (
             <GlassCalendar
                 key={this.state.availableDesks}
-                highlight="none"
+                highlight='none'
                 hideYearButtons
                 hideLanguageToggle
-                selectionClass="selected"
+                selectionClass='selected'
                 onDaySelect={(e) => {
                     this.props.onSelect(
                         this.getDesks(e),
@@ -188,15 +174,11 @@ export default class BookingCalendar extends React.Component {
                 onMonthChange={(e) => {
                     let date = String(e).split(" ");
                     let month = months.indexOf(date[1]);
-                    let dateStr =
-                        date[3] +
-                        "-" +
-                        (String(month + 1).length === 1 ? "0" : "") +
-                        (month + 1);
+                    let dateStr = date[3] + "-" + (String(month + 1).length === 1 ? "0" : "") + (month + 1);
                     this.setState({ currentMonth: dateStr }, () => {
                         this.fetchAvailableDesks();
                     });
-                    if(this.props.onMonthChange) this.props.onMonthChange();
+                    if (this.props.onMonthChange) this.props.onMonthChange();
                 }}
                 disableTile={this.disabledTiles}
                 tileClass={this.checkAvailability}

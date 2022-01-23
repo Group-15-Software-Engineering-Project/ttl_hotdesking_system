@@ -73,7 +73,7 @@ class Login extends Component {
 
     render() {
         return (
-            <div className='wrapper TCD-BG' style={{ posistion: "relative" }}>
+            <div className='wrapper TCD-BG' style={{ position: "relative" }}>
                 <form
                     className='login-box'
                     onSubmit={(e) => {
@@ -90,7 +90,7 @@ class Login extends Component {
                         <img src={TCDLogo} alt='TCD Logo' style={{ width: "20rem" }} />
                     </div>
                     <div style={{ display: "block", textAlign: "left", padding: "2em 0 3em 3em" }}>
-                        <h1 className='login-title'>Trinity Desk Booking System</h1>
+                        <h1 className='login-title'>Trinity T&L Hot-Desking App</h1>
                         <div className='space' />
                         <input
                             type='text'
@@ -110,31 +110,16 @@ class Login extends Component {
                             style={{ minWidth: "20em" }}
                             value={this.state.password}
                             onChange={(e) => this.setState({ password: e.target.value })}></input>
-                        {this.state.errorText ? (
-                            <div>
-                                <p
-                                    className='space'
-                                    style={{
-                                        backgroundColor: "#faaa",
-                                        color: "#e00",
-                                        fontWeight: "bold",
-                                        margin: "0.1em 0 0.4em 0.3em",
-                                        height: "2em",
-                                        width: "fit-content",
-                                        padding: "0.4em 0.5em 0.6em 0.5em",
-                                        borderRadius: "20px",
-                                        maxWidth: "fit-content",
-                                    }}>
-                                    {"Email and password did not match."}
-                                </p>
-                            </div>
-                        ) : (
-                            <div className='space' style={{ margin: "0 0 0.5em 0", height: "2em" }} />
-                        )}
 
                         <button style={{ minWidth: "16.5em" }} className='button-style' type='submit'>
                             Login
                         </button>
+                        <div className='space' style={{ margin: "2em 0" }} />
+                        {this.state.errorText ? (
+                            <p className='space login-error'>{"Email and password did not match."}</p>
+                        ) : (
+                            <div className='space' style={{ margin: "0 0 0.5em 0", height: "2em" }} />
+                        )}
                         <div className='space' style={{ margin: "2em 0" }} />
                     </div>
                 </form>

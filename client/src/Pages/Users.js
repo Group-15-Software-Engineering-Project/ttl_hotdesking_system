@@ -19,7 +19,7 @@ class Users extends Component {
         users: [],
         teamList: [],
         listedTeam: "",
-
+        emailPasswordToChange: "",
     };
 
     positionReference = createRef();
@@ -41,8 +41,7 @@ class Users extends Component {
         );
     };
     submitAddUserToTeam = () => {
-        if (this.state.addTeamName.length === 0 || this.state.addTeamUserName.length === 0)
-            return;
+        if (this.state.addTeamName.length === 0 || this.state.addTeamUserName.length === 0) return;
         fetch("/api/addUserToGroup", {
             method: "POST",
             headers: {
@@ -54,17 +53,13 @@ class Users extends Component {
             }),
         })
             .then((res) => {
-                if (!res.ok)
-                    throw new Error(`Failed to add user to group (status:${res.status})`);
+                if (!res.ok) throw new Error(`Failed to add user to group (status:${res.status})`);
                 else {
-                    alert(
-                        `Added ${this.state.addTeamUserName} to team ${this.state.addTeamName}.`
-                    );
+                    alert(`Added ${this.state.addTeamUserName} to team ${this.state.addTeamName}.`);
                     this.setState({ addTeamUserName: "" });
                     this.submitGetUsersInTeam(this.state.listedTeam, "users");
 
                     this.getTeams();
-                    
                 }
             })
             .catch(console.error);
@@ -89,7 +84,6 @@ class Users extends Component {
                     alert("Success");
                     this.setState({ removeUserFromTeam: "", removeFromTeam: "" });
                     this.submitGetUsersInTeam(this.state.listedTeam, "users");
-
                 }
             })
             .catch((err) => {});
@@ -138,11 +132,9 @@ class Users extends Component {
                 if (!res.ok) throw new Error(`Failed to add user (status:${res.status})`);
             })
             .then(() => {
-                console.log("added");
                 this.setState({ addEmail: "" });
                 this.submitGetUsersInTeam("All Users", "allUsers");
                 this.submitGetUsersInTeam(this.state.listedTeam, "users");
-
             })
             .catch(console.error);
     };
@@ -163,7 +155,21 @@ class Users extends Component {
                 alert(err);
             });
     };
-   
+
+    resetPassword = () => {
+        fetch(`/api/resetPassword/${this.state.emailPasswordToChange}`, {
+            method: "PATCH",
+        })
+            .then((res) => {
+                if (!res.ok)
+                    throw new Error(`Failed to reset password for the user: ${this.state.emailPasswordToChange}`);
+                else {
+                    alert(`Password for the user ${this.state.emailPasswordToChange} has been reset succesfully.`);
+                    this.setState({ emailPasswordToChange: "" });
+                }
+            })
+            .catch(alert);
+    };
 
     submitGetUsersInTeam = (team, label) => {
         if (team === -1) return;
@@ -212,33 +218,27 @@ class Users extends Component {
 
     render() {
         return verify(true) ? (
-            <div className="wrapper TCD-BG">
-                <div className="flex-container-1"></div>
-                <div className="flex-container-5 main-body">
-                    <div className="quadrant-container">
-                        <div className="quadrant">
+            <div className='wrapper TCD-BG'>
+                <div className='flex-container-1'></div>
+                <div className='flex-container-5 main-body'>
+                    <div className='quadrant-container'>
+                        <div className='quadrant'>
                             <h1
-                                className="page-divider-header"
+                                className='page-divider-header'
                                 style={{ marginLeft: "2.5%", backgroundColor: "#4dc300" }}>
                                 Add Users
                             </h1>
-                            <div
-                                className="space"
-                                style={{ marginBottom: "10%", marginTop: "5%" }}
-                            />
+                            <div className='space' style={{ marginBottom: "10%", marginTop: "5%" }} />
                             <input
-                                type="email"
-                                className="text-input"
-                                placeholder="Email"
+                                type='email'
+                                className='text-input'
+                                placeholder='Email'
                                 onChange={this.addEmailF}
                                 value={this.state.addEmail}></input>
-                            <div className="space" style={{ marginBottom: "1%" }} />
-                            <div
-                                className="space"
-                                style={{ marginTop: "5%", marginBottom: "5%" }}
-                            />
+                            <div className='space' style={{ marginBottom: "1%" }} />
+                            <div className='space' style={{ marginTop: "5%", marginBottom: "5%" }} />
                             <button
-                                className="button-style no-outline"
+                                className='button-style no-outline'
                                 disabled={!this.validEmail(this.state.addEmail)}
                                 onClick={() => {
                                     this.submitAddUser(this.state.addEmail);
@@ -246,34 +246,31 @@ class Users extends Component {
                                 Add User
                             </button>
                         </div>
-                        <div className="quadrant">
+                        <div className='quadrant'>
                             <h1
-                                className="page-divider-header"
+                                className='page-divider-header'
                                 style={{
                                     marginLeft: "2.5%",
                                     backgroundColor: "#4dc300",
                                 }}>
                                 Add Users to Teams
                             </h1>
-                            <div
-                                className="space"
-                                style={{ marginBottom: "10%", marginTop: "5%" }}
-                            />
+                            <div className='space' style={{ marginBottom: "10%", marginTop: "5%" }} />
                             <input
-                                className="text-input"
-                                placeholder="Team name"
-                                type="text"
-                                name="addTeamName"
+                                className='text-input'
+                                placeholder='Team name'
+                                type='text'
+                                name='addTeamName'
                                 onChange={this.handleEvent}
                                 value={this.state.addTeamName}></input>
                             <span> </span>
                             <select
-                                className="text-input"
-                                name="addTeamName"
+                                className='text-input'
+                                name='addTeamName'
                                 style={{ padding: 0 }}
                                 onChange={this.handleEvent}
                                 value={this.state.addTeamName}>
-                                <option key="empty-option" value="">
+                                <option key='empty-option' value=''>
                                     Select team
                                 </option>
                                 {this.state.teamList
@@ -286,23 +283,23 @@ class Users extends Component {
                                         );
                                     })}
                             </select>
-                            <div className="space" style={{ marginBottom: "1%" }} />
+                            <div className='space' style={{ marginBottom: "1%" }} />
                             <input
                                 key={"addUserToTeam"}
-                                className="text-input"
-                                placeholder="User email"
-                                type="email"
-                                name="addTeamUserName"
+                                className='text-input'
+                                placeholder='User email'
+                                type='email'
+                                name='addTeamUserName'
                                 onChange={this.handleEvent}
                                 value={this.state.addTeamUserName}></input>
                             <span> </span>
                             <select
-                                className="text-input"
-                                name="addTeamUserName"
+                                className='text-input'
+                                name='addTeamUserName'
                                 style={{ padding: 0 }}
                                 onChange={this.handleEvent}
                                 value={this.state.addTeamUserName}>
-                                <option key="empty-val" value="">
+                                <option key='empty-val' value=''>
                                     Select user
                                 </option>
                                 {this.state.allUsers.map((x) => {
@@ -314,119 +311,116 @@ class Users extends Component {
                                 })}
                             </select>
 
-                            <div
-                                className="space"
-                                style={{ marginTop: "5%", marginBottom: "5%" }}
-                            />
+                            <div className='space' style={{ marginTop: "5%", marginBottom: "5%" }} />
                             <button
-                                className="button-style no-outline"
-                                disabled={
-                                    !(
-                                        this.state.addTeamName &&
-                                        this.validEmail(this.state.addTeamUserName)
-                                    )
-                                }
+                                className='button-style no-outline'
+                                disabled={!(this.state.addTeamName && this.validEmail(this.state.addTeamUserName))}
                                 onClick={this.submitAddUserToTeam}>
                                 Add to Teams
                             </button>
                         </div>
-                        <div className="quadrant">
+                        <div className='quadrant'>
                             <h1
-                                className="page-divider-header"
+                                className='page-divider-header'
                                 style={{
                                     marginLeft: "2.5%",
                                     backgroundColor: "#F32000",
                                 }}>
                                 Remove Users
                             </h1>
-                            <div
-                                className="space"
-                                style={{ marginBottom: "10%", marginTop: "5%" }}
-                            />
+                            <div className='space' style={{ marginBottom: "10%", marginTop: "5%" }} />
                             <input
-                                className="text-input"
-                                placeholder="Email"
-                                type="email"
-                                name="deleteEmail"
-                                autoComplete="none"
+                                className='text-input'
+                                placeholder='Email'
+                                type='email'
+                                name='deleteEmail'
+                                autoComplete='none'
                                 onChange={this.handleEvent}></input>
-                            <div
-                                className="space"
-                                style={{ marginTop: "5%", marginBottom: "5%" }}
-                            />
+                            <div className='space' style={{ marginTop: "5%", marginBottom: "5%" }} />
                             <button
-                                className="button-style no-outline"
-                                disabled={
-                                    this.state.allUsers.indexOf(this.state.deleteEmail) === -1
-                                }
+                                className='button-style no-outline'
+                                disabled={this.state.allUsers.indexOf(this.state.deleteEmail) === -1}
                                 onClick={() => {
                                     this.submitRemoveUser(this.state.deleteEmail);
                                 }}>
                                 Remove User
                             </button>
                         </div>
-                        <div className="quadrant">
+                        <div className='quadrant'>
                             <h1
-                                className="page-divider-header"
+                                className='page-divider-header'
                                 style={{ marginLeft: "2.5%", backgroundColor: "#F32000" }}>
                                 Remove Users from Teams
                             </h1>
-                            <div
-                                className="space"
-                                style={{ marginBottom: "10%", marginTop: "5%" }}
-                            />
+                            <div className='space' style={{ marginBottom: "10%", marginTop: "5%" }} />
 
                             <select
-                                className="text-input"
+                                className='text-input'
                                 style={{ padding: "0" }}
-                                name="removeFromTeam"
+                                name='removeFromTeam'
                                 value={this.state.removeFromTeam}
                                 onChange={(e) => {
                                     this.submitGetUsersInTeam(e.target.value, "usersInTeam");
                                     this.handleEvent(e);
                                 }}>
                                 <option value={-1}>Select team</option>
-                                {this.state.teamList.filter(e => !e.includes("All Users")).map((x) =>
-                                    <option value={x}>{x}</option>
-                                )}
+                                {this.state.teamList
+                                    .filter((e) => !e.includes("All Users"))
+                                    .map((x) => (
+                                        <option value={x}>{x}</option>
+                                    ))}
                             </select>
-                            <div className="space" style={{ marginBottom: "1%" }} />
+                            <div className='space' style={{ marginBottom: "1%" }} />
 
                             <select
-                                className="text-input"
+                                className='text-input'
                                 style={{ padding: "0" }}
-                                name="removeUserFromTeam"
+                                name='removeUserFromTeam'
                                 value={this.state.removeUserFromTeam}
                                 onChange={this.handleEvent}>
                                 <option value={-1}>Select user</option>
-                                {this.state.usersInTeam.map((x) => 
+                                {this.state.usersInTeam.map((x) => (
                                     <option value={x}>{x}</option>
-                                )}
+                                ))}
                             </select>
-                            <div
-                                className="space"
-                                style={{ marginTop: "5%", marginBottom: "5%" }}
-                            />
+                            <div className='space' style={{ marginTop: "5%", marginBottom: "5%" }} />
                             <button
-                                className="button-style no-outline"
-                                disabled={
-                                    !this.state.removeFromTeam ||
-                                    !this.state.removeUserFromTeam
-                                }
+                                className='button-style no-outline'
+                                disabled={!this.state.removeFromTeam || !this.state.removeUserFromTeam}
                                 onClick={() => {
                                     this.submitRemoveUserFromTeam();
                                 }}>
                                 Remove from Team
                             </button>
                         </div>
-                        <div className="space" />
-                        <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                        <div className='double-quadrant' style={{ height: "220px" }}>
+                            <h1
+                                className='page-divider-header'
+                                style={{ marginLeft: "2.5%", backgroundColor: "#fdaf12" }}>
+                                Reset User Password
+                            </h1>
+                            <div className='space' />
+                            <input
+                                type='text'
+                                className='text-input'
+                                autoComplete='off'
+                                placeholder='User email'
+                                name='emailPasswordToChange'
+                                value={this.state.emailPasswordToChange}
+                                onChange={this.handleEvent}></input>
+                            <div className='space' />
+                            <button
+                                className='button-style'
+                                onClick={this.resetPassword}
+                                disabled={!this.state.allUsers.includes(this.state.emailPasswordToChange)}>
+                                Reset User Password
+                            </button>
+                        </div>
+                        <div className='space' />
+                        <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                             Registered Users
                         </h1>
-                        <div
-                            className="space"
-                            style={{ marginBottom: "2%", marginTop: "2%" }}
-                        />
+                        <div className='space' style={{ marginBottom: "2%", marginTop: "2%" }} />
                         <div
                             style={{
                                 display: "flex",
@@ -436,13 +430,13 @@ class Users extends Component {
                                 justifyContent: "center",
                             }}>
                             <select
-                                className="text-input"
+                                className='text-input'
                                 style={{ padding: "0", width: "25%" }}
-                                name="usersInTeam"
+                                name='usersInTeam'
                                 value={this.state.listedTeam}
                                 onChange={(e) => {
-                                    this.setState({listedTeam: e.target.value});
-                                    this.submitGetUsersInTeam(e.target.value, "users")
+                                    this.setState({ listedTeam: e.target.value });
+                                    this.submitGetUsersInTeam(e.target.value, "users");
                                 }}>
                                 {/* <option value={-1}>Select team</option> */}
                                 {this.state.teamList
@@ -451,7 +445,7 @@ class Users extends Component {
                                       })
                                     : null}
                             </select>
-                            <div className="space" />
+                            <div className='space' />
                             <ol
                                 style={{
                                     width: "80%",
@@ -471,13 +465,13 @@ class Users extends Component {
                                 ))}
                             </ol>
                         </div>
-                        <div className="space" style={{ marginBottom: "10%" }} />
+                        <div className='space' style={{ marginBottom: "10%" }} />
                     </div>
                 </div>
-                <div className="flex-container-1"></div>
+                <div className='flex-container-1'></div>
             </div>
         ) : (
-            <Redirect to="/home" />
+            <Redirect to='/home' />
         );
     }
 }

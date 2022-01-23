@@ -2,7 +2,6 @@ import React, { createRef } from "react";
 import BookingCalendar from "../Components/BookingCalendar";
 import TileSelection from "../Components/TileSelection";
 import { createUniqueID, months, verify } from "../Components/Misc";
-import ConfirmationEmail from "../Components/ConfirmationEmail.js";
 import "../public/css/main.css";
 import { Redirect } from "react-router";
 
@@ -32,10 +31,7 @@ export default class BookingPage extends React.Component {
         return (
             String(this.state.chosenDate).split(" ")[2] +
             "-" +
-            String(months.indexOf(String(this.state.chosenDate).split(" ")[1]) + 1).padStart(
-                2,
-                "0"
-            ) +
+            String(months.indexOf(String(this.state.chosenDate).split(" ")[1]) + 1).padStart(2, "0") +
             "-" +
             String(this.state.chosenDate).split(" ")[3]
         );
@@ -58,13 +54,7 @@ export default class BookingPage extends React.Component {
                 pm = true;
                 break;
         }
-        console.log(this.state.chosenArea);
-        console.log(
-            "Chosen Date: ",
-            this.state.chosenDate.getFullYear(),
-            this.state.chosenDate.getMonth(),
-            this.state.chosenDate.getDate()
-        );
+
         fetch("/api/addBooking", {
             method: "POST",
             headers: {
@@ -87,15 +77,6 @@ export default class BookingPage extends React.Component {
                 return res.json();
             })
             .then((res) => {
-                ConfirmationEmail(
-                    this.props.email,
-                    this.state.chosenDesk.split(" ")[1],
-                    this.state.chosenArea,
-                    this.convertDate(),
-                    am,
-                    pm,
-                    this.state.chosenTime
-                );
                 this.setState({
                     chosenArea: "default",
                     chosenDate: "default",
@@ -106,7 +87,7 @@ export default class BookingPage extends React.Component {
                 });
             })
             .catch((err) => {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -175,16 +156,16 @@ export default class BookingPage extends React.Component {
     };
     render() {
         return verify(true) || verify(false) ? (
-            <div className="wrapper TCD-BG">
-                <div className="flex-container-1"></div>
-                <div className="flex-container-5 main-body">
-                    <div className="space" />
+            <div className='wrapper TCD-BG'>
+                <div className='flex-container-1'></div>
+                <div className='flex-container-5 main-body'>
+                    <div className='space' />
                     <TileSelection
-                        elementID="Booking_area_selection"
+                        elementID='Booking_area_selection'
                         showLabel={true}
                         key={this.state.areaKey}
                         title={
-                            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                            <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                 Select a Booking Area
                             </h1>
                         }
@@ -201,7 +182,7 @@ export default class BookingPage extends React.Component {
                     />
                     {this.state.chosenArea !== "default" ? (
                         <TileSelection
-                            elementID="Booking_time_selection"
+                            elementID='Booking_time_selection'
                             showLabel={false}
                             key={this.state.chosenArea}
                             options={this.state.times}
@@ -215,9 +196,7 @@ export default class BookingPage extends React.Component {
                                 })
                             }
                             title={
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ marginLeft: "2.5%" }}>
+                                <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                     Select a Booking Time
                                 </h1>
                             }
@@ -226,7 +205,7 @@ export default class BookingPage extends React.Component {
 
                     {this.state.chosenTime !== "default" ? (
                         <div>
-                            <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                            <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                 Select a Booking Date
                             </h1>
                             <div
@@ -244,16 +223,13 @@ export default class BookingPage extends React.Component {
                                     chosenArea={this.state.chosenArea}
                                     bookingTime={(() => {
                                         for (let i in this.state.times) {
-                                            if (
-                                                this.state.chosenTime ===
-                                                this.state.times[i].value
-                                            ) {
+                                            if (this.state.chosenTime === this.state.times[i].value) {
                                                 return this.state.times[i].label;
                                             }
                                         }
                                     })()}
                                     onMonthChange={() => {
-                                        this.setState({chosenDate: "default"})
+                                        this.setState({ chosenDate: "default" });
                                     }}
                                     onSelect={(desks, date, m) => {
                                         let newDate;
@@ -263,13 +239,10 @@ export default class BookingPage extends React.Component {
                                             String(date).split(" ")[1] !== m
                                         ) {
                                             newDate = "default";
-                                        } else if (
-                                            String(this.state.chosenDate) === "default"
-                                        ) {
+                                        } else if (String(this.state.chosenDate) === "default") {
                                             newDate = date;
                                         } else if (
-                                            String(this.state.chosenDate).split(" ")[1] !==
-                                            String(date).split(" ")[1]
+                                            String(this.state.chosenDate).split(" ")[1] !== String(date).split(" ")[1]
                                         ) {
                                             newDate = "default";
                                         } else {
@@ -293,13 +266,11 @@ export default class BookingPage extends React.Component {
                         <div>
                             <TileSelection
                                 key={this.state.chosenDate}
-                                elementID="Booking_desk_selection"
+                                elementID='Booking_desk_selection'
                                 showLabel={true}
                                 title={
                                     <div>
-                                        <h1
-                                            className="page-divider-header"
-                                            style={{ marginLeft: "2.5%" }}>
+                                        <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                             Select a Desk
                                         </h1>
                                         <div
@@ -313,9 +284,7 @@ export default class BookingPage extends React.Component {
                                                     color: "black",
                                                     fontSize: "18px",
                                                     fontWeight: "bold",
-                                                }}>{`Desks for ${
-                                                this.state.chosenArea
-                                            } on ${this.getViewableDate(
+                                                }}>{`Desks for ${this.state.chosenArea} on ${this.getViewableDate(
                                                 this.state.chosenDate
                                             )}.`}</span>
                                         </div>
@@ -333,9 +302,7 @@ export default class BookingPage extends React.Component {
                     ) : null}
                     {this.state.chosenDesk !== "default" ? (
                         <div style={{ alignItems: "center", textAlign: "center" }}>
-                            <button
-                                className="button-style no-outline"
-                                onClick={this.submitBooking}>
+                            <button className='button-style no-outline' onClick={this.submitBooking}>
                                 Confirm Booking
                             </button>
                             <div style={{ marginBottom: "30px" }} />
@@ -344,10 +311,10 @@ export default class BookingPage extends React.Component {
                     ) : null}
                     <div ref={this.positionReference} style={{ marginBottom: "150px" }} />
                 </div>
-                <div className="flex-container-1"></div>
+                <div className='flex-container-1'></div>
             </div>
         ) : (
-            <Redirect to="/login" />
+            <Redirect to='/login' />
         );
     }
 }

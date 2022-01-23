@@ -30,17 +30,10 @@ export default class AdminBookingView extends React.Component {
         };
     }
 
-
-
     getBookingsOnDate = (date) => {
-        console.log("fetching Booking", this.state.email);
-
         fetch(`/api/getBookingsOnDate/${date}`)
             .then((res) => {
-                if (!res.ok)
-                    throw new Error(
-                        `Failed to fetch bookings on this date (status:${res.status})`
-                    );
+                if (!res.ok) throw new Error(`Failed to fetch bookings on this date (status:${res.status})`);
                 return res.json();
             })
             .then((data) => {
@@ -51,27 +44,16 @@ export default class AdminBookingView extends React.Component {
     };
 
     getBookingsByLocation = async (deskRoom) => {
-        console.log("fetching Booking for location", deskRoom);
-
         fetch(`/api/getBookingsByLocation/${deskRoom}`)
             .then((res) => {
-                if (!res.ok)
-                    throw new Error(
-                        `Failed to fetch bookings for this location (status:${res.status})`
-                    );
+                if (!res.ok) throw new Error(`Failed to fetch bookings for this location (status:${res.status})`);
                 return res.json();
             })
             .then((data) => {
                 this.setState({ filteredBookings: data.bookings });
-             
             })
             .catch((err) => console.error(err));
     };
-
-    componentDidMount() {
-        this.getBookingsOnDate();
-       
-    }
 
     submitRoomRestriction = () => {
         fetch("/api/addRoomRestriction", {
@@ -106,29 +88,16 @@ export default class AdminBookingView extends React.Component {
     };
 
     checkRestriction = (d) => {
-        console.log("Checking restriction for date", d);
-
         // let date = String(d).split("T")[0].split(" ");
         let currentdate = new Date(); //today
         this.setState({
-            todayDate:
-                currentdate.getFullYear() * 10000 +
-                (currentdate.getMonth() + 1) * 100 +
-                currentdate.getDate(),
+            todayDate: currentdate.getFullYear() * 10000 + (currentdate.getMonth() + 1) * 100 + currentdate.getDate(),
         });
 
         let gap = getDifferenceInDays(currentdate, d);
-        let days = -(this.state.RestrictWeek * 7) ;
+        let days = -(this.state.RestrictWeek * 7);
 
         this.setState({ dateRestricted: gap < days });
-
-        console.log("Date Restricted?", gap < days);
-
-        // console.log("Date Restricted?", this.state.dateRestricted);
-
-        console.log("Days", days);
-
-        console.log("gap", gap);
 
         return gap < days;
     };
@@ -136,7 +105,6 @@ export default class AdminBookingView extends React.Component {
     checkExistingRestrictions = () => {
         for (let index = 0; index < this.state.bookings.length; index++) {
             let currentBooking = this.state.bookings[index];
-            console.log(" in check existing restrictions");
             let morning = 0;
 
             this.state.AM ? (morning = 1) : (morning = 0);
@@ -145,10 +113,6 @@ export default class AdminBookingView extends React.Component {
 
             this.state.PM ? (evening = 1) : (evening = 0);
 
-            console.log("dates", currentBooking.date, this.state.chosenDate);
-            console.log("room", currentBooking.deskRoom, this.state.chosenLocation);
-            console.log("morning?", currentBooking.am, morning);
-            console.log("evening?", currentBooking.pm, evening);
             if (
                 currentBooking.deskRoom === this.state.chosenLocation &&
                 (currentBooking.am === morning || currentBooking.pm === evening)
@@ -162,16 +126,10 @@ export default class AdminBookingView extends React.Component {
     filterBookings = () => {
         if (this.state.chosenLocation !== "overall") {
             this.getBookingsByLocation(this.state.chosenLocation);
-            // this. sortBookingsbyLocation();
-
-            console.log("fetching Booking", this.state.date);
 
             fetch(`/api/getBookingsOnDate/${this.state.date}`)
                 .then((res) => {
-                    if (!res.ok)
-                        throw new Error(
-                            `Failed to fetch bookings on this date (status:${res.status})`
-                        );
+                    if (!res.ok) throw new Error(`Failed to fetch bookings on this date (status:${res.status})`);
                     return res.json();
                 })
                 .then((data) => {
@@ -181,41 +139,17 @@ export default class AdminBookingView extends React.Component {
         }
     };
 
-
-
     sortBookingsbyLocation = async () => {
         this.setState({
-            filteredBookings: this.state.bookings.filter(
-                (booking) => this.state.chosenLocation === booking.deskRoom
-            ),
+            filteredBookings: this.state.bookings.filter((booking) => this.state.chosenLocation === booking.deskRoom),
         });
-
-        console.log(this.state.bookings);
-
-        // {console.log(this.state.filteredBookings)}
     };
 
     filterBookings = () => {
         if (this.state.chosenLocation !== "overall") {
             this.sortBookingsbyLocation();
-
-            console.log(this.state.chosenDate);
-
-            console.log(this.state.chosenLocation);
-
-            console.log(this.state.bookings);
-
-            console.log(this.state.filteredBookings);
         } else {
             this.setState({ filteredBookings: this.state.bookings });
-
-            console.log(this.state.chosenDate);
-
-            console.log(this.state.chosenLocation);
-
-            console.log(this.state.bookings);
-
-            console.log(this.state.filteredBookings);
         }
     };
 
@@ -243,7 +177,6 @@ export default class AdminBookingView extends React.Component {
     };
 
     submitCancelBooking = (bookingToCancel) => {
-        console.log(bookingToCancel);
         fetch("/api/removeBooking", {
             method: "POST",
             headers: {
@@ -270,21 +203,14 @@ export default class AdminBookingView extends React.Component {
             .catch((err) => {});
     };
 
-   
-
-
-    componentDidMount=()=> {  
+    componentDidMount = () => {
         fetch(`/api/adminOptions/Desk_Booking_Range`)
-        .then((res) => {
-            if (!res.ok) throw new Error(`Failed to retrieve option`);
-            return res.json();
-        })
-        .then((res) =>
-            this.setState({ RestrictWeek: res.option.value }, () =>
-                console.log(this.state.RestrictWeek)
-            )
-        )
-        .catch(console.error);
+            .then((res) => {
+                if (!res.ok) throw new Error(`Failed to retrieve option`);
+                return res.json();
+            })
+            .then((res) => this.setState({ RestrictWeek: res.option.value }))
+            .catch(console.error);
 
         fetch("/api/getLocationData")
             .then((res) => {
@@ -300,12 +226,7 @@ export default class AdminBookingView extends React.Component {
     };
 
     displayBooking = (data) => {
-        let time =
-            data.pm && !data.am
-                ? "13:30 - 17:30"
-                : data.am && !data.pm
-                ? "09:00 - 13:00"
-                : "09:00 - 17:30";
+        let time = data.pm && !data.am ? "13:30 - 17:30" : data.am && !data.pm ? "09:00 - 13:00" : "09:00 - 17:30";
         let date = new Date();
         date = data.date.split("T")[0].split("-");
 
@@ -324,11 +245,11 @@ export default class AdminBookingView extends React.Component {
                       backgroundColor: "white",
                   };
         let displayDate = parseInt(date[2]) + " " + months[date[1] - 1] + " " + date[0];
-       
+
         return (
             <button
                 disabled={!this.state.isCancelling || isUpcoming > 0}
-                className="bookings-table no-outline"
+                className='bookings-table no-outline'
                 onClick={() => {
                     setTimeout(() => {
                         let displayTime =
@@ -361,18 +282,12 @@ export default class AdminBookingView extends React.Component {
                 }}
                 style={{
                     backgroundColor: bg.backgroundColor,
-                    "--hover-background":
-                        isUpcoming > 0
-                            ? "#eee"
-                            : this.state.isCancelling
-                            ? "#ff6655"
-                            : "#ddf8ff",
-                    "--cursor":
-                        isUpcoming < 1 && this.state.isCancelling ? "pointer" : "normal",
+                    "--hover-background": isUpcoming > 0 ? "#eee" : this.state.isCancelling ? "#ff6655" : "#ddf8ff",
+                    "--cursor": isUpcoming < 1 && this.state.isCancelling ? "pointer" : "normal",
                 }}>
                 <div style={{ width: "100%", marginBottom: "1%" }} />
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         marginLeft: "5px",
@@ -385,7 +300,7 @@ export default class AdminBookingView extends React.Component {
                 </span>
 
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -394,14 +309,14 @@ export default class AdminBookingView extends React.Component {
                     {"" + data.deskId}
                 </span>
                 <span
-                    className="ellipsis booking-history"
+                    className='ellipsis booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
                         flex: "1.25",
                     }}>{`${data.deskRoom}`}</span>
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -410,7 +325,7 @@ export default class AdminBookingView extends React.Component {
                     {displayDate}
                 </span>
                 <span
-                    className="booking-history"
+                    className='booking-history'
                     style={{
                         textAlign: "left",
                         fontWeight: "bold",
@@ -425,13 +340,13 @@ export default class AdminBookingView extends React.Component {
 
     render = () => {
         return verify(true) || verify(false) ? (
-            <div className="wrapper TCD-BG">
-                <div className="flex-container-1" />
-                <div className="flex-container-5 main-body">
-                    <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+            <div className='wrapper TCD-BG'>
+                <div className='flex-container-1' />
+                <div className='flex-container-5 main-body'>
+                    <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                         View Bookings by Date
                     </h1>
-                    <div className="space" />
+                    <div className='space' />
 
                     <div>
                         <div
@@ -442,31 +357,26 @@ export default class AdminBookingView extends React.Component {
                                 paddingBottom: "20px",
                             }}>
                             <GlassCalendar
-                                highlight="none"
+                                highlight='none'
                                 hideLanguageToggle
                                 disableTile={(e) => {
                                     return e.getDay() === 0 || e.getDay() === 6;
                                 }}
                                 tileClass={(e) => {
                                     let today = new Date();
-                                    
+
                                     let diff = getDifferenceInDays(e, today);
-                                   
-                                    return diff <= this.state.RestrictWeek * 7 && diff > 0
-                                        ? "calendar-green"
-                                        : "";
+
+                                    return diff <= this.state.RestrictWeek * 7 && diff > 0 ? "calendar-green" : "";
                                 }}
                                 onDaySelect={(date) => {
                                     this.setState({ chosenDate: date }, () => {
                                         this.filterBookings();
-                                        
-                                        console.log(this.state.chosenDate);
                                     });
                                     this.getBookingsOnDate(date);
 
                                     this.checkRestriction(date);
-                                    document.getElementById("selectlocation").value =
-                                        "overall";
+                                    document.getElementById("selectlocation").value = "overall";
                                 }}
                             />
                         </div>
@@ -488,22 +398,20 @@ export default class AdminBookingView extends React.Component {
                             justifyContent: "flex-start",
                         }}>
                         <div style={{ flex: "1", height: "100%" }}>
-                            <h1
-                                className="page-divider-header"
-                                style={{ marginLeft: "2.5%", flex: "1" }}>
+                            <h1 className='page-divider-header' style={{ marginLeft: "2.5%", flex: "1" }}>
                                 Locations
                             </h1>
-                            <div className="space" />
+                            <div className='space' />
                             <select
-                                id="selectlocation"
-                                name="chosenLocation"
-                                className="text-input"
+                                id='selectlocation'
+                                name='chosenLocation'
+                                className='text-input'
                                 style={{ padding: "0" }}
-                                onClick={this.handleEvent}>
-                                <option key={"_empty_loc"} value="" id="myDefault">
+                                onChange={this.handleEvent}>
+                                <option key={"_empty_loc"} value='' id='myDefault'>
                                     Select location
                                 </option>
-                                <option value="overall">All</option>
+                                <option value='overall'>All</option>
                                 {this.state.location
                                     ? this.state.location.map((x) => {
                                           return (
@@ -518,7 +426,7 @@ export default class AdminBookingView extends React.Component {
                         {!this.state.dateRestricted ? null : (
                             <div style={{ flex: "1", height: "100%", marginBottom: "20%" }}>
                                 <h1
-                                    className="page-divider-header"
+                                    className='page-divider-header'
                                     style={{
                                         marginLeft: "2.5%",
                                         flex: "1",
@@ -526,103 +434,88 @@ export default class AdminBookingView extends React.Component {
                                     }}>
                                     Time
                                 </h1>
-                                <div className="space" />
+                                <div className='space' />
 
-                                <h8>
-                                    <h9
-                                        style={{
-                                            position: "absolute",
-                                            marginLeft: "3.5%",
-                                        }}>
-                                        AM
-                                    </h9>
+                                <label
+                                    for='AM_Chackbox'
+                                    style={{ verticalAlign: "top", textAnchor: "middle", marginRight: "4px" }}>
+                                    AM
+                                </label>
 
-                                    <input
-                                        type="checkbox"
-                                        style={{
-                                            position: "relative",
-                                            marginRight: "20%",
-                                        }}
-                                        onChange={() =>
-                                            this.setState({
-                                                AM: !this.state.AM,
-                                            })
-                                        }></input>
-                                </h8>
-                                <h8>
-                                    <h9
-                                        style={{
-                                            position: "absolute",
-                                            marginLeft: "3.5%",
-                                        }}>
-                                        PM
-                                    </h9>
-
-                                    <input
-                                        type="checkbox"
-                                        onChange={() =>
-                                            this.setState({
-                                                PM: !this.state.PM,
-                                            })
-                                        }></input>
-                                </h8>
-                                
+                                <input
+                                    type='checkbox'
+                                    id={"AM_Checkbox"}
+                                    style={{ marginRight: "10%" }}
+                                    onChange={() =>
+                                        this.setState({
+                                            AM: !this.state.AM,
+                                        })
+                                    }></input>
+                                <label
+                                    for='PM_Chackbox'
+                                    style={{ verticalAlign: "top", textAnchor: "middle", marginRight: "4px" }}>
+                                    PM
+                                </label>
+                                <input
+                                    type='checkbox'
+                                    id={"PM_Checkbox"}
+                                    onChange={() =>
+                                        this.setState({
+                                            PM: !this.state.PM,
+                                        })
+                                    }></input>
                             </div>
                         )}
                     </div>
 
-                    {this.state.dateRestricted ? ( <div>
-                    <div className="space" style={{ marginTop: "7%" }} />
-                                <button
-                                    disabled={
-                                        document.getElementById("selectlocation").value ===
-                                            "overall" ||
-                                        document.getElementById("selectlocation").value === ""
-                                    }
-                                    className="button-style no-outline"
-                                    style={{
-                                        position: "relative",
-                                        "--bg-color": "#f32000",
-                                        "--hover-highlight": "#ff5000",
-                                        // marginTop: "-5%",
-                                       top:"20px",
-                                        //  marginBottom: "0%",
-                                    }}
-                                    onClick={() => {
-                                        this.checkExistingRestrictions()
-                                            ? this.submitRoomRestriction()
-                                            : alert("Booking already exists.");
-                                    }}>
-                                    Restrict
-                                </button>
-                    </div>):null}
+                    {this.state.dateRestricted ? (
+                        <div>
+                            <div className='space' style={{ marginTop: "7%" }} />
+                            <button
+                                disabled={
+                                    document.getElementById("selectlocation").value === "overall" ||
+                                    document.getElementById("selectlocation").value === ""
+                                }
+                                className='button-style no-outline'
+                                style={{
+                                    position: "relative",
+                                    "--bg-color": "#f32000",
+                                    "--hover-highlight": "#ff5000",
+                                    // marginTop: "-5%",
+                                    top: "20px",
+                                    //  marginBottom: "0%",
+                                }}
+                                onClick={() => {
+                                    this.checkExistingRestrictions()
+                                        ? this.submitRoomRestriction()
+                                        : alert("Booking already exists.");
+                                }}>
+                                Restrict
+                            </button>
+                        </div>
+                    ) : null}
 
                     {this.state.dateRestricted ? (
                         <h1
-                            className="page-divider-header"
-                            style={{position:"relative", marginLeft: "2.5%", top:"30px" }}>
+                            className='page-divider-header'
+                            style={{ position: "relative", marginLeft: "2.5%", top: "30px" }}>
                             Restricted Bookings
                         </h1>
                     ) : null}
 
-                    <div className="space" />
+                    <div className='space' style={{ marginBottom: "25px" }} />
 
                     {this.state.bookings ? (
-                        this.state.bookings.length > 0 &&
-                        this.state.filteredBookings.length > 0 ? (
+                        this.state.bookings.length > 0 && this.state.filteredBookings.length > 0 ? (
                             <button
-                                className="button-style no-outline"
+                                className='button-style no-outline'
                                 style={{
-                                   position: "relative",
-                                    height:"40px",
-                                    "--bg-color": this.state.isCancelling
-                                        ? "#4dc300"
-                                        : "#f32000",
-                                    "--hover-highlight": this.state.isCancelling
-                                        ? "#5dE300"
-                                        : "#ff5000",
+                                    position: "relative",
+                                    height: "40px",
+                                    "--bg-color": this.state.isCancelling ? "#4dc300" : "#f32000",
+                                    "--hover-highlight": this.state.isCancelling ? "#5dE300" : "#ff5000",
                                     marginBottom: "40px",
-                                    
+                                    marginTop: "20px",
                                     top: "20px",
                                 }}
                                 onClick={() => {
@@ -642,17 +535,16 @@ export default class AdminBookingView extends React.Component {
                         }}>
                         <div style={{ width: "100%", marginBottom: "2%" }} />
                         {this.state.bookings ? (
-                            this.state.bookings.length > 0 &&
-                            this.state.filteredBookings.length > 0 ? (
+                            this.state.bookings.length > 0 && this.state.filteredBookings.length > 0 ? (
                                 <>
                                     <div
-                                        className="bookings-table"
+                                        className='bookings-table'
                                         style={{
                                             border: "none",
                                             pointerEvents: "none",
                                         }}>
                                         <span
-                                            className="booking-history"
+                                            className='booking-history'
                                             style={{
                                                 textAlign: "left",
                                                 marginLeft: "5px",
@@ -663,7 +555,7 @@ export default class AdminBookingView extends React.Component {
                                             User
                                         </span>
                                         <span
-                                            className="booking-history"
+                                            className='booking-history'
                                             style={{
                                                 textAlign: "left",
                                                 fontWeight: "bold",
@@ -673,7 +565,7 @@ export default class AdminBookingView extends React.Component {
                                             Desk No.
                                         </span>
                                         <span
-                                            className="booking-history"
+                                            className='booking-history'
                                             style={{
                                                 textAlign: "left",
                                                 fontWeight: "bold",
@@ -683,7 +575,7 @@ export default class AdminBookingView extends React.Component {
                                             Location
                                         </span>
                                         <span
-                                            className="booking-history"
+                                            className='booking-history'
                                             style={{
                                                 textAlign: "left",
                                                 fontWeight: "bold",
@@ -693,7 +585,7 @@ export default class AdminBookingView extends React.Component {
                                             Date
                                         </span>
                                         <span
-                                            className="booking-history"
+                                            className='booking-history'
                                             style={{
                                                 textAlign: "left",
                                                 fontWeight: "bold",
@@ -711,8 +603,7 @@ export default class AdminBookingView extends React.Component {
                                         }}
                                     />
 
-                                    {document.getElementById("selectlocation").value !==
-                                        "overall" &&
+                                    {document.getElementById("selectlocation").value !== "overall" &&
                                     document.getElementById("selectlocation").value !== ""
                                         ? this.state.filteredBookings.map((booking, index) => {
                                               return this.displayBooking(booking);
@@ -729,9 +620,7 @@ export default class AdminBookingView extends React.Component {
                                         justifyContent: "center",
                                         flexDirection: "column",
                                     }}>
-                                    {console.log("No Boookings")}
-                                    {this.state.chosenLocation !== "" &&
-                                    this.state.chosenDate !== "" ? (
+                                    {this.state.chosenLocation !== "" && this.state.chosenDate !== "" ? (
                                         <h2 style={{ marginTop: "0%" }}>No Bookings Found.</h2>
                                     ) : (
                                         <h3>Please select a date and location.</h3>
@@ -739,7 +628,7 @@ export default class AdminBookingView extends React.Component {
                                 </div>
                             )
                         ) : (
-                            "Failed to get your bookings.Please try logging back in."
+                            "Failed to get your bookings. Please try logging back in."
                         )}
                     </div>
                     <div
@@ -750,10 +639,10 @@ export default class AdminBookingView extends React.Component {
                         }}
                     />
                 </div>
-                <div className="flex-container-1"></div>
+                <div className='flex-container-1'></div>
             </div>
         ) : (
-            <Redirect to="/login" />
+            <Redirect to='/login' />
         );
     };
 }

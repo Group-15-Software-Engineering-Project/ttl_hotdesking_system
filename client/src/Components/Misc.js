@@ -7,8 +7,8 @@ export const verify = (e) => {
     let b = sessionStorage.username;
     let date = new Date();
     let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
+
     let token = sha256(a + c + process.env.REACT_APP_A + (e ? process.env.REACT_APP_B : "") + b);
-    // console.log(token, sessionStorage.sessionToken, e);
     return token === sessionStorage.sessionToken;
 };
 

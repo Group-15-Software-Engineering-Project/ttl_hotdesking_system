@@ -60,18 +60,9 @@ class Home extends React.Component {
                 return res.json();
             })
             .then((res) => {
-                console.log(res);
                 const today = res.appointments.filter((x) => getDifferenceInDays(new Date(), new Date(x.start)) === 0);
                 const future = res.appointments.filter((x) => getDifferenceInDays(new Date(), new Date(x.start)) < 0);
                 future.sort((a, b) => getDifferenceInDays(new Date(a.start), new Date(b.start)));
-                // let bookings = res.appointments.filter(
-                //     (booking) =>
-                //         !(
-                //             new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
-                //             new Date(booking.start).getMonth() <= new Date().getMonth() &&
-                //             new Date(booking.start).getDate() < new Date().getDate()
-                //         )
-                // );
                 this.setState({ appointments: [...today, ...future] });
             })
             .catch(console.error);

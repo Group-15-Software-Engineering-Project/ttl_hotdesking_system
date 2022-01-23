@@ -43,10 +43,6 @@ function GlassCalendar(props) {
     const [view, changeView] = useState("daysInMonth");
     const [today] = useState(new Date());
 
-    const dismount = () => {
-        console.log("dismounted");
-    };
-
     const arrayRotate = (arr, rotation) => {
         let array = arr.slice();
         if (rotation < 0) {
@@ -164,8 +160,6 @@ function GlassCalendar(props) {
     const deselectCell = (cell) => {
         let previousSelected = document.querySelector(".calendar-cell.selected-calendar-cell");
         if (cell === previousSelected) {
-            //TODO change calendar view into the selected day.
-            console.log("Selected Cell has been Clicked!");
             return false;
         }
         if (previousSelected) previousSelected.classList.remove("selected-calendar-cell");

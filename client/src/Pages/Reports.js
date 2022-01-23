@@ -9,12 +9,7 @@ class Reports extends Component {
     constructor() {
         super();
         this.state = {
-            timeRanges: [
-                "Next week",
-                "Last week",
-                "Last month",
-                "Last 3 months",
-            ],
+            timeRanges: ["Next week", "Last week", "Last month", "Last 3 months"],
             time: "overall",
             room: "overall",
             team: "overall",
@@ -24,21 +19,21 @@ class Reports extends Component {
             chosenTeam: "",
             roomlist: [],
             teamlist: [],
-            week: [],
+            week: 0,
             error: "",
             isError: false,
             userData: {},
             dayData: {},
             deskData: {},
             backgroundColor: [
-              "rgba(255, 99, 132, 0.6)",
-              "rgba(54, 162, 235, 0.6)",
-              "rgba(255, 206, 86, 0.6)",
-              "rgba(75, 192, 192, 0.6)",
-              "rgba(153, 102, 255, 0.6)",
-              "rgba(255, 159, 64, 0.6)",
-              "rgba(255, 99, 132, 0.6)",
-            ]
+                "rgba(255, 99, 132, 0.6)",
+                "rgba(54, 162, 235, 0.6)",
+                "rgba(255, 206, 86, 0.6)",
+                "rgba(75, 192, 192, 0.6)",
+                "rgba(153, 102, 255, 0.6)",
+                "rgba(255, 159, 64, 0.6)",
+                "rgba(255, 99, 132, 0.6)",
+            ],
         };
     }
     componentDidMount = () => {
@@ -64,7 +59,6 @@ class Reports extends Component {
                     alert("Could not get Users");
                 } else {
                     this.setState({ week: res.option });
-                    console.log("NUmber of weeks", res.option);
                 }
             })
             .catch((err) => {
@@ -110,7 +104,7 @@ class Reports extends Component {
                 time: this.state.chosenTimeRange.toLowerCase(),
                 room: this.state.chosenLocation,
                 team: this.state.chosenTeam,
-                week: this.state.week,
+                week: this.state.week.value,
             }),
         })
             .then((res) => {
@@ -133,15 +127,7 @@ class Reports extends Component {
                     },
 
                     dayData: {
-                        labels: [
-                            "Sunday",
-                            "Monday",
-                            "Tuesday",
-                            "Wednesday",
-                            "Thursday",
-                            "Friday",
-                            "Saturday",
-                        ],
+                        labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                         datasets: [
                             {
                                 label: "Day",
@@ -171,18 +157,15 @@ class Reports extends Component {
 
     render() {
         return verify(true) ? (
-            <div className="wrapper TCD-BG">
-                <div className="flex-container-1" />
-                <div className="flex-container-5 main-body">
+            <div className='wrapper TCD-BG'>
+                <div className='flex-container-1' />
+                <div className='flex-container-5 main-body'>
                     <section>
-                        <div className="space" />
-                        <h1
-                            className="page-divider-header"
-                            style={{ marginLeft: "2.5%" }}
-                        >
+                        <div className='space' />
+                        <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                             Reports
                         </h1>
-                        <div className="space" />
+                        <div className='space' />
 
                         <div
                             style={{
@@ -190,61 +173,43 @@ class Reports extends Component {
                                 height: "20%",
                                 flexFlow: "row wrap",
                                 justifyContent: "flex-start",
-                            }}
-                        >
+                            }}>
                             <div style={{ flex: "1", height: "100%" }}>
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ marginLeft: "2.5%" }}
-                                >
+                                <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                     Time Range
                                 </h1>
-                                <div className="space" />
+                                <div className='space' />
                                 <select
-                                    name="chosenTimeRange"
-                                    className="text-input"
+                                    name='chosenTimeRange'
+                                    className='text-input'
                                     style={{ padding: "0" }}
-                                    onChange={this.handleEvent}
-                                >
-                                    <option value="">Select time range</option>
-                                    <option value="overall">All time</option>
+                                    onChange={this.handleEvent}>
+                                    <option value=''>Select time range</option>
+                                    <option value='overall'>All time</option>
                                     {this.state.week.value > 1 ? (
-                                        <option value="upcomingWeek">
-                                            Next {this.state.week.value} weeks
-                                        </option>
+                                        <option value='upcomingWeek'>Next {this.state.week.value} weeks</option>
                                     ) : null}
-                                    {console.log(
-                                        "This is weeks",
-                                        this.state.week
-                                    )}
                                     {this.state.timeRanges.map((x) => {
                                         return <option value={x}>{x}</option>;
                                     })}
                                 </select>
                             </div>
                             <div style={{ flex: "1", height: "100%" }}>
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ marginLeft: "2.5%" }}
-                                >
+                                <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                     Locations
                                 </h1>
-                                <div className="space" />
+                                <div className='space' />
                                 <select
-                                    name="chosenLocation"
-                                    className="text-input"
+                                    name='chosenLocation'
+                                    className='text-input'
                                     style={{ padding: "0" }}
-                                    onChange={this.handleEvent}
-                                >
-                                    <option value="">Select location</option>
-                                    <option value="overall">All</option>
+                                    onChange={this.handleEvent}>
+                                    <option value=''>Select location</option>
+                                    <option value='overall'>All</option>
                                     {this.state.roomlist
                                         ? this.state.roomlist.map((x) => {
                                               return (
-                                                  <option
-                                                      key={x.name}
-                                                      value={x.name}
-                                                  >
+                                                  <option key={x.name} value={x.name}>
                                                       {x.name}
                                                   </option>
                                               );
@@ -253,35 +218,28 @@ class Reports extends Component {
                                 </select>
                             </div>
                             <div style={{ flex: "1", height: "100%" }}>
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ marginLeft: "2.5%" }}
-                                >
+                                <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                     Teams
                                 </h1>
-                                <div className="space" />
+                                <div className='space' />
                                 <select
-                                    name="chosenTeam"
-                                    className="text-input"
+                                    name='chosenTeam'
+                                    className='text-input'
                                     style={{ padding: "0" }}
-                                    onChange={this.handleEvent}
-                                >
-                                    <option value="">Select team</option>
+                                    onChange={this.handleEvent}>
+                                    <option value=''>Select team</option>
                                     {this.state.teamlist.map((x) => {
                                         return <option value={x}>{x}</option>;
                                     })}
                                 </select>
                             </div>
                         </div>
-                        <div className="space" />
-                        <button
-                            className="button-style no-outline"
-                            onClick={() => this.getData()}
-                        >
+                        <div className='space' />
+                        <button className='button-style no-outline' onClick={() => this.getData()}>
                             Run Report
                         </button>
                     </section>
-                    <div className="space" />
+                    <div className='space' />
                     {this.state.graphsVisible ? (
                         <div>
                             {!this.state.isError ? (
@@ -291,8 +249,7 @@ class Reports extends Component {
                                             width: "70%",
                                             marginLeft: "15%",
                                             marginBottom: "5%",
-                                        }}
-                                    >
+                                        }}>
                                         <Bar
                                             data={this.state.userData}
                                             options={{
@@ -307,49 +264,35 @@ class Reports extends Component {
                                                     ],
                                                 },
                                                 title: {
-                                                    display:
-                                                        this.props.displayTitle,
+                                                    display: this.props.displayTitle,
                                                     text: "Most active user",
                                                     fontSize: 25,
                                                 },
                                                 legend: {
-                                                    display:
-                                                        this.props
-                                                            .displayLegend,
-                                                    position:
-                                                        this.props
-                                                            .legendPosition,
+                                                    display: this.props.displayLegend,
+                                                    position: this.props.legendPosition,
                                                 },
                                             }}
                                         />
                                     </div>
-                                    <div
-                                        className="space"
-                                        style={{ marginBottom: "5%" }}
-                                    />
+                                    <div className='space' style={{ marginBottom: "5%" }} />
                                     <div
                                         style={{
                                             width: "70%",
                                             marginLeft: "15%",
                                             marginBottom: "5%",
-                                        }}
-                                    >
+                                        }}>
                                         <Bar
                                             data={this.state.dayData}
                                             options={{
                                                 title: {
-                                                    display:
-                                                        this.props.displayTitle,
+                                                    display: this.props.displayTitle,
                                                     text: "Most active day",
                                                     fontSize: 25,
                                                 },
                                                 legend: {
-                                                    display:
-                                                        this.props
-                                                            .displayLegend,
-                                                    position:
-                                                        this.props
-                                                            .legendPosition,
+                                                    display: this.props.displayLegend,
+                                                    position: this.props.legendPosition,
                                                 },
                                             }}
                                         />
@@ -361,10 +304,10 @@ class Reports extends Component {
                         </div>
                     ) : null}
                 </div>
-                <div className="flex-container-1" />
+                <div className='flex-container-1' />
             </div>
         ) : (
-            <Redirect to="/home" />
+            <Redirect to='/home' />
         );
     }
 }

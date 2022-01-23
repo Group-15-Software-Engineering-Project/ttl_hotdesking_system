@@ -31,8 +31,9 @@ module.exports = {
         let b = model[0].username;
         let date = new Date();
         let c = date.getFullYear() + date.getMonth() + date.getDate() + date.getDay();
-        let token = sha256(a + c + process.env.REACT_APP_A + (admin ? process.env.REACT_APP_B : "") + b);
-        console.log(token);
+        let token = sha256(
+            a + c + process.env.REACT_APP_SECRET + (admin ? process.env.REACT_APP_ADMIN_SECRET : "") + b
+        );
         return model.length > 0 ? [true, admin, { email: a, username: b, token: token }] : [false, false, {}];
     },
     adminCheck: async (email) => {
@@ -214,6 +215,7 @@ module.exports = {
         return report;
     },
     getReports: async (time, room, team, week) => {
+        console.log(`time: ${time} !!!!`);
         const userBookingsCount = [];
         let allBookings = [];
         const bookingDistribution = [0, 0, 0, 0, 0, 0, 0];
@@ -539,26 +541,9 @@ module.exports = {
                 bookedBy: email,
             },
             order: [["start", "ASC"]],
+            raw: true,
         });
-        appointments = appointments.map(({ dataValues }) => dataValues);
-        console.log("\x1b[1;31m" + JSON.stringify(appointments, null, 4) + "\x1b[0m");
-        // const today = appointments.filter(
-        //     (appointment) =>
-        //         new Date(appointment.start).getFullYear() === new Date().getFullYear() &&
-        //         new Date(appointment.start).getMonth() === new Date().getMonth() &&
-        //         new Date(appointment.start).getDate() === new Date().getDate()
-        // );
-        // appointments = appointments.filter((appointment) => !today.includes(appointment));
-        // const past = appointments.filter(
-        //     (booking) =>
-        //         new Date(booking.start).getFullYear() <= new Date().getFullYear() &&
-        //         new Date(booking.start).getMonth() <= new Date().getMonth() &&
-        //         new Date(booking.start).getDate() < new Date().getDate()
-        // );
-        // appointments = appointments.filter((booking) => !past.includes(booking));
-        // appointments.unshift(...today);
-        // appointments.push(...past);
-        // console.log(appointments);
+
         return appointments;
     },
     getUserBookingCount: async (email) => {
@@ -641,5 +626,18 @@ module.exports = {
         deskBookings = deskBookings.filter((obj) => obj.bookings.length !== 0);
         appointments = appointments.filter((obj) => obj.bookings.length !== 0);
         return { bookings: deskBookings, appointments: appointments };
+    },
+    resetPassword: async (email) => {
+        const password = email;
+        const options = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "ttl_hotdesking Account Password Reset",
+            text: `Email: ${email}\nPassword: ${password}`,
+        };
+        transporter.sendMail(options);
+        const user = await User.findByPk(email);
+        user.password = sha256(password);
+        user.save();
     },
 };

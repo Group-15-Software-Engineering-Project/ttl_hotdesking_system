@@ -71,11 +71,7 @@ function MeetingBookings() {
         return res;
     };
     const getEndTimes = (day, bookings, currentDate) => {
-        let date = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            currentDate.getDate() + day
-        );
+        let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + day);
 
         let currentDayBookings = [];
         for (let app of bookings) {
@@ -92,9 +88,7 @@ function MeetingBookings() {
 
         let minimumTime = 18;
         for (let booking of currentDayBookings) {
-            let t =
-                booking.startDate.getHours() +
-                (booking.startDate.getMinutes() === 30 ? 0.5 : 0.0);
+            let t = booking.startDate.getHours() + (booking.startDate.getMinutes() === 30 ? 0.5 : 0.0);
             if (t > startTime && t < minimumTime) {
                 minimumTime = t;
             }
@@ -107,11 +101,7 @@ function MeetingBookings() {
         return validTimes;
     };
     const getStartTimes = (day, bookings, currentDate) => {
-        let date = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            currentDate.getDate() + day
-        );
+        let date = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + day);
 
         let currentDayBookings = [];
         for (let app of bookings) {
@@ -216,8 +206,6 @@ function MeetingBookings() {
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
-
                 let appointments = [];
                 for (let app of data.appointments) {
                     appointments.push({
@@ -245,16 +233,16 @@ function MeetingBookings() {
         } else return false;
     };
     return verify(true) || verify(false) ? (
-        <div className="wrapper TCD-BG">
-            <div className="flex-container-1" />
-            <div className="flex-container-5 main-body">
-                <div className="space" />
+        <div className='wrapper TCD-BG'>
+            <div className='flex-container-1' />
+            <div className='flex-container-5 main-body'>
+                <div className='space' />
 
                 <TileSelection
                     key={state + "meeting_room_key"}
-                    elementID="Meeting_room_selection"
+                    elementID='Meeting_room_selection'
                     title={
-                        <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                        <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                             Select a Meeting Room
                         </h1>
                     }
@@ -270,12 +258,10 @@ function MeetingBookings() {
                 />
                 {show && location && (
                     <div>
-                        <h1 className="page-divider-header" style={{ marginLeft: "2.5%" }}>
+                        <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                             {`Current Bookings for ${location}`}
                         </h1>
-                        <h5 style={{ marginTop: "5px", marginBottom: "2%" }}>
-                            Scroll down to place your booking.
-                        </h5>
+                        <h5 style={{ marginTop: "5px", marginBottom: "2%" }}>Scroll down to place your booking.</h5>
                         <div
                             style={{
                                 width: "80%",
@@ -301,19 +287,15 @@ function MeetingBookings() {
                             />
                         </div>
                         <TileSelection
-                            elementID="Day_of_week_selection"
+                            elementID='Day_of_week_selection'
                             key={currentSelectedWeek}
                             title={
                                 <div>
-                                    <h1
-                                        className="page-divider-header"
-                                        style={{ marginLeft: "2.5%" }}>
+                                    <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                         Select the Day of the Week
                                     </h1>
                                     <h6 style={{ marginTop: "5px" }}>
-                                        <i>
-                                            Day of week for the currently displayed week above.
-                                        </i>
+                                        <i>Day of week for the currently displayed week above.</i>
                                     </h6>
                                 </div>
                             }
@@ -335,13 +317,11 @@ function MeetingBookings() {
                 )}
                 {day !== 0 && (
                     <TileSelection
-                        elementID="Start_time_selection"
+                        elementID='Start_time_selection'
                         key={day}
                         title={
                             <div>
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ marginLeft: "2.5%" }}>
+                                <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                     Select the Meeting Start Time
                                 </h1>
                             </div>
@@ -356,13 +336,11 @@ function MeetingBookings() {
                 )}
                 {startT && (
                     <TileSelection
-                        elementID="End_time_selection"
+                        elementID='End_time_selection'
                         key={startT}
                         title={
                             <div>
-                                <h1
-                                    className="page-divider-header"
-                                    style={{ marginLeft: "2.5%" }}>
+                                <h1 className='page-divider-header' style={{ marginLeft: "2.5%" }}>
                                     Select the Meeting End Time
                                 </h1>
                             </div>
@@ -374,17 +352,15 @@ function MeetingBookings() {
                 )}
                 {startT && endT && day && (
                     <div>
-                        <h1
-                            className="page-divider-header"
-                            style={{ marginLeft: "2.5%", marginBottom: "20px" }}>
+                        <h1 className='page-divider-header' style={{ marginLeft: "2.5%", marginBottom: "20px" }}>
                             Complete the Booking
                         </h1>
                         <input
-                            className="text-input"
+                            className='text-input'
                             style={{ width: "350px" }}
-                            placeholder="Meeting Title (Required)"
+                            placeholder='Meeting Title (Required)'
                             onChange={(e) => setMeetingTitle(e.target.value)}></input>
-                        <div className="space" />
+                        <div className='space' />
                         <h4>
                             {"Meeting at "}
                             <span style={{ color: "red" }}>{location}</span>
@@ -403,10 +379,10 @@ function MeetingBookings() {
                             {"."}
                         </h4>
 
-                        <div className="space" />
+                        <div className='space' />
 
                         <button
-                            className="button-style"
+                            className='button-style'
                             disabled={meetingTitle.length === 0}
                             onClick={() => submitAppointmentBooking()}>
                             Confirm
@@ -416,10 +392,10 @@ function MeetingBookings() {
                 {location && <div style={{ marginTop: "100px" }}></div>}
                 {/* Confirm */}
             </div>
-            <div className="flex-container-1" />
+            <div className='flex-container-1' />
         </div>
     ) : (
-        <Redirect to="/login" />
+        <Redirect to='/login' />
     );
 }
 
